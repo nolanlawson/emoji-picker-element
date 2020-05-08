@@ -46,13 +46,32 @@ export class IndexedDBEngine {
     })
   }
 
-  searchEmojiByPrefix(prefix) {
+  getEmojiBySearchPrefix(prefix) {
     prefix = prefix.toLowerCase()
     return dbPromise(this._db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
       const range = IDBKeyRange.bound(prefix, prefix + '\uffff', false, true)
       emojiStore.index(INDEX_TOKENS).getAll(range).onsuccess = e => {
         cb(e.target.result)
       }
+    })
+  }
+
+  getEmojiByShortcode(shortcode) {
+    shortcode = shortcode.toLowerCase()
+    return dbPromise(this._db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
+      const range = IDBKeyRange.only(shortcode)
+      emojiStore.index(INDEX_TOKENS).getAll(range).onsuccess = e => {
+        // of course, we could add an extra index just for shortcodes, but it seems
+        // simpler to just re-use the existing tokens index and filter in-memory
+        const results = e.target.result.filter(emoji => emoji.shortcodes.includes(shortcode))
+        cb(results[0])
+      }
+    })
+  }
+
+  getEmojiByUnicode(unicode) {
+    return dbPromise(this._db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
+      emojiStore.get(unicode).onsuccess = e => cb(e.target.result)
     })
   }
 }
