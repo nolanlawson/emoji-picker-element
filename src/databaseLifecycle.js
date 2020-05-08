@@ -57,12 +57,15 @@ export async function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
   })
 }
 
-export function closeDatabase (instanceName) {
+export function closeDatabase (dbName) {
+  if (!dbName) {
+    throw new Error('dbName is required')
+  }
   // close any open requests
-  const openReq = openReqs[instanceName]
+  const openReq = openReqs[dbName]
   if (openReq && openReq.result) {
     openReq.result.close()
   }
-  delete openReqs[instanceName]
-  delete databaseCache[instanceName]
+  delete openReqs[dbName]
+  delete databaseCache[dbName]
 }

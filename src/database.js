@@ -48,3 +48,8 @@ export async function getEmojiByUnicode (unicode) {
   await init()
   return idbEngine.getEmojiByUnicode(unicode)
 }
+
+export async function closeDatabase () {
+  await init()
+  return idbEngine.close()
+}

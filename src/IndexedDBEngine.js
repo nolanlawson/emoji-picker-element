@@ -1,4 +1,4 @@
-import { dbPromise, openDatabase } from './databaseLifecycle'
+import { closeDatabase, dbPromise, openDatabase } from './databaseLifecycle'
 import {
   DATA_VERSION_CURRENT,
   DB_NAME,
@@ -73,5 +73,9 @@ export class IndexedDBEngine {
     return dbPromise(this._db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
       emojiStore.get(unicode).onsuccess = e => cb(e.target.result)
     })
+  }
+
+  close () {
+    return closeDatabase(DB_NAME)
   }
 }
