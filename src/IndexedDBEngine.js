@@ -75,7 +75,8 @@ export class IndexedDBEngine {
     })
   }
 
-  close () {
-    return closeDatabase(DB_NAME)
+  async close () {
+    await closeDatabase(DB_NAME)
+    this._db = null
   }
 }

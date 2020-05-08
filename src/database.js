@@ -50,6 +50,9 @@ export async function getEmojiByUnicode (unicode) {
 }
 
 export async function closeDatabase () {
-  await init()
-  return idbEngine.close()
+  if (idbEngine) {
+    await idbEngine.readyPromise
+    await idbEngine.close()
+    idbEngine = undefined
+  }
 }
