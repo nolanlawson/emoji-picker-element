@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ad-hoc test</title>
+</head>
+<body>
+  <h1>Ad-hoc test</h1>
+  <script type="module">
+      import { loadData, getEmojiByGroup } from '../pkg/dist-web/index.js'
+
+      (async () => {
+        const emojiBaseData = await (await fetch('../node_modules/emojibase-data/en/compact.json')).json()
+
+        Object.assign(window, { loadData, getEmojiByGroup, emojiBaseData })
+      })()
+  </script>
+</body>
+</html>
