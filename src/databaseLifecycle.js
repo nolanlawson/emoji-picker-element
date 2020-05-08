@@ -1,4 +1,5 @@
-import { DB_VERSION_CURRENT, migrations } from './migrations'
+import { migrations } from './migrations'
+import { DB_VERSION_CURRENT } from './constants'
 
 const openReqs = {}
 const databaseCache = {}

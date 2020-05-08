@@ -5,7 +5,7 @@ import {
   INDEX_GROUP_AND_ORDER,
   KEY_VERSION,
   STORE_EMOJI,
-  STORE_META
+  STORE_META, INDEX_TOKENS
 } from './constants'
 
 function initialMigration (db, tx, done) {
@@ -14,19 +14,19 @@ function initialMigration (db, tx, done) {
       ? db.createObjectStore(name, init)
       : db.createObjectStore(name)
     if (indexes) {
-      Object.keys(indexes).forEach(indexKey => {
-        store.createIndex(indexKey, indexes[indexKey])
-      })
+      for (const { indexName, keyPath, multiEntry } of indexes) {
+        store.createIndex(indexName, keyPath, { multiEntry })
+      }
     }
     return store
   }
 
   const metaStore = createObjectStore(STORE_META)
   metaStore.put(DATA_VERSION_INITIAL, KEY_VERSION)
-  createObjectStore(STORE_EMOJI, { keyPath: FIELD_UNICODE }, {
-    [FIELD_TOKENS]: FIELD_TOKENS,
-    [INDEX_GROUP_AND_ORDER]: [FIELD_GROUP, FIELD_ORDER]
-  })
+  createObjectStore(STORE_EMOJI, { keyPath: FIELD_UNICODE }, [
+    { indexName: INDEX_TOKENS, keyPath: FIELD_TOKENS, multiEntry: true },
+    { indexName: INDEX_GROUP_AND_ORDER, keyPath: [FIELD_GROUP, FIELD_ORDER] }
+  ])
   done()
 }
 

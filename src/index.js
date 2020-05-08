@@ -1,6 +1,7 @@
-import { loadData, getEmojiByGroup } from './loadData'
+import { loadData, getEmojiByGroup, searchEmojiByPrefix } from './loadData'
 
 export {
   loadData,
-  getEmojiByGroup
+  getEmojiByGroup,
+  searchEmojiByPrefix
 }

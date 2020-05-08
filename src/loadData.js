@@ -21,3 +21,11 @@ export async function getEmojiByGroup (group) {
   await init()
   return idbEngine.getEmojiByGroup(group)
 }
+
+export async function searchEmojiByPrefix (prefix) {
+  if (typeof prefix !== 'string' || !prefix) {
+    throw new Error('expected a non-empty string, got: ' + prefix)
+  }
+  await init()
+  return idbEngine.searchEmojiByPrefix(prefix)
+}

@@ -2,8 +2,8 @@ import { dbPromise, openDatabase } from './databaseLifecycle'
 import {
   DATA_VERSION_CURRENT,
   DB_NAME,
-  INDEX_GROUP_AND_ORDER,
-  KEY_VERSION,
+  INDEX_GROUP_AND_ORDER, INDEX_TOKENS,
+  KEY_VERSION, MODE_READONLY, MODE_READWRITE,
   STORE_EMOJI,
   STORE_META
 } from './constants'
@@ -19,11 +19,11 @@ export class IndexedDBEngine {
 
   async loadData (emojiBaseData) {
     const transformedData = transformEmojiBaseData(emojiBaseData)
-    const dataVersion = await dbPromise(this._db, STORE_META, 'readonly', (metaStore, cb) => {
+    const dataVersion = await dbPromise(this._db, STORE_META, MODE_READONLY, (metaStore, cb) => {
       metaStore.get(KEY_VERSION).onsuccess = e => cb(e.target.result)
     })
     if (dataVersion < DATA_VERSION_CURRENT) {
-      await dbPromise(this._db, [STORE_EMOJI, STORE_META], 'readwrite', ([emojiStore, metaStore]) => {
+      await dbPromise(this._db, [STORE_EMOJI, STORE_META], MODE_READWRITE, ([emojiStore, metaStore]) => {
         metaStore.get(KEY_VERSION).onsuccess = e => {
           const dataVersion = e.target.result
           // check again within the transaction to guard against concurrency, e.g. multiple browser tabs
@@ -38,9 +38,19 @@ export class IndexedDBEngine {
   }
 
   getEmojiByGroup (group) {
-    return dbPromise(this._db, STORE_EMOJI, 'readonly', (emojiStore, cb) => {
+    return dbPromise(this._db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
       const range = IDBKeyRange.bound([group, 0], [group + 1, 0], false, true)
       emojiStore.index(INDEX_GROUP_AND_ORDER).getAll(range).onsuccess = e => {
+        cb(e.target.result)
+      }
+    })
+  }
+
+  searchEmojiByPrefix(prefix) {
+    prefix = prefix.toLowerCase()
+    return dbPromise(this._db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
+      const range = IDBKeyRange.bound(prefix, prefix + '\uffff', false, true)
+      emojiStore.index(INDEX_TOKENS).getAll(range).onsuccess = e => {
         cb(e.target.result)
       }
     })
