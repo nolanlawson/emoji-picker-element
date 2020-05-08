@@ -7,12 +7,12 @@
 <body>
   <h1>Ad-hoc test</h1>
   <script type="module">
-      import { loadData, getEmojiByGroup, searchEmojiByPrefix } from '../pkg/dist-web/index.js'
+      import * as liteEmojiPicker from '../pkg/dist-web/index.js'
 
       (async () => {
         const emojiBaseData = await (await fetch('../node_modules/emojibase-data/en/compact.json')).json()
-
-        Object.assign(window, { loadData, getEmojiByGroup, emojiBaseData, searchEmojiByPrefix })
+        await liteEmojiPicker.loadData(emojiBaseData)
+        window.liteEmojiPicker = liteEmojiPicker
       })()
   </script>
 </body>
