@@ -2,7 +2,7 @@ import { IndexedDBEngine } from './IndexedDBEngine'
 
 let idbEngine
 
-function verifyNonEmptyString(str) {
+function verifyNonEmptyString (str) {
   if (typeof str !== 'string' || !str) {
     throw new Error('expected a non-empty string, got: ' + str)
   }

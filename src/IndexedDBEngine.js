@@ -46,7 +46,7 @@ export class IndexedDBEngine {
     })
   }
 
-  getEmojiBySearchPrefix(prefix) {
+  getEmojiBySearchPrefix (prefix) {
     prefix = prefix.toLowerCase()
     return dbPromise(this._db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
       const range = IDBKeyRange.bound(prefix, prefix + '\uffff', false, true)
@@ -56,7 +56,7 @@ export class IndexedDBEngine {
     })
   }
 
-  getEmojiByShortcode(shortcode) {
+  getEmojiByShortcode (shortcode) {
     shortcode = shortcode.toLowerCase()
     return dbPromise(this._db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
       const range = IDBKeyRange.only(shortcode)
@@ -69,7 +69,7 @@ export class IndexedDBEngine {
     })
   }
 
-  getEmojiByUnicode(unicode) {
+  getEmojiByUnicode (unicode) {
     return dbPromise(this._db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
       emojiStore.get(unicode).onsuccess = e => cb(e.target.result)
     })
