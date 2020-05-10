@@ -1,3 +1,4 @@
+<svelte:options tag="lite-emoji-picker" />
 <section
     class="lite-emoji-picker"
     aria-label={i18n.sectionLabel}>

@@ -6,7 +6,9 @@ const baseConfig = {
   plugins: [
     resolve(),
     cjs(),
-    svelte()
+    svelte({
+      customElement: true
+    })
   ]
 }
 
