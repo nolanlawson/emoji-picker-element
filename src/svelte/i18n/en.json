@@ -1,0 +1,16 @@
+{
+  "regionLabel": "Emoji picker",
+  "search": "Search",
+  "categoriesLabel": "Categories",
+  "categories": {
+    "smileys-emotion": "Smileys and emoticons",
+    "people-body": "People and body",
+    "animals-nature": "Animals and nature",
+    "food-drink": "Food and drink",
+    "travel-places": "Travel and places",
+    "activities": "Activities",
+    "objects": "Objects",
+    "symbols": "Symbols",
+    "flags": "Flags"
+  }
+}

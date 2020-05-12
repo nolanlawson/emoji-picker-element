@@ -1,13 +1,16 @@
 import cjs from 'rollup-plugin-commonjs'
 import resolve from 'rollup-plugin-node-resolve'
+import json from 'rollup-plugin-json'
 import svelte from 'rollup-plugin-svelte'
 
 const baseConfig = {
   plugins: [
     resolve(),
     cjs(),
+    json(),
     svelte({
-      customElement: true
+      customElement: true,
+      css: true
     })
   ]
 }
