@@ -13,20 +13,15 @@ export class Database {
   }
 
   async _init () {
-    const emojiBaseData = await (await fetch(this._dataSource)).json()
+    const response = await fetch(this._dataSource)
+    const emojiBaseData = await response.json()
     if (!emojiBaseData || !Array.isArray(emojiBaseData)) {
       throw new Error('Expected emojibase data, but data was in wrong format: ' + emojiBaseData)
     }
     this._idbEngine = new IndexedDBEngine(`lite-emoji-picker-${this._locale}`)
     await this._idbEngine.open()
-  }
-
-  async loadData (emojiBaseData) {
-    if (!emojiBaseData || !Array.isArray(emojiBaseData)) {
-      throw new Error('Expected emojibase data, got: ' + emojiBaseData)
-    }
-    await this._readyPromise
-    await this._idbEngine.loadData(emojiBaseData)
+    const etag = response.headers.get('etag') // TODO: use cache-control as well
+    await this._idbEngine.loadData(emojiBaseData, etag)
   }
 
   async getEmojiByGroup (group) {

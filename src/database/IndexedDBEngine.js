@@ -1,7 +1,7 @@
-import { closeDatabase, dbPromise, deleteDatabase, openDatabase } from './databaseLifecycle'
+import { closeDatabase, dbPromise, deleteDatabase, get, openDatabase } from './databaseLifecycle'
 import {
   DATA_VERSION_CURRENT,
-  INDEX_GROUP_AND_ORDER, INDEX_TOKENS,
+  INDEX_GROUP_AND_ORDER, INDEX_TOKENS, KEY_ETAG,
   KEY_VERSION, MODE_READONLY, MODE_READWRITE,
   STORE_EMOJI,
   STORE_META
@@ -18,24 +18,55 @@ export class IndexedDBEngine {
     this._db = await openDatabase(this._dbName)
   }
 
-  async loadData (emojiBaseData) {
+  async loadData (emojiBaseData, etag) {
     const transformedData = transformEmojiBaseData(emojiBaseData)
-    const dataVersion = await dbPromise(this._db, STORE_META, MODE_READONLY, (metaStore, cb) => {
-      metaStore.get(KEY_VERSION).onsuccess = e => cb(e.target.result)
-    })
-    if (dataVersion < DATA_VERSION_CURRENT) {
-      await dbPromise(this._db, [STORE_EMOJI, STORE_META], MODE_READWRITE, ([emojiStore, metaStore]) => {
-        metaStore.get(KEY_VERSION).onsuccess = e => {
-          const dataVersion = e.target.result
+    const existingEtag = await get(this._db, STORE_META, KEY_ETAG)
+    if (existingEtag === etag) {
+      return
+    }
+    await dbPromise(this._db, [STORE_EMOJI, STORE_META], MODE_READWRITE, ([emojiStore, metaStore]) => {
+
+      let existingEtag
+      let gotEtag = false
+      let existingKeys
+
+      function checkHasEtagAndKeys () {
+        if (gotEtag && existingKeys) {
+          onGetEtagAndKeys()
+        }
+      }
+
+      function onGetEtagAndKeys () {
+        if (existingEtag === etag) {
           // check again within the transaction to guard against concurrency, e.g. multiple browser tabs
-          if (dataVersion < DATA_VERSION_CURRENT) {
-            for (const data of transformedData) {
-              emojiStore.put(data)
-            }
+          return
+        }
+        if (existingKeys.length) {
+          for (const key of existingKeys) {
+            emojiStore.delete(key)
           }
         }
-      })
-    }
+        insertData()
+      }
+
+      function insertData () {
+        for (const data of transformedData) {
+          emojiStore.put(data)
+        }
+      }
+
+      metaStore.get(KEY_ETAG).onsuccess = e => {
+        existingEtag = e.target.result
+        gotEtag = true
+        checkHasEtagAndKeys()
+      }
+
+      emojiStore.getAllKeys().onsuccess = e => {
+        existingKeys = e.target.result
+        checkHasEtagAndKeys()
+      }
+    })
+
   }
 
   getEmojiByGroup (group) {
