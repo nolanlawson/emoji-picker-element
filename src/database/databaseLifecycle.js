@@ -69,3 +69,19 @@ export function closeDatabase (dbName) {
   delete openReqs[dbName]
   delete databaseCache[dbName]
 }
+
+export function deleteDatabase (dbName) {
+  return new Promise((resolve, reject) => {
+    // close any open requests
+    const openReq = openReqs[dbName]
+    if (openReq && openReq.result) {
+      openReq.result.close()
+    }
+    delete openReqs[dbName]
+    delete databaseCache[dbName]
+    const req = indexedDB.deleteDatabase(dbName)
+    req.onsuccess = () => resolve()
+    req.onerror = () => reject(req.error)
+    req.onblocked = () => console.error(`database ${dbName} blocked`)
+  })
+}

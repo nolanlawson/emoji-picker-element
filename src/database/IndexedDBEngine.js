@@ -1,7 +1,6 @@
-import { closeDatabase, dbPromise, openDatabase } from './databaseLifecycle'
+import { closeDatabase, dbPromise, deleteDatabase, openDatabase } from './databaseLifecycle'
 import {
   DATA_VERSION_CURRENT,
-  DB_NAME,
   INDEX_GROUP_AND_ORDER, INDEX_TOKENS,
   KEY_VERSION, MODE_READONLY, MODE_READWRITE,
   STORE_EMOJI,
@@ -10,11 +9,13 @@ import {
 import { transformEmojiBaseData } from './transformEmojiBaseData'
 
 export class IndexedDBEngine {
-  constructor () {
+  constructor (dbName) {
     this._db = null
-    this.readyPromise = openDatabase(DB_NAME).then(db => {
-      this._db = db
-    })
+    this._dbName = dbName
+  }
+
+  async open () {
+    this._db = await openDatabase(this._dbName)
   }
 
   async loadData (emojiBaseData) {
@@ -76,7 +77,12 @@ export class IndexedDBEngine {
   }
 
   async close () {
-    await closeDatabase(DB_NAME)
+    await closeDatabase(this._dbName)
+    this._db = null
+  }
+
+  async delete () {
+    await deleteDatabase(this._dbName)
     this._db = null
   }
 }

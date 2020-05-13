@@ -41,6 +41,7 @@
   },
   "standard": {
     "global": [
+      "fetch",
       "indexedDB",
       "IDBKeyRange"
     ]

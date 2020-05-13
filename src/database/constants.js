@@ -1,7 +1,6 @@
 export const DB_VERSION_CURRENT = 1
 export const DB_VERSION_INITIAL = 1
 export const DATA_VERSION_INITIAL = 1
-export const DB_NAME = 'lite-emoji-picker'
 export const DATA_VERSION_CURRENT = 2
 export const STORE_EMOJI = 'emoji'
 export const STORE_META = 'meta'
