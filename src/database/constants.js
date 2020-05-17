@@ -12,3 +12,6 @@ export const KEY_ETAG = 'eTag'
 export const KEY_URL = 'url'
 export const MODE_READONLY = 'readonly'
 export const MODE_READWRITE = 'readwrite'
+
+export const DEFAULT_DATA_SOURCE = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json'
+export const DEFAULT_LOCALE = 'en'

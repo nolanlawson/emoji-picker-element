@@ -3,9 +3,7 @@ import { assertNonEmptyString } from './utils/assertNonEmptyString'
 import { assertETag } from './utils/assertETag'
 import { assertEmojiBaseData } from './utils/assertEmojiBaseData'
 import { assertNumber } from './utils/assertNumber'
-
-const DEFAULT_DATA_SOURCE = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/compact.json'
-const DEFAULT_LOCALE = 'en'
+import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from './constants'
 
 export class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE } = {}) {
