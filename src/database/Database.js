@@ -4,6 +4,7 @@ import { assertETag } from './utils/assertETag'
 import { assertEmojiBaseData } from './utils/assertEmojiBaseData'
 import { assertNumber } from './utils/assertNumber'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from './constants'
+import { uniqEmoji } from './utils/uniqEmoji'
 
 export class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE } = {}) {
@@ -44,19 +45,22 @@ export class Database {
   async getEmojiByGroup (group) {
     assertNumber(group)
     await this._readyPromise
-    return this._idbEngine.getEmojiByGroup(group)
+    const emojis = await this._idbEngine.getEmojiByGroup(group)
+    return uniqEmoji(emojis)
   }
 
   async getEmojiBySearchPrefix (prefix) {
     assertNonEmptyString(prefix)
     await this._readyPromise
-    return this._idbEngine.getEmojiBySearchPrefix(prefix)
+    const emojis = await this._idbEngine.getEmojiBySearchPrefix(prefix)
+    return uniqEmoji(emojis)
   }
 
   async getEmojiByShortcode (shortcode) {
     assertNonEmptyString(shortcode)
     await this._readyPromise
-    return this._idbEngine.getEmojiByShortcode(shortcode)
+    const emojis = await this._idbEngine.getEmojiByShortcode(shortcode)
+    return uniqEmoji(emojis)
   }
 
   async getEmojiByUnicode (unicode) {

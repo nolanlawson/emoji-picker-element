@@ -8,14 +8,17 @@ import { versionsAndTestEmoji } from './bin/versionsAndTestEmoji'
 const baseConfig = {
   plugins: [
     resolve(),
-    cjs(),
+    cjs({
+      exclude: ['node_modules/lodash-es/**']
+    }),
     json(),
     replace({
       'process.env.VERSIONS_AND_TEST_EMOJI': JSON.stringify(versionsAndTestEmoji)
     }),
     svelte({
+      css: true,
       customElement: true,
-      css: true
+      dev: process.env.NODE_ENV !== 'production'
     })
   ]
 }

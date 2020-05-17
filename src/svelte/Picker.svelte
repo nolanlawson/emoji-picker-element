@@ -26,7 +26,7 @@
        aria-label={i18n.categories[currentCategory.name]}
        id="lite-emoji-picker-tab-{currentCategory.group}">
     <div class="lep-emoji-menu" role="menu">
-      {#each currentEmojis as emoji (emoji.order)}
+      {#each currentEmojis as emoji (emoji.unicode)}
         <button role="menuitem" class="lep-emoji">
           {emoji.unicode}
         </button>
@@ -93,17 +93,18 @@
   let searchText = ''
   $: database = new Database({ dataSource, locale })
   $: {
-    getEmojisByGroup(currentCategory.group).then(emojis => {
-      currentEmojis = emojis
-    })
+    (async () => {
+      currentEmojis = await getEmojisByGroup(currentCategory.group)
+    })()
   }
   $: {
-    if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
-      database.getEmojiBySearchPrefix(searchText).then(emojis => {
-        console.log('emojis', emojis)
-        currentEmojis = emojis
-      })
-    }
+    (async () => {
+      if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
+        currentEmojis = await getEmojisBySearchPrefix(searchText)
+      } else {
+        currentEmojis = await getEmojisByGroup(currentCategory.group)
+      }
+    })()
   }
 
   function filterEmojis (emojis) {
