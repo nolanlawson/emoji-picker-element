@@ -48,7 +48,9 @@
     "global": [
       "fetch",
       "indexedDB",
-      "IDBKeyRange"
+      "IDBKeyRange",
+      "requestAnimationFrame",
+      "requestIdleCallback"
     ]
   }
 }
