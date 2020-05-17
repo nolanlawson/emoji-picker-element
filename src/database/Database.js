@@ -1,14 +1,11 @@
 import { IndexedDBEngine } from './IndexedDBEngine'
 import { assertNonEmptyString } from './utils/assertNonEmptyString'
+import { assertETag } from './utils/assertETag'
+import { assertEmojiBaseData } from './utils/assertEmojiBaseData'
+import { assertNumber } from './utils/assertNumber'
 
 const DEFAULT_DATA_SOURCE = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/compact.json'
 const DEFAULT_LOCALE = 'en'
-
-function checkETag (eTag) {
-  if (!eTag) {
-    throw new Error('lite-emoji-picker expects the dataSource server to return an eTag header')
-  }
-}
 
 export class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE } = {}) {
@@ -32,26 +29,22 @@ export class Database {
         return
       }
       const eTag = headResponse.headers.get('etag')
-      checkETag(eTag)
+      assertETag(eTag)
       if (await this._idbEngine.hasData(this._dataSource, eTag)) {
         return // fast init, data is already loaded
       }
     }
     const response = await fetch(this._dataSource)
     const emojiBaseData = await response.json()
-    if (!emojiBaseData || !Array.isArray(emojiBaseData)) {
-      throw new Error('Expected emojibase data, but data was in wrong format: ' + emojiBaseData)
-    }
+    assertEmojiBaseData(emojiBaseData)
     const eTag = response.headers.get('etag')
-    checkETag(eTag)
+    assertETag(eTag)
 
     await this._idbEngine.loadData(emojiBaseData, this._dataSource, eTag)
   }
 
   async getEmojiByGroup (group) {
-    if (typeof group !== 'number') {
-      throw new Error('group must be a number, got: ' + group)
-    }
+    assertNumber(group)
     await this._readyPromise
     return this._idbEngine.getEmojiByGroup(group)
   }
