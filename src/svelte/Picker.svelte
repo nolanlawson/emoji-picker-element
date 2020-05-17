@@ -187,7 +187,6 @@
   }
 
   export {
-    categories,
     locale,
     dataSource,
     i18n
