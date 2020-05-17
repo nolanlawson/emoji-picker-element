@@ -1,6 +1,14 @@
 export function transformEmojiBaseData (emojiBaseData) {
   return emojiBaseData.map(({ annotation, emoticon, group, order, shortcodes, tags, emoji, version }) => {
-    const tokens = [].concat(shortcodes).concat(tags).map(_ => _.toLowerCase())
+    const tokens = [...new Set(
+      [
+        ...shortcodes.map(shortcode => shortcode.split('_')).flat(),
+        ...tags,
+        ...annotation.split(/\s+/),
+        emoticon
+      ].filter(Boolean)
+        .map(_ => _.toLowerCase())
+    )].sort()
     const res = {
       annotation,
       group,

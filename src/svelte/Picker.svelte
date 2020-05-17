@@ -9,6 +9,7 @@
             placeholder={i18n.search}
             autocapitalize="none"
             spellcheck="true"
+            bind:value={searchText}
     >
     <label class="lep-sr-only" for="lite-emoji-picker-search">{i18n.search}</label>
   </div>
@@ -87,21 +88,37 @@
   import { categories } from './categories'
   import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../database/constants'
   import { Database } from '../database/Database'
+  import { MIN_SEARCH_TEXT_LENGTH } from './constants'
 
   let currentEmojis = []
   let locale = DEFAULT_LOCALE
   let dataSource = DEFAULT_DATA_SOURCE
   let currentCategory = categories[0]
+  let searchText = ''
   $: database = new Database({ dataSource, locale })
   $: {
     getEmojisByGroup(currentCategory.group).then(emojis => {
       currentEmojis = emojis
     })
   }
+  $: {
+    if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
+      database.getEmojiBySearchPrefix(searchText).then(emojis => {
+        currentEmojis = emojis
+      })
+    }
+  }
+
+  function filterEmojis (emojis) {
+    return emojis.filter(emoji => emoji.version <= emojiSupportLevel)
+  }
 
   async function getEmojisByGroup(group) {
-    const emojis = await database.getEmojiByGroup(group)
-    return emojis.filter(emoji => emoji.version <= emojiSupportLevel)
+    return filterEmojis(await database.getEmojiByGroup(group))
+  }
+
+  async function getEmojisBySearchPrefix(prefix) {
+    return filterEmojis(await database.getEmojiBySearchPrefix(prefix))
   }
 
   function handleCategoryClick(category) {
