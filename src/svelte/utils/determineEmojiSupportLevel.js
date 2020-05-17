@@ -12,6 +12,8 @@ export function determineEmojiSupportLevel () {
       supported
     }
   })
-  console.log('versionsWithSupports', versionsWithSupports)
-  return versionsWithSupports.filter(_ => _.supported).map(_ => _.version).sort((a, b) => a < b ? 1 : -1)[0]
+  return versionsWithSupports
+    .filter(_ => _.supported)
+    .map(_ => _.version)
+    .sort((a, b) => a < b ? 1 : -1)[0]
 }

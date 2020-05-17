@@ -1,7 +1,9 @@
 <svelte:options tag={null} />
 <section
     class="lep-picker"
-    aria-label={i18n.regionLabel}>
+    aria-label={i18n.regionLabel}
+    bind:this={rootElement}
+>
   <div>
     <input
             id="lite-emoji-picker-search"
@@ -27,16 +29,22 @@
        id="lite-emoji-picker-tab-{currentCategory.group}">
     <div class="lep-emoji-menu" role="menu">
       {#each currentEmojis as emoji (emoji.unicode)}
-        <button role="menuitem" class="lep-emoji">
+        <button role="menuitem" class="lep-emoji" id="lep-emoji-{emoji.unicode}">
           {emoji.unicode}
         </button>
       {/each}
     </div>
   </div>
+  <div aria-hidden="true" class="lep-hidden">
+    <button class="lep-emoji lep-baseline-emoji" bind:this={baselineEmoji}>😀</button>
+  </div>
 </section>
 <style>
   .lep-picker {
     --lep-num-columns: 8;
+  }
+  .lep-picker *, .lep-picker *::before, .lep-picker *::after {
+    box-sizing: border-box;
   }
   /* via https://stackoverflow.com/a/19758620 */
   .lep-sr-only {
@@ -48,6 +56,13 @@
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     border: 0;
+  }
+  .lep-hidden {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
   }
   .lep-shown {
     display: block;
@@ -69,15 +84,20 @@
     background: none;
     box-shadow: none;
     cursor: pointer;
-    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji Mozilla",
                  "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
   }
 </style>
 <script context="module">
   import { determineEmojiSupportLevel } from './utils/determineEmojiSupportLevel'
+  // Check which emojis we know for sure aren't supported, based on Unicode version level
   export const emojiSupportLevel = determineEmojiSupportLevel()
-  console.log('emojiSupportLevel', emojiSupportLevel)
+  // determine which emojis containing ZWJ (zero width joiner) characters
+  // are supported (rendered as one glyph) rather than unsupported (rendered as two or more glyphs)
+  export const supportedZwjEmojis = new Map()
 </script>
 <script>
   import i18n from './i18n/en.json'
@@ -86,6 +106,8 @@
   import { Database } from '../database/Database'
   import { MIN_SEARCH_TEXT_LENGTH } from './constants'
   import { requestIdleCallback } from './utils/requestIdleCallback'
+  import { getTextWidth } from './utils/getTextWidth'
+  import { hasZwj } from './utils/hasZwj'
 
   let currentEmojis = []
   let locale = DEFAULT_LOCALE
@@ -93,12 +115,10 @@
   let currentCategory = categories[0]
   let rawSearchText = ''
   let searchText = ''
+  let rootElement
+  let baselineEmojiWidth
+  let baselineEmoji
   $: database = new Database({ dataSource, locale })
-  $: {
-    (async () => {
-      currentEmojis = await getEmojisByGroup(currentCategory.group)
-    })()
-  }
   $: {
     (async () => {
       if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
@@ -114,20 +134,56 @@
     })
   }
 
-  function filterEmojis (emojis) {
-    return emojis.filter(emoji => emoji.version <= emojiSupportLevel)
+  // Some emojis have their ligatures rendered as two or more consecutive emojis
+  // We want to treat these the same as unsupported emojis, so we compare their
+  // widths against the baseline widths and remove them as necessary
+  $: {
+    const zwjEmojisToCheck = currentEmojis.filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
+    if (zwjEmojisToCheck.length) {
+      // render now, check their length later
+      requestAnimationFrame(() => checkZwjSupport(zwjEmojisToCheck))
+    } else {
+      currentEmojis = currentEmojis.filter(isZwjSupported)
+    }
+  }
+
+  function checkZwjSupport(zwjEmojisToCheck) {
+    const root = rootElement.getRootNode()
+    const domNodes = zwjEmojisToCheck.map(emoji => root.getElementById(`lep-emoji-${emoji.unicode}`))
+    if (typeof baselineEmojiWidth === 'undefined') {
+      baselineEmojiWidth = getTextWidth(baselineEmoji)
+    }
+    for (let i = 0; i < domNodes.length; i++) {
+      const domNode = domNodes[i]
+      const emoji = zwjEmojisToCheck[i]
+      const emojiWidth = getTextWidth(domNode)
+      const supported = emojiWidth === baselineEmojiWidth
+      supportedZwjEmojis.set(emoji.unicode, supported)
+    }
+    currentEmojis = currentEmojis // force update
+  }
+
+  function isZwjSupported (emoji) {
+    return !hasZwj(emoji) || supportedZwjEmojis.get(emoji.unicode)
+  }
+
+  function filterEmojisByVersion (emojis) {
+    return emojis.filter(({ version }) => version <= emojiSupportLevel)
   }
 
   async function getEmojisByGroup(group) {
-    return filterEmojis(await database.getEmojiByGroup(group))
+    return filterEmojisByVersion(await database.getEmojiByGroup(group))
   }
 
   async function getEmojisBySearchPrefix(prefix) {
-    return filterEmojis(await database.getEmojiBySearchPrefix(prefix))
+    return filterEmojisByVersion(await database.getEmojiBySearchPrefix(prefix))
   }
 
   function handleCategoryClick(category) {
-    currentCategory = category
+    // throttle to avoid input delays
+    requestIdleCallback(() => {
+      currentCategory = category
+    })
   }
 
   export {
