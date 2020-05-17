@@ -26,7 +26,7 @@
        aria-label={i18n.categories[currentCategory.name]}
        id="lite-emoji-picker-tab-{currentCategory.group}">
     <ul class="lep-emoji-menu" role="menu">
-      {#each currentEmojis as emoji (emoji.unicode)}
+      {#each currentEmojis as emoji (emoji.order)}
         <li class="lep-emoji-item" role="presentation">
           <button role="menuitem" class="lep-emoji">
             {emoji.unicode}
@@ -104,6 +104,7 @@
   $: {
     if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
       database.getEmojiBySearchPrefix(searchText).then(emojis => {
+        console.log('emojis', emojis)
         currentEmojis = emojis
       })
     }

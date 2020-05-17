@@ -4,7 +4,7 @@ export function transformEmojiBaseData (emojiBaseData) {
       [
         ...shortcodes.map(shortcode => shortcode.split('_')).flat(),
         ...tags,
-        ...annotation.split(/\s+/),
+        ...annotation.split(/[\s:]+/),
         emoticon
       ].filter(Boolean)
         .map(_ => _.toLowerCase())
