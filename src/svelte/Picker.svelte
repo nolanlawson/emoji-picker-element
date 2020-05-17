@@ -25,15 +25,13 @@
   <div role="tabpanel"
        aria-label={i18n.categories[currentCategory.name]}
        id="lite-emoji-picker-tab-{currentCategory.group}">
-    <ul class="lep-emoji-menu" role="menu">
+    <div class="lep-emoji-menu" role="menu">
       {#each currentEmojis as emoji (emoji.order)}
-        <li class="lep-emoji-item" role="presentation">
-          <button role="menuitem" class="lep-emoji">
-            {emoji.unicode}
-          </button>
-        </li>
+        <button role="menuitem" class="lep-emoji">
+          {emoji.unicode}
+        </button>
       {/each}
-    </ul>
+    </div>
   </div>
 </section>
 <style>
@@ -57,17 +55,15 @@
   .lep-not-shown {
     display: none;
   }
-  ul.lep-emoji-menu {
-    list-style: none;
+  .lep-emoji-menu {
     display: grid;
     grid-template-columns: repeat(var(--lep-num-columns), 1fr);
     justify-content: center;
     align-items: center;
   }
-  li.lep-emoji-item {
-    display: flex;
-  }
   button.lep-emoji {
+    margin: 0;
+    padding: 0;
     font-size: 1.5rem;
     border: none;
     background: none;
