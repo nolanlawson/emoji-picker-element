@@ -1,5 +1,5 @@
 import { migrations } from './migrations'
-import { DB_VERSION_CURRENT, KEY_VERSION, MODE_READONLY, STORE_META } from './constants'
+import { DB_VERSION_CURRENT, MODE_READONLY } from './constants'
 
 const openReqs = {}
 const databaseCache = {}
@@ -59,7 +59,20 @@ export async function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
 
 export function get (db, storeName, key) {
   return dbPromise(db, storeName, MODE_READONLY, (store, cb) => {
-    store.get(key).onsuccess = e => cb(e.target.result)
+    if (Array.isArray(key)) {
+      const res = Array(key.length)
+      let todo = 0
+      for (let i = 0; i < key.length; i++) {
+        store.get(key[i]).onsuccess = e => {
+          res[i] = e.target.result
+          if (++todo === key.length) {
+            cb(res)
+          }
+        }
+      }
+    } else {
+      store.get(key).onsuccess = e => cb(e.target.result)
+    }
   })
 }
 

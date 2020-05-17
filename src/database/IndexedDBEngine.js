@@ -1,8 +1,7 @@
 import { closeDatabase, dbPromise, deleteDatabase, get, openDatabase } from './databaseLifecycle'
 import {
-  DATA_VERSION_CURRENT,
-  INDEX_GROUP_AND_ORDER, INDEX_TOKENS, KEY_ETAG,
-  KEY_VERSION, MODE_READONLY, MODE_READWRITE,
+  INDEX_GROUP_AND_ORDER, INDEX_TOKENS, KEY_ETAG, KEY_URL,
+  MODE_READONLY, MODE_READWRITE,
   STORE_EMOJI,
   STORE_META
 } from './constants'
@@ -18,31 +17,40 @@ export class IndexedDBEngine {
     this._db = await openDatabase(this._dbName)
   }
 
-  async loadData (emojiBaseData, etag) {
+  async isEmpty () {
+    return !(await get(this._db, STORE_META, KEY_URL))
+  }
+
+  async hasData (url, eTag) {
+    const [oldETag, oldUrl] = await get(this._db, STORE_META, [KEY_ETAG, KEY_URL])
+    return (oldETag === eTag && oldUrl === url)
+  }
+
+  async loadData (emojiBaseData, url, eTag) {
     const transformedData = transformEmojiBaseData(emojiBaseData)
-    const existingEtag = await get(this._db, STORE_META, KEY_ETAG)
-    if (existingEtag === etag) {
+    const [oldETag, oldUrl] = await get(this._db, STORE_META, [KEY_ETAG, KEY_URL])
+    if (oldETag === eTag && oldUrl === url) {
       return
     }
     await dbPromise(this._db, [STORE_EMOJI, STORE_META], MODE_READWRITE, ([emojiStore, metaStore]) => {
+      let oldETag
+      let oldUrl
+      let oldKeys
+      let todo = 0
 
-      let existingEtag
-      let gotEtag = false
-      let existingKeys
-
-      function checkHasEtagAndKeys () {
-        if (gotEtag && existingKeys) {
-          onGetEtagAndKeys()
+      function checkFetched () {
+        if (++todo === 3) {
+          onFetched()
         }
       }
 
-      function onGetEtagAndKeys () {
-        if (existingEtag === etag) {
+      function onFetched () {
+        if (oldETag === eTag && oldUrl === url) {
           // check again within the transaction to guard against concurrency, e.g. multiple browser tabs
           return
         }
-        if (existingKeys.length) {
-          for (const key of existingKeys) {
+        if (oldKeys.length) {
+          for (const key of oldKeys) {
             emojiStore.delete(key)
           }
         }
@@ -53,20 +61,25 @@ export class IndexedDBEngine {
         for (const data of transformedData) {
           emojiStore.put(data)
         }
+        metaStore.put(eTag, KEY_ETAG)
+        metaStore.put(url, KEY_URL)
       }
 
       metaStore.get(KEY_ETAG).onsuccess = e => {
-        existingEtag = e.target.result
-        gotEtag = true
-        checkHasEtagAndKeys()
+        oldETag = e.target.result
+        checkFetched()
+      }
+
+      metaStore.get(KEY_URL).onsuccess = e => {
+        oldUrl = e.target.result
+        checkFetched()
       }
 
       emojiStore.getAllKeys().onsuccess = e => {
-        existingKeys = e.target.result
-        checkHasEtagAndKeys()
+        oldKeys = e.target.result
+        checkFetched()
       }
     })
-
   }
 
   getEmojiByGroup (group) {
