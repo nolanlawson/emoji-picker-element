@@ -3,6 +3,7 @@
     class="lep-picker"
     aria-label={i18n.regionLabel}
     bind:this={rootElement}
+    style="--lep-num-columns: {numColumns};"
 >
   <div>
     <input
@@ -18,6 +19,7 @@
   <div role="tablist" aria-label={i18n.categoriesLabel}>
     {#each categories as category (category.group)}
       <button role="tab"
+              class="lep-button-reset"
               aria-controls="lite-emoji-picker-tab-{category.group}"
               on:click={() => handleCategoryClick(category)}>
         {i18n.categories[category.name]}
@@ -29,7 +31,9 @@
        id="lite-emoji-picker-tab-{currentCategory.group}">
     <div class="lep-emoji-menu" role="menu">
       {#each currentEmojis as emoji (emoji.unicode)}
-        <button role="menuitem" class="lep-emoji" id="lep-emoji-{emoji.unicode}">
+        <button role="menuitem"
+                class="lep-emoji lep-button-reset"
+                id="lep-emoji-{emoji.unicode}">
           {emoji.unicode}
         </button>
       {/each}
@@ -40,9 +44,6 @@
   </div>
 </section>
 <style>
-  .lep-picker {
-    --lep-num-columns: 8;
-  }
   .lep-picker *, .lep-picker *::before, .lep-picker *::after {
     box-sizing: border-box;
   }
@@ -76,19 +77,21 @@
     justify-content: center;
     align-items: center;
   }
-  button.lep-emoji {
-    margin: 0;
-    padding: 0;
+  .lep-emoji {
     font-size: 1.5rem;
-    border: none;
-    background: none;
-    box-shadow: none;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji Mozilla",
                  "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
+  }
+  button.lep-button-reset {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    cursor: pointer;
   }
 </style>
 <script context="module">
@@ -108,7 +111,9 @@
   import { requestIdleCallback } from './utils/requestIdleCallback'
   import { getTextWidth } from './utils/getTextWidth'
   import { hasZwj } from './utils/hasZwj'
+  import { DEFAULT_NUM_COLUMNS } from './constants'
 
+  let numColumns = DEFAULT_NUM_COLUMNS
   let currentEmojis = []
   let locale = DEFAULT_LOCALE
   let dataSource = DEFAULT_DATA_SOURCE
@@ -189,6 +194,7 @@
   export {
     locale,
     dataSource,
-    i18n
+    i18n,
+    numColumns
   }
 </script>

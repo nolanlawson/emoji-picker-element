@@ -30,6 +30,7 @@ document.body.appendChild(new Picker())
 | `locale` | String | `"en"` | Locale, should map to the locales supported by `emojibase-data` |
 | `dataSource` | String | `"https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json"` | Where to fetch the emoji data from. Note that `lite-emoji-picker` requires the full `data.json`, not `compact.json`. |
 | `i18n` | Object | See below | Strings to use for i18n in the Picker itself, i.e. the text and `aria-label`s.
+| `numColumns` | number | `8` | Number of emoji to show per row. |
 
 ## Design decisions
 
