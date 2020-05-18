@@ -1,0 +1,51 @@
+*, *::before, *::after {
+    .lep-picker & {
+        box-sizing: border-box;
+    }
+}
+// via https://stackoverflow.com/a/19758620
+.lep-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+.lep-hidden {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+}
+.lep-shown {
+    display: block;
+}
+.lep-not-shown {
+    display: none;
+}
+.lep-emoji-menu {
+    display: grid;
+    grid-template-columns: repeat(var(--lep-num-columns), 1fr);
+    justify-content: center;
+    align-items: center;
+}
+.lep-emoji {
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji Mozilla",
+    "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
+}
+button.lep-button-reset {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    cursor: pointer;
+}

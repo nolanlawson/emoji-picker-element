@@ -1,0 +1,45 @@
+<svelte:options tag={null} />
+<section
+  class="lep-picker"
+  aria-label={i18n.regionLabel}
+  bind:this={rootElement}
+  style="--lep-num-columns: {numColumns};"
+>
+  <div>
+    <input
+      id="lite-emoji-picker-search"
+      type="text"
+      placeholder={i18n.search}
+      autocapitalize="none"
+      spellcheck="true"
+      bind:value={rawSearchText}
+    >
+    <label class="lep-sr-only" for="lite-emoji-picker-search">{i18n.search}</label>
+  </div>
+  <div role="tablist" aria-label={i18n.categoriesLabel}>
+    {#each categories as category (category.group)}
+    <button role="tab"
+            class="lep-button-reset"
+            aria-controls="lite-emoji-picker-tab-{category.group}"
+            on:click={() => handleCategoryClick(category)}>
+    {i18n.categories[category.name]}
+    </button>
+    {/each}
+  </div>
+  <div role="tabpanel"
+       aria-label={i18n.categories[currentCategory.name]}
+       id="lite-emoji-picker-tab-{currentCategory.group}">
+    <div class="lep-emoji-menu" role="menu">
+      {#each currentEmojis as emoji (emoji.unicode)}
+      <button role="menuitem"
+              class="lep-emoji lep-button-reset"
+              id="lep-emoji-{emoji.unicode}">
+        {emoji.unicode}
+      </button>
+      {/each}
+    </div>
+  </div>
+  <div aria-hidden="true" class="lep-hidden">
+    <button class="lep-emoji lep-baseline-emoji" bind:this={baselineEmoji}>😀</button>
+  </div>
+</section>

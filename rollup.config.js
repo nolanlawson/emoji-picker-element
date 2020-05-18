@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import replace from '@rollup/plugin-replace'
 import svelte from 'rollup-plugin-svelte'
+import autoPreprocess from 'svelte-preprocess'
 import { versionsAndTestEmoji } from './bin/versionsAndTestEmoji'
 
 const baseConfig = {
@@ -18,7 +19,8 @@ const baseConfig = {
     svelte({
       css: true,
       customElement: true,
-      dev: process.env.NODE_ENV !== 'production'
+      dev: process.env.NODE_ENV !== 'production',
+      preprocess: autoPreprocess()
     })
   ]
 }

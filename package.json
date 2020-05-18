@@ -39,10 +39,12 @@
     "esm": "^3.2.25",
     "if-emoji": "^0.1.0",
     "lodash-es": "^4.17.15",
+    "node-sass": "^4.14.1",
     "rollup": "^2.8.2",
     "rollup-plugin-svelte": "^5.2.1",
     "standard": "^14.3.3",
-    "svelte": "^3.22.2"
+    "svelte": "^3.22.2",
+    "svelte-preprocess": "^3.7.4"
   },
   "standard": {
     "global": [
