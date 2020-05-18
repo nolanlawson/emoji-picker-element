@@ -1,8 +1,11 @@
-*, *::before, *::after {
-    .lep-picker & {
+.lep-picker {
+    & *, *::before, *::after {
         box-sizing: border-box;
     }
+
+    contain: content;
 }
+
 // via https://stackoverflow.com/a/19758620
 .lep-sr-only {
     position: absolute;
