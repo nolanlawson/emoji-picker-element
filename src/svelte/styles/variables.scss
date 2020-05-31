@@ -1,17 +1,20 @@
 @mixin vars($dark) {
-  $border: #999 !default;
+  $border: #e0e0e0 !default;
   $bg: #fff !default;
   $placeholder: #999 !default;
   $outline: rgb(43, 110, 180) !default; // Chrome default focus color
+  $input-border: #999 !default;
 
   @if $dark {
-    $border: #ccc;
-    $bg: #111;
+    $border: #444;
+    $bg: #222;
     $placeholder: #ccc;
     $outline: #fff;
+    $input-border: #ccc;
   }
 
-  --lep-input-border-color: #{$border};
+  --lep-border-color: #{$border};
+  --lep-input-border-color: #{$input-border};
   --lep-background-color: #{$bg};
   --lep-placeholder-color: #{$placeholder};
   --lep-outline-color: #{$outline};

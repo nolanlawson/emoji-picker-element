@@ -22,6 +22,7 @@ let rootElement
 let baselineEmojiWidth
 let baselineEmoji
 let darkMode = 'auto'
+let resolvedDarkMode // eslint-disable-line no-unused-vars
 
 $: resolvedDarkMode = darkMode === 'auto' ? matchMedia('(prefers-color-scheme: dark)').matches : !!darkMode
 

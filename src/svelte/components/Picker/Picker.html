@@ -5,17 +5,21 @@
   bind:this={rootElement}
   style="--lep-num-columns: {numColumns};"
 >
-  <div>
-    <input
-      id="lep-search"
-      class="lep-search"
-      type="text"
-      placeholder={i18n.search}
-      autocapitalize="none"
-      spellcheck="true"
-      bind:value={rawSearchText}
-    >
-    <label class="lep-sr-only" for="lep-search">{i18n.search}</label>
+  <div class="lep-search-row">
+    <div class="lep-search-wrapper">
+      <input
+        id="lep-search"
+        class="lep-search"
+        type="text"
+        placeholder={i18n.search}
+        autocapitalize="none"
+        spellcheck="true"
+        bind:value={rawSearchText}
+      >
+      <label class="lep-sr-only" for="lep-search">{i18n.search}</label>
+    </div>
+    <button class="lep-emoji lep-skintone-button">👍</button>
+
   </div>
   <div class="lep-nav" role="tablist" aria-label={i18n.categoriesLabel}>
     {#each categories as category (category.group)}
@@ -23,6 +27,7 @@
             class="lep-nav-button lep-emoji"
             aria-controls="lep-tab-{category.group}"
             aria-label={i18n.categories[category.name]}
+            aria-selected={currentCategory.group === category.group}
             title={i18n.categories[category.name]}
             on:click={() => handleCategoryClick(category)}>
       {category.emoji}

@@ -4,7 +4,7 @@ export const categories = [
   { group: 1, emoji: '👋', name: 'people-body' },
   { group: 3, emoji: '🐱', name: 'animals-nature' },
   { group: 4, emoji: '🍎', name: 'food-drink' },
-  { group: 5, emoji: '🚗', name: 'travel-places' },
+  { group: 5, emoji: '🏠️', name: 'travel-places' },
   { group: 6, emoji: '⚽', name: 'activities' },
   { group: 7, emoji: '✏', name: 'objects' },
   { group: 8, emoji: '✅', name: 'symbols' },
