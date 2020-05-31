@@ -2,9 +2,13 @@ import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import replace from '@rollup/plugin-replace'
-import svelte from 'rollup-plugin-svelte'
+import mainSvelte from 'rollup-plugin-svelte'
+import hotSvelte from 'rollup-plugin-svelte-hot'
 import autoPreprocess from 'svelte-preprocess'
 import { versionsAndTestEmoji } from './bin/versionsAndTestEmoji'
+
+const dev = process.env.NODE_ENV !== 'production'
+const svelte = dev ? hotSvelte : mainSvelte
 
 const baseConfig = {
   plugins: [
@@ -19,7 +23,7 @@ const baseConfig = {
     svelte({
       css: true,
       customElement: true,
-      dev: process.env.NODE_ENV !== 'production',
+      dev,
       preprocess: autoPreprocess()
     })
   ]
@@ -38,6 +42,7 @@ export default formats.map(format => (entryPoints.map(({ input, output }) => ({
   input,
   output: {
     format,
-    file: `dist/${format}/${output}`
+    file: `dist/${format}/${output}`,
+    sourcemap: dev
   }
 })))).flat()
