@@ -1,9 +1,12 @@
 .lep-picker {
-    & *, *::before, *::after {
+    &, &::before, &::after, & *, *::before, *::after {
         box-sizing: border-box;
     }
 
     contain: content;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
 }
 
 // via https://stackoverflow.com/a/19758620
@@ -35,14 +38,25 @@
     grid-template-columns: repeat(var(--lep-num-columns), 1fr);
     justify-content: center;
     align-items: center;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0;
+    flex: 1;
+    grid-row-gap: 0.5rem;
 }
 .lep-emoji {
-    font-size: 1.5rem;
+    font-size: 1.375rem;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji Mozilla",
     "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
+}
+
+.lep-tabpanel {
+    min-height: 0;
+    flex: 1;
+    display: flex;
 }
 button.lep-button-reset {
     margin: 0;

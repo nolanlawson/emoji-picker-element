@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Ad-hoc test</title>
+  <style>
+    .container {
+      height: 300px;
+      width: 380px;
+      overflow: hidden;
+    }
+  </style>
 </head>
 <body>
   <h1>Ad-hoc test</h1>
+  <div class="container"></div>
   <script type="module">
       import * as liteEmojiPicker from '../dist/es/index.js'
 
@@ -16,7 +24,7 @@
 
         customElements.define('lite-emoji-picker', liteEmojiPicker.Picker)
         const picker = document.createElement('lite-emoji-picker')
-        document.body.appendChild(picker)
+        document.querySelector('.container').appendChild(picker)
       })()
   </script>
 </body>
