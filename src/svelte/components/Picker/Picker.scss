@@ -38,7 +38,6 @@
 button.lep-nav-button.lep-emoji {
   flex: 1;
   padding: 0.5rem 0;
-  outline-offset: -1px; // fix focus ring getting cropped
 }
 
 .lep-tabpanel {
@@ -49,7 +48,6 @@ button.lep-nav-button.lep-emoji {
 
 button.lep-tabpanel-emoji.lep-emoji {
   padding: 0.5rem 0;
-  outline-offset: -1px; // fix focus ring getting cropped
 }
 
 input.lep-search {
