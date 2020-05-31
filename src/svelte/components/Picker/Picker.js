@@ -21,6 +21,10 @@ let searchText = ''
 let rootElement
 let baselineEmojiWidth
 let baselineEmoji
+let darkMode = 'auto'
+
+$: resolvedDarkMode = darkMode === 'auto' ? matchMedia('(prefers-color-scheme: dark)').matches : !!darkMode
+
 $: database = new Database({ dataSource, locale })
 $: {
   (async () => {
@@ -95,5 +99,6 @@ export {
   locale,
   dataSource,
   i18n,
-  numColumns
+  numColumns,
+  darkMode
 }

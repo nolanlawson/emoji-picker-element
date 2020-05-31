@@ -52,6 +52,7 @@
       "fetch",
       "indexedDB",
       "IDBKeyRange",
+      "matchMedia",
       "requestAnimationFrame",
       "requestIdleCallback"
     ]

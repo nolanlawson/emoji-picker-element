@@ -3,8 +3,25 @@
     box-sizing: border-box;
   }
 
-  --lep-input-border-color: #999;
-  --lep-background-color: #fff;
+  $border: #999;
+  $bg: #fff;
+  $placeholder: #999;
+  --lep-input-border-color: #{$border};
+  --lep-background-color: #{$bg};
+  --lep-placeholder-color: #{$placeholder};
+  --lep-hover-background-color: #{darken($bg, 15%)};
+  --lep-active-background-color: #{darken($bg, 10%)};
+
+  &.lep-dark {
+    $border: #ccc;
+    $bg: #111;
+    $placeholder: #ccc;
+    --lep-input-border-color: #{$border};
+    --lep-background-color: #{$bg};
+    --lep-placeholder-color: #{$placeholder};
+    --lep-hover-background-color: #{lighten($bg, 15%)};
+    --lep-active-background-color: #{lighten($bg, 20%)};
+  }
 
   contain: content;
   display: flex;
@@ -32,9 +49,11 @@
   top: 0;
   pointer-events: none;
 }
+
 .lep-shown {
   display: block;
 }
+
 .lep-not-shown {
   display: none;
 }

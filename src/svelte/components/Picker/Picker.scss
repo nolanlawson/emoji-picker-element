@@ -1,47 +1,64 @@
 @import '../../styles/global.scss';
 
 .lep-emoji-menu {
-    display: grid;
-    grid-template-columns: repeat(var(--lep-num-columns), 1fr);
-    justify-content: space-between;
-    align-items: center;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch; // fix iOS scrolling
-    will-change: transform; // fix "repaints on scroll" warning in Chrome https://crbug.com/514303
-    min-height: 0;
-    flex: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--lep-num-columns), 1fr);
+  justify-content: space-between;
+  align-items: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; // fix iOS scrolling
+  will-change: transform; // fix "repaints on scroll" warning in Chrome https://crbug.com/514303
+  min-height: 0;
+  flex: 1;
 }
+
 .lep-emoji {
-    font-size: 1.375rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji Mozilla",
-    "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
+  font-size: 1.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji Mozilla",
+  "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
+
+  border-radius: 100%;
+
+  &:hover {
+    background-color: var(--lep-hover-background-color);
+  }
+
+  &:active {
+    background-color: var(--lep-active-background-color);
+  }
 }
 
 .lep-nav {
-    display: flex;
+  display: flex;
 }
+
 button.lep-nav-button.lep-emoji {
-    flex: 1;
-    padding: 0.5rem 0;
-    outline-offset: -1px; // fix focus ring getting cropped
+  flex: 1;
+  padding: 0.5rem 0;
+  outline-offset: -1px; // fix focus ring getting cropped
 }
 
 .lep-tabpanel {
-    min-height: 0;
-    flex: 1;
-    display: flex;
+  min-height: 0;
+  flex: 1;
+  display: flex;
 }
 
 button.lep-tabpanel-emoji.lep-emoji {
-    padding: 0.5rem 0;
-    outline-offset: -1px; // fix focus ring getting cropped
+  padding: 0.5rem 0;
+  outline-offset: -1px; // fix focus ring getting cropped
 }
 
 input.lep-search {
-    padding: 0.25rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--lep-input-border-color);
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--lep-input-border-color);
+  background-color: var(--lep-background-color);
+
+  &::placeholder {
+    color: var(--lep-placeholder-color);
+  }
 }
