@@ -7,33 +7,36 @@
 >
   <div>
     <input
-      id="lite-emoji-picker-search"
+      id="lep-search"
+      class="lep-search"
       type="text"
       placeholder={i18n.search}
       autocapitalize="none"
       spellcheck="true"
       bind:value={rawSearchText}
     >
-    <label class="lep-sr-only" for="lite-emoji-picker-search">{i18n.search}</label>
+    <label class="lep-sr-only" for="lep-search">{i18n.search}</label>
   </div>
-  <div role="tablist" aria-label={i18n.categoriesLabel}>
+  <div class="lep-nav" role="tablist" aria-label={i18n.categoriesLabel}>
     {#each categories as category (category.group)}
     <button role="tab"
-            class="lep-button-reset"
-            aria-controls="lite-emoji-picker-tab-{category.group}"
+            class="lep-nav-button lep-emoji"
+            aria-controls="lep-tab-{category.group}"
+            aria-label={i18n.categories[category.name]}
+            title={i18n.categories[category.name]}
             on:click={() => handleCategoryClick(category)}>
-    {i18n.categories[category.name]}
+      {category.emoji}
     </button>
     {/each}
   </div>
   <div role="tabpanel"
        class="lep-tabpanel"
        aria-label={i18n.categories[currentCategory.name]}
-       id="lite-emoji-picker-tab-{currentCategory.group}">
+       id="lep-tab-{currentCategory.group}">
     <div class="lep-emoji-menu" role="menu">
       {#each currentEmojis as emoji (emoji.unicode)}
       <button role="menuitem"
-              class="lep-emoji lep-button-reset"
+              class="lep-tabpanel-emoji lep-emoji"
               id="lep-emoji-{emoji.unicode}">
         {emoji.unicode}
       </button>
