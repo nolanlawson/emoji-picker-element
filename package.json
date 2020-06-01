@@ -37,7 +37,9 @@
     "@rollup/plugin-replace": "^2.3.2",
     "emojibase-data": "^5.0.1",
     "esm": "^3.2.25",
+    "husky": "^4.2.5",
     "if-emoji": "^0.1.0",
+    "lint-staged": "^10.2.7",
     "lodash-es": "^4.17.15",
     "rollup": "^2.8.2",
     "rollup-plugin-svelte": "^5.2.1",
@@ -56,5 +58,13 @@
       "requestAnimationFrame",
       "requestIdleCallback"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "standard --fix"
   }
 }
