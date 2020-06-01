@@ -5,6 +5,7 @@
   $outline: #999;
   $input-border: #999;
   $indicator: #385ac1;
+  $input-color: #111;
 
   @if $dark {
     $border: #444;
@@ -12,7 +13,8 @@
     $placeholder: #ccc;
     $outline: #fff;
     $input-border: #ccc;
-    $indicator: #253a84;
+    $indicator: #5373ec;
+    $input-color: #efefef;
   }
 
   --lep-border-color: #{$border};
@@ -23,6 +25,7 @@
   --lep-indicator-color: #{$indicator};
   --lep-indicator-height: 3px;
   --lep-outline-size: 2px;
+  --lep-input-font-color: #{$input-color};
 
   @if $dark {
     --lep-hover-background-color: #{lighten($bg, 15%)};

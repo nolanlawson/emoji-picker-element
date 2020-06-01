@@ -23,12 +23,12 @@ let rootElement
 let baselineEmoji
 let darkMode = 'auto'
 let resolvedDarkMode // eslint-disable-line no-unused-vars
+let placeholders = [] // eslint-disable-line no-unused-vars
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
-
-$: resolvedDarkMode = darkMode === 'auto' ? matchMedia('(prefers-color-scheme: dark)').matches : !!darkMode
-
 $: database = new Database({ dataSource, locale })
+$: placeholders = new Array(numColumns - (currentEmojis.length % numColumns)).fill()
+$: resolvedDarkMode = darkMode === 'auto' ? matchMedia('(prefers-color-scheme: dark)').matches : !!darkMode
 $: {
   (async () => {
     if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {

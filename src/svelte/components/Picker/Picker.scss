@@ -1,16 +1,29 @@
 @import '../../styles/global.scss';
 
-.lep-emoji-menu {
-  display: grid;
-  grid-template-columns: repeat(var(--lep-num-columns), auto);
-  justify-content: space-around;
-  align-items: center;
+//
+// tab panel
+//
+
+.lep-tabpanel {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; // fix iOS scrolling
   will-change: transform; // fix "repaints on scroll" warning in Chrome https://crbug.com/514303
   min-height: 0;
   flex: 1;
+  contain: content;
 }
+
+.lep-emoji-menu {
+  display: grid;
+  grid-template-columns: repeat(var(--lep-num-columns), auto);
+  justify-content: space-around;
+  align-items: flex-start;
+  width: 100%;
+}
+
+//
+// emoji
+//
 
 $emojiSize: 1.375rem;
 $emojiPadding: 0.5rem;
@@ -38,6 +51,10 @@ button.lep-emoji, .lep-emoji {
   }
 }
 
+//
+// nav
+//
+
 .lep-nav {
   display: grid;
   justify-content: space-between;
@@ -63,12 +80,9 @@ button.lep-emoji, .lep-emoji {
   background-color: var(--lep-indicator-color);
 }
 
-.lep-tabpanel {
-  min-height: 0;
-  flex: 1;
-  display: flex;
-  contain: content;
-}
+//
+// search
+//
 
 .lep-search-row {
   display: flex;
@@ -87,7 +101,10 @@ input.lep-search {
   border-radius: 0.5rem;
   border: 1px solid var(--lep-input-border-color);
   background-color: var(--lep-background-color);
+  color: var(--lep-input-font-color);
   width: 100%;
+  font-size: 1rem;
+  line-height: 1.5;
 
   &::placeholder {
     color: var(--lep-placeholder-color);

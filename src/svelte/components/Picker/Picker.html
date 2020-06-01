@@ -42,21 +42,26 @@
   <div class="lep-indicators"
        aria-hidden="true">
     {#each categories as category (category.group)}
-      <div class="lep-indicator {currentCategory.group === category.group ? '' : 'lep-hidden'}"></div>
+      <div class="lep-indicator {currentCategory.group === category.group ? '' : 'lep-hidden'}">
+      </div>
     {/each}
   </div>
-  <div role="tabpanel"
-       class="lep-tabpanel"
+  <div class="lep-tabpanel"
+       role="tabpanel"
        aria-label={i18n.categories[currentCategory.name]}
        id="lep-tab-{currentCategory.group}">
-    <div class="lep-emoji-menu" role="menu">
-      {#each currentEmojis as emoji (emoji.unicode)}
-        <button role="menuitem"
-                class="lep-tabpanel-emoji lep-emoji"
-                id="lep-emoji-{emoji.unicode}">
-          {emoji.unicode}
-        </button>
-      {/each}
+      <div class="lep-emoji-menu" role="menu">
+        {#each currentEmojis as emoji (emoji.unicode)}
+          <button role="menuitem"
+                  class="lep-tabpanel-emoji lep-emoji"
+                  id="lep-emoji-{emoji.unicode}">
+            {emoji.unicode}
+          </button>
+        {/each}
+        <!-- Render placeholders to make sure that the grid spacing looks correct. There may be a better way. -->
+        {#each placeholders as placeholder}
+          <div class="lep-emoji lep-hidden"></div>
+        {/each}
     </div>
   </div>
   <div aria-hidden="true" class="lep-hidden lep-abs-pos">
