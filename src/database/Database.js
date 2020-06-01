@@ -1,10 +1,12 @@
 import { IndexedDBEngine } from './IndexedDBEngine'
 import { assertNonEmptyString } from './utils/assertNonEmptyString'
-import { assertETag } from './utils/assertETag'
+import { warnETag } from './utils/warnETag'
 import { assertEmojiBaseData } from './utils/assertEmojiBaseData'
 import { assertNumber } from './utils/assertNumber'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from './constants'
 import { uniqEmoji } from './utils/uniqEmoji'
+import { jsonChecksum } from '../svelte/utils/jsonChecksum'
+import { warnOffline } from './utils/warnOffline'
 
 export class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE } = {}) {
@@ -17,29 +19,50 @@ export class Database {
   async _init () {
     this._idbEngine = new IndexedDBEngine(`lite-emoji-picker-${this._locale}`)
     await this._idbEngine.open()
-    if (!(await this._idbEngine.isEmpty())) {
+    const url = this._dataSource
+    const isEmpty = await this._idbEngine.isEmpty()
+    if (!isEmpty) {
       // just do a simple HEAD request first to see if the eTags match
       let headResponse
       try {
-        headResponse = await fetch(this._dataSource, { method: 'HEAD' })
-      } catch (e) {
-        // offline fallback, just keep current data
-        console.warn('lite-emoji-picker: falling back to offline mode', e)
+        headResponse = await fetch(url, { method: 'HEAD' })
+      } catch (e) { // offline fallback
+        warnOffline(e)
         return
       }
       const eTag = headResponse.headers.get('etag')
-      assertETag(eTag)
-      if (await this._idbEngine.hasData(this._dataSource, eTag)) {
+      warnETag(eTag)
+      if (eTag && await this._idbEngine.hasData(url, eTag)) {
+        console.log('Database already populated')
         return // fast init, data is already loaded
       }
     }
-    const response = await fetch(this._dataSource)
+    let response
+    try {
+      response = await fetch(this._dataSource)
+    } catch (e) { // offline fallback
+      if (!isEmpty) {
+        warnOffline(e)
+        return
+      }
+      throw e
+    }
     const emojiBaseData = await response.json()
     assertEmojiBaseData(emojiBaseData)
-    const eTag = response.headers.get('etag')
-    assertETag(eTag)
+    let eTag = response.headers.get('etag')
+    warnETag(eTag)
+    if (!eTag) {
+      // GNOME Web returns an empty eTag for cross-origin HEAD requests, even when
+      // Access-Control-Expose-Headers:* is set. So as a fallback, compute an ETag
+      // from the object itself.
+      eTag = await jsonChecksum(emojiBaseData)
+    }
+    if (!isEmpty && await this._idbEngine.hasData(url, eTag)) {
+      console.log('Database already populated')
+      return // data already loaded
+    }
 
-    await this._idbEngine.loadData(emojiBaseData, this._dataSource, eTag)
+    await this._idbEngine.loadData(emojiBaseData, url, eTag)
   }
 
   async getEmojiByGroup (group) {

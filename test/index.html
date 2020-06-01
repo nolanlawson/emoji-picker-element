@@ -18,9 +18,7 @@
       import * as liteEmojiPicker from '../dist/es/index.js'
 
       (async () => {
-        const database = new liteEmojiPicker.Database()
         window.liteEmojiPicker = liteEmojiPicker
-        window.database = database
 
         customElements.define('lite-emoji-picker', liteEmojiPicker.Picker)
         const picker = document.createElement('lite-emoji-picker')

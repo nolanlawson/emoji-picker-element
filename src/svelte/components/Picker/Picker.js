@@ -62,7 +62,9 @@ function checkZwjSupport (zwjEmojisToCheck) {
   for (const emoji of zwjEmojisToCheck) {
     const domNode = rootNode.getElementById(`lep-emoji-${emoji.unicode}`)
     const emojiWidth = calculateTextWidth(domNode)
-    const supported = emojiWidth === getBaselineEmojiWidth()
+    const baselineEmojiWidth = getBaselineEmojiWidth()
+    // compare sizes rounded to 1/10 of a pixel to avoid issues with slightly different measurements (e.g. GNOME Web)
+    const supported = emojiWidth.toFixed(1) === baselineEmojiWidth.toFixed(1)
     supportedZwjEmojis.set(emoji.unicode, supported)
     if (!supported) {
       console.log('Filtered unsupported emoji', emoji.unicode)
