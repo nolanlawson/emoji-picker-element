@@ -2,8 +2,8 @@
 
 .lep-emoji-menu {
   display: grid;
-  grid-template-columns: repeat(var(--lep-num-columns), 1fr);
-  justify-content: space-between;
+  grid-template-columns: repeat(var(--lep-num-columns), auto);
+  justify-content: space-around;
   align-items: center;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; // fix iOS scrolling
@@ -12,13 +12,20 @@
   flex: 1;
 }
 
-button.lep-emoji {
-  padding: 0.5rem 0.5rem;
-  font-size: 1.375rem;
+$emojiSize: 1.375rem;
+$emojiPadding: 0.5rem;
+
+button.lep-emoji, .lep-emoji {
+  padding: $emojiPadding;
+  font-size: $emojiSize;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 100%;
+  height: $emojiSize + (2 * $emojiPadding);
+  width: $emojiSize + (2 * $emojiPadding);
+  overflow: hidden;
+
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji Mozilla",
   "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
 
@@ -32,26 +39,28 @@ button.lep-emoji {
 }
 
 .lep-nav {
-  display: flex;
-  border-bottom: 1px solid var(--lep-border-color);
+  display: grid;
+  justify-content: space-between;
+  align-items: center;
   contain: content;
 }
 
-.lep-nav-item {
+.lep-nav-button {
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.lep-indicators {
+  display: flex;
+  border-bottom: 1px solid var(--lep-border-color);
 }
 
 .lep-indicator {
+  flex: 1;
   height: var(--lep-indicator-height);
   width: 100%;
   background-color: var(--lep-indicator-color);
-}
-
-button.lep-nav-button.lep-emoji {
-  flex: 1;
-  padding: 0.5rem 0;
 }
 
 .lep-tabpanel {

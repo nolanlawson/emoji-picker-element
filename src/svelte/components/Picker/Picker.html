@@ -21,21 +21,28 @@
     <button class="lep-emoji lep-skintone-button">👍</button>
 
   </div>
-  <div class="lep-nav" role="tablist" aria-label={i18n.categoriesLabel}>
+  <div class="lep-nav"
+       role="tablist"
+       style="grid-template-columns: repeat({categories.length}, 1fr);"
+       aria-label={i18n.categoriesLabel}>
     {#each categories as category (category.group)}
-      <div class="lep-nav-item">
-        <button role="tab"
-                class="lep-nav-button lep-emoji"
-                aria-controls="lep-tab-{category.group}"
-                aria-label={i18n.categories[category.name]}
-                aria-selected={currentCategory.group === category.group}
-                title={i18n.categories[category.name]}
-                on:click={() => handleCategoryClick(category)}>
+      <button role="tab"
+              class="lep-nav-button"
+              aria-controls="lep-tab-{category.group}"
+              aria-label={i18n.categories[category.name]}
+              aria-selected={currentCategory.group === category.group}
+              title={i18n.categories[category.name]}
+              on:click={() => handleCategoryClick(category)}>
+        <div class="lep-emoji">
           {category.emoji}
-        </button>
-        <div class="lep-indicator {currentCategory.group === category.group ? '' : 'lep-hidden'}">
         </div>
-      </div>
+      </button>
+    {/each}
+  </div>
+  <div class="lep-indicators"
+       aria-hidden="true">
+    {#each categories as category (category.group)}
+      <div class="lep-indicator {currentCategory.group === category.group ? '' : 'lep-hidden'}"></div>
     {/each}
   </div>
   <div role="tabpanel"
@@ -52,7 +59,7 @@
       {/each}
     </div>
   </div>
-  <div aria-hidden="true" class="lep-hidden">
+  <div aria-hidden="true" class="lep-hidden lep-abs-pos">
     <button class="lep-emoji lep-baseline-emoji" bind:this={baselineEmoji}>😀</button>
   </div>
 </section>

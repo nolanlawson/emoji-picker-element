@@ -33,10 +33,13 @@
 
 .lep-hidden {
   opacity: 0;
+  pointer-events: none;
+}
+
+.lep-abs-pos {
   position: absolute;
   left: 0;
   top: 0;
-  pointer-events: none;
 }
 
 .lep-shown {
