@@ -23,15 +23,19 @@
   </div>
   <div class="lep-nav" role="tablist" aria-label={i18n.categoriesLabel}>
     {#each categories as category (category.group)}
-    <button role="tab"
-            class="lep-nav-button lep-emoji"
-            aria-controls="lep-tab-{category.group}"
-            aria-label={i18n.categories[category.name]}
-            aria-selected={currentCategory.group === category.group}
-            title={i18n.categories[category.name]}
-            on:click={() => handleCategoryClick(category)}>
-      {category.emoji}
-    </button>
+      <div class="lep-nav-item">
+        <button role="tab"
+                class="lep-nav-button lep-emoji"
+                aria-controls="lep-tab-{category.group}"
+                aria-label={i18n.categories[category.name]}
+                aria-selected={currentCategory.group === category.group}
+                title={i18n.categories[category.name]}
+                on:click={() => handleCategoryClick(category)}>
+          {category.emoji}
+        </button>
+        <div class="lep-indicator {currentCategory.group === category.group ? '' : 'lep-hidden'}">
+        </div>
+      </div>
     {/each}
   </div>
   <div role="tabpanel"
@@ -40,11 +44,11 @@
        id="lep-tab-{currentCategory.group}">
     <div class="lep-emoji-menu" role="menu">
       {#each currentEmojis as emoji (emoji.unicode)}
-      <button role="menuitem"
-              class="lep-tabpanel-emoji lep-emoji"
-              id="lep-emoji-{emoji.unicode}">
-        {emoji.unicode}
-      </button>
+        <button role="menuitem"
+                class="lep-tabpanel-emoji lep-emoji"
+                id="lep-emoji-{emoji.unicode}">
+          {emoji.unicode}
+        </button>
       {/each}
     </div>
   </div>

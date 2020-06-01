@@ -37,6 +37,18 @@ button.lep-emoji {
   contain: content;
 }
 
+.lep-nav-item {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.lep-indicator {
+  height: var(--lep-indicator-height);
+  width: 100%;
+  background-color: var(--lep-indicator-color);
+}
+
 button.lep-nav-button.lep-emoji {
   flex: 1;
   padding: 0.5rem 0;

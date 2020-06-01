@@ -1,9 +1,10 @@
 @mixin vars($dark) {
-  $border: #e0e0e0 !default;
-  $bg: #fff !default;
-  $placeholder: #999 !default;
-  $outline: rgb(43, 110, 180) !default; // Chrome default focus color
-  $input-border: #999 !default;
+  $border: #e0e0e0;
+  $bg: #fff;
+  $placeholder: #999;
+  $outline: #999;
+  $input-border: #999;
+  $indicator: #385ac1;
 
   @if $dark {
     $border: #444;
@@ -11,6 +12,7 @@
     $placeholder: #ccc;
     $outline: #fff;
     $input-border: #ccc;
+    $indicator: #253a84;
   }
 
   --lep-border-color: #{$border};
@@ -18,6 +20,9 @@
   --lep-background-color: #{$bg};
   --lep-placeholder-color: #{$placeholder};
   --lep-outline-color: #{$outline};
+  --lep-indicator-color: #{$indicator};
+  --lep-indicator-height: 3px;
+  --lep-outline-size: 2px;
 
   @if $dark {
     --lep-hover-background-color: #{lighten($bg, 15%)};

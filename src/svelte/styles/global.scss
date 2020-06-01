@@ -1,4 +1,5 @@
 @import './variables.scss';
+@import './resets.scss';
 
 .lep-picker {
   &, &::before, &::after, & *, *::before, *::after {
@@ -6,8 +7,8 @@
   }
 
   &:focus, & *:focus {
-    outline: var(--lep-outline-color) solid 2px;
-    outline-offset: -2px; // fix focus ring getting cropped
+    outline: var(--lep-outline-color) solid var(--lep-outline-size);
+    outline-offset: calc(-1 * var(--lep-outline-size)); // fix focus ring getting cropped
   }
 
   contain: content;
@@ -44,25 +45,4 @@
 
 .lep-not-shown {
   display: none;
-}
-
-/* CSS resets */
-
-.lep-picker button {
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: none;
-  box-shadow: none;
-  cursor: pointer;
-}
-
-.lep-picker input {
-  padding: 0;
-  margin: 0;
-  line-height: 1.15;
-}
-
-.lep-picker input[type=search] {
-  -webkit-appearance: none;
 }

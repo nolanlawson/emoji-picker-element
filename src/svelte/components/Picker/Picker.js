@@ -7,8 +7,9 @@ import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants
 import { Database } from '../../../database/Database'
 import { MIN_SEARCH_TEXT_LENGTH, DEFAULT_NUM_COLUMNS } from '../../constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
-import { getTextWidth } from '../../utils/getTextWidth'
+import { calculateTextWidth } from '../../utils/calculateTextWidth'
 import { hasZwj } from '../../utils/hasZwj'
+import { thunk } from '../../utils/thunk'
 
 let database
 let numColumns = DEFAULT_NUM_COLUMNS
@@ -19,10 +20,11 @@ let currentCategory = categories[0]
 let rawSearchText = ''
 let searchText = ''
 let rootElement
-let baselineEmojiWidth
 let baselineEmoji
 let darkMode = 'auto'
 let resolvedDarkMode // eslint-disable-line no-unused-vars
+
+const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
 $: resolvedDarkMode = darkMode === 'auto' ? matchMedia('(prefers-color-scheme: dark)').matches : !!darkMode
 
@@ -56,17 +58,15 @@ $: {
 }
 
 function checkZwjSupport (zwjEmojisToCheck) {
-  const root = rootElement.getRootNode()
-  const domNodes = zwjEmojisToCheck.map(emoji => root.getElementById(`lep-emoji-${emoji.unicode}`))
-  if (typeof baselineEmojiWidth === 'undefined') {
-    baselineEmojiWidth = getTextWidth(baselineEmoji)
-  }
-  for (let i = 0; i < domNodes.length; i++) {
-    const domNode = domNodes[i]
-    const emoji = zwjEmojisToCheck[i]
-    const emojiWidth = getTextWidth(domNode)
-    const supported = emojiWidth === baselineEmojiWidth
+  const rootNode = rootElement.getRootNode()
+  for (const emoji of zwjEmojisToCheck) {
+    const domNode = rootNode.getElementById(`lep-emoji-${emoji.unicode}`)
+    const emojiWidth = calculateTextWidth(domNode)
+    const supported = emojiWidth === getBaselineEmojiWidth()
     supportedZwjEmojis.set(emoji.unicode, supported)
+    if (!supported) {
+      console.log('Filtered unsupported emoji', emoji.unicode)
+    }
   }
   // force update
   currentEmojis = currentEmojis // eslint-disable-line no-self-assign
