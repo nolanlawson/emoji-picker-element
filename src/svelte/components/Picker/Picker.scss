@@ -46,7 +46,7 @@ button.lep-emoji, .lep-emoji {
     background-color: var(--lep-hover-background-color);
   }
 
-  &:active {
+  &:active, &.lep-active-search-item {
     background-color: var(--lep-active-background-color);
   }
 }

@@ -2,6 +2,8 @@
   "loading": "Loading…",
   "regionLabel": "Emoji picker",
   "search": "Search",
+  "skinToneLabel": "Choose a skin tone",
+  "searchResultsLabel": "Search results",
   "categoriesLabel": "Categories",
   "categories": {
     "smileys-emotion": "Smileys and emoticons",

@@ -6,7 +6,13 @@
   style="--lep-num-columns: {numColumns};"
 >
   <div class="lep-search-row">
-    <div class="lep-search-wrapper">
+    <div class="lep-search-wrapper"
+         role="combobox"
+         aria-expanded={searchMode && currentEmojis.length}
+         aria-owns="lep-search-results"
+         aria-haspopup="listbox"
+         aria-label={i18n.search}
+    >
       <input
         id="lep-search"
         class="lep-search"
@@ -14,11 +20,15 @@
         placeholder={i18n.search}
         autocapitalize="none"
         spellcheck="true"
+        aria-controls="lep-search-results"
+        aria-autocomplete="list"
+        aria-activedescendant={activeSearchItem === -1 ? '' : `lep-emoji-${currentEmojis[activeSearchItem].unicode}`}
         bind:value={rawSearchText}
+        on:keydown={onSearchKeydown}
       >
       <label class="lep-sr-only" for="lep-search">{i18n.search}</label>
     </div>
-    <button class="lep-emoji lep-skintone-button">👍</button>
+    <button class="lep-emoji lep-skintone-button" aria-label={i18n.skinToneLabel}>👍</button>
 
   </div>
   <div class="lep-nav"
@@ -47,13 +57,16 @@
     {/each}
   </div>
   <div class="lep-tabpanel"
-       role="tabpanel"
-       aria-label={i18n.categories[currentCategory.name]}
-       id="lep-tab-{currentCategory.group}">
-      <div class="lep-emoji-menu" role="menu">
-        {#each currentEmojis as emoji (emoji.unicode)}
-          <button role="menuitem"
-                  class="lep-tabpanel-emoji lep-emoji"
+       role={searchMode ? 'listbox' : 'tabpanel'}
+       aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
+       id={searchMode ? 'lep-search-results' : `lep-tab-${currentCategory.group}`}
+  >
+      <div class="lep-emoji-menu"
+           role={searchMode ? '' : 'menu'}>
+        {#each currentEmojis as emoji, i (emoji.unicode)}
+          <button role={searchMode ? 'option' : 'menuitem'}
+                  aria-selected={searchMode && i === activeSearchItem}
+                  class="lep-tabpanel-emoji lep-emoji {searchMode && i === activeSearchItem ? 'lep-active-search-item' : ''}"
                   id="lep-emoji-{emoji.unicode}">
             {emoji.unicode}
           </button>

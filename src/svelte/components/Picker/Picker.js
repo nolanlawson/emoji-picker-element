@@ -24,23 +24,30 @@ let baselineEmoji
 let darkMode = 'auto'
 let resolvedDarkMode // eslint-disable-line no-unused-vars
 let placeholders = [] // eslint-disable-line no-unused-vars
+let searchMode = false // eslint-disable-line no-unused-vars
+let activeSearchItem = -1
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 $: database = new Database({ dataSource, locale })
 $: placeholders = new Array(numColumns - (currentEmojis.length % numColumns)).fill()
 $: resolvedDarkMode = darkMode === 'auto' ? matchMedia('(prefers-color-scheme: dark)').matches : !!darkMode
 $: {
-  (async () => {
+  // eslint-disable-next-line no-inner-declarations
+  async function updateEmojis () {
     if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
+      searchMode = true
       currentEmojis = await getEmojisBySearchPrefix(searchText)
     } else {
+      searchMode = false
       currentEmojis = await getEmojisByGroup(currentCategory.group)
     }
-  })()
+  }
+  updateEmojis()
 }
 $: {
   requestIdleCallback(() => {
     searchText = rawSearchText // defer to avoid input delays
+    activeSearchItem = -1
   })
 }
 
@@ -94,8 +101,38 @@ async function getEmojisBySearchPrefix (prefix) {
 function handleCategoryClick (category) {
   // throttle to avoid input delays
   requestIdleCallback(() => {
+    rawSearchText = ''
+    searchText = ''
+    activeSearchItem = -1
     currentCategory = category
   })
+}
+
+// eslint-disable-next-line no-unused-vars
+function onSearchKeydown (event) {
+  if (!searchMode || !currentEmojis.length) {
+    return
+  }
+  switch (event.key) {
+    case 'ArrowDown':
+      if (activeSearchItem === currentEmojis.length - 1) {
+        activeSearchItem = 0
+      } else {
+        activeSearchItem++
+      }
+      event.preventDefault()
+      event.stopPropagation()
+      break
+    case 'ArrowUp':
+      event.preventDefault()
+      event.stopPropagation()
+      if (activeSearchItem <= 0) {
+        activeSearchItem = currentEmojis.length - 1
+      } else {
+        activeSearchItem--
+      }
+      break
+  }
 }
 
 export {
