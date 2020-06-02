@@ -29,7 +29,7 @@ import 'lite-emoji-picker';
 `lite-emoji-picker` will expand to fit whatever container you give it. Here is a good default:
 
 ```css
-.lite-emoji-picker {
+lite-emoji-picker {
   width: 400px;
   height: 300px;
 }
