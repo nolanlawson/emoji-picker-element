@@ -53,6 +53,7 @@
   },
   "standard": {
     "global": [
+      "btoa",
       "crypto",
       "fetch",
       "indexedDB",
