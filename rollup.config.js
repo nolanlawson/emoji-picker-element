@@ -10,15 +10,19 @@ import { versionsAndTestEmoji } from './bin/versionsAndTestEmoji'
 const dev = process.env.NODE_ENV !== 'production'
 const svelte = dev ? hotSvelte : mainSvelte
 
+// Build Database.js and Picker.js as separate modules at build times so that they are properly tree-shakeable.
+// Most of this has to happen because customElements.define() has side effects
 const baseConfig = {
   plugins: [
     resolve(),
-    cjs({
-      exclude: ['node_modules/lodash-es/**']
-    }),
+    cjs(),
     json(),
     replace({
       'process.env.VERSIONS_AND_TEST_EMOJI': JSON.stringify(versionsAndTestEmoji)
+    }),
+    replace({
+      '../../../database/Database.js': './Database.js',
+      delimiters: ['', '']
     }),
     svelte({
       css: true,
@@ -26,14 +30,21 @@ const baseConfig = {
       dev,
       preprocess: autoPreprocess()
     })
+  ],
+  external: [
+    '../../../database/Database.js'
   ]
 }
 
 const formats = ['es', 'cjs']
 const entryPoints = [
   {
-    input: './src/index.js',
-    output: 'index.js'
+    input: './src/svelte/components/Picker/Picker.svelte',
+    output: 'Picker.js'
+  },
+  {
+    input: './src/database/Database.js',
+    output: 'Database.js'
   }
 ]
 

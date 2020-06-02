@@ -5,10 +5,10 @@ import { assertEmojiBaseData } from './utils/assertEmojiBaseData'
 import { assertNumber } from './utils/assertNumber'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from './constants'
 import { uniqEmoji } from './utils/uniqEmoji'
-import { jsonChecksum } from '../svelte/utils/jsonChecksum'
+import { jsonChecksum } from './utils/jsonChecksum'
 import { warnOffline } from './utils/warnOffline'
 
-export class Database {
+export default class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE } = {}) {
     this._dataSource = dataSource
     this._locale = locale
@@ -63,6 +63,10 @@ export class Database {
     }
 
     await this._idbEngine.loadData(emojiBaseData, url, eTag)
+  }
+
+  async ready () {
+    return this._readyPromise
   }
 
   async getEmojiByGroup (group) {

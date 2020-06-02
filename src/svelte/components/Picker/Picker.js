@@ -1,15 +1,15 @@
-/* global supportedZwjEmojis, emojiSupportLevel */
 /* eslint-disable prefer-const,no-labels */
 
+import Database from '../../../database/Database.js'
 import i18n from '../../i18n/en.json'
 import { categories } from '../../categories'
 import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants'
-import { Database } from '../../../database/Database'
 import { MIN_SEARCH_TEXT_LENGTH, DEFAULT_NUM_COLUMNS } from '../../constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { calculateTextWidth } from '../../utils/calculateTextWidth'
 import { hasZwj } from '../../utils/hasZwj'
 import { thunk } from '../../utils/thunk'
+import { emojiSupportLevel, supportedZwjEmojis } from '../../utils/emojiSupport'
 
 let database
 let numColumns = DEFAULT_NUM_COLUMNS
