@@ -3,7 +3,6 @@
   class="lep-picker"
   aria-label={i18n.regionLabel}
   bind:this={rootElement}
-  style="--lep-num-columns: {numColumns};"  
 >
   <div class="lep-search-row">
     <div class="lep-search-wrapper"
@@ -70,10 +69,6 @@
                   id="lep-emoji-{emoji.unicode}">
             {emoji.unicode}
           </button>
-        {/each}
-        <!-- Render placeholders to make sure that the grid spacing looks correct. There may be a better way. -->
-        {#each placeholders as placeholder}
-          <div class="lep-emoji lep-hidden"></div>
         {/each}
     </div>
   </div>

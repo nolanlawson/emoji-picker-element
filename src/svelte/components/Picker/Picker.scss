@@ -1,5 +1,9 @@
 @import '../../styles/global.scss';
 
+.lep-picker {
+  --total-emoji-size: calc(var(--lep-emoji-size) + (2 * var(--lep-emoji-padding)));
+}
+
 //
 // tab panel
 //
@@ -15,7 +19,7 @@
 
 .lep-emoji-menu {
   display: grid;
-  grid-template-columns: repeat(var(--lep-num-columns), auto);
+  grid-template-columns: repeat(var(--lep-num-columns), var(--total-emoji-size));
   justify-content: space-around;
   align-items: flex-start;
   width: 100%;
@@ -25,18 +29,15 @@
 // emoji
 //
 
-$emojiSize: 1.375rem;
-$emojiPadding: 0.5rem;
-
 button.lep-emoji, .lep-emoji {
-  padding: $emojiPadding;
-  font-size: $emojiSize;
+  padding: var(--lep-emoji-padding);
+  font-size: var(--lep-emoji-size);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 100%;
-  height: $emojiSize + (2 * $emojiPadding);
-  width: $emojiSize + (2 * $emojiPadding);
+  height: var(--total-emoji-size);
+  width: var(--total-emoji-size);
   overflow: hidden;
 
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji Mozilla",

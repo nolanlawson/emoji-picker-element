@@ -54,7 +54,6 @@ document.body.appendChild(picker);
 | `dataSource` | String | `"https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json"` | Where to fetch the emoji data from. Note that `lite-emoji-picker` requires the full `data.json`, not `compact.json`. |
 | `locale` | String | `"en"` | Locale, should map to the locales supported by `emojibase-data` |
 | `i18n` | Object | See below | Strings to use for internationalization of the Picker itself, i.e. the text and `aria-label`s. Note that `lite-emoji-picker` only ships with English by default. |
-| `numColumns` | number | `8` | Number of emoji to show per row. |
 
 These values can also be set at runtime, e.g.:
 
@@ -102,7 +101,19 @@ By default, `lite-emoji-picker` will automatically switch to dark mode based on 
 
 Many attributes such as colors and sizes can be styled with CSS variables. Here is a list:
 
-<!-- TODO: list of CSS variables -->
+| Option | Type | Default | Description |
+| ------ | ---- | ------- | ----------- |
+| --lep-num-columns | integer | 8 | Number of emoji to show per row |
+
+For example:
+
+```css
+lite-emoji-picker {
+  --lep-num-columns: 6;
+  --lep-emoji-size: 3rem;
+  --lep-background-color: gray;
+}
+```
 
 ### Database
 

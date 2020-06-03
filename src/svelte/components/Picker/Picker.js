@@ -4,7 +4,7 @@ import Database from '../../../database/Database.js'
 import i18n from '../../i18n/en.json'
 import { categories } from '../../categories'
 import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants'
-import { MIN_SEARCH_TEXT_LENGTH, DEFAULT_NUM_COLUMNS } from '../../constants'
+import { MIN_SEARCH_TEXT_LENGTH } from '../../constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { calculateTextWidth } from '../../utils/calculateTextWidth'
 import { hasZwj } from '../../utils/hasZwj'
@@ -12,7 +12,6 @@ import { thunk } from '../../utils/thunk'
 import { emojiSupportLevel, supportedZwjEmojis } from '../../utils/emojiSupport'
 
 let database
-let numColumns = DEFAULT_NUM_COLUMNS
 let currentEmojis = []
 let locale = DEFAULT_LOCALE
 let dataSource = DEFAULT_DATA_SOURCE
@@ -21,13 +20,11 @@ let rawSearchText = ''
 let searchText = ''
 let rootElement
 let baselineEmoji
-let placeholders = [] // eslint-disable-line no-unused-vars
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 $: database = new Database({ dataSource, locale })
-$: placeholders = new Array(numColumns - (currentEmojis.length % numColumns)).fill()
 $: {
   // eslint-disable-next-line no-inner-declarations
   async function updateEmojis () {
@@ -135,6 +132,5 @@ function onSearchKeydown (event) {
 export {
   locale,
   dataSource,
-  i18n,
-  numColumns
+  i18n
 }
