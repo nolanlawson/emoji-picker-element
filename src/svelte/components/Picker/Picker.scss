@@ -4,15 +4,15 @@
 // private variables
 //
 
-.lep-picker {
-  --total-emoji-size: calc(var(--lep-emoji-size) + (2 * var(--lep-emoji-padding)));
+.picker {
+  --total-emoji-size: calc(var(--emoji-size) + (2 * var(--emoji-padding)));
 }
 
 //
 // tab panel
 //
 
-.lep-tabpanel {
+.tabpanel {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; // fix iOS scrolling
   will-change: transform; // fix "repaints on scroll" warning in Chrome https://crbug.com/514303
@@ -21,9 +21,9 @@
   contain: content;
 }
 
-.lep-emoji-menu {
+.emoji-menu {
   display: grid;
-  grid-template-columns: repeat(var(--lep-num-columns), var(--total-emoji-size));
+  grid-template-columns: repeat(var(--num-columns), var(--total-emoji-size));
   justify-content: space-around;
   align-items: flex-start;
   width: 100%;
@@ -33,10 +33,10 @@
 // emoji
 //
 
-button.lep-emoji,
-.lep-emoji {
-  padding: var(--lep-emoji-padding);
-  font-size: var(--lep-emoji-size);
+button.emoji,
+.emoji {
+  padding: var(--emoji-padding);
+  font-size: var(--emoji-size);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,12 +55,12 @@ button.lep-emoji,
     sans-serif;
 
   &:hover {
-    background-color: var(--lep-hover-background-color);
+    background-color: var(--hover-background-color);
   }
 
   &:active,
-  &.lep-active-search-item {
-    background-color: var(--lep-active-background-color);
+  &.active-search-item {
+    background-color: var(--active-background-color);
   }
 }
 
@@ -68,58 +68,58 @@ button.lep-emoji,
 // nav
 //
 
-.lep-nav {
+.nav {
   display: grid;
   justify-content: space-between;
   align-items: center;
   contain: content;
 }
 
-.lep-nav-button {
+.nav-button {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.lep-indicators {
+.indicators {
   display: flex;
-  border-bottom: 1px solid var(--lep-border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
-.lep-indicator {
+.indicator {
   flex: 1;
-  height: var(--lep-indicator-height);
+  height: var(--indicator-height);
   width: 100%;
-  background-color: var(--lep-indicator-color);
+  background-color: var(--indicator-color);
 }
 
 //
 // search
 //
 
-.lep-search-row {
+.search-row {
   display: flex;
   align-items: center;
   contain: content;
 }
 
-.lep-search-wrapper {
+.search-wrapper {
   flex: 1;
   min-width: 0;
   padding-left: 0.5rem;
 }
 
-input.lep-search {
-  padding: var(--lep-input-padding);
-  border-radius: var(--lep-input-border-radius);
-  border: var(--lep-input-border-size) solid var(--lep-input-border-color);
-  background-color: var(--lep-background-color);
-  color: var(--lep-input-font-color);
+input.search {
+  padding: var(--input-padding);
+  border-radius: var(--input-border-radius);
+  border: var(--input-border-size) solid var(--input-border-color);
+  background-color: var(--background-color);
+  color: var(--input-font-color);
   width: 100%;
-  font-size: var(--lep-input-font-size);
-  line-height: var(--lep-input-line-height);
+  font-size: var(--input-font-size);
+  line-height: var(--input-line-height);
 
   &::placeholder {
-    color: var(--lep-placeholder-color);
+    color: var(--input-placeholder-color);
   }
 }

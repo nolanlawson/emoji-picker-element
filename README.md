@@ -103,15 +103,15 @@ Many attributes such as colors and sizes can be styled with CSS variables. Here 
 
 | Option | Type | Default | Description |
 | ------ | ---- | ------- | ----------- |
-| --lep-num-columns | integer | 8 | Number of emoji to show per row |
+| --num-columns | integer | 8 | Number of emoji to show per row |
 
 For example:
 
 ```css
 lite-emoji-picker {
-  --lep-num-columns: 6;
-  --lep-emoji-size: 3rem;
-  --lep-background-color: gray;
+  --num-columns: 6;
+  --emoji-size: 3rem;
+  --background-color: gray;
 }
 ```
 

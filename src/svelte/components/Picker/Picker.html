@@ -1,78 +1,78 @@
 <svelte:options tag="lite-emoji-picker" />
 <section
-  class="lep-picker"
+  class="picker"
   aria-label={i18n.regionLabel}
   bind:this={rootElement}
 >
-  <div class="lep-search-row">
-    <div class="lep-search-wrapper"
+  <div class="search-row">
+    <div class="search-wrapper"
          role="combobox"
          aria-expanded={searchMode && currentEmojis.length}
-         aria-owns="lep-search-results"
+         aria-owns="search-results"
          aria-haspopup="listbox"
          aria-label={i18n.search}
     >
       <input
-        id="lep-search"
-        class="lep-search"
+        id="search"
+        class="search"
         type="text"
         placeholder={i18n.search}
         autocapitalize="none"
         spellcheck="true"
-        aria-controls="lep-search-results"
+        aria-controls="search-results"
         aria-autocomplete="list"
-        aria-activedescendant={activeSearchItem === -1 ? '' : `lep-emoji-${currentEmojis[activeSearchItem].unicode}`}
+        aria-activedescendant={activeSearchItem === -1 ? '' : `emoji-${currentEmojis[activeSearchItem].unicode}`}
         bind:value={rawSearchText}
         on:keydown={onSearchKeydown}
       >
-      <label class="lep-sr-only" for="lep-search">{i18n.search}</label>
+      <label class="sr-only" for="search">{i18n.search}</label>
     </div>
-    <button class="lep-emoji lep-skintone-button" aria-label={i18n.skinToneLabel}>👍</button>
+    <button class="emoji skintone-button" aria-label={i18n.skinToneLabel}>👍</button>
 
   </div>
-  <div class="lep-nav"
+  <div class="nav"
        role="tablist"
        style="grid-template-columns: repeat({categories.length}, 1fr);"
        aria-label={i18n.categoriesLabel}>
     {#each categories as category (category.group)}
       <button role="tab"
-              class="lep-nav-button"
-              aria-controls="lep-tab-{category.group}"
+              class="nav-button"
+              aria-controls="tab-{category.group}"
               aria-label={i18n.categories[category.name]}
               aria-selected={currentCategory.group === category.group}
               title={i18n.categories[category.name]}
               on:click={() => handleCategoryClick(category)}>
-        <div class="lep-emoji">
+        <div class="emoji">
           {category.emoji}
         </div>
       </button>
     {/each}
   </div>
-  <div class="lep-indicators"
+  <div class="indicators"
        aria-hidden="true">
     {#each categories as category (category.group)}
-      <div class="lep-indicator {currentCategory.group === category.group ? '' : 'lep-hidden'}">
+      <div class="indicator {currentCategory.group === category.group ? '' : 'hidden'}">
       </div>
     {/each}
   </div>
-  <div class="lep-tabpanel"
+  <div class="tabpanel"
        role={searchMode ? 'listbox' : 'tabpanel'}
        aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
-       id={searchMode ? 'lep-search-results' : `lep-tab-${currentCategory.group}`}
+       id={searchMode ? 'search-results' : `tab-${currentCategory.group}`}
   >
-      <div class="lep-emoji-menu"
+      <div class="emoji-menu"
            role={searchMode ? '' : 'menu'}>
         {#each currentEmojis as emoji, i (emoji.unicode)}
           <button role={searchMode ? 'option' : 'menuitem'}
                   aria-selected={searchMode && i === activeSearchItem}
-                  class="lep-tabpanel-emoji lep-emoji {searchMode && i === activeSearchItem ? 'lep-active-search-item' : ''}"
-                  id="lep-emoji-{emoji.unicode}">
+                  class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active-search-item' : ''}"
+                  id="emoji-{emoji.unicode}">
             {emoji.unicode}
           </button>
         {/each}
     </div>
   </div>
-  <div aria-hidden="true" class="lep-hidden lep-abs-pos">
-    <button class="lep-emoji lep-baseline-emoji" bind:this={baselineEmoji}>😀</button>
+  <div aria-hidden="true" class="hidden abs-pos">
+    <button class="emoji baseline-emoji" bind:this={baselineEmoji}>😀</button>
   </div>
 </section>

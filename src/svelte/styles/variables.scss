@@ -1,53 +1,52 @@
 @mixin sizes() {
-  --lep-indicator-height: 3px;
-  --lep-outline-size: 2px;
-  --lep-num-columns: 8;
-
-  --lep-emoji-size: 1.375rem;
-  --lep-emoji-padding: 0.5rem;
-
-  --lep-input-font-size: 1rem;
-  --lep-input-line-height: 1.5;
-  --lep-input-border-size: 1px;
-  --lep-input-border-radius: 0.5rem;
-  --lep-input-padding: 0.25rem;
+  --emoji-padding: 0.5rem;
+  --emoji-size: 1.375rem;
+  --indicator-height: 3px;
+  --input-border-radius: 0.5rem;
+  --input-border-size: 1px;
+  --input-font-size: 1rem;
+  --input-line-height: 1.5;
+  --input-padding: 0.25rem;
+  --num-columns: 8;
+  --outline-size: 2px;
 }
 
 @mixin colors($dark) {
-  $border: #e0e0e0;
   $bg: #fff;
-  $placeholder: #999;
-  $outline: #999;
-  $input-border: #999;
+  $border: #e0e0e0;
   $indicator: #385ac1;
+  $input-border: #999;
   $input-color: #111;
+  $input-placeholder: #999;
+  $outline: #999;
+
 
   @if $dark {
-    $border: #444;
     $bg: #222;
-    $placeholder: #ccc;
-    $outline: #fff;
-    $input-border: #ccc;
+    $border: #444;
     $indicator: #5373ec;
+    $input-border: #ccc;
     $input-color: #efefef;
+    $input-placeholder: #ccc;
+    $outline: #fff;
   }
 
-  --lep-border-color: #{$border};
-  --lep-input-border-color: #{$input-border};
-  --lep-background-color: #{$bg};
-  --lep-placeholder-color: #{$placeholder};
-  --lep-outline-color: #{$outline};
-  --lep-indicator-color: #{$indicator};
-  --lep-input-font-color: #{$input-color};
+  --background-color: #{$bg};
+  --border-color: #{$border};
+  --indicator-color: #{$indicator};
+  --input-border-color: #{$input-border};
+  --input-font-color: #{$input-color};
+  --input-placeholder-color: #{$input-placeholder};
+  --outline-color: #{$outline};
 
   @if $dark {
-    --lep-hover-background-color: #{lighten($bg, 15%)};
-    --lep-active-background-color: #{lighten($bg, 20%)};
+    --active-background-color: #{lighten($bg, 20%)};
+    --hover-background-color: #{lighten($bg, 15%)};
   }
 
   @else {
-    --lep-hover-background-color: #{darken($bg, 15%)};
-    --lep-active-background-color: #{darken($bg, 10%)};
+    --active-background-color: #{darken($bg, 10%)};
+    --hover-background-color: #{darken($bg, 15%)};
   }
 }
 

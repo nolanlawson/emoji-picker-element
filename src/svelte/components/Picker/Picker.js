@@ -61,7 +61,7 @@ $: {
 function checkZwjSupport (zwjEmojisToCheck) {
   const rootNode = rootElement.getRootNode()
   for (const emoji of zwjEmojisToCheck) {
-    const domNode = rootNode.getElementById(`lep-emoji-${emoji.unicode}`)
+    const domNode = rootNode.getElementById(`emoji-${emoji.unicode}`)
     const emojiWidth = calculateTextWidth(domNode)
     const baselineEmojiWidth = getBaselineEmojiWidth()
     // compare sizes rounded to 1/10 of a pixel to avoid issues with slightly different measurements (e.g. GNOME Web)
