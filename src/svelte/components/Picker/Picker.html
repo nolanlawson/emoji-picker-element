@@ -7,7 +7,7 @@
   <div class="search-row">
     <div class="search-wrapper"
          role="combobox"
-         aria-expanded={searchMode && currentEmojis.length}
+         aria-expanded={!!(searchMode && currentEmojis.length)}
          aria-owns="search-results"
          aria-haspopup="listbox"
          aria-label={i18n.search}
@@ -56,12 +56,16 @@
     {/each}
   </div>
   <div class="tabpanel"
-       role={searchMode ? 'listbox' : 'tabpanel'}
-       aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
-       id={searchMode ? 'search-results' : `tab-${currentCategory.group}`}
+       role={searchMode ? '' : 'tabpanel'}
+       aria-label={searchMode ? '' : i18n.categories[currentCategory.name]}
+       id={searchMode ? '' : `tab-${currentCategory.group}`}
+       tabindex="{searchMode ? '' : '0'}"
   >
       <div class="emoji-menu"
-           role={searchMode ? '' : 'menu'}>
+           role={searchMode ? 'listbox' : 'menu'}
+           aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
+           id="search-results"
+      >
         {#each currentEmojis as emoji, i (emoji.unicode)}
           <button role={searchMode ? 'option' : 'menuitem'}
                   aria-selected={searchMode && i === activeSearchItem}
