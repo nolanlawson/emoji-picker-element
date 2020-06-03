@@ -52,10 +52,6 @@
 :host {
   @include sizes();
 
-  @media (prefers-color-scheme: light) {
-    @include colors(false);
-  }
-
   @media (prefers-color-scheme: dark) {
     @include colors(true);
   }

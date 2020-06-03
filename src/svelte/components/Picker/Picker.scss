@@ -1,5 +1,9 @@
 @import '../../styles/global.scss';
 
+//
+// private variables
+//
+
 .lep-picker {
   --total-emoji-size: calc(var(--lep-emoji-size) + (2 * var(--lep-emoji-padding)));
 }
