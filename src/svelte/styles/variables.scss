@@ -36,23 +36,29 @@
   @if $dark {
     --lep-hover-background-color: #{lighten($bg, 15%)};
     --lep-active-background-color: #{lighten($bg, 20%)};
-  } @else {
+  }
+
+  @else {
     --lep-hover-background-color: #{darken($bg, 15%)};
     --lep-active-background-color: #{darken($bg, 10%)};
   }
 }
 
-:host, :host-context(lite-emoji-picker.light) {
+:host {
+  @include sizes();
+}
+
+:host,
+:host-context(lite-emoji-picker.light) {
   @include colors(false);
 }
+
 :host-context(lite-emoji-picker.dark) {
   @include colors(true);
 }
 
-:host {
-  @include sizes();
-
-  @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
+  :host {
     @include colors(true);
   }
 }

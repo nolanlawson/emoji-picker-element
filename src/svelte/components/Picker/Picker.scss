@@ -33,7 +33,8 @@
 // emoji
 //
 
-button.lep-emoji, .lep-emoji {
+button.lep-emoji,
+.lep-emoji {
   padding: var(--lep-emoji-padding);
   font-size: var(--lep-emoji-size);
   display: flex;
@@ -43,15 +44,22 @@ button.lep-emoji, .lep-emoji {
   height: var(--total-emoji-size);
   width: var(--total-emoji-size);
   overflow: hidden;
-
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Twemoji Mozilla",
-  "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
+  font-family:
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Twemoji Mozilla",
+    "Noto Color Emoji",
+    "EmojiOne Color",
+    "Android Emoji",
+    sans-serif;
 
   &:hover {
     background-color: var(--lep-hover-background-color);
   }
 
-  &:active, &.lep-active-search-item {
+  &:active,
+  &.lep-active-search-item {
     background-color: var(--lep-active-background-color);
   }
 }

@@ -15,8 +15,8 @@
     "dev:rollup": "NODE_ENV=development rollup -c -w",
     "build": "run-s build:static build:rollup",
     "dev": "run-s build:static dev:rollup",
-    "lint": "standard",
-    "lint:fix": "standard --fix",
+    "lint": "standard && stylelint '**/*.scss'",
+    "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -53,6 +53,9 @@
     "rollup-plugin-svelte-hot": "^0.7.0",
     "sass": "^1.26.7",
     "standard": "^14.3.3",
+    "stylelint": "^13.5.0",
+    "stylelint-config-recommended-scss": "^4.2.0",
+    "stylelint-scss": "^3.17.2",
     "svelte": "^3.22.2",
     "svelte-preprocess": "^3.7.4"
   },
@@ -68,12 +71,26 @@
       "requestIdleCallback"
     ]
   },
+  "stylelint": {
+    "extends": "stylelint-config-recommended-scss",
+    "rules": {
+      "selector-type-no-unknown": [
+        true,
+        {
+          "ignoreTypes": [
+            "lite-emoji-picker"
+          ]
+        }
+      ]
+    }
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
-    "*.js": "standard --fix"
+    "*.js": "standard --fix",
+    "*.(css|scss)": "stylelint --fix '**/*.scss'"
   }
 }
