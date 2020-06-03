@@ -110,14 +110,14 @@ button.lep-emoji,
 }
 
 input.lep-search {
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--lep-input-border-color);
+  padding: var(--lep-input-padding);
+  border-radius: var(--lep-input-border-radius);
+  border: var(--lep-input-border-size) solid var(--lep-input-border-color);
   background-color: var(--lep-background-color);
   color: var(--lep-input-font-color);
   width: 100%;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: var(--lep-input-font-size);
+  line-height: var(--lep-input-line-height);
 
   &::placeholder {
     color: var(--lep-placeholder-color);

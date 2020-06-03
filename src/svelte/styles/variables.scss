@@ -2,8 +2,15 @@
   --lep-indicator-height: 3px;
   --lep-outline-size: 2px;
   --lep-num-columns: 8;
+
   --lep-emoji-size: 1.375rem;
   --lep-emoji-padding: 0.5rem;
+
+  --lep-input-font-size: 1rem;
+  --lep-input-line-height: 1.5;
+  --lep-input-border-size: 1px;
+  --lep-input-border-radius: 0.5rem;
+  --lep-input-padding: 0.25rem;
 }
 
 @mixin colors($dark) {
