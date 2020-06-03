@@ -1,16 +1,16 @@
 @import './variables.scss';
 @import './resets.scss';
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:focus {
+  outline: var(--lep-outline-color) solid var(--lep-outline-size);
+  outline-offset: calc(-1 * var(--lep-outline-size)); // fix focus ring getting cropped
+}
+
 .lep-picker {
-  &, &::before, &::after, & *, *::before, *::after {
-    box-sizing: border-box;
-  }
-
-  &:focus, & *:focus {
-    outline: var(--lep-outline-color) solid var(--lep-outline-size);
-    outline-offset: calc(-1 * var(--lep-outline-size)); // fix focus ring getting cropped
-  }
-
   contain: content;
   display: flex;
   flex-direction: column;

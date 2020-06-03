@@ -21,8 +21,6 @@ let rawSearchText = ''
 let searchText = ''
 let rootElement
 let baselineEmoji
-let darkMode = 'auto'
-let resolvedDarkMode // eslint-disable-line no-unused-vars
 let placeholders = [] // eslint-disable-line no-unused-vars
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
@@ -30,7 +28,6 @@ let activeSearchItem = -1
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 $: database = new Database({ dataSource, locale })
 $: placeholders = new Array(numColumns - (currentEmojis.length % numColumns)).fill()
-$: resolvedDarkMode = darkMode === 'auto' ? matchMedia('(prefers-color-scheme: dark)').matches : !!darkMode
 $: {
   // eslint-disable-next-line no-inner-declarations
   async function updateEmojis () {
@@ -139,6 +136,5 @@ export {
   locale,
   dataSource,
   i18n,
-  numColumns,
-  darkMode
+  numColumns
 }

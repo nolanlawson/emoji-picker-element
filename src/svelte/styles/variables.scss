@@ -1,4 +1,9 @@
-@mixin vars($dark) {
+@mixin sizes() {
+  --lep-indicator-height: 3px;
+  --lep-outline-size: 2px;
+}
+
+@mixin colors($dark) {
   $border: #e0e0e0;
   $bg: #fff;
   $placeholder: #999;
@@ -23,8 +28,6 @@
   --lep-placeholder-color: #{$placeholder};
   --lep-outline-color: #{$outline};
   --lep-indicator-color: #{$indicator};
-  --lep-indicator-height: 3px;
-  --lep-outline-size: 2px;
   --lep-input-font-color: #{$input-color};
 
   @if $dark {
@@ -36,12 +39,21 @@
   }
 }
 
-.lep-picker {
-  &.lep-light {
-    @include vars(false);
+:host, :host-context(lite-emoji-picker.light) {
+  @include colors(false);
+}
+:host-context(lite-emoji-picker.dark) {
+  @include colors(true);
+}
+
+:host {
+  @include sizes();
+
+  @media (prefers-color-scheme: light) {
+    @include colors(false);
   }
 
-  &.lep-dark {
-    @include vars(true);
+  @media (prefers-color-scheme: dark) {
+    @include colors(true);
   }
 }

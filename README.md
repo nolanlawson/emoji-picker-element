@@ -55,7 +55,6 @@ document.body.appendChild(picker);
 | `locale` | String | `"en"` | Locale, should map to the locales supported by `emojibase-data` |
 | `i18n` | Object | See below | Strings to use for internationalization of the Picker itself, i.e. the text and `aria-label`s. Note that `lite-emoji-picker` only ships with English by default. |
 | `numColumns` | number | `8` | Number of emoji to show per row. |
-| `darkMode` | boolean/String | `"auto"` | Dark mode. Either `false`, `true`, or `"auto"`. The `"auto"` option chooses based on [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme).
 
 These values can also be set at runtime, e.g.:
 
@@ -87,6 +86,23 @@ Note that some of these values are only visible to users of screen readers (but 
   }
 }
 ```
+
+#### Styling
+
+##### Dark mode
+
+By default, `lite-emoji-picker` will automatically switch to dark mode based on [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme). For more fine-grained, control, add the class `dark` or `light` to force dark/light mode:
+
+```html
+<lite-emoji-picker class="dark"></lite-emoji-picker>
+<lite-emoji-picker class="light"></lite-emoji-picker>
+```
+
+###### CSS variables
+
+Many attributes such as colors and sizes can be styled with CSS variables. Here is a list:
+
+<!-- TODO: list of CSS variables -->
 
 ### Database
 
