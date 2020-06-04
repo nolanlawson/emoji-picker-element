@@ -129,6 +129,18 @@ function onSearchKeydown (event) {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
+function onNavKeydown (event) {
+  const { target, key } = event
+
+  switch (key) {
+    case 'ArrowLeft':
+      return target.previousSibling && target.previousSibling.focus()
+    case 'ArrowRight':
+      return target.nextSibling && target.nextSibling.focus()
+  }
+}
+
 export {
   locale,
   dataSource,

@@ -33,7 +33,8 @@
   <div class="nav"
        role="tablist"
        style="grid-template-columns: repeat({categories.length}, 1fr);"
-       aria-label={i18n.categoriesLabel}>
+       aria-label={i18n.categoriesLabel}
+       on:keydown={onNavKeydown}>
     {#each categories as category (category.group)}
       <button role="tab"
               class="nav-button"
