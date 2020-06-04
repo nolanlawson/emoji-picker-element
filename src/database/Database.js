@@ -1,4 +1,3 @@
-import { IndexedDBEngine } from './IndexedDBEngine'
 import { assertNonEmptyString } from './utils/assertNonEmptyString'
 import { warnETag } from './utils/warnETag'
 import { assertEmojiBaseData } from './utils/assertEmojiBaseData'
@@ -7,21 +6,26 @@ import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from './constants'
 import { uniqEmoji } from './utils/uniqEmoji'
 import { jsonChecksum } from './utils/jsonChecksum'
 import { warnOffline } from './utils/warnOffline'
+import { closeDatabase, deleteDatabase, openDatabase } from './databaseLifecycle'
+import {
+  isEmpty, hasData, loadData, getEmojiByGroup,
+  getEmojiBySearchPrefix, getEmojiByShortcode, getEmojiByUnicode
+} from './idbInterface'
 
 export default class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE } = {}) {
     this._dataSource = dataSource
     this._locale = locale
-    this._idbEngine = undefined
+    this._dbName = `lite-emoji-picker-${this._locale}`
+    this._db = undefined
     this._readyPromise = this._init()
   }
 
   async _init () {
-    this._idbEngine = new IndexedDBEngine(`lite-emoji-picker-${this._locale}`)
-    await this._idbEngine.open()
+    this._db = await openDatabase(this._dbName)
     const url = this._dataSource
-    const isEmpty = await this._idbEngine.isEmpty()
-    if (!isEmpty) {
+    const empty = await isEmpty(this._db)
+    if (!empty) {
       // just do a simple HEAD request first to see if the eTags match
       let headResponse
       try {
@@ -32,7 +36,7 @@ export default class Database {
       }
       const eTag = headResponse.headers.get('etag')
       warnETag(eTag)
-      if (eTag && await this._idbEngine.hasData(url, eTag)) {
+      if (eTag && await hasData(this._db, url, eTag)) {
         console.log('Database already populated')
         return // fast init, data is already loaded
       }
@@ -41,7 +45,7 @@ export default class Database {
     try {
       response = await fetch(this._dataSource)
     } catch (e) { // offline fallback
-      if (!isEmpty) {
+      if (!empty) {
         warnOffline(e)
         return
       }
@@ -57,12 +61,12 @@ export default class Database {
       // from the object itself.
       eTag = await jsonChecksum(emojiBaseData)
     }
-    if (!isEmpty && await this._idbEngine.hasData(url, eTag)) {
+    if (!empty && await hasData(this._db, url, eTag)) {
       console.log('Database already populated')
       return // data already loaded
     }
 
-    await this._idbEngine.loadData(emojiBaseData, url, eTag)
+    await loadData(this._db, emojiBaseData, url, eTag)
   }
 
   async ready () {
@@ -72,43 +76,43 @@ export default class Database {
   async getEmojiByGroup (group) {
     assertNumber(group)
     await this._readyPromise
-    const emojis = await this._idbEngine.getEmojiByGroup(group)
+    const emojis = await getEmojiByGroup(this._db, group)
     return uniqEmoji(emojis)
   }
 
   async getEmojiBySearchPrefix (prefix) {
     assertNonEmptyString(prefix)
     await this._readyPromise
-    const emojis = await this._idbEngine.getEmojiBySearchPrefix(prefix)
+    const emojis = await getEmojiBySearchPrefix(this._db, prefix)
     return uniqEmoji(emojis)
   }
 
   async getEmojiByShortcode (shortcode) {
     assertNonEmptyString(shortcode)
     await this._readyPromise
-    const emojis = await this._idbEngine.getEmojiByShortcode(shortcode)
+    const emojis = await getEmojiByShortcode(this._db, shortcode)
     return uniqEmoji(emojis)
   }
 
   async getEmojiByUnicode (unicode) {
     assertNonEmptyString(unicode)
     await this._readyPromise
-    return this._idbEngine.getEmojiByUnicode(unicode)
+    return getEmojiByUnicode(this._db, unicode)
   }
 
   async close () {
     await this._readyPromise
-    if (this._idbEngine) {
-      await this._idbEngine.close()
-      this._idbEngine = undefined
+    if (this._db) {
+      await closeDatabase(this._dbName)
+      this._db = undefined
     }
   }
 
   async delete () {
     await this._readyPromise
-    if (this._idbEngine) {
-      await this._idbEngine.delete()
-      this._idbEngine = undefined
+    if (this._db) {
+      await deleteDatabase(this._dbName)
+      this._db = undefined
     }
   }
 }
