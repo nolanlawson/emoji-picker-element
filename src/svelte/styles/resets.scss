@@ -1,4 +1,4 @@
-.picker button {
+button {
   margin: 0;
   padding: 0;
   border: none;
@@ -11,12 +11,12 @@
   }
 }
 
-.picker input {
+input {
   padding: 0;
   margin: 0;
   line-height: 1.15;
 }
 
-.picker input[type=search] {
+input[type=search] {
   -webkit-appearance: none;
 }
