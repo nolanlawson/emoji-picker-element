@@ -107,25 +107,23 @@ function onSearchKeydown (event) {
   if (!searchMode || !currentEmojis.length) {
     return
   }
+
+  const goToNextOrPrevious = (previous) => {
+    event.preventDefault()
+    event.stopPropagation()
+    activeSearchItem += (previous ? -1 : 1)
+    if (activeSearchItem < 0) {
+      activeSearchItem = currentEmojis.length - 1
+    } else if (activeSearchItem >= currentEmojis.length) {
+      activeSearchItem = 0
+    }
+  }
+
   switch (event.key) {
     case 'ArrowDown':
-      if (activeSearchItem === currentEmojis.length - 1) {
-        activeSearchItem = 0
-      } else {
-        activeSearchItem++
-      }
-      event.preventDefault()
-      event.stopPropagation()
-      break
+      return goToNextOrPrevious(false)
     case 'ArrowUp':
-      event.preventDefault()
-      event.stopPropagation()
-      if (activeSearchItem <= 0) {
-        activeSearchItem = currentEmojis.length - 1
-      } else {
-        activeSearchItem--
-      }
-      break
+      return goToNextOrPrevious(true)
   }
 }
 
