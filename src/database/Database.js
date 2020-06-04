@@ -18,7 +18,7 @@ export default class Database {
     this._locale = locale
     this._dbName = `lite-emoji-picker-${this._locale}`
     this._db = undefined
-    this._readyPromise = this._init()
+    this._ready = this._init()
   }
 
   async _init () {
@@ -70,38 +70,38 @@ export default class Database {
   }
 
   async ready () {
-    return this._readyPromise
+    return this._ready
   }
 
   async getEmojiByGroup (group) {
     assertNumber(group)
-    await this._readyPromise
+    await this._ready
     const emojis = await getEmojiByGroup(this._db, group)
     return uniqEmoji(emojis)
   }
 
   async getEmojiBySearchPrefix (prefix) {
     assertNonEmptyString(prefix)
-    await this._readyPromise
+    await this._ready
     const emojis = await getEmojiBySearchPrefix(this._db, prefix)
     return uniqEmoji(emojis)
   }
 
   async getEmojiByShortcode (shortcode) {
     assertNonEmptyString(shortcode)
-    await this._readyPromise
+    await this._ready
     const emojis = await getEmojiByShortcode(this._db, shortcode)
     return uniqEmoji(emojis)
   }
 
   async getEmojiByUnicode (unicode) {
     assertNonEmptyString(unicode)
-    await this._readyPromise
+    await this._ready
     return getEmojiByUnicode(this._db, unicode)
   }
 
   async close () {
-    await this._readyPromise
+    await this._ready
     if (this._db) {
       await closeDatabase(this._dbName)
       this._db = undefined
@@ -109,7 +109,7 @@ export default class Database {
   }
 
   async delete () {
-    await this._readyPromise
+    await this._ready
     if (this._db) {
       await deleteDatabase(this._dbName)
       this._db = undefined
