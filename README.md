@@ -173,10 +173,6 @@ applyFocusVisiblePolyfill(picker.shadowRoot);
 
 ### Data source and JSON format
 
-You can fetch the emoji JSON file from wherever you want. However, it's recommended that your server expose an `ETag` header. If so, `lite-emoji-picker` can avoid re-downloading the entire JSON file over and over again. Instead, it will fire off a `HEAD` request and just check the `ETag`.
-
-If your server is cross-origin, then it will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: *`. (Note that `jsdelivr` already does this, which is why it is the default.)
-
 `lite-emoji-picker` requires the _full_ [emojibase-data](https://github.com/milesj/emojibase) JSON file, not the "compact" one. If you would like to trim the JSON file down even further, then modify the file to only contain these keys:
 
 ```json
@@ -185,6 +181,12 @@ If your server is cross-origin, then it will also need to expose `Access-Control
   "order", "shortcodes", "tags", "version"
 ]
 ```
+
+You can fetch the emoji JSON file from wherever you want. However, it's recommended that your server expose an `ETag` header. If so, `lite-emoji-picker` can avoid re-downloading the entire JSON file over and over again. Instead, it will fire off a `HEAD` request and just check the `ETag`.
+
+If the server hosting the JSON file is not the same as the one containing the emoji picker, then it will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: *`. (Note that `jsdelivr` already does this, which is why it is the default.)
+
+Unfortunately [Safari does not support `Access-Control-Allow-Headers`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#Browser_compatibility), meaning that the `ETag` header will not be available cross-origin. In that case, `lite-emoji-picker` will fall back to the less performant option.
 
 ### Offline-first
 
