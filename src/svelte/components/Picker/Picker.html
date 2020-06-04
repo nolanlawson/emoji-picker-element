@@ -57,10 +57,10 @@
     {/each}
   </div>
   <div class="tabpanel"
-       role={searchMode ? '' : 'tabpanel'}
-       aria-label={searchMode ? '' : i18n.categories[currentCategory.name]}
+       role={searchMode ? 'region' : 'tabpanel'}
+       aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
        id={searchMode ? '' : `tab-${currentCategory.group}`}
-       tabindex="{searchMode ? '' : '0'}"
+       tabindex="0"
   >
       <div class="emoji-menu"
            role={searchMode ? 'listbox' : 'menu'}
