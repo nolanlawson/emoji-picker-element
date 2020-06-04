@@ -21,7 +21,7 @@ const baseConfig = {
       'process.env.VERSIONS_AND_TEST_EMOJI': JSON.stringify(versionsAndTestEmoji)
     }),
     replace({
-      '../../../database/Database.js': './Database.js',
+      '../../../database/Database.js': './database.js',
       delimiters: ['', '']
     }),
     svelte({
@@ -36,24 +36,23 @@ const baseConfig = {
   ]
 }
 
-const formats = ['es', 'cjs']
 const entryPoints = [
   {
-    input: './src/svelte/components/Picker/Picker.svelte',
-    output: 'Picker.js'
+    input: './src/picker/components/Picker/Picker.svelte',
+    output: './picker.js'
   },
   {
     input: './src/database/Database.js',
-    output: 'Database.js'
+    output: './database.js'
   }
 ]
 
-export default formats.map(format => (entryPoints.map(({ input, output }) => ({
+export default entryPoints.map(({ input, output }) => ({
   ...baseConfig,
   input,
   output: {
-    format,
-    file: `dist/${format}/${output}`,
+    format: 'es',
+    file: output,
     sourcemap: dev
   }
-})))).flat()
+}))

@@ -115,5 +115,7 @@ dist
 .yarn/build-state.yml
 .pnp.*
 
-
-/dist
+/database.js
+/database.js.map
+/picker.js
+/picker.js.map

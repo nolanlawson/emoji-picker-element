@@ -144,8 +144,8 @@ In general, it's not a problem to create multiple `Database` objects with the sa
 If you want to import the `Database` without the `Picker`, or you want to import them separately, then do:
 
 ```js
-import Picker from 'lite-emoji-picker/dist/es/Picker.js';
-import Database from 'lite-emoji-picker/dist/es/Database.js';
+import Picker from 'lite-emoji-picker/picker';
+import Database from 'lite-emoji-picker/database';
 ```
 
 The reason for this is that `Picker` automatically registers itself as a custom element, following [web component best practices](https://justinfagnani.com/2019/11/01/how-to-publish-web-components-to-npm/). But this adds side effects, so bundlers do not tree-shake as well unless the modules are imported from completely separate files.

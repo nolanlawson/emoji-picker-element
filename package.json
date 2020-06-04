@@ -2,19 +2,17 @@
   "name": "lite-emoji-picker",
   "version": "1.0.0",
   "description": "Lightweight emoji picker based on IndexedDB",
-  "main": "dist/cjs/index.js",
-  "module": "dist/es/index.js",
+  "main": "index.js",
+  "module": "index.js",
+  "type": "module",
   "files": [
-    "dist"
+    "database.js",
+    "index.js",
+    "picker.js"
   ],
   "scripts": {
-    "build:clean": "rm -fr dist && mkdir -p dist/cjs dist/es",
-    "build:copy": "cp src/index.cjs.js dist/cjs/index.js && cp src/index.es.js dist/es/index.js",
-    "build:static": "run-s build:clean build:copy",
-    "build:rollup": "NODE_ENV=production rollup -c",
-    "dev:rollup": "NODE_ENV=development rollup -c -w",
-    "build": "run-s build:static build:rollup",
-    "dev": "run-s build:static dev:rollup",
+    "build": "NODE_ENV=production rollup -c",
+    "dev": "NODE_ENV=development rollup -c -w",
     "lint": "standard && stylelint '**/*.scss'",
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -60,6 +58,11 @@
     "svelte-preprocess": "^3.7.4"
   },
   "standard": {
+    "ignore": [
+      "/database.js",
+      "/index.js",
+      "/picker.js"
+    ],
     "global": [
       "btoa",
       "crypto",
