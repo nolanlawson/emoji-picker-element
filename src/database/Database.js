@@ -1,17 +1,50 @@
 import { assertNonEmptyString } from './utils/assertNonEmptyString'
-import { warnETag } from './utils/warnETag'
-import { assertEmojiBaseData } from './utils/assertEmojiBaseData'
 import { assertNumber } from './utils/assertNumber'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from './constants'
 import { uniqEmoji } from './utils/uniqEmoji'
 import { jsonChecksum } from './utils/jsonChecksum'
-import { warnOffline } from './utils/warnOffline'
 import { closeDatabase, deleteDatabase, openDatabase } from './databaseLifecycle'
 import {
   isEmpty, hasData, loadData, getEmojiByGroup,
   getEmojiBySearchPrefix, getEmojiByShortcode, getEmojiByUnicode
 } from './idbInterface'
 import { log } from '../shared/log'
+import { getETag, getETagAndData } from './utils/ajax'
+
+async function checkForUpdates (db, dataSource) {
+  // just do a simple HEAD request first to see if the eTags match
+  let emojiBaseData
+  let eTag = await getETag(dataSource)
+  if (!eTag) { // work around lack of ETag/Access-Control-Expose-Headers
+    const eTagAndData = await getETagAndData(dataSource)
+    eTag = eTagAndData[0]
+    emojiBaseData = eTagAndData[1]
+    if (!eTag) {
+      eTag = await jsonChecksum(emojiBaseData)
+    }
+  }
+  if (await hasData(db, dataSource, eTag)) {
+    log('Database already populated')
+  } else {
+    log('Database update available')
+    if (!emojiBaseData) {
+      const eTagAndData = await getETagAndData(dataSource)
+      emojiBaseData = eTagAndData[1]
+    }
+    await loadData(db, emojiBaseData, dataSource, eTag)
+  }
+}
+
+async function loadDataForFirstTime (db, dataSource) {
+  let [eTag, emojiBaseData] = await getETagAndData(dataSource)
+  if (!eTag) {
+    // Handle lack of support for ETag or Access-Control-Expose-Headers
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#Browser_compatibility
+    eTag = await jsonChecksum(emojiBaseData)
+  }
+
+  await loadData(db, emojiBaseData, dataSource, eTag)
+}
 
 export default class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE } = {}) {
@@ -23,51 +56,15 @@ export default class Database {
   }
 
   async _init () {
-    this._db = await openDatabase(this._dbName)
-    const url = this._dataSource
-    const empty = await isEmpty(this._db)
-    if (!empty) {
-      // just do a simple HEAD request first to see if the eTags match
-      let headResponse
-      try {
-        headResponse = await fetch(url, { method: 'HEAD' })
-      } catch (e) { // offline fallback
-        warnOffline(e)
-        return
-      }
-      const eTag = headResponse.headers.get('etag')
-      warnETag(eTag)
-      if (eTag && await hasData(this._db, url, eTag)) {
-        log('Database already populated')
-        return // fast init, data is already loaded
-      }
-    }
-    let response
-    try {
-      response = await fetch(this._dataSource)
-    } catch (e) { // offline fallback
-      if (!empty) {
-        warnOffline(e)
-        return
-      }
-      throw e
-    }
-    const emojiBaseData = await response.json()
-    assertEmojiBaseData(emojiBaseData)
-    let eTag = response.headers.get('etag')
-    warnETag(eTag)
-    if (!eTag) {
-      // GNOME Web returns an empty eTag for cross-origin HEAD requests, even when
-      // Access-Control-Expose-Headers:* is set. So as a fallback, compute an ETag
-      // from the object itself.
-      eTag = await jsonChecksum(emojiBaseData)
-    }
-    if (!empty && await hasData(this._db, url, eTag)) {
-      log('Database already populated')
-      return // data already loaded
-    }
+    const db = this._db = await openDatabase(this._dbName)
+    const dataSource = this._dataSource
+    const empty = await isEmpty(db)
 
-    await loadData(this._db, emojiBaseData, url, eTag)
+    if (empty) {
+      await loadDataForFirstTime(db, dataSource)
+    } else { // offline-first - do an update asynchronously
+      /* no await */ checkForUpdates(db, dataSource)
+    }
   }
 
   async ready () {
