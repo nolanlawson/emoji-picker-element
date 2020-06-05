@@ -9,7 +9,7 @@ import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { calculateTextWidth } from '../../utils/calculateTextWidth'
 import { hasZwj } from '../../utils/hasZwj'
 import { thunk } from '../../utils/thunk'
-import { emojiSupportLevel, supportedZwjEmojis } from '../../utils/emojiSupport'
+import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiSupport'
 import { log } from '../../../shared/log'
 import { mark, stop } from '../../../shared/marks'
 
@@ -83,7 +83,8 @@ function isZwjSupported (emoji) {
   return !hasZwj(emoji) || supportedZwjEmojis.get(emoji.unicode)
 }
 
-function filterEmojisByVersion (emojis) {
+async function filterEmojisByVersion (emojis) {
+  const emojiSupportLevel = await emojiSupportLevelPromise
   return emojis.filter(({ version }) => version <= emojiSupportLevel)
 }
 
