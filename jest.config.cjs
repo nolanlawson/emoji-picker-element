@@ -14,5 +14,6 @@ module.exports = {
   verbose: true,
   setupFilesAfterEnv: [
     '<rootDir>/config/jest.setup.js'
-  ]
+  ],
+  coverageReporters: ['json', 'lcov', 'text', 'html']
 }

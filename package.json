@@ -15,7 +15,8 @@
     "dev": "NODE_ENV=development rollup -c -w",
     "lint": "standard && stylelint '**/*.scss'",
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",
-    "test": "jest"
+    "test": "jest",
+    "cover": "jest --coverage"
   },
   "repository": {
     "type": "git",
