@@ -6,9 +6,9 @@
   "module": "index.js",
   "type": "module",
   "files": [
-    "database.js",
-    "index.js",
-    "picker.js"
+    "database.js*",
+    "index.js*",
+    "picker.js*"
   ],
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
@@ -70,6 +70,7 @@
       "indexedDB",
       "IDBKeyRange",
       "matchMedia",
+      "performance",
       "requestAnimationFrame",
       "requestIdleCallback"
     ]

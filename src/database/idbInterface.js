@@ -6,6 +6,7 @@ import {
   STORE_META
 } from './constants'
 import { transformEmojiBaseData } from './transformEmojiBaseData'
+import { mark, stop } from '../shared/marks'
 
 export async function isEmpty (db) {
   return !(await get(db, STORE_META, KEY_URL))
@@ -17,59 +18,64 @@ export async function hasData (db, url, eTag) {
 }
 
 export async function loadData (db, emojiBaseData, url, eTag) {
-  const transformedData = transformEmojiBaseData(emojiBaseData)
-  const [oldETag, oldUrl] = await get(db, STORE_META, [KEY_ETAG, KEY_URL])
-  if (oldETag === eTag && oldUrl === url) {
-    return
-  }
-  await dbPromise(db, [STORE_EMOJI, STORE_META], MODE_READWRITE, ([emojiStore, metaStore]) => {
-    let oldETag
-    let oldUrl
-    let oldKeys
-    let todo = 0
-
-    function checkFetched () {
-      if (++todo === 3) {
-        onFetched()
-      }
+  mark('loadData')
+  try {
+    const transformedData = transformEmojiBaseData(emojiBaseData)
+    const [oldETag, oldUrl] = await get(db, STORE_META, [KEY_ETAG, KEY_URL])
+    if (oldETag === eTag && oldUrl === url) {
+      return
     }
+    await dbPromise(db, [STORE_EMOJI, STORE_META], MODE_READWRITE, ([emojiStore, metaStore]) => {
+      let oldETag
+      let oldUrl
+      let oldKeys
+      let todo = 0
 
-    function onFetched () {
-      if (oldETag === eTag && oldUrl === url) {
-        // check again within the transaction to guard against concurrency, e.g. multiple browser tabs
-        return
-      }
-      if (oldKeys.length) {
-        for (const key of oldKeys) {
-          emojiStore.delete(key)
+      function checkFetched () {
+        if (++todo === 3) {
+          onFetched()
         }
       }
-      insertData()
-    }
 
-    function insertData () {
-      for (const data of transformedData) {
-        emojiStore.put(data)
+      function onFetched () {
+        if (oldETag === eTag && oldUrl === url) {
+          // check again within the transaction to guard against concurrency, e.g. multiple browser tabs
+          return
+        }
+        if (oldKeys.length) {
+          for (const key of oldKeys) {
+            emojiStore.delete(key)
+          }
+        }
+        insertData()
       }
-      metaStore.put(eTag, KEY_ETAG)
-      metaStore.put(url, KEY_URL)
-    }
 
-    metaStore.get(KEY_ETAG).onsuccess = e => {
-      oldETag = e.target.result
-      checkFetched()
-    }
+      function insertData () {
+        for (const data of transformedData) {
+          emojiStore.put(data)
+        }
+        metaStore.put(eTag, KEY_ETAG)
+        metaStore.put(url, KEY_URL)
+      }
 
-    metaStore.get(KEY_URL).onsuccess = e => {
-      oldUrl = e.target.result
-      checkFetched()
-    }
+      metaStore.get(KEY_ETAG).onsuccess = e => {
+        oldETag = e.target.result
+        checkFetched()
+      }
 
-    emojiStore.getAllKeys().onsuccess = e => {
-      oldKeys = e.target.result
-      checkFetched()
-    }
-  })
+      metaStore.get(KEY_URL).onsuccess = e => {
+        oldUrl = e.target.result
+        checkFetched()
+      }
+
+      emojiStore.getAllKeys().onsuccess = e => {
+        oldKeys = e.target.result
+        checkFetched()
+      }
+    })
+  } finally {
+    stop('loadData')
+  }
 }
 
 export async function getEmojiByGroup (db, group) {

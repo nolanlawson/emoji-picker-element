@@ -1,4 +1,5 @@
 import { MIN_SEARCH_TEXT_LENGTH } from '../shared/constants'
+import { mark, stop } from '../shared/marks'
 
 function extractTokens (annotation) {
   return annotation
@@ -11,7 +12,8 @@ function extractTokens (annotation) {
 }
 
 export function transformEmojiBaseData (emojiBaseData) {
-  return emojiBaseData.map(({ annotation, emoticon, group, order, shortcodes, tags, emoji, version }) => {
+  mark('transformEmojiBaseData')
+  const res = emojiBaseData.map(({ annotation, emoticon, group, order, shortcodes, tags, emoji, version }) => {
     const tokens = [...new Set(
       [
         ...shortcodes.map(extractTokens).flat(),
@@ -38,4 +40,6 @@ export function transformEmojiBaseData (emojiBaseData) {
     }
     return res
   })
+  stop('transformEmojiBaseData')
+  return res
 }

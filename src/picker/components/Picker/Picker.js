@@ -10,6 +10,8 @@ import { calculateTextWidth } from '../../utils/calculateTextWidth'
 import { hasZwj } from '../../utils/hasZwj'
 import { thunk } from '../../utils/thunk'
 import { emojiSupportLevel, supportedZwjEmojis } from '../../utils/emojiSupport'
+import { log } from '../../../shared/log'
+import { mark, stop } from '../../../shared/marks'
 
 let database
 let currentEmojis = []
@@ -59,6 +61,7 @@ $: {
 }
 
 function checkZwjSupport (zwjEmojisToCheck) {
+  mark('checkZwjSupport')
   const rootNode = rootElement.getRootNode()
   for (const emoji of zwjEmojisToCheck) {
     const domNode = rootNode.getElementById(`emoji-${emoji.unicode}`)
@@ -68,9 +71,10 @@ function checkZwjSupport (zwjEmojisToCheck) {
     const supported = emojiWidth.toFixed(1) === baselineEmojiWidth.toFixed(1)
     supportedZwjEmojis.set(emoji.unicode, supported)
     if (!supported) {
-      console.log('Filtered unsupported emoji', emoji.unicode)
+      log('Filtered unsupported emoji', emoji.unicode)
     }
   }
+  stop('checkZwjSupport')
   // force update
   currentEmojis = currentEmojis // eslint-disable-line no-self-assign
 }

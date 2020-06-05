@@ -11,6 +11,7 @@ import {
   isEmpty, hasData, loadData, getEmojiByGroup,
   getEmojiBySearchPrefix, getEmojiByShortcode, getEmojiByUnicode
 } from './idbInterface'
+import { log } from '../shared/log'
 
 export default class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE } = {}) {
@@ -37,7 +38,7 @@ export default class Database {
       const eTag = headResponse.headers.get('etag')
       warnETag(eTag)
       if (eTag && await hasData(this._db, url, eTag)) {
-        console.log('Database already populated')
+        log('Database already populated')
         return // fast init, data is already loaded
       }
     }
@@ -62,7 +63,7 @@ export default class Database {
       eTag = await jsonChecksum(emojiBaseData)
     }
     if (!empty && await hasData(this._db, url, eTag)) {
-      console.log('Database already populated')
+      log('Database already populated')
       return // data already loaded
     }
 
