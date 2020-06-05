@@ -32,9 +32,6 @@ function createDatabase (instanceName) {
 }
 
 export async function openDatabase (dbName) {
-  if (!dbName) {
-    throw new Error('dbName is required')
-  }
   if (!databaseCache[dbName]) {
     databaseCache[dbName] = await createDatabase(dbName)
   }
@@ -77,9 +74,6 @@ export function get (db, storeName, key) {
 }
 
 export function closeDatabase (dbName) {
-  if (!dbName) {
-    throw new Error('dbName is required')
-  }
   // close any open requests
   const openReq = openReqs[dbName]
   if (openReq && openReq.result) {
