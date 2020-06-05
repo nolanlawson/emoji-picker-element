@@ -3,13 +3,13 @@
 const hasPerfMarks = typeof performance !== 'undefined' && performance.mark && performance.measure
 
 export function mark (str) {
-  if (hasPerfMarks && (process.env.NODE_ENV !== 'production' || process.env.PERF)) {
+  if ((process.env.NODE_ENV !== 'production' || process.env.PERF) && hasPerfMarks) {
     performance.mark(str)
   }
 }
 
 export function stop (str) {
-  if (hasPerfMarks && (process.env.NODE_ENV !== 'production' || process.env.PERF)) {
+  if ((process.env.NODE_ENV !== 'production' || process.env.PERF) && hasPerfMarks) {
     performance.measure(str, str)
   }
 }
