@@ -88,8 +88,7 @@ export default class Database {
   async getEmojiByShortcode (shortcode) {
     assertNonEmptyString(shortcode)
     await this._ready
-    const emojis = await getEmojiByShortcode(this._db, shortcode)
-    return uniqEmoji(emojis)
+    return getEmojiByShortcode(this._db, shortcode)
   }
 
   async getEmojiByUnicode (unicode) {

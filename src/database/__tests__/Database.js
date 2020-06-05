@@ -139,4 +139,44 @@ describe('database tests', () => {
     expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI_MISCONFIGURED_ETAG, undefined)
     await db.delete()
   })
+
+  test('updates emoji on second load if changed', async () => {
+    const dataSource = 'http://localhost/will-change.json'
+    fetch.get(dataSource, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/xxx' } }))
+    fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/xxx' } }))
+
+    let db = new Database({ dataSource })
+    await db.ready()
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch).toHaveBeenLastCalledWith(dataSource, undefined)
+
+    expect((await db.getEmojiByShortcode('rofl')).annotation).toBe('rolling on the floor laughing')
+    expect(await db.getEmojiByShortcode('weary_cat')).toBeFalsy()
+
+    await db.close()
+
+    const changedEmoji = JSON.parse(JSON.stringify(truncatedEmoji))
+    const roflIndex = allEmoji.findIndex(_ => _.annotation === 'rolling on the floor laughing')
+    changedEmoji[roflIndex] = allEmoji.find(_ => _.annotation === 'pineapple') // replace rofl
+
+    fetch.mockClear()
+    fetch.reset()
+    fetch.get(dataSource, () => new Response(JSON.stringify(changedEmoji), { headers: { ETag: 'W/yyy' } }))
+    fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/yyy' } }))
+
+    db = new Database({ dataSource })
+    await db.ready()
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(fetch).toHaveBeenCalledTimes(2)
+    expect(fetch).toHaveBeenLastCalledWith(dataSource, undefined)
+    expect(fetch).toHaveBeenNthCalledWith(1, dataSource, { method: 'HEAD' })
+    expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
+    expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
+    await db.delete()
+  })
+
+  // test - same test but no ETag
+  // test - invalid data
+  // test - URL changed
+  // test - are shortcodes unique?
 })
