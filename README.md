@@ -50,7 +50,101 @@ This will log:
 }
 ```
 
-## API
+## Styling
+
+`emoji-picker-element` uses [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM), so its inner styling cannot be changed with arbitrary CSS. Please refer to the API below for style customization.
+
+### Size
+
+`emoji-picker-element` has a default size, but you can change it to be whatever you want:
+
+```css
+emoji-picker {
+  width: 400px;
+  height: 300px;
+}
+```
+
+For instance, to make it expand to fit whatever container you give it:
+
+```css
+emoji-picker {
+  width: 100%;
+  height: 100%;
+}
+```
+
+### Dark mode
+
+By default, `emoji-picker-element` will automatically switch to dark mode based on 
+[`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme). 
+For more fine-grained, control, add the class `dark` or `light` to force dark/light mode:
+
+```html
+<emoji-picker class="dark"></emoji-picker>
+<emoji-picker class="light"></emoji-picker>
+```
+
+### CSS variables
+
+Most colors and sizes can be styled with CSS variables. For example:
+
+```css
+emoji-picker {
+  --num-columns: 6;
+  --emoji-size: 3rem;
+  --background: gray;
+}
+```
+
+Here is a full list of options:
+
+<!-- CSS variable options start -->
+
+| Variable                     | Default    | Default (dark) | Description                                     |
+| ---------------------------- | ---------- | -------------- | ----------------------------------------------- |
+| `--background`               | `#fff`     | `#222`         |  Background of the entire `<emoji-picker>`      |
+| `--border-color`             | `#e0e0e0`  | `#444`         |                                                 |
+| `--button-active-background` | `#e6e6e6`  | `#555555`      |  Background of an active button                 |
+| `--button-hover-background`  | `#d9d9d9`  | `#484848`      |  Background of a hovered button                 |
+| `--emoji-padding`            | `0.5rem`   |                |                                                 |
+| `--emoji-size`               | `1.375rem` |                |                                                 |
+| `--indicator-color`          | `#385ac1`  | `#5373ec`      |  Color of the nav indicator                     |
+| `--indicator-height`         | `3px`      |                |  Height of the nav indicator                    |
+| `--input-border-color`       | `#999`     | `#ccc`         |                                                 |
+| `--input-border-radius`      | `0.5rem`   |                |                                                 |
+| `--input-border-size`        | `1px`      |                |                                                 |
+| `--input-font-color`         | `#111`     | `#efefef`      |                                                 |
+| `--input-font-size`          | `1rem`     |                |                                                 |
+| `--input-line-height`        | `1.5`      |                |                                                 |
+| `--input-padding`            | `0.25rem`  |                |                                                 |
+| `--input-placeholder-color`  | `#999`     | `#ccc`         |                                                 |
+| `--num-columns`              | `8`        |                |  How many columns to display in the emoji grid  |
+| `--outline-color`            | `#999`     | `#fff`         |  Focus outline color                            |
+| `--outline-size`             | `2px`      |                |  Focus outline width                            |
+
+<!-- CSS variable options end -->
+
+### Focus outline
+
+For accessibility reasons, `emoji-picker-element` displays a prominent focus ring. If you want to hide the focus ring for non-keyboard users (e.g. mouse and touch only), then use the [focus-visible](https://github.com/WICG/focus-visible) polyfill, e.g.:
+
+```css
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+```
+
+```js
+import { applyFocusVisiblePolyfill } from 'focus-visible';
+
+const picker = new Picker();
+applyFocusVisiblePolyfill(picker.shadowRoot);
+```
+
+`emoji-picker-element` already ships with the proper CSS for both the `:focus_visible` standard and the polyfill.
+
+## JavaScript API
 
 ### Picker
 
@@ -110,84 +204,10 @@ Here is the default English `i81n` object (`"en"` locale):
 Note that some of these strings are only visible to users of screen readers.
 But you should still support them if you internationalize your app!
 
-#### Styling
-
-`emoji-picker-element` uses Shadow DOM, so its inner styling is not accessible except via the API described below.
-
-##### Size
-
-`emoji-picker-element` has a default size, but you can change it to be whatever you want:
-
-```css
-emoji-picker {
-  width: 400px;
-  height: 300px;
-}
-```
-
-For instance, to make it expand to fit whatever container you give it:
-
-```css
-emoji-picker {
-  width: 100%;
-  height: 100%;
-}
-```
-
-##### Dark mode
-
-By default, `emoji-picker-element` will automatically switch to dark mode based on 
-[`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme). 
-For more fine-grained, control, add the class `dark` or `light` to force dark/light mode:
-
-```html
-<emoji-picker class="dark"></emoji-picker>
-<emoji-picker class="light"></emoji-picker>
-```
-
-##### CSS variables
-
-Most colors and sizes can be styled with CSS variables. For example:
-
-```css
-emoji-picker {
-  --num-columns: 6;
-  --emoji-size: 3rem;
-  --background: gray;
-}
-```
-
-Here is a full list of options:
-
-<!-- CSS variable options start -->
-
-| Variable                     | Default    | Default (dark) | Description                                     |
-| ---------------------------- | ---------- | -------------- | ----------------------------------------------- |
-| `--background`               | `#fff`     | `#222`         |  Background of the entire <emoji-picker>        |
-| `--border-color`             | `#e0e0e0`  | `#444`         |                                                 |
-| `--button-active-background` | `#e6e6e6`  | `#555555`      |  Background of an active button                 |
-| `--button-hover-background`  | `#d9d9d9`  | `#484848`      |  Background of a hovered button                 |
-| `--emoji-padding`            | `0.5rem`   |                |                                                 |
-| `--emoji-size`               | `1.375rem` |                |                                                 |
-| `--indicator-color`          | `#385ac1`  | `#5373ec`      |  Color of the nav indicator                     |
-| `--indicator-height`         | `3px`      |                |  Height of the nav indicator                    |
-| `--input-border-color`       | `#999`     | `#ccc`         |                                                 |
-| `--input-border-radius`      | `0.5rem`   |                |                                                 |
-| `--input-border-size`        | `1px`      |                |                                                 |
-| `--input-font-color`         | `#111`     | `#efefef`      |                                                 |
-| `--input-font-size`          | `1rem`     |                |                                                 |
-| `--input-line-height`        | `1.5`      |                |                                                 |
-| `--input-padding`            | `0.25rem`  |                |                                                 |
-| `--input-placeholder-color`  | `#999`     | `#ccc`         |                                                 |
-| `--num-columns`              | `8`        |                |  How many columns to display in the emoji grid  |
-| `--outline-color`            | `#999`     | `#fff`         |  Focus outline color                            |
-| `--outline-size`             | `2px`      |                |  Focus outline width                            |
-
-<!-- CSS variable options end -->
-
 ### Database
 
-You can work with the database API separately:
+You can work with the database API separately, which allows you to query emoji the same
+way that the picker does:
 
 ```js
 import { Database } from 'emoji-picker-element';
@@ -219,25 +239,6 @@ import Database from 'emoji-picker-element/database';
 ```
 
 The reason for this is that `Picker` automatically registers itself as a custom element, following [web component best practices](https://justinfagnani.com/2019/11/01/how-to-publish-web-components-to-npm/). But this adds side effects, so bundlers like Webpack and Rollup do not tree-shake as well, unless the modules are imported from completely separate files.
-
-## Focus outline
-
-For accessibility reasons, `emoji-picker-element` displays a prominent focus ring. If you want to hide the focus ring for non-keyboard users (e.g. mouse and touch only), then use the [focus-visible](https://github.com/WICG/focus-visible) polyfill, e.g.:
-
-```css
-.js-focus-visible :focus:not(.focus-visible) {
-  outline: none;
-}
-```
-
-```js
-import { applyFocusVisiblePolyfill } from 'focus-visible';
-
-const picker = new Picker();
-applyFocusVisiblePolyfill(picker.shadowRoot);
-```
-
-`emoji-picker-element` already ships with the proper CSS for both the `:focus_visible` standard and the polyfill.
 
 ## Data and offline
 
