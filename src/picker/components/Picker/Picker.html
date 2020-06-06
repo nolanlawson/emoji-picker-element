@@ -56,8 +56,8 @@
       </div>
     {/each}
   </div>
-  {#if emojiUnsupported}
-    <div class="unsupported">{i18n.emojiUnsupported}</div>
+  {#if message}
+    <div class="message">{message}</div>
   {:else}
     <div class="tabpanel"
          role={searchMode ? 'region' : 'tabpanel'}

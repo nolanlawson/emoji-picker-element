@@ -1,4 +1,4 @@
-/* eslint-disable prefer-const,no-labels */
+/* eslint-disable prefer-const,no-labels,no-inner-declarations */
 
 import Database from '../../../database/Database.js'
 import i18n from '../../i18n/en.json'
@@ -13,6 +13,8 @@ import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiS
 import { log } from '../../../shared/log'
 import { mark, stop } from '../../../shared/marks'
 
+const TIMEOUT_BEFORE_LOADING_MESSAGE = 1000 // 1 second
+
 let database
 let currentEmojis = []
 let locale = DEFAULT_LOCALE
@@ -24,17 +26,41 @@ let rootElement
 let baselineEmoji
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
-let emojiUnsupported = false // eslint-disable-line no-unused-vars
+let message // eslint-disable-line no-unused-vars
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
 emojiSupportLevelPromise.then(level => {
-  emojiUnsupported = !level
+  if (!level) {
+    message = i18n.emojiUnsupported
+  }
 })
 
-$: database = new Database({ dataSource, locale }) // should be the first thing we do, to kick off loading IDB
 $: {
-  // eslint-disable-next-line no-inner-declarations
+  // should be the first thing we do, to kick off loading IDB
+  database = new Database({ dataSource, locale })
+
+  // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
+  async function handleDatabaseLoading () {
+    const timeoutHandle = setTimeout(() => {
+      message = i18n.loading
+    }, TIMEOUT_BEFORE_LOADING_MESSAGE)
+    try {
+      await database.ready()
+    } catch (err) {
+      console.error(err)
+      message = i18n.networkError
+    } finally {
+      clearTimeout(timeoutHandle)
+      if (message === i18n.loading) {
+        message = ''
+      }
+    }
+  }
+  /* no await */ handleDatabaseLoading()
+}
+
+$: {
   async function updateEmojis () {
     if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
       searchMode = true

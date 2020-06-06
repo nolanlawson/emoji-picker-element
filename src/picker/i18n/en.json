@@ -1,5 +1,7 @@
 {
   "emojiUnsupported": "Your browser does not support color emoji.",
+  "loading": "Loading…",
+  "networkError": "Could not load emoji. Try refreshing.",
   "regionLabel": "Emoji picker",
   "search": "Search",
   "skinToneLabel": "Choose a skin tone",
