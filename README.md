@@ -27,7 +27,7 @@ Design goals:
 import 'emoji-picker-element';
 ```
 
-or via [unpkg](https://unpkg.com):
+Or via [unpkg](https://unpkg.com):
 
 ```js
 import 'https://unpkg.com/emoji-picker-element'

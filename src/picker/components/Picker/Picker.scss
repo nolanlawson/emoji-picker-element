@@ -123,3 +123,11 @@ input.search {
     color: var(--input-placeholder-color);
   }
 }
+
+//
+// unsupported warning
+//
+
+.unsupported {
+  padding: var(--emoji-padding);
+}

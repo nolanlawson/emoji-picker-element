@@ -56,27 +56,31 @@
       </div>
     {/each}
   </div>
-  <div class="tabpanel"
-       role={searchMode ? 'region' : 'tabpanel'}
-       aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
-       id={searchMode ? '' : `tab-${currentCategory.group}`}
-       tabindex="0"
-  >
-      <div class="emoji-menu"
-           role={searchMode ? 'listbox' : 'menu'}
-           aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
-           id="search-results"
-      >
-        {#each currentEmojis as emoji, i (emoji.unicode)}
-          <button role={searchMode ? 'option' : 'menuitem'}
-                  aria-selected={searchMode && i === activeSearchItem}
-                  class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active-search-item' : ''}"
-                  id="emoji-{emoji.unicode}">
-            {emoji.unicode}
-          </button>
-        {/each}
+  {#if emojiUnsupported}
+    <div class="unsupported">{i18n.emojiUnsupported}</div>
+  {:else}
+    <div class="tabpanel"
+         role={searchMode ? 'region' : 'tabpanel'}
+         aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
+         id={searchMode ? '' : `tab-${currentCategory.group}`}
+         tabindex="0"
+    >
+        <div class="emoji-menu"
+             role={searchMode ? 'listbox' : 'menu'}
+             aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
+             id="search-results"
+        >
+          {#each currentEmojis as emoji, i (emoji.unicode)}
+            <button role={searchMode ? 'option' : 'menuitem'}
+                    aria-selected={searchMode && i === activeSearchItem}
+                    class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active-search-item' : ''}"
+                    id="emoji-{emoji.unicode}">
+              {emoji.unicode}
+            </button>
+          {/each}
+      </div>
     </div>
-  </div>
+  {/if}
   <div aria-hidden="true" class="hidden abs-pos">
     <button class="emoji baseline-emoji" bind:this={baselineEmoji}>😀</button>
   </div>

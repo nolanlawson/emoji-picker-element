@@ -1,5 +1,5 @@
 {
-  "loading": "Loading…",
+  "emojiUnsupported": "Your browser does not support color emoji.",
   "regionLabel": "Emoji picker",
   "search": "Search",
   "skinToneLabel": "Choose a skin tone",

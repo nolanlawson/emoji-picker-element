@@ -24,9 +24,15 @@ let rootElement
 let baselineEmoji
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
+let emojiUnsupported = false // eslint-disable-line no-unused-vars
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
-$: database = new Database({ dataSource, locale })
+
+emojiSupportLevelPromise.then(level => {
+  emojiUnsupported = !level
+})
+
+$: database = new Database({ dataSource, locale }) // should be the first thing we do, to kick off loading IDB
 $: {
   // eslint-disable-next-line no-inner-declarations
   async function updateEmojis () {
