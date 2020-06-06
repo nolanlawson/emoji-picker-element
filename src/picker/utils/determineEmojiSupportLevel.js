@@ -7,7 +7,7 @@ const versionsAndTestEmoji = process.env.VERSIONS_AND_TEST_EMOJI
 
 export function determineEmojiSupportLevel () {
   mark('determineEmojiSupportLevel')
-  const versionsWithSupports = versionsAndTestEmoji.map(({ version, emoji }) => {
+  const versionsWithSupports = Object.entries(versionsAndTestEmoji).map(([emoji, version]) => {
     const supported = isEmoji(emoji)
     return {
       version,
