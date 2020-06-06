@@ -6,7 +6,7 @@ import { jsonChecksum } from './utils/jsonChecksum'
 import { closeDatabase, deleteDatabase, openDatabase } from './databaseLifecycle'
 import {
   isEmpty, hasData, loadData, getEmojiByGroup,
-  getEmojiBySearchPrefix, getEmojiByShortcode, getEmojiByUnicode
+  getEmojiBySearchQuery, getEmojiByShortcode, getEmojiByUnicode
 } from './idbInterface'
 import { log } from '../shared/log'
 import { getETag, getETagAndData } from './utils/ajax'
@@ -78,10 +78,10 @@ export default class Database {
     return uniqEmoji(emojis)
   }
 
-  async getEmojiBySearchPrefix (prefix) {
-    assertNonEmptyString(prefix)
+  async getEmojiBySearchQuery (query) {
+    assertNonEmptyString(query)
     await this._ready
-    const emojis = await getEmojiBySearchPrefix(this._db, prefix)
+    const emojis = await getEmojiBySearchQuery(this._db, query)
     return uniqEmoji(emojis)
   }
 

@@ -1,15 +1,6 @@
 import { MIN_SEARCH_TEXT_LENGTH } from '../shared/constants'
 import { mark, stop } from '../shared/marks'
-
-function extractTokens (annotation) {
-  return annotation
-    .split(/[\s_]+/)
-    .map(word => {
-      return word
-        .replace(/[)(:,]/g, '')
-        .replace(/’/g, "'")
-    })
-}
+import { extractTokens } from './utils/extractTokens'
 
 export function transformEmojiBaseData (emojiBaseData) {
   mark('transformEmojiBaseData')
@@ -22,8 +13,8 @@ export function transformEmojiBaseData (emojiBaseData) {
         emoticon
       ]
         .filter(Boolean)
-        .filter(_ => _.length >= MIN_SEARCH_TEXT_LENGTH)
         .map(_ => _.toLowerCase())
+        .filter(_ => _.length >= MIN_SEARCH_TEXT_LENGTH)
     )].sort()
     const res = {
       annotation,

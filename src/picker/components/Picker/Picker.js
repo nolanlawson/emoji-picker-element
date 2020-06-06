@@ -32,7 +32,7 @@ $: {
   async function updateEmojis () {
     if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
       searchMode = true
-      currentEmojis = await getEmojisBySearchPrefix(searchText)
+      currentEmojis = await getEmojisBySearchQuery(searchText)
     } else {
       searchMode = false
       currentEmojis = await getEmojisByGroup(currentCategory.group)
@@ -92,8 +92,8 @@ async function getEmojisByGroup (group) {
   return filterEmojisByVersion(await database.getEmojiByGroup(group))
 }
 
-async function getEmojisBySearchPrefix (prefix) {
-  return filterEmojisByVersion(await database.getEmojiBySearchPrefix(prefix))
+async function getEmojisBySearchQuery (query) {
+  return filterEmojisByVersion(await database.getEmojiBySearchQuery(query))
 }
 
 // eslint-disable-next-line no-unused-vars
