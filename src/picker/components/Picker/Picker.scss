@@ -55,12 +55,12 @@ button.emoji,
     sans-serif;
 
   &:hover {
-    background-color: var(--hover-background-color);
+    background: var(--button-hover-background);
   }
 
   &:active,
   &.active-search-item {
-    background-color: var(--active-background-color);
+    background: var(--button-active-background);
   }
 }
 
@@ -126,7 +126,7 @@ input.search {
   padding: var(--input-padding);
   border-radius: var(--input-border-radius);
   border: var(--input-border-size) solid var(--input-border-color);
-  background-color: var(--background-color);
+  background: var(--background);
   color: var(--input-font-color);
   width: 100%;
   font-size: var(--input-font-size);

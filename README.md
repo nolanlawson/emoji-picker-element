@@ -143,21 +143,43 @@ For more fine-grained, control, add the class `dark` or `light` to force dark/li
 
 ###### CSS variables
 
-Many attributes such as colors and sizes can be styled with CSS variables. Here is a list:
-
-| Option | Type | Default | Description |
-| ------ | ---- | ------- | ----------- |
-| --num-columns | integer | 8 | Number of emoji to show per row |
-
-For example:
+Many attributes such as colors and sizes can be styled with CSS variables. For example:
 
 ```css
 emoji-picker {
   --num-columns: 6;
   --emoji-size: 3rem;
-  --background-color: gray;
+  --background: gray;
 }
 ```
+
+Here is a full list of options:
+
+<!-- CSS variable options start -->
+
+| Variable                     | Default    | Default (dark) | Description                                     |
+| ---------------------------- | ---------- | -------------- | ----------------------------------------------- |
+| `--background`               | `#fff`     | `#222`         |  Background of the entire <emoji-picker>        |
+| `--border-color`             | `#e0e0e0`  | `#444`         |                                                 |
+| `--button-active-background` | `#e6e6e6`  | `#555555`      |  Background of an active button                 |
+| `--button-hover-background`  | `#d9d9d9`  | `#484848`      |  Background of a hovered button                 |
+| `--emoji-padding`            | `0.5rem`   |                |                                                 |
+| `--emoji-size`               | `1.375rem` |                |                                                 |
+| `--indicator-color`          | `#385ac1`  | `#5373ec`      |  Color of the nav indicator                     |
+| `--indicator-height`         | `3px`      |                |  Height of the nav indicator                    |
+| `--input-border-color`       | `#999`     | `#ccc`         |                                                 |
+| `--input-border-radius`      | `0.5rem`   |                |                                                 |
+| `--input-border-size`        | `1px`      |                |                                                 |
+| `--input-font-color`         | `#111`     | `#efefef`      |                                                 |
+| `--input-font-size`          | `1rem`     |                |                                                 |
+| `--input-line-height`        | `1.5`      |                |                                                 |
+| `--input-padding`            | `0.25rem`  |                |                                                 |
+| `--input-placeholder-color`  | `#999`     | `#ccc`         |                                                 |
+| `--num-columns`              | `8`        |                |  How many columns to display in the emoji grid  |
+| `--outline-color`            | `#999`     | `#fff`         |  Focus outline color                            |
+| `--outline-size`             | `2px`      |                |  Focus outline width                            |
+
+<!-- CSS variable options end -->
 
 ### Database
 
