@@ -81,16 +81,29 @@ button.emoji,
   align-items: center;
 }
 
-.indicators {
+//
+// indicator
+//
+
+.indicator-wrapper {
   display: flex;
   border-bottom: 1px solid var(--border-color);
 }
 
 .indicator {
-  flex: 1;
+  $opacityAnim: 0.1s;
+  $transformAnim: 0.25s;
+  width: calc(100% / var(--num-categories));
   height: var(--indicator-height);
-  width: 100%;
+  opacity: var(--indicator-opacity);
   background-color: var(--indicator-color);
+  will-change: transform, opacity;
+  transition: opacity #{$opacityAnim} linear, transform #{$transformAnim} ease-in-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    will-change: opacity;
+    transition: opacity #{$opacityAnim} linear;
+  }
 }
 
 //

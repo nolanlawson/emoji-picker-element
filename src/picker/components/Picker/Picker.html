@@ -2,6 +2,7 @@
 <section
   class="picker"
   aria-label={i18n.regionLabel}
+  style="--num-categories: {categories.length}; --indicator-opacity: {searchMode ? 0 : 1};"
   bind:this={rootElement}
 >
   <div class="search-row">
@@ -49,12 +50,11 @@
       </button>
     {/each}
   </div>
-  <div class="indicators"
+  <div class="indicator-wrapper"
        aria-hidden="true">
-    {#each categories as category (category.group)}
-      <div class="indicator {currentCategory.group === category.group ? '' : 'hidden'}">
-      </div>
-    {/each}
+    <div class="indicator"
+         style="transform: translateX({currentCategoryIndex * 100}%);">
+    </div>
   </div>
   {#if message}
     <div class="message">{message}</div>

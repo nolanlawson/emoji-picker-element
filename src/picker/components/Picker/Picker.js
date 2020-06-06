@@ -19,7 +19,6 @@ let database
 let currentEmojis = []
 let locale = DEFAULT_LOCALE
 let dataSource = DEFAULT_DATA_SOURCE
-let currentCategory = categories[0]
 let rawSearchText = ''
 let searchText = ''
 let rootElement
@@ -27,6 +26,8 @@ let baselineEmoji
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
 let message // eslint-disable-line no-unused-vars
+let currentCategoryIndex = 0
+let currentCategory = categories[currentCategoryIndex]
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
@@ -59,6 +60,8 @@ $: {
   }
   /* no await */ handleDatabaseLoading()
 }
+
+$: currentCategoryIndex = categories.findIndex(_ => _.group === currentCategory.group)
 
 $: {
   async function updateEmojis () {
