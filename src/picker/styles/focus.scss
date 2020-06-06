@@ -1,0 +1,16 @@
+:focus {
+  outline: var(--outline-color) solid var(--outline-size);
+  outline-offset: calc(-1 * var(--outline-size)); // fix focus ring getting cropped
+}
+
+// focus-visible polyfill
+:host([data-js-focus-visible]) :focus:not([data-focus-visible-added]) {
+  outline: none;
+}
+
+/* stylelint-disable */
+// focus-visible standard
+:focus:not(:focus-visible) {
+  outline: none;
+}
+/* stylelint-enable */

@@ -1,15 +1,11 @@
 @import './variables.scss';
 @import './resets.scss';
+@import './focus.scss';
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
-}
-
-:focus {
-  outline: var(--outline-color) solid var(--outline-size);
-  outline-offset: calc(-1 * var(--outline-size)); // fix focus ring getting cropped
 }
 
 :host {

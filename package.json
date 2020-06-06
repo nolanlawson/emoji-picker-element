@@ -50,6 +50,7 @@
     "fake-indexeddb": "^3.0.1",
     "fast-json-stable-stringify": "^2.1.0",
     "fetch-mock-jest": "^1.3.0",
+    "focus-visible": "^5.1.0",
     "husky": "^4.2.5",
     "if-emoji": "^0.1.0",
     "jest": "^26.0.1",

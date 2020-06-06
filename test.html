@@ -10,9 +10,12 @@
 <div class="container">
   <emoji-picker></emoji-picker>
 </div>
+<script src="/node_modules/focus-visible/dist/focus-visible.js"></script>
 <script type="module">
   import './index.js'
-  document.querySelector('emoji-picker').addEventListener('emoji-click', e => console.log(e))
+  const picker = document.querySelector('emoji-picker')
+  picker.addEventListener('emoji-click', e => console.log(e))
+  applyFocusVisiblePolyfill(picker.shadowRoot)
 </script>
 </body>
 </html>
