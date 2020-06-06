@@ -11,9 +11,10 @@
     "picker.js*"
   ],
   "scripts": {
-    "build": "run-s build:rollup build:css-docs",
+    "build": "run-s build:rollup build:css-docs build:i18n-docs",
     "build:rollup": "NODE_ENV=production rollup -c",
     "build:css-docs": "node ./bin/generateCssDocs",
+    "build:i18n-docs": "node ./bin/generateI18nDocs",
     "dev": "NODE_ENV=development rollup -c -w",
     "lint": "standard && stylelint '**/*.scss'",
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",

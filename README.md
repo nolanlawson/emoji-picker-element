@@ -77,18 +77,12 @@ picker.dataSource = '/my-emoji.json';
 
 #### i18n structure
 
-The default English (`"en"`) `i81n` object:
+Here is the default English `i81n` object (`"en"` locale):
+
+<!-- i18n options start -->
 
 ```json
 {
-  "emojiUnsupported": "Your browser does not support color emoji.",
-  "loading": "Loading…",
-  "networkError": "Could not load emoji. Try refreshing.",
-  "regionLabel": "Emoji picker",
-  "search": "Search",
-  "skinToneLabel": "Choose a skin tone",
-  "searchResultsLabel": "Search results",
-  "categoriesLabel": "Categories",
   "categories": {
     "smileys-emotion": "Smileys and emoticons",
     "people-body": "People and body",
@@ -99,11 +93,21 @@ The default English (`"en"`) `i81n` object:
     "objects": "Objects",
     "symbols": "Symbols",
     "flags": "Flags"
-  }
+  },
+  "categoriesLabel": "Categories",
+  "emojiUnsupported": "Your browser does not support color emoji.",
+  "loading": "Loading…",
+  "networkError": "Could not load emoji. Try refreshing.",
+  "regionLabel": "Emoji picker",
+  "search": "Search",
+  "searchResultsLabel": "Search results",
+  "skinToneLabel": "Choose a skin tone"
 }
 ```
 
-Note that some of these values are only visible to users of screen readers. 
+<!-- i18n options end -->
+
+Note that some of these strings are only visible to users of screen readers.
 But you should still support them if you internationalize your app!
 
 #### Styling
