@@ -222,6 +222,20 @@ To avoid downloading a large sprite sheet (which may be copyrighted, or may look
 
 To avoid rendering ugly unsupported or half-supported emoji, `emoji-picker-element` will automatically detect emoji support and only render the supported characters. (So no empty boxes or awkward double emoji.)
 
+### JSON loading
+
+Why only allow loading via a URL rather than directly passing in a JSON object? A few reasons:
+
+First, it bloats the size of the JavaScript bundle to do so. `emoji-picker-element` is optimized for second load, where
+it doesn't even need to fetch, parse, or read the full JSON object into memory – it can just rely on IndexedDB.
+Sure, this could be optional, but if an anti-pattern is allowed, then people might do it out of convenience.
+
+Second, browsers deal with JSON more efficiently when it's loaded via `fetch()` rather than embedded in JavaScript. It's
+[faster for the browser to parse JSON than JavaScript](https://joreteg.com/blog/improving-redux-state-transfer-performance),
+plus using the `await (await fetch()).json()` pattern gives the browser more room for optimizations, since you're
+explicitly telling it to cache and parse the data (asynchronously) as JSON. (I'm not aware of any browsers that do
+this, e.g. off-main-thread JSON parsing, but it's certainly possible!)
+
 ### Browser support
 
 Only the latest versions of Chrome, Firefox, and Safari (and browsers using equivalent rendering engines) are supported.
