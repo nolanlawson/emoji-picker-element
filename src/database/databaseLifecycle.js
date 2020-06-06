@@ -1,11 +1,13 @@
 import { migrations } from './migrations'
 import { DB_VERSION_CURRENT, MODE_READONLY } from './constants'
+import { mark, stop } from '../shared/marks'
 
 const openReqs = {}
 const databaseCache = {}
 
 function createDatabase (dbName) {
   return new Promise((resolve, reject) => {
+    mark('createDatabase')
     const req = indexedDB.open(dbName, DB_VERSION_CURRENT)
     openReqs[dbName] = req
     req.onerror = reject
@@ -27,7 +29,10 @@ function createDatabase (dbName) {
       }
       doNextMigration()
     }
-    req.onsuccess = () => resolve(req.result)
+    req.onsuccess = () => {
+      stop('createDatabase')
+      resolve(req.result)
+    }
   })
 }
 
