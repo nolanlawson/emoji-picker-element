@@ -12,6 +12,12 @@
   outline-offset: calc(-1 * var(--outline-size)); // fix focus ring getting cropped
 }
 
+:host {
+  display: flex;
+  width: fit-content;
+  height: 400px;
+}
+
 .picker {
   contain: content;
   display: flex;

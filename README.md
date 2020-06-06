@@ -1,15 +1,16 @@
 emoji-picker-element
 ====
 
-A small, performant, accessible emoji picker, distributed as a custom element.
+A lightweight emoji picker, distributed as a custom element.
 
-It's built on top of IndexedDB, so it consumes far less memory than other emoji pickers. It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint.
+It's built on top of IndexedDB, so it consumes far less memory than other emoji pickers.
+It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint.
 
 Design goals:
 
 - Store emoji data in IndexedDB, not memory
 - Render native emoji, no spritesheets
-- Accessible by default
+- Accessible
 - Drop-in as a vanilla web component
 
 ## Install
@@ -26,16 +27,11 @@ Design goals:
 import 'emoji-picker-element';
 ```
 
-`emoji-picker-element` will expand to fit whatever container you give it. Here is a good default:
+or via [unpkg](https://unpkg.com):
 
-```css
-emoji-picker {
-  width: 400px;
-  height: 300px;
-}
+```js
+import 'https://unpkg.com/emoji-picker-element'
 ```
-
-`emoji-picker-element` uses Shadow DOM, so its inner styling is not accessible except via the API.
 
 ## API
 
@@ -59,7 +55,7 @@ These values can also be set at runtime, e.g.:
 
 ```js
 const picker = new Picker();
-picker.numColumns = 6;
+picker.dataSource = '/my-emoji.json';
 ```
 
 #### i18n structure
@@ -88,9 +84,33 @@ Note that some of these values are only visible to users of screen readers (but 
 
 #### Styling
 
+`emoji-picker-element` uses Shadow DOM, so its inner styling is not accessible except via the API described below.
+
+##### Size
+
+`emoji-picker-element` has a default size, but you can change it to be whatever you want:
+
+```css
+emoji-picker {
+  width: 400px;
+  height: 300px;
+}
+```
+
+For instance, to make it expand to fit whatever container you give it:
+
+```css
+emoji-picker {
+  width: 100%;
+  height: 100%;
+}
+```
+
 ##### Dark mode
 
-By default, `emoji-picker-element` will automatically switch to dark mode based on [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme). For more fine-grained, control, add the class `dark` or `light` to force dark/light mode:
+By default, `emoji-picker-element` will automatically switch to dark mode based on 
+[`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme). 
+For more fine-grained, control, add the class `dark` or `light` to force dark/light mode:
 
 ```html
 <emoji-picker class="dark"></emoji-picker>

@@ -1,7 +1,7 @@
 {
   "name": "emoji-picker-element",
   "version": "1.0.0",
-  "description": "Lightweight emoji picker based on IndexedDB",
+  "description": "A lightweight emoji picker, distributed as a custom element",
   "main": "index.js",
   "module": "index.js",
   "type": "module",
