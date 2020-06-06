@@ -143,6 +143,8 @@ describe('database tests', () => {
 
   test('updates emoji on second load if changed', async () => {
     const dataSource = 'http://localhost/will-change.json'
+
+    // first time - data is v1
     fetch.get(dataSource, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/xxx' } }))
     fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/xxx' } }))
 
@@ -160,10 +162,80 @@ describe('database tests', () => {
     const roflIndex = allEmoji.findIndex(_ => _.annotation === 'rolling on the floor laughing')
     changedEmoji[roflIndex] = allEmoji.find(_ => _.annotation === 'pineapple') // replace rofl
 
+    // second time - update, data is v2
     fetch.mockClear()
     fetch.reset()
     fetch.get(dataSource, () => new Response(JSON.stringify(changedEmoji), { headers: { ETag: 'W/yyy' } }))
     fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/yyy' } }))
+
+    db = new Database({ dataSource })
+    await db.ready()
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(fetch).toHaveBeenCalledTimes(2)
+    expect(fetch).toHaveBeenLastCalledWith(dataSource, undefined)
+    expect(fetch).toHaveBeenNthCalledWith(1, dataSource, { method: 'HEAD' })
+    expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
+    expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
+
+    // third time - no update, data is v2
+    fetch.mockClear()
+    fetch.reset()
+    fetch.get(dataSource, () => new Response(JSON.stringify(changedEmoji), { headers: { ETag: 'W/yyy' } }))
+    fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/yyy' } }))
+
+    db = new Database({ dataSource })
+    await db.ready()
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch).toHaveBeenLastCalledWith(dataSource, { method: 'HEAD' })
+    expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
+    expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
+
+    await db.delete()
+  })
+
+  test('updates emoji on second load if changed - no ETag', async () => {
+    const dataSource = 'http://localhost/will-change.json'
+
+    // first time - data is v1
+    fetch.get(dataSource, () => new Response(JSON.stringify(truncatedEmoji)))
+    fetch.head(dataSource, () => new Response(null))
+
+    let db = new Database({ dataSource })
+    await db.ready()
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch).toHaveBeenLastCalledWith(dataSource, undefined)
+
+    expect((await db.getEmojiByShortcode('rofl')).annotation).toBe('rolling on the floor laughing')
+    expect(await db.getEmojiByShortcode('weary_cat')).toBeFalsy()
+
+    await db.close()
+
+    const changedEmoji = JSON.parse(JSON.stringify(truncatedEmoji))
+    const roflIndex = allEmoji.findIndex(_ => _.annotation === 'rolling on the floor laughing')
+    changedEmoji[roflIndex] = allEmoji.find(_ => _.annotation === 'pineapple') // replace rofl
+
+    // second time - update, data is v2
+    fetch.mockClear()
+    fetch.reset()
+    fetch.get(dataSource, () => new Response(JSON.stringify(changedEmoji)))
+    fetch.head(dataSource, () => new Response(null))
+
+    db = new Database({ dataSource })
+    await db.ready()
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(fetch).toHaveBeenCalledTimes(2)
+    expect(fetch).toHaveBeenLastCalledWith(dataSource, undefined)
+    expect(fetch).toHaveBeenNthCalledWith(1, dataSource, { method: 'HEAD' })
+    expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
+    expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
+    await db.close()
+
+    // third time - no update, data is v2
+    fetch.mockClear()
+    fetch.reset()
+    fetch.get(dataSource, () => new Response(JSON.stringify(changedEmoji)))
+    fetch.head(dataSource, () => new Response(null))
 
     db = new Database({ dataSource })
     await db.ready()
