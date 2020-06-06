@@ -141,9 +141,9 @@ For more fine-grained, control, add the class `dark` or `light` to force dark/li
 <emoji-picker class="light"></emoji-picker>
 ```
 
-###### CSS variables
+##### CSS variables
 
-Many attributes such as colors and sizes can be styled with CSS variables. For example:
+Most colors and sizes can be styled with CSS variables. For example:
 
 ```css
 emoji-picker {
@@ -207,18 +207,18 @@ In general, it's not a problem to create multiple `Database` objects with the sa
 
 ### Tree-shaking
 
-If you want to import the `Database` without the `Picker`, or you want to import them separately, then do:
+If you want to import the `Database` without the `Picker`, or you want to code-split them separately, then do:
 
 ```js
 import Picker from 'emoji-picker-element/picker';
 import Database from 'emoji-picker-element/database';
 ```
 
-The reason for this is that `Picker` automatically registers itself as a custom element, following [web component best practices](https://justinfagnani.com/2019/11/01/how-to-publish-web-components-to-npm/). But this adds side effects, so bundlers do not tree-shake as well unless the modules are imported from completely separate files.
+The reason for this is that `Picker` automatically registers itself as a custom element, following [web component best practices](https://justinfagnani.com/2019/11/01/how-to-publish-web-components-to-npm/). But this adds side effects, so bundlers like Webpack and Rollup do not tree-shake as well, unless the modules are imported from completely separate files.
 
 ## Focus outline
 
-By default, `emoji-picker-element` displays a prominent focus ring for accessibility reasons. If you want to hide the focus ring for non-keyboard users (e.g. mouse and touch only), then use the [focus-visible](https://github.com/WICG/focus-visible) polyfill, e.g.:
+For accessibility reasons, `emoji-picker-element` displays a prominent focus ring. If you want to hide the focus ring for non-keyboard users (e.g. mouse and touch only), then use the [focus-visible](https://github.com/WICG/focus-visible) polyfill, e.g.:
 
 ```css
 .js-focus-visible :focus:not(.focus-visible) {
@@ -239,7 +239,7 @@ applyFocusVisiblePolyfill(picker.shadowRoot);
 
 ### Data source and JSON format
 
-`emoji-picker-element` requires the _full_ [emojibase-data](https://github.com/milesj/emojibase) JSON file, not the "compact" one. If you would like to trim the JSON file down even further, then modify the file to only contain these keys:
+`emoji-picker-element` requires the _full_ [emojibase-data](https://github.com/milesj/emojibase) JSON file, not the "compact" one. If you would like to trim the JSON file down even further, then you can modify the JSON to only contain these keys:
 
 ```json
 [
@@ -248,15 +248,15 @@ applyFocusVisiblePolyfill(picker.shadowRoot);
 ]
 ```
 
-You can fetch the emoji JSON file from wherever you want. However, it's recommended that your server expose an `ETag` header. If so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will fire off a `HEAD` request and just check the `ETag`.
+You can fetch the emoji JSON file from wherever you want. However, it's recommended that your server expose an `ETag` header – if so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will fire off a `HEAD` request and just check the `ETag`.
 
-If the server hosting the JSON file is not the same as the one containing the emoji picker, then it will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: *`. (Note that `jsdelivr` already does this, which is why it is the default.)
+If the server hosting the JSON file is not the same as the one containing the emoji picker, then cross-origin server will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: *`. (Note that `jsdelivr` already does this, which is why it is the default.)
 
-Unfortunately [Safari does not support `Access-Control-Allow-Headers`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#Browser_compatibility), meaning that the `ETag` header will not be available cross-origin. In that case, `emoji-picker-element` will fall back to the less performant option.
+Unfortunately [Safari does not support `Access-Control-Allow-Headers`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#Browser_compatibility), meaning that the `ETag` header will not be available cross-origin. In that case, `emoji-picker-element` will fall back to the less performant option. If you want to avoid this, host the JSON on the same server as your web app.
 
 ### Offline-first
 
-By default, `emoji-picker-element` will use the "stale while revalidate" strategy the second time it loads. In other words, it will use any existing data it finds in IndexedDB, and lazily update via the `dataSource` in case data has changed. This means it will work offline-first the second time it runs.
+`emoji-picker-element` uses a "stale while revalidate" strategy to update emoji data. In other words, it will use any existing data it finds in IndexedDB, and lazily update via the `dataSource` in case that data has changed. This means it will work [offline-first](http://offlinefirst.org/) the second time it runs.
 
 If you would like to manage the database yourself (e.g. to ensure that it's correctly populated before displaying the `Picker`), then create a new `Database` instance and wait for its `ready()` promise to resolve:
 
@@ -269,13 +269,13 @@ try {
 }
 ```
 
-If `emoji-picker-element` fails to fetch the JSON data the first time it loads, then it will display no emoji.
+If `emoji-picker-element` fails to fetch the JSON data the first time it loads, then it will display an error message.
 
 ## Design decisions
 
 ### IndexedDB
 
-The [`emojibase-data`](https://github.com/milesj/emojibase) English JSON file is [854kB](https://unpkg.com/browse/emojibase-data@5.0.1/en/), and the "compact" version is still 543kB. That's a lot of data to keep in memory just for an emoji picker. And it's not like that number is ever going down; the Unicode Consortium keeps adding more emoji every year.
+Why IndexedDB? Well, the [`emojibase-data`](https://github.com/milesj/emojibase) English JSON file is [854kB](https://unpkg.com/browse/emojibase-data@5.0.1/en/), and the "compact" version is still 543kB. That's a lot of data to keep in memory just for an emoji picker. And it's not as if that number is ever going down; the Unicode Consortium keeps adding more emoji every year.
 
 Using IndexedDB has a few advantages:
 
@@ -284,7 +284,7 @@ Using IndexedDB has a few advantages:
 
 ### Native emoji
 
-To avoid downloading a large sprite sheet (which may be copyrighted, or may look out-of-place on different platforms), `emoji-picker-element` only renders native emoji. This means it is limited to the emoji actually installed on the user's device.
+To avoid downloading a large sprite sheet (which may look out-of-place on different platforms, or may have IP issues), `emoji-picker-element` only renders native emoji. This means it is limited to the emoji actually installed on the user's device.
 
 To avoid rendering ugly unsupported or half-supported emoji, `emoji-picker-element` will automatically detect emoji support and only render the supported characters. (So no empty boxes or awkward double emoji.)
 
@@ -304,7 +304,7 @@ this, e.g. off-main-thread JSON parsing, but it's certainly possible!)
 
 ### Browser support
 
-Only the latest versions of Chrome, Firefox, and Safari (and browsers using equivalent rendering engines) are supported.
+`emoji-picker-element` only supports the latest versions of Chrome, Firefox, and Safari, as well as equivalent browsers (Edge, Opera, etc.).
 
 ## Contributing
 
@@ -312,6 +312,18 @@ Install
 
     yarn
 
+Lint:
+
+    yarn lint
+
+Fix most lint issues:
+
+    yarn lint:fix
+
 Run the tests:
 
     yarn test
+
+Check code coverage:
+
+    yarn cover
