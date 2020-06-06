@@ -75,6 +75,7 @@
     "global": [
       "btoa",
       "crypto",
+      "CustomEvent",
       "fetch",
       "indexedDB",
       "IDBKeyRange",

@@ -64,6 +64,7 @@
          aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
          id={searchMode ? '' : `tab-${currentCategory.group}`}
          tabindex="0"
+         on:click={onEmojiClick}
     >
         <div class="emoji-menu"
              role={searchMode ? 'listbox' : 'menu'}

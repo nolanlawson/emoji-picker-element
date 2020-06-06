@@ -27,10 +27,27 @@ Design goals:
 import 'emoji-picker-element';
 ```
 
-Or via [unpkg](https://unpkg.com):
+Then listen for `emoji-click` events:
 
 ```js
-import 'https://unpkg.com/emoji-picker-element'
+const element = document.querySelector('emoji-picker');
+element.addEventListener('emoji-click', event => console.log(event.detail))
+```
+
+This will log:
+
+```json
+{
+  "annotation": "grinning face",
+  "group": 0,
+  "order": 1,
+  "shortcodes": [ "gleeful" ],
+  "tags": [ "face", "grin" ],
+  "tokens": [ ":d", "face", "gleeful", "grin", "grinning" ],
+  "unicode": "😀",
+  "version": 1,
+  "emoticon": ":D"
+}
 ```
 
 ## API
@@ -60,13 +77,17 @@ picker.dataSource = '/my-emoji.json';
 
 #### i18n structure
 
-Note that some of these values are only visible to users of screen readers (but you should still support them if you internationalize your app!).
+The default English (`"en"`) `i81n` object:
 
 ```json
 {
+  "emojiUnsupported": "Your browser does not support color emoji.",
   "loading": "Loading…",
+  "networkError": "Could not load emoji. Try refreshing.",
   "regionLabel": "Emoji picker",
   "search": "Search",
+  "skinToneLabel": "Choose a skin tone",
+  "searchResultsLabel": "Search results",
   "categoriesLabel": "Categories",
   "categories": {
     "smileys-emotion": "Smileys and emoticons",
@@ -81,6 +102,9 @@ Note that some of these values are only visible to users of screen readers (but 
   }
 }
 ```
+
+Note that some of these values are only visible to users of screen readers. 
+But you should still support them if you internationalize your app!
 
 #### Styling
 

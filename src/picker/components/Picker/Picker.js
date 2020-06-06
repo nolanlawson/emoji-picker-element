@@ -176,6 +176,24 @@ function onNavKeydown (event) {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
+async function onEmojiClick (event) {
+  const { target } = event
+  if (!target.classList.contains('emoji')) {
+    return
+  }
+  event.preventDefault()
+  event.stopPropagation()
+  const unicode = target.id.substring(6) // remove 'emoji-'
+
+  const emojiData = currentEmojis.find(_ => _.unicode === unicode)
+  rootElement.dispatchEvent(new CustomEvent('emoji-click', {
+    detail: emojiData,
+    bubbles: true,
+    composed: true
+  }))
+}
+
 export {
   locale,
   dataSource,
