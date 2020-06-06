@@ -1,5 +1,5 @@
 {
-  "name": "lite-emoji-picker",
+  "name": "emoji-picker-element",
   "version": "1.0.0",
   "description": "Lightweight emoji picker based on IndexedDB",
   "main": "index.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nolanlawson/lite-emoji-picker.git"
+    "url": "git+https://github.com/nolanlawson/emoji-picker-element.git"
   },
   "keywords": [
     "emoji",
@@ -30,9 +30,9 @@
   "author": "Nolan Lawson <nolan@nolanlawson.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/nolanlawson/lite-emoji-picker/issues"
+    "url": "https://github.com/nolanlawson/emoji-picker-element/issues"
   },
-  "homepage": "https://github.com/nolanlawson/lite-emoji-picker#readme",
+  "homepage": "https://github.com/nolanlawson/emoji-picker-element#readme",
   "devDependencies": {
     "@babel/preset-env": "^7.10.2",
     "@peculiar/webcrypto": "^1.1.1",
@@ -99,7 +99,7 @@
         true,
         {
           "ignoreTypes": [
-            "lite-emoji-picker"
+            "emoji-picker"
           ]
         }
       ]

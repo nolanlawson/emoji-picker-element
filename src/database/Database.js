@@ -50,7 +50,7 @@ export default class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE } = {}) {
     this._dataSource = dataSource
     this._locale = locale
-    this._dbName = `lite-emoji-picker-${this._locale}`
+    this._dbName = `emoji-picker-element-${this._locale}`
     this._db = undefined
     this._ready = this._init()
   }
