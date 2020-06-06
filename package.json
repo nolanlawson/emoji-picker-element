@@ -4,7 +4,6 @@
   "description": "Lightweight emoji picker based on IndexedDB",
   "main": "index.js",
   "module": "index.js",
-  "type": "module",
   "files": [
     "database.js*",
     "index.js*",
@@ -44,6 +43,7 @@
     "babel-jest": "^26.0.1",
     "blob-util": "^2.0.2",
     "emojibase-data": "^5.0.1",
+    "express": "^4.17.1",
     "fake-indexeddb": "^3.0.1",
     "fast-json-stable-stringify": "^2.1.0",
     "fetch-mock-jest": "^1.3.0",
