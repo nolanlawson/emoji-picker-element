@@ -4,10 +4,10 @@ import { DB_VERSION_CURRENT, MODE_READONLY } from './constants'
 const openReqs = {}
 const databaseCache = {}
 
-function createDatabase (instanceName) {
+function createDatabase (dbName) {
   return new Promise((resolve, reject) => {
-    const req = indexedDB.open(instanceName, DB_VERSION_CURRENT)
-    openReqs[instanceName] = req
+    const req = indexedDB.open(dbName, DB_VERSION_CURRENT)
+    openReqs[dbName] = req
     req.onerror = reject
     req.onblocked = () => {
       console.error('idb blocked')
@@ -31,9 +31,9 @@ function createDatabase (instanceName) {
   })
 }
 
-export async function openDatabase (dbName) {
+export function openDatabase (dbName) {
   if (!databaseCache[dbName]) {
-    databaseCache[dbName] = await createDatabase(dbName)
+    databaseCache[dbName] = createDatabase(dbName)
   }
   return databaseCache[dbName]
 }

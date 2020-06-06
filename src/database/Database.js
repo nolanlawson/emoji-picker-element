@@ -100,16 +100,16 @@ export default class Database {
   async close () {
     await this._ready
     if (this._db) {
-      await closeDatabase(this._dbName)
       this._db = undefined
+      await closeDatabase(this._dbName)
     }
   }
 
   async delete () {
     await this._ready
     if (this._db) {
-      await deleteDatabase(this._dbName)
       this._db = undefined
+      await deleteDatabase(this._dbName)
     }
   }
 }

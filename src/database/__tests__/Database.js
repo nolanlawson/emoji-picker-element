@@ -309,8 +309,40 @@ describe('database tests', () => {
     await db.delete()
   })
 
-  // test - same test but no ETag
-  // test - invalid data
+  test('invalid emoji data', async () => {
+    const NULL = 'http://localhost/null.json'
+    const NOT_ARRAY = 'not-array.json'
+    const EMPTY = 'empty.json'
+    const NULL_ARRAY = 'null-array.json'
+    const BAD_OBJECT = 'bad-object.json'
+    fetch.get(NULL, () => new Response('null'))
+    fetch.get(NOT_ARRAY, () => new Response('{}'))
+    fetch.get(EMPTY, () => new Response('[]'))
+    fetch.get(NULL_ARRAY, () => new Response('[null]'))
+    fetch.get(BAD_OBJECT, () => new Response('[{"missing": true}]'))
+
+    const makeDB = async (dataSource) => {
+      const db = new Database({ dataSource })
+      await db.ready()
+    }
+
+    for (const dataSource of [NULL, NOT_ARRAY, EMPTY, NULL_ARRAY, BAD_OBJECT]) {
+      await expect(makeDB(dataSource)).rejects.toThrow(/data is in wrong format/)
+    }
+  })
+
+  test('close twice, delete twice', async () => {
+    let db = new Database({ dataSource: ALL_EMOJI })
+    await db.close()
+    await db.close()
+    db = new Database({ dataSource: ALL_EMOJI })
+    await db.ready()
+    await new Promise(resolve => setTimeout(resolve, 50))
+    await db.delete()
+    await db.delete()
+  })
+
+  // test - race conditions opening two DBs with same name at same time ?
   // test - URL changed
   // test - are shortcodes unique?
   // test - separate languages
