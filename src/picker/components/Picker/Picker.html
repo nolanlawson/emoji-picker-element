@@ -53,7 +53,8 @@
   <div class="indicator-wrapper"
        aria-hidden="true">
     <div class="indicator"
-         style="transform: translateX({currentCategoryIndex * 100}%);">
+         style={indicatorStyle}
+         use:calculateWidth>
     </div>
   </div>
   {#if message}

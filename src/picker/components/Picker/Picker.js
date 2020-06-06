@@ -28,6 +28,8 @@ let activeSearchItem = -1
 let message // eslint-disable-line no-unused-vars
 let currentCategoryIndex = 0
 let currentCategory = categories[currentCategoryIndex]
+let computedIndicatorWidth = 0
+let indicatorStyle = '' // eslint-disable-line no-unused-vars
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
@@ -61,7 +63,35 @@ $: {
   /* no await */ handleDatabaseLoading()
 }
 
+// TODO: Chrome has an unfortunate bug where we can't use a simple percent-based transform
+// here, becuause it's janky. You can especially see this on a Nexus 5.
+// So we calculate of the indicator and use exact pixel values in the animation instead
+// (where ResizeObserver is supported).
+const resizeObserverSupported = typeof ResizeObserver === 'function'
 $: currentCategoryIndex = categories.findIndex(_ => _.group === currentCategory.group)
+$: indicatorStyle = (resizeObserverSupported
+  ? `transform: translateX(${currentCategoryIndex * computedIndicatorWidth}px);` // exact pixels
+  : `transform: translateX(${currentCategoryIndex * 100}%);`// fallback to percent-based
+)
+
+// eslint-disable-next-line no-unused-vars
+function calculateWidth (indicator) {
+  let resizeObserver
+  if (resizeObserverSupported) {
+    resizeObserver = new ResizeObserver(entries => {
+      computedIndicatorWidth = entries[0].contentRect.width
+    })
+    resizeObserver.observe(indicator)
+  }
+
+  return {
+    destroy () {
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+      }
+    }
+  }
+}
 
 $: {
   async function updateEmojis () {
