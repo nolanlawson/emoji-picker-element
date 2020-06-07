@@ -13,7 +13,7 @@ describe('Picker tests', () => {
     await tick(7)
     expect(getByRole(container, 'button', { name: 'Choose a skin tone' })).toBeVisible()
     expect(getAllByRole(container, 'tab')).toHaveLength(9)
-    const db = picker.$capture_state().database // TODO: private API
+    const db = picker.$$.ctx.find(_ => _ && _.constructor.toString().includes('Database')) // TODO: private API
     await db.delete()
   })
 })
