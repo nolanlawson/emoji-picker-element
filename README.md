@@ -129,12 +129,6 @@ Here is a full list of options:
 
 For accessibility reasons, `emoji-picker-element` displays a prominent focus ring. If you want to hide the focus ring for non-keyboard users (e.g. mouse and touch only), then use the [focus-visible](https://github.com/WICG/focus-visible) polyfill, e.g.:
 
-```css
-.js-focus-visible :focus:not(.focus-visible) {
-  outline: none;
-}
-```
-
 ```js
 import { applyFocusVisiblePolyfill } from 'focus-visible';
 
