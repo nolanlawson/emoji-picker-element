@@ -135,6 +135,6 @@ export async function getEmojiByShortcode (db, shortcode) {
 
 export async function getEmojiByUnicode (db, unicode) {
   return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
-    emojiStore.get(unicode).onsuccess = e => cb(e.target.result)
+    emojiStore.get(unicode).onsuccess = e => cb(e.target.result || null)
   })
 }

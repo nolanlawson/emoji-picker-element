@@ -30,6 +30,8 @@ export default class Database {
 
   /**
    * Returns all emoji belonging to a group, ordered by `order`.
+   *
+   * Non-numbers throw an error.
    * @param group - the group number
    */
   getEmojiByGroup(group: number): Promise<Emoji[]> {
@@ -38,6 +40,9 @@ export default class Database {
 
   /**
    * Returns all emoji matching the given search query, ordered by `order`.
+   *
+   * Empty/null strings throw an error.
+   *
    * @param query - search query string
    */
   getEmojiBySearchQuery(query: string): Promise<Emoji[]> {
@@ -49,7 +54,7 @@ export default class Database {
    *
    * The colons around the shortcode should not be included when querying, e.g.
    * use "slight_smile", not ":slight_smile:". Uppercase versus lowercase
-   * does not matter.
+   * does not matter. Empty/null strings throw an error.
    * @param shortcode
    */
   getEmojiByShortcode(shortcode: string): Promise<Emoji | null> {
@@ -58,6 +63,8 @@ export default class Database {
 
   /**
    * Return a single emoji matching the unicode string, or null if not found.
+   *
+   * Empty/null strings throw an error.
    * @param unicode - unicode string
    */
   getEmojiByUnicode(unicode: string): Promise<Emoji | null> {

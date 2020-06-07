@@ -1,6 +1,9 @@
+import allEmoji from 'emojibase-data/en/data.json'
 import Database from '../Database'
 import { pick } from 'lodash-es'
-import { basicAfterEach, basicBeforeEach, ALL_EMOJI } from './shared'
+import { basicAfterEach, basicBeforeEach, ALL_EMOJI, truncatedEmoji } from './shared'
+
+const { Response } = fetch
 
 beforeEach(basicBeforeEach)
 afterEach(basicAfterEach)
@@ -64,6 +67,105 @@ describe('getEmojiBySearchQuery', () => {
     ])
     expect(await search('monkey facee')).toStrictEqual([])
     expect(await search('monk face')).toStrictEqual([])
+    await db.delete()
+  })
+
+  test('ordering', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+
+    const checkOrdering = emojis => {
+      expect(emojis.length).toBeGreaterThan(0)
+      const orderings = emojis.map(_ => _.order)
+      expect(orderings.slice().sort((a, b) => a < b ? -1 : 1)).toStrictEqual(orderings)
+    }
+
+    checkOrdering(await db.getEmojiBySearchQuery('face'))
+    checkOrdering(await db.getEmojiBySearchQuery('smile'))
+    checkOrdering(await db.getEmojiBySearchQuery('grin'))
+    checkOrdering(await db.getEmojiBySearchQuery('monkey'))
+    checkOrdering(await db.getEmojiBySearchQuery('cat'))
+
+    await db.delete()
+  })
+
+  test('emoticons', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+    expect((await db.getEmojiBySearchQuery(';)')).map(_ => _.annotation)).toStrictEqual([
+      'winking face'
+    ])
+    expect((await db.getEmojiBySearchQuery(':*')).map(_ => _.annotation)).toStrictEqual([
+      'kissing face with closed eyes'
+    ])
+    expect((await db.getEmojiBySearchQuery(':)')).map(_ => _.annotation)).toStrictEqual([
+      'slightly smiling face'
+    ])
+
+    await db.delete()
+  })
+
+  test('apostrophes', async () => {
+    const emojiWithTwelveOclock = [
+      ...truncatedEmoji,
+      allEmoji.find(_ => _.annotation === 'twelve o’clock'),
+      allEmoji.find(_ => _.annotation === 'woman’s boot')
+    ]
+
+    const EMOJI_WITH_APOS = 'http://localhost/apos.json'
+
+    fetch.get(EMOJI_WITH_APOS, () => new Response(JSON.stringify(emojiWithTwelveOclock), {
+      headers: { ETag: 'W/apos' }
+    }))
+    fetch.head(EMOJI_WITH_APOS, () => new Response(null, { headers: { ETag: 'W/apos' } }))
+
+    const db = new Database({ dataSource: EMOJI_WITH_APOS })
+
+    expect((await db.getEmojiBySearchQuery("o'clock")).map(_ => _.annotation)).toStrictEqual([
+      'twelve o’clock'
+    ])
+    expect((await db.getEmojiBySearchQuery('o’clock')).map(_ => _.annotation)).toStrictEqual([
+      'twelve o’clock'
+    ])
+    expect((await db.getEmojiBySearchQuery("woman's boot")).map(_ => _.annotation)).toStrictEqual([
+      'woman’s boot'
+    ])
+    expect((await db.getEmojiBySearchQuery('woman’s boot')).map(_ => _.annotation)).toStrictEqual([
+      'woman’s boot'
+    ])
+
+    await db.delete()
+  })
+
+  test('colons', async () => {
+    const emoji = [
+      ...truncatedEmoji,
+      allEmoji.find(_ => _.annotation === 'person: blond hair')
+    ]
+
+    const EMOJI = 'http://localhost/apos.json'
+
+    fetch.get(EMOJI, () => new Response(JSON.stringify(emoji), {
+      headers: { ETag: 'W/blond' }
+    }))
+    fetch.head(EMOJI, () => new Response(null, { headers: { ETag: 'W/blond' } }))
+
+    const db = new Database({ dataSource: EMOJI })
+
+    expect((await db.getEmojiBySearchQuery('person')).map(_ => _.annotation)).toContain('person: blond hair')
+    expect((await db.getEmojiBySearchQuery('blond')).map(_ => _.annotation)).toContain('person: blond hair')
+    expect((await db.getEmojiBySearchQuery('hair')).map(_ => _.annotation)).toContain('person: blond hair')
+    expect((await db.getEmojiBySearchQuery('blon')).map(_ => _.annotation)).toContain('person: blond hair')
+
+    await db.delete()
+  })
+
+  test('errors', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+
+    await expect(() => db.getEmojiBySearchQuery()).rejects.toThrow()
+    await expect(() => db.getEmojiBySearchQuery(1)).rejects.toThrow()
+    await expect(() => db.getEmojiBySearchQuery(null)).rejects.toThrow()
+    await expect(() => db.getEmojiBySearchQuery('')).rejects.toThrow()
+
     await db.delete()
   })
 })
