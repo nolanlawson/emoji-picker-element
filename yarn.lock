@@ -1170,7 +1170,7 @@
     remark "^12.0.0"
     unist-util-find-all-after "^3.0.1"
 
-"@testing-library/dom@^7.0.3", "@testing-library/dom@^7.10.1":
+"@testing-library/dom@^7.10.1":
   version "7.10.1"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.10.1.tgz#dc2cac517b5956020d28a027c58b24b393a44320"
   integrity sha512-shB6yx0eqoKya8V6zqV152MioYe6R4iIorT9LdGhGMZwvqny0GYMBqzKbAcxbTMlBmG0M0xaqO8AnzVEMuUamA==
@@ -1194,13 +1194,6 @@
     jest-matcher-utils "^25.1.0"
     lodash "^4.17.15"
     redent "^3.0.0"
-
-"@testing-library/svelte@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/svelte/-/svelte-3.0.0.tgz#cfb9c5e2679b0e90f6a79ffdf4397b92537dd1f2"
-  integrity sha512-0KarnU6czyhNaRECWUI4lpxTGg+9lTgASrsrtnflw9odVSmKk3iRym3ZOg0TOM4GBsX/CR4Un590fEsf6FdTJg==
-  dependencies:
-    "@testing-library/dom" "^7.0.3"
 
 "@types/asn1js@^0.0.1":
   version "0.0.1"
@@ -1903,7 +1896,7 @@ ccount@^1.0.0:
   resolved "https://registry.yarnpkg.com/ccount/-/ccount-1.0.5.tgz#ac82a944905a65ce204eb03023157edf29425c17"
   integrity sha512-MOli1W+nfbPLlKEhInaxhRdp7KVLFxLN5ykwzHgLsLI3H3gs5jjFAK4Eoj3OzzcxCtumDaI8onoVDeQyWaNTkw==
 
-chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.4.1, chalk@^2.4.2:
+chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
@@ -2295,14 +2288,6 @@ data-urls@^2.0.0:
     abab "^2.0.3"
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
-
-deasync@^0.1.19:
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/deasync/-/deasync-0.1.20.tgz#546fd2660688a1eeed55edce2308c5cf7104f9da"
-  integrity sha512-E1GI7jMI57hL30OX6Ht/hfQU8DO4AuB9m72WFm4c38GNbUD4Q03//XZaOIHZiY+H1xUaomcot5yk2q/qIZQkGQ==
-  dependencies:
-    bindings "^1.5.0"
-    node-addon-api "^1.7.1"
 
 debug-log@^1.0.0:
   version "1.0.1"
@@ -4461,13 +4446,6 @@ jest-snapshot@^26.0.1:
     pretty-format "^26.0.1"
     semver "^7.3.2"
 
-jest-transform-svelte@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/jest-transform-svelte/-/jest-transform-svelte-2.1.1.tgz#d25cb142195fa8906b38d9bd4bc4a7947324e952"
-  integrity sha512-hdOB+HeIufvOjGH3o1oz72ORacmVJzkhvGglqmOllXDu3+m2lIeBo6UpCdJ1yCIAkdNztiFUm0WRpCVATI9rhw==
-  dependencies:
-    deasync "^0.1.19"
-
 jest-util@^26.0.1:
   version "26.0.1"
   resolved "https://registry.yarnpkg.com/jest-util/-/jest-util-26.0.1.tgz#72c4c51177b695fdd795ca072a6f94e3d7cef00a"
@@ -5042,7 +5020,7 @@ min-indent@^1.0.0:
   resolved "https://registry.yarnpkg.com/min-indent/-/min-indent-1.0.0.tgz#cfc45c37e9ec0d8f0a0ec3dd4ef7f7c3abe39256"
   integrity sha1-z8RcN+nsDY8KDsPdTvf3w6vjklY=
 
-minimatch@^3.0.0, minimatch@^3.0.4:
+minimatch@3.0.4, minimatch@^3.0.0, minimatch@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   integrity sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
@@ -5139,11 +5117,6 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
-
-node-addon-api@^1.7.1:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.7.2.tgz#3df30b95720b53c24e59948b49532b662444f54d"
-  integrity sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==
 
 node-fetch@^2.6.0:
   version "2.6.0"
@@ -6150,6 +6123,15 @@ replace-ext@1.0.0:
   resolved "https://registry.yarnpkg.com/replace-ext/-/replace-ext-1.0.0.tgz#de63128373fcbf7c3ccfa4de5a480c45a67958eb"
   integrity sha1-3mMSg3P8v3w8z6TeWkgMRaZ5WOs=
 
+replace@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/replace/-/replace-1.2.0.tgz#a25da288841aab22f0f7e95dc1d249dbd2ed6e26"
+  integrity sha512-e3AP5GkRk+N/Qm1MUBaMhEHr4X3sHNI44a8m4ww6/qShJphTsStxSezbYtFNTFGCXZtWrwz4McVvCEwBv+ebAw==
+  dependencies:
+    chalk "2.4.2"
+    minimatch "3.0.4"
+    yargs "^15.3.1"
+
 request-promise-core@1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/request-promise-core/-/request-promise-core-1.1.3.tgz#e9a3c081b51380dfea677336061fea879a829ee9"
@@ -7029,13 +7011,6 @@ svelte-hmr@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.8.0.tgz#c02c9b5bbe2e8fa23f6f7e221aef4d00495d9e39"
   integrity sha512-2CIgd1q2ANQhKzboWHQEZqNX+2kSun12Z8WTy/REOY4ymekWm9C9tsHKdE8uxp2snVYC64RXI6iNgtqpWtSfXg==
-
-svelte-jester@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/svelte-jester/-/svelte-jester-1.0.6.tgz#a95da31acdcdd339468745c05c63fd0b52acff93"
-  integrity sha512-PyJsp6KHQVPWwh9u+9jYKfKLBbSnffRuA0dlqf616iuEc1kLu+GpSEu4C7/pzT69AYNNYyxRy02Q7y8sxdxjqA==
-  dependencies:
-    cosmiconfig "^6.0.0"
 
 svelte-preprocess@^3.7.4:
   version "3.7.4"

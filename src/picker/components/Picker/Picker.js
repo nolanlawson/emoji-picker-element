@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
 
-import Database from '../../../database/Database.js'
+import Database from '../../ImportedDatabase'
 import i18n from '../../i18n/en.json'
 import { categories } from '../../categories'
 import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants'
@@ -15,10 +15,8 @@ import { mark, stop } from '../../../shared/marks'
 
 const TIMEOUT_BEFORE_LOADING_MESSAGE = 1000 // 1 second
 
-let database
+let database = null
 let currentEmojis = []
-let locale = null
-let dataSource = null
 let rawSearchText = ''
 let searchText = ''
 let rootElement
@@ -42,11 +40,9 @@ emojiSupportLevelPromise.then(level => {
 $: {
   // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
   async function handleDatabaseLoading () {
-    if (!dataSource || !locale) {
+    if (!database) {
       return
     }
-    // should be the first thing we do, to kick off loading IDB
-    database = new Database({ dataSource, locale })
     const timeoutHandle = setTimeout(() => {
       message = i18n.loading
     }, TIMEOUT_BEFORE_LOADING_MESSAGE)
@@ -70,8 +66,9 @@ $: {
 // but are only set later. This would cause a double render or a double-fetch of
 // the dataSource, which is bad. Delaying with a microtask avoids this.
 Promise.resolve().then(() => {
-  locale = locale || DEFAULT_LOCALE
-  dataSource = dataSource || DEFAULT_DATA_SOURCE
+  if (!database) {
+    database || new Database({ dataSource: DEFAULT_DATA_SOURCE, locale: DEFAULT_LOCALE })
+  }
 })
 
 // TODO: Chrome has an unfortunate bug where we can't use a simple percent-based transform
@@ -242,7 +239,6 @@ async function onEmojiClick (event) {
 }
 
 export {
-  locale,
-  dataSource,
+  database,
   i18n
 }

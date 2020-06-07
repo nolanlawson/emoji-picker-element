@@ -23,7 +23,7 @@ const baseConfig = {
       'process.env.VERSIONS_AND_TEST_EMOJI': JSON.stringify(versionsAndTestEmoji)
     }),
     replace({
-      '../database/Database.js': './database.js',
+      '\'../database/Database.js\'': '\'./database.js\'',
       delimiters: ['', '']
     }),
     svelte({
@@ -34,6 +34,7 @@ const baseConfig = {
     })
   ],
   external: [
+    './database.js',
     '../database/Database.js'
   ]
 }
