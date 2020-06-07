@@ -14,5 +14,9 @@ module.exports = {
   setupFilesAfterEnv: [
     '<rootDir>/config/jest.setup.js'
   ],
-  coverageReporters: ['json', 'lcov', 'text', 'html']
+  coverageReporters: ['json', 'lcov', 'text', 'html'],
+  coveragePathIgnorePatterns: [
+    'bin/',
+    'test/'
+  ]
 }
