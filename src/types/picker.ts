@@ -1,9 +1,9 @@
-import {PickerConstructorOptions} from "./shared";
+import {I18n, PickerConstructorOptions} from "./shared";
 
 export default class Picker extends HTMLElement {
   dataSource: string;
   locale: string;
-  i18n: object;
+  i18n: I18n;
 
   /**
    *
@@ -14,7 +14,7 @@ export default class Picker extends HTMLElement {
   constructor({
                 dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json',
                 locale = 'en',
-                i18n = {}
+                i18n
               }: PickerConstructorOptions = {}) {
     super()
   }

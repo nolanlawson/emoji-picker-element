@@ -163,7 +163,7 @@ The `new Picker(options)` constructor supports several options:
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from |
-`i18n` | object | - | i18n object (see below for details)  |
+`i18n` | I18n | - | i18n object (see below for details)  |
 `locale` | string | "en" | Locale string |
 
 **Returns:** *Picker*

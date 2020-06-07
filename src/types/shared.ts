@@ -18,5 +18,29 @@ export interface DatabaseConstructorOptions {
 export interface PickerConstructorOptions {
   dataSource?: string,
   locale?: string,
-  i18n?: object
+  i18n?: I18n
+}
+
+export interface I18n {
+  emojiUnsupported: string,
+  loading: string,
+  networkError: string,
+  regionLabel: string,
+  search: string,
+  skinToneLabel: string,
+  searchResultsLabel: string,
+  categoriesLabel: string,
+  categories: I18nCategories
+}
+
+export interface I18nCategories {
+  'smileys-emotion': string,
+  'people-body': string,
+  'animals-nature': string,
+  'food-drink': string,
+  'travel-places': string,
+  activities: string,
+  objects: string,
+  symbols: string,
+  flags: string
 }
