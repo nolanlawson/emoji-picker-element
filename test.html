@@ -8,14 +8,16 @@
 <body>
 <h1>Ad-hoc emoji-picker-element test</h1>
 <div class="container">
-  <emoji-picker></emoji-picker>
 </div>
 <script src="/node_modules/focus-visible/dist/focus-visible.js"></script>
 <script type="module">
-  import './index.js'
-  const picker = document.querySelector('emoji-picker')
+  import { Picker } from './index.js'
+  const picker = new Picker({
+    dataSource: '/node_modules/emojibase-data/en/data.json'
+  })
   picker.addEventListener('emoji-click', e => console.log(e))
   applyFocusVisiblePolyfill(picker.shadowRoot)
+  document.querySelector('.container').appendChild(picker)
 </script>
 </body>
 </html>

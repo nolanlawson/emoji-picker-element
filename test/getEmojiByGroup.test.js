@@ -1,5 +1,5 @@
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach } from './shared'
-import Database from '../Database'
+import { Database } from '../index.js'
 
 beforeEach(basicBeforeEach)
 afterEach(basicAfterEach)

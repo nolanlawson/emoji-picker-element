@@ -17,8 +17,8 @@ const TIMEOUT_BEFORE_LOADING_MESSAGE = 1000 // 1 second
 
 let database
 let currentEmojis = []
-let locale = DEFAULT_LOCALE
-let dataSource = DEFAULT_DATA_SOURCE
+let locale = null
+let dataSource = null
 let rawSearchText = ''
 let searchText = ''
 let rootElement
@@ -40,11 +40,13 @@ emojiSupportLevelPromise.then(level => {
 })
 
 $: {
-  // should be the first thing we do, to kick off loading IDB
-  database = new Database({ dataSource, locale })
-
   // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
   async function handleDatabaseLoading () {
+    if (!dataSource || !locale) {
+      return
+    }
+    // should be the first thing we do, to kick off loading IDB
+    database = new Database({ dataSource, locale })
     const timeoutHandle = setTimeout(() => {
       message = i18n.loading
     }, TIMEOUT_BEFORE_LOADING_MESSAGE)
@@ -62,6 +64,15 @@ $: {
   }
   /* no await */ handleDatabaseLoading()
 }
+
+// TODO: this is a bizarre way to set these default properties, but currently Svelte
+// renders custom elements in an odd way - props are not set when calling the constructor,
+// but are only set later. This would cause a double render or a double-fetch of
+// the dataSource, which is bad. Delaying with a microtask avoids this.
+Promise.resolve().then(() => {
+  locale = locale || DEFAULT_LOCALE
+  dataSource = dataSource || DEFAULT_DATA_SOURCE
+})
 
 // TODO: Chrome has an unfortunate bug where we can't use a simple percent-based transform
 // here, becuause it's janky. You can especially see this on a Nexus 5.
@@ -95,7 +106,10 @@ function calculateWidth (indicator) {
 
 $: {
   async function updateEmojis () {
-    if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
+    if (!database) {
+      searchMode = false
+      currentEmojis = []
+    } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
       searchMode = true
       currentEmojis = await getEmojisBySearchQuery(searchText)
     } else {
