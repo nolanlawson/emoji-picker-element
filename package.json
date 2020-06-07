@@ -96,6 +96,7 @@
       "matchMedia",
       "performance",
       "ResizeObserver",
+      "Response",
       "requestAnimationFrame",
       "requestIdleCallback",
       "test",

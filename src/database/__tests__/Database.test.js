@@ -6,8 +6,6 @@ import {
   ALL_EMOJI_NO_ETAG, truncatedEmoji, truncateEmoji
 } from './shared'
 
-const { Response } = fetch
-
 beforeEach(basicBeforeEach)
 afterEach(basicAfterEach)
 

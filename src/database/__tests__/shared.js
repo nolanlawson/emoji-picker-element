@@ -1,7 +1,5 @@
 import allEmoji from 'emojibase-data/en/data.json'
 
-const { Response } = fetch
-
 export function truncateEmoji (allEmoji) {
   // just take the first few emoji from each category, or else it takes forever to insert
   // into fake-indexeddb: https://github.com/dumbmatter/fakeIndexedDB/issues/44

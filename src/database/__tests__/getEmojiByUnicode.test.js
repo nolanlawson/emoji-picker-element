@@ -2,8 +2,6 @@ import allEmoji from 'emojibase-data/en/data.json'
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, truncatedEmoji } from './shared'
 import Database from '../Database'
 
-const { Response } = fetch
-
 beforeEach(basicBeforeEach)
 afterEach(basicAfterEach)
 

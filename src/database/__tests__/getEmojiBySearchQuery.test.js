@@ -3,8 +3,6 @@ import Database from '../Database'
 import { pick } from 'lodash-es'
 import { basicAfterEach, basicBeforeEach, ALL_EMOJI, truncatedEmoji } from './shared'
 
-const { Response } = fetch
-
 beforeEach(basicBeforeEach)
 afterEach(basicAfterEach)
 
