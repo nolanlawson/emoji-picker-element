@@ -1,9 +1,6 @@
 import sass from 'sass'
 import table from 'markdown-table'
-import fs from 'fs'
-import { promisify } from 'util'
-const readFile = promisify(fs.readFile)
-const writeFile = promisify(fs.writeFile)
+import { replaceInReadme } from './replaceInReadme.js'
 
 const START_MARKER = '<!-- CSS variable options start -->'
 const END_MARKER = '<!-- CSS variable options end -->'
@@ -49,13 +46,7 @@ async function generateMarkdownTable (css) {
 async function main () {
   const css = sass.renderSync({ file: './src/picker/styles/variables.scss' }).css.toString('utf8')
   const markdown = await generateMarkdownTable(css)
-  let readme = await readFile('./README.md', 'utf8')
-  const startIndex = readme.indexOf(START_MARKER)
-  const endIndex = readme.indexOf(END_MARKER) + END_MARKER.length
-  readme = readme.substring(0, startIndex) +
-    START_MARKER + '\n\n' + markdown + '\n\n' + END_MARKER +
-    readme.substring(endIndex)
-  await writeFile('./README.md', readme, 'utf8')
+  await replaceInReadme(START_MARKER, END_MARKER, markdown)
 }
 
 main().catch(err => {

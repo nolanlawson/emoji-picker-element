@@ -15,6 +15,7 @@
     "build:rollup": "NODE_ENV=production rollup -c",
     "build:css-docs": "node ./bin/generateCssDocs",
     "build:i18n-docs": "node ./bin/generateI18nDocs",
+    "build:typedoc": "rm -fr docs-tmp && typedoc --out docs-tmp --theme markdown --excludePrivate --excludeNotExported --hideSources --hideBreadcrumbs ./src/types && node ./bin/generateTypeDocs && rm -fr docs-tmp",
     "dev": "NODE_ENV=development rollup -c -w",
     "lint": "standard && stylelint '**/*.scss'",
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",
@@ -65,11 +66,15 @@
     "rollup-plugin-svelte-hot": "^0.7.0",
     "sass": "^1.26.7",
     "standard": "^14.3.3",
+    "string.prototype.replaceall": "^1.0.3",
     "stylelint": "^13.5.0",
     "stylelint-config-recommended-scss": "^4.2.0",
     "stylelint-scss": "^3.17.2",
     "svelte": "^3.22.2",
-    "svelte-preprocess": "^3.7.4"
+    "svelte-preprocess": "^3.7.4",
+    "typedoc": "^0.17.7",
+    "typedoc-plugin-markdown": "^2.3.1",
+    "typescript": "^3.9.5"
   },
   "standard": {
     "ignore": [

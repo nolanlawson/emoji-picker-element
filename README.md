@@ -154,13 +154,29 @@ const picker = new Picker();
 document.body.appendChild(picker);
 ```
 
-`new Picker(options)` supports a few different options:
+The `new Picker(options)` constructor supports several options:
 
-| Option | Type | Default | Description |
-| ------ | ---- | ------- | ----------- |
-| `dataSource` | String | `"https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json"` | Where to fetch the emoji data from. Note that `emoji-picker-element` requires the full `data.json`, not `compact.json`. |
-| `locale` | String | `"en"` | Locale, should map to the locales supported by `emojibase-data` |
-| `i18n` | Object | See below | Strings to use for internationalization of the Picker itself, i.e. the text and `aria-label`s. Note that `emoji-picker-element` only ships with English by default. |
+<!-- picker API start -->
+
+####  constructor
+
+\+ **new Picker**(`__namedParameters`: object): *Picker*
+
+**Parameters:**
+
+▪`Default value`  **__namedParameters**: *object*= {}
+
+Name | Type | Default | Description |
+------ | ------ | ------ | ------ |
+`dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from |
+`i18n` | object | - | i18n object (see below for details)  |
+`locale` | string | "en" | Locale string |
+
+**Returns:** *Picker*
+
+
+
+<!-- picker API end -->
 
 These values can also be set at runtime, e.g.:
 
@@ -216,18 +232,150 @@ const database = new Database();
 await database.getEmojiBySearchPrefix('elephant'); // [{unicode: "🐘", ...}]
 ```
 
-`new Database()` takes similar options as the picker:
+Full API:
 
-```js
-const database = new Database({
-  locale: 'en',
-  dataSource: 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json'
-});
+<!-- database API start -->
+
+####  constructor
+
+\+ **new Database**(`__namedParameters`: object): *Database*
+
+Create a new Database.
+
+Note that multiple Databases pointing to the same locale will share the
+same underlying IndexedDB connection and database.
+
+**Parameters:**
+
+▪`Default value`  **__namedParameters**: *object*= {}
+
+Name | Type | Default | Description |
+------ | ------ | ------ | ------ |
+`dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from |
+`locale` | string | "en" | Locale string  |
+
+**Returns:** *Database*
+
+
+
+####  close
+
+▸ **close**(): *Promise‹void›*
+
+Closes the underlying IndexedDB connection. The Database is not usable after that (or any other Databases
+with the same locale).
+
+**Returns:** *Promise‹void›*
+
+___
+
+####  delete
+
+▸ **delete**(): *Promise‹void›*
+
+Deletes the underlying IndexedDB database. The Database is not usable after that (or any other Databases
+with the same locale).
+
+**Returns:** *Promise‹void›*
+
+___
+
+####  getEmojiByGroup
+
+▸ **getEmojiByGroup**(`group`: number): *Promise‹Emoji]›*
+
+Returns all emoji belonging to a group, ordered by `order`.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`group` | number | the group number  |
+
+**Returns:** *Promise‹[Emoji]›*
+
+___
+
+####  getEmojiBySearchQuery
+
+▸ **getEmojiBySearchQuery**(`query`: string): *Promise‹[Emoji]›*
+
+Returns all emoji matching the given search query, ordered by `order`.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`query` | string | search query string  |
+
+**Returns:** *Promise‹[Emoji]›*
+
+___
+
+####  getEmojiByShortcode
+
+▸ **getEmojiByShortcode**(`shortcode`: string): *Promise‹[Emoji | null›*
+
+Return a single emoji matching the shortcode, or null if not found.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`shortcode` | string |   |
+
+**Returns:** *Promise‹Emoji | null›*
+
+___
+
+####  getEmojiByUnicode
+
+▸ **getEmojiByUnicode**(`unicode`: string): *Promise‹Emoji | null›*
+
+Return a single emoji matching the unicode string, or null if not found.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`unicode` | string | unicode string  |
+
+**Returns:** *Promise‹Emoji | null›*
+
+___
+
+####  ready
+
+▸ **ready**(): *Promise‹void›*
+
+Resolves when the Database is ready, or throws an error if
+the Database could not initialize.
+
+Note that you don't need to do this before calling other APIs – they will
+all wait for this promise to resolve before doing anything.
+
+**Returns:** *Promise‹void›*
+
+
+<!-- database API end -->
+
+### Emoji object
+
+This object is returned as the Event `detail` in the `emoji-click` event, or when querying the Database. Here is the format:
+
+```ts
+interface Emoji {
+  annotation: string;
+  emoticon?: string;
+  group: number;
+  name: string;
+  order: number;
+  shortcodes: string[];
+  tags?: string[];
+  version: number;
+  unicode: string;
+}
 ```
-
-In general, it's not a problem to create multiple `Database` objects with the same arguments. Under the hood, they will share the same IndexedDB connection.
-
-<!-- TODO: Database API here -->
 
 ### Tree-shaking
 
