@@ -126,16 +126,11 @@ export async function getEmojiBySearchQuery (db, query) {
 }
 
 export async function getEmojiByShortcode (db, shortcode) {
-  shortcode = shortcode.toLowerCase()
-  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
-    const range = IDBKeyRange.only(shortcode)
-    emojiStore.index(INDEX_TOKENS).getAll(range).onsuccess = e => {
-      // of course, we could add an extra index just for shortcodes, but it seems
-      // simpler to just re-use the existing tokens index and filter in-memory
-      const results = e.target.result.filter(emoji => emoji.shortcodes.includes(shortcode))
-      cb(results[0])
-    }
-  })
+  const emojis = await getEmojiBySearchQuery(db, shortcode)
+  return emojis.filter(_ => {
+    const lowerShortcodes = _.shortcodes.map(_ => _.toLowerCase())
+    return lowerShortcodes.includes(shortcode.toLowerCase())
+  })[0] || null
 }
 
 export async function getEmojiByUnicode (db, unicode) {

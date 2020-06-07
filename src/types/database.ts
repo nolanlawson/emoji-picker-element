@@ -46,6 +46,10 @@ export default class Database {
 
   /**
    * Return a single emoji matching the shortcode, or null if not found.
+   *
+   * The colons around the shortcode should not be included when querying, e.g.
+   * use "slight_smile", not ":slight_smile:". Uppercase versus lowercase
+   * does not matter.
    * @param shortcode
    */
   getEmojiByShortcode(shortcode: string): Promise<Emoji | null> {

@@ -10,7 +10,7 @@ import { versionsAndTestEmoji } from './bin/versionsAndTestEmoji'
 const dev = process.env.NODE_ENV !== 'production'
 const svelte = dev ? hotSvelte : mainSvelte
 
-// Build Database.js and Picker.js as separate modules at build times so that they are properly tree-shakeable.
+// Build Database.test.js and Picker.js as separate modules at build times so that they are properly tree-shakeable.
 // Most of this has to happen because customElements.define() has side effects
 const baseConfig = {
   plugins: [
@@ -44,7 +44,7 @@ const entryPoints = [
     output: './picker.js'
   },
   {
-    input: './src/database/Database.js',
+    input: './src/database/Database.test.js',
     output: './database.js'
   }
 ]

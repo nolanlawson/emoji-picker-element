@@ -7,8 +7,8 @@ export function transformEmojiBaseData (emojiBaseData) {
   const res = emojiBaseData.map(({ annotation, emoticon, group, order, shortcodes, tags, emoji, version }) => {
     const tokens = [...new Set(
       [
-        ...shortcodes.map(extractTokens).flat(),
-        ...tags.map(extractTokens).flat(),
+        ...(shortcodes || []).map(extractTokens).flat(),
+        ...(tags || []).map(extractTokens).flat(),
         ...extractTokens(annotation),
         emoticon
       ]
