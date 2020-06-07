@@ -30,8 +30,8 @@ import 'emoji-picker-element';
 Then listen for `emoji-click` events:
 
 ```js
-const element = document.querySelector('emoji-picker');
-element.addEventListener('emoji-click', event => console.log(event.detail))
+document.querySelector('emoji-picker')
+  .addEventListener('emoji-click', event => console.log(event.detail));
 ```
 
 This will log:
@@ -52,7 +52,7 @@ This will log:
 
 ## Styling
 
-`emoji-picker-element` uses [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM), so its inner styling cannot be changed with arbitrary CSS. Please refer to the API below for style customization.
+`emoji-picker-element` uses [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM), so its inner styling cannot be changed with arbitrary CSS. Refer to the API below for style customization.
 
 ### Size
 
