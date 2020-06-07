@@ -3,7 +3,7 @@ import allEmoji from 'emojibase-data/en/data.json'
 import frEmoji from 'emojibase-data/fr/data.json'
 import {
   basicAfterEach, basicBeforeEach, ALL_EMOJI, ALL_EMOJI_MISCONFIGURED_ETAG,
-  ALL_EMOJI_NO_ETAG, truncatedEmoji, truncateEmoji
+  ALL_EMOJI_NO_ETAG, truncatedEmoji, truncateEmoji, tick
 } from './shared'
 
 beforeEach(basicBeforeEach)
@@ -25,7 +25,7 @@ describe('database tests', () => {
     await db.close()
     db = new Database({ dataSource: ALL_EMOJI })
     await db.ready()
-    await new Promise(resolve => setTimeout(resolve)) // the HEAD request is done asynchronously, so wait for it
+    await tick() // the HEAD request is done asynchronously, so wait for it
     expect(fetch).toHaveBeenCalledTimes(2)
     expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI, { method: 'HEAD' })
     await db.delete()
@@ -39,7 +39,7 @@ describe('database tests', () => {
     await db.close()
     db = new Database({ dataSource: ALL_EMOJI_NO_ETAG })
     await db.ready()
-    await new Promise(resolve => setTimeout(resolve)) // the request is done asynchronously, so wait for it
+    await tick() // the request is done asynchronously, so wait for it
     expect(fetch).toHaveBeenCalledTimes(3)
     expect(fetch).toHaveBeenNthCalledWith(2, ALL_EMOJI_NO_ETAG, { method: 'HEAD' })
     expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI_NO_ETAG, undefined)
@@ -67,7 +67,7 @@ describe('database tests', () => {
     await db.close()
     db = new Database({ dataSource: ALL_EMOJI_MISCONFIGURED_ETAG })
     await db.ready()
-    await new Promise(resolve => setTimeout(resolve)) // the request is done asynchronously, so wait for it
+    await tick() // the request is done asynchronously, so wait for it
     expect(fetch).toHaveBeenCalledTimes(3)
     expect(fetch).toHaveBeenNthCalledWith(2, ALL_EMOJI_MISCONFIGURED_ETAG, { method: 'HEAD' })
     expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI_MISCONFIGURED_ETAG, undefined)
@@ -103,7 +103,7 @@ describe('database tests', () => {
 
     db = new Database({ dataSource })
     await db.ready()
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await tick(7)
     expect(fetch).toHaveBeenCalledTimes(2)
     expect(fetch).toHaveBeenLastCalledWith(dataSource, undefined)
     expect(fetch).toHaveBeenNthCalledWith(1, dataSource, { method: 'HEAD' })
@@ -118,7 +118,7 @@ describe('database tests', () => {
 
     db = new Database({ dataSource })
     await db.ready()
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await tick(7)
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(dataSource, { method: 'HEAD' })
     expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
@@ -156,7 +156,7 @@ describe('database tests', () => {
 
     db = new Database({ dataSource })
     await db.ready()
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await tick(7)
     expect(fetch).toHaveBeenCalledTimes(2)
     expect(fetch).toHaveBeenLastCalledWith(dataSource, undefined)
     expect(fetch).toHaveBeenNthCalledWith(1, dataSource, { method: 'HEAD' })
@@ -172,7 +172,7 @@ describe('database tests', () => {
 
     db = new Database({ dataSource })
     await db.ready()
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await tick(7)
     expect(fetch).toHaveBeenCalledTimes(2)
     expect(fetch).toHaveBeenLastCalledWith(dataSource, undefined)
     expect(fetch).toHaveBeenNthCalledWith(1, dataSource, { method: 'HEAD' })
@@ -211,7 +211,7 @@ describe('database tests', () => {
 
     db = new Database({ dataSource: dataSource2 })
     await db.ready()
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await tick(7)
     expect(fetch).toHaveBeenCalledTimes(2)
     expect(fetch).toHaveBeenLastCalledWith(dataSource2, undefined)
     expect(fetch).toHaveBeenNthCalledWith(1, dataSource2, { method: 'HEAD' })
@@ -226,7 +226,7 @@ describe('database tests', () => {
 
     db = new Database({ dataSource: dataSource2 })
     await db.ready()
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await tick(7)
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(dataSource2, { method: 'HEAD' })
     expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
@@ -263,7 +263,7 @@ describe('database tests', () => {
     await db.close()
     db = new Database({ dataSource: ALL_EMOJI })
     await db.ready()
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await tick(7)
     await db.delete()
     await db.delete()
   })
@@ -276,7 +276,7 @@ describe('database tests', () => {
     await expect(() => db2.getEmojiByGroup(1)).rejects.toThrow()
     const db3 = new Database({ dataSource: ALL_EMOJI })
     await db3.ready()
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await tick(7)
     await db3.delete()
   })
 

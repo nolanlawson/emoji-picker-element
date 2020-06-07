@@ -43,3 +43,9 @@ export function basicAfterEach () {
   fetch.mockClear()
   fetch.reset()
 }
+
+export async function tick (times = 1) {
+  for (let i = 0; i < times; i++) {
+    await new Promise(resolve => setTimeout(resolve))
+  }
+}

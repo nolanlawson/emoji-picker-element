@@ -11,9 +11,7 @@ function createDatabase (dbName) {
     const req = indexedDB.open(dbName, DB_VERSION_CURRENT)
     openReqs[dbName] = req
     req.onerror = reject
-    req.onblocked = () => {
-      console.error('idb blocked')
-    }
+    req.onblocked = () => reject(new Error(`Database ${dbName} blocked`))
     req.onupgradeneeded = e => {
       const db = req.result
       const tx = e.currentTarget.transaction
@@ -100,6 +98,6 @@ export function deleteDatabase (dbName) {
     const req = indexedDB.deleteDatabase(dbName)
     req.onsuccess = () => resolve()
     req.onerror = () => reject(req.error)
-    req.onblocked = () => console.error(`database ${dbName} blocked`)
+    req.onblocked = () => reject(new Error(`Database ${dbName} blocked`))
   })
 }
