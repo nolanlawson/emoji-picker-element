@@ -119,5 +119,9 @@ dist
 /database.js.map
 /picker.js
 /picker.js.map
+/picker.d.ts
+/database.d.ts
+/shared.d.ts
 
 /docs-tmp
+/ts-tmp

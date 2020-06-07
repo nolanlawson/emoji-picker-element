@@ -4,18 +4,22 @@
   "description": "A lightweight emoji picker, distributed as a custom element",
   "main": "index.js",
   "module": "index.js",
+  "types": "index.d.ts",
   "type": "module",
   "files": [
     "database.js*",
     "index.js*",
-    "picker.js*"
+    "picker.js*",
+    "*.d.ts"
   ],
   "scripts": {
-    "build": "run-s build:rollup build:css-docs build:i18n-docs",
+    "prepare": "run-s build",
+    "build": "run-s build:rollup build:css-docs build:i18n-docs build:types build:typedoc",
     "build:rollup": "NODE_ENV=production rollup -c",
     "build:css-docs": "node ./bin/generateCssDocs",
     "build:i18n-docs": "node ./bin/generateI18nDocs",
-    "build:typedoc": "rm -fr docs-tmp && typedoc --out docs-tmp --theme markdown --excludePrivate --excludeNotExported --hideSources --hideBreadcrumbs ./src/types && node ./bin/generateTypeDocs && rm -fr docs-tmp",
+    "build:typedoc": "typedoc --out docs-tmp --theme markdown --excludePrivate --excludeNotExported --hideSources --hideBreadcrumbs ./src/types && node ./bin/generateTypeDocs && rm -fr docs-tmp",
+    "build:types": "tsc -d --outDir ./ts-tmp ./src/types/*.ts && mv ./ts-tmp/*.d.ts ./ && rm -fr ts-tmp",
     "dev": "NODE_ENV=development rollup -c -w",
     "lint": "standard && stylelint '**/*.scss'",
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",

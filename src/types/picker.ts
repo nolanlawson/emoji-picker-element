@@ -1,6 +1,9 @@
 import {PickerConstructorOptions} from "./shared";
 
 export default class Picker extends HTMLElement {
+  dataSource: string;
+  locale: string;
+  i18n: object;
 
   /**
    *
