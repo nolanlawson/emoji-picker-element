@@ -44,7 +44,7 @@ const entryPoints = [
     output: './picker.js'
   },
   {
-    input: './src/database/Database.test.js',
+    input: './src/database/Database.js',
     output: './database.js'
   }
 ]

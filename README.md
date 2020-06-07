@@ -286,6 +286,8 @@ ___
 
 Returns all emoji belonging to a group, ordered by `order`.
 
+Non-numbers throw an error.
+
 **Parameters:**
 
 Name | Type | Description |
@@ -301,6 +303,8 @@ ___
 ▸ **getEmojiBySearchQuery**(`query`: string): *Promise‹[Emoji]›*
 
 Returns all emoji matching the given search query, ordered by `order`.
+
+Empty/null strings throw an error.
 
 **Parameters:**
 
@@ -318,6 +322,10 @@ ___
 
 Return a single emoji matching the shortcode, or null if not found.
 
+The colons around the shortcode should not be included when querying, e.g.
+use "slight_smile", not ":slight_smile:". Uppercase versus lowercase
+does not matter. Empty/null strings throw an error.
+
 **Parameters:**
 
 Name | Type | Description |
@@ -333,6 +341,8 @@ ___
 ▸ **getEmojiByUnicode**(`unicode`: string): *Promise‹Emoji | null›*
 
 Return a single emoji matching the unicode string, or null if not found.
+
+Empty/null strings throw an error.
 
 **Parameters:**
 
