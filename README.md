@@ -78,7 +78,7 @@ emoji-picker {
 
 By default, `emoji-picker-element` will automatically switch to dark mode based on 
 [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme). 
-For more fine-grained, control, add the class `dark` or `light` to force dark/light mode:
+Or you can add the class `dark` or `light` to force dark/light mode:
 
 ```html
 <emoji-picker class="dark"></emoji-picker>
