@@ -17,7 +17,7 @@
       document.body.appendChild(picker)
     } else if (params.has('compact')) {
       window.json = await (await fetch('/node_modules/emojibase-data/en/compact.json')).json()
-    } else { // full json
+    } else if (params.has('full')) {
       window.json = await (await fetch('/node_modules/emojibase-data/en/data.json')).json()
     }
   })()
