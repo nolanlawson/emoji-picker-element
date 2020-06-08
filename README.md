@@ -105,6 +105,7 @@ Here is a full list of options:
 | ---------------------------- | ---------- | -------------- | ----------------------------------------------- |
 | `--background`               | `#fff`     | `#222`         |  Background of the entire `<emoji-picker>`      |
 | `--border-color`             | `#e0e0e0`  | `#444`         |                                                 |
+| `--border-size`              | `1px`      |                |  Width of border used in most of the picker     |
 | `--button-active-background` | `#e6e6e6`  | `#555555`      |  Background of an active button                 |
 | `--button-hover-background`  | `#d9d9d9`  | `#484848`      |  Background of a hovered button                 |
 | `--emoji-padding`            | `0.5rem`   |                |                                                 |
@@ -122,6 +123,7 @@ Here is a full list of options:
 | `--num-columns`              | `8`        |                |  How many columns to display in the emoji grid  |
 | `--outline-color`            | `#999`     | `#fff`         |  Focus outline color                            |
 | `--outline-size`             | `2px`      |                |  Focus outline width                            |
+| `--skintone-border-radius`   | `1rem`     |                |  border radius of the skintone dropdown         |
 
 <!-- CSS variable options end -->
 
@@ -205,7 +207,16 @@ Here is the default English `i81n` object (`"en"` locale):
   "regionLabel": "Emoji picker",
   "search": "Search",
   "searchResultsLabel": "Search results",
-  "skinToneLabel": "Choose a skin tone"
+  "skinToneLabel": "Choose a skin tone",
+  "skinTones": [
+    "Default",
+    "Light",
+    "Medium-Light",
+    "Medium",
+    "Medium-Dark",
+    "Dark"
+  ],
+  "skinTonesTitle": "Skin tones"
 }
 ```
 
