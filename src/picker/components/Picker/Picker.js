@@ -18,7 +18,7 @@ const TIMEOUT_BEFORE_LOADING_MESSAGE = 1000 // 1 second
 const SKIN_TONE_BASE_TEXT = '\u270c'
 const NUM_SKIN_TONES = 6
 
-const skinToneTextForSkinTone = i => (i > 0 ? applySkinTone(SKIN_TONE_BASE_TEXT, i - 1) : SKIN_TONE_BASE_TEXT)
+const skinToneTextForSkinTone = i => (i > 0 ? applySkinTone(SKIN_TONE_BASE_TEXT, i) : SKIN_TONE_BASE_TEXT)
 const skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTone(i))
 
 let database = null
@@ -266,6 +266,10 @@ function onClickSkintoneButton (event) {
 function onSkintoneKeydown (event) {
   const { key } = event
 
+  if (!skintonePickerExpanded) {
+    return
+  }
+
   const goToNextOrPrevious = (previous) => {
     event.preventDefault()
     event.stopPropagation()
@@ -282,6 +286,11 @@ function onSkintoneKeydown (event) {
       return goToNextOrPrevious(true)
     case 'ArrowDown':
       return goToNextOrPrevious(false)
+    case 'Enter':
+    case ' ':
+      event.preventDefault()
+      event.stopPropagation()
+      return onClickSkinTone(activeSkinTone)
   }
 }
 
