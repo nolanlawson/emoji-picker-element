@@ -9,6 +9,8 @@
   --input-padding: 0.25rem;
   --num-columns: 8; /* How many columns to display in the emoji grid */
   --outline-size: 2px; /* Focus outline width */
+  --border-size: 1px; /* Width of border used in most of the picker */
+  --skintone-border-radius: 1rem; /* border radius of the skintone dropdown */
 }
 
 @mixin colors($dark) {

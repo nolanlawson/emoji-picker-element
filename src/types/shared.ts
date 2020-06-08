@@ -30,7 +30,9 @@ export interface I18n {
   skinToneLabel: string,
   searchResultsLabel: string,
   categoriesLabel: string,
-  categories: I18nCategories
+  categories: I18nCategories,
+  skinTonesTitle: string,
+  skinTones: string[]
 }
 
 export interface I18nCategories {
