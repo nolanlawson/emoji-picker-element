@@ -79,6 +79,7 @@
     "rollup-plugin-svelte-hot": "^0.7.0",
     "rollup-plugin-terser": "^6.1.0",
     "sass": "^1.26.7",
+    "skin-tone": "^2.0.0",
     "standard": "^14.3.3",
     "string.prototype.replaceall": "^1.0.3",
     "stylelint": "^13.5.0",
