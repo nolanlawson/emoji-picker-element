@@ -24,11 +24,12 @@
     "benchmark:memory:server": "node ./test/memory/server.js",
     "benchmark:memory:test": "node ./test/memory/test.js",
     "benchmark:bundlesize": "rollup -c ./test/bundlesize/rollup.config.js && bundlesize && rm -f bundle.js",
-    "dev": "NODE_ENV=development rollup -c -w",
+    "dev": "run-p --race dev:rollup dev:server",
+    "dev:rollup": "NODE_ENV=development rollup -c -w",
+    "dev:server": "node ./test/adhoc/server.js",
     "lint": "standard && stylelint '**/*.scss'",
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",
     "test": "jest",
-    "test:adhoc": "node ./test/adhoc/server.js",
     "cover": "jest --coverage"
   },
   "repository": {

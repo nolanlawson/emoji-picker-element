@@ -9,6 +9,22 @@
 }
 
 //
+// skintone picker
+//
+
+.skintone-list {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  overflow: visible;
+  background: var(--background);
+  border: var(--border-size) solid var(--border-color);
+  border-radius: var(--skintone-border-radius);
+}
+
+
+//
 // tab panel
 //
 
@@ -59,7 +75,7 @@ button.emoji,
   }
 
   &:active,
-  &.active-search-item {
+  &.active {
     background: var(--button-active-background);
   }
 }
@@ -113,7 +129,7 @@ button.emoji,
 .search-row {
   display: flex;
   align-items: center;
-  contain: content;
+  position: relative;
 }
 
 .search-wrapper {

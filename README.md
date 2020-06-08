@@ -508,6 +508,10 @@ Check code coverage:
 
     yarn cover
 
+Run a local dev server on `localhost:3000`:
+
+    yarn dev
+
 Benchmark memory usage:
 
     yarn benchmark:memory

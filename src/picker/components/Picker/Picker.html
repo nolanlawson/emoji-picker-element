@@ -9,7 +9,7 @@
     <div class="search-wrapper"
          role="combobox"
          aria-expanded={!!(searchMode && currentEmojis.length)}
-         aria-owns="search-results"
+         aria-controls="search-results"
          aria-haspopup="listbox"
          aria-label={i18n.search}
     >
@@ -28,7 +28,34 @@
       >
       <label class="sr-only" for="search">{i18n.search}</label>
     </div>
-    <button class="emoji skintone-button" aria-label={i18n.skinToneLabel}>👍</button>
+    <button class="emoji {skintonePickerExpanded ? 'hide-focus' : ''}"
+            aria-label={i18n.skinToneLabel}
+            aria-haspopup="listbox"
+            aria-expanded={skintonePickerExpanded}
+            aria-controls="skintone-list"
+            on:click={onClickSkintoneButton}
+            on:keydown={onSkintoneKeydown}>{skinToneText}</button>
+    {#if skintonePickerExpanded}
+      <div id="skintone-list"
+           class="skintone-list"
+           role="listbox"
+           tabindex="-1"
+           aria-label={i18n.skinTonesTitle}
+           aria-activedescendant="skintone-{activeSkinTone}"
+      >
+        {#each skinTones as skinTone, i (skinTone)}
+          <button id="skintone-{i}"
+                  class="emoji {i === activeSkinTone ? 'active' : ''}"
+                  aria-label={i18n.skinTones[i]}
+                  aria-selected={i === activeSkinTone}
+                  role="option"
+                  tabindex="-1"
+                  on:click={() => onClickSkinTone(i)}>
+            {skinTone}
+          </button>
+        {/each}
+      </div>
+    {/if}
 
   </div>
   <div class="nav"
@@ -75,7 +102,7 @@
           {#each currentEmojis as emoji, i (emoji.unicode)}
             <button role={searchMode ? 'option' : 'menuitem'}
                     aria-selected={searchMode && i === activeSearchItem}
-                    class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active-search-item' : ''}"
+                    class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                     id="emoji-{emoji.unicode}">
               {emoji.unicode}
             </button>

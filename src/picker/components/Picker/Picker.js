@@ -12,8 +12,14 @@ import { thunk } from '../../utils/thunk'
 import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiSupport'
 import { log } from '../../../shared/log'
 import { mark, stop } from '../../../shared/marks'
+import { applySkinTone } from '../../utils/applySkinTone'
 
 const TIMEOUT_BEFORE_LOADING_MESSAGE = 1000 // 1 second
+const SKIN_TONE_BASE_TEXT = '\u270c'
+const NUM_SKIN_TONES = 6
+
+const skinToneTextForSkinTone = i => (i > 0 ? applySkinTone(SKIN_TONE_BASE_TEXT, i - 1) : SKIN_TONE_BASE_TEXT)
+const skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTone(i))
 
 let database = null
 let currentEmojis = []
@@ -28,6 +34,10 @@ let currentCategoryIndex = 0
 let currentCategory = categories[currentCategoryIndex]
 let computedIndicatorWidth = 0
 let indicatorStyle = '' // eslint-disable-line no-unused-vars
+let skintonePickerExpanded = false
+let currentSkinTone = 0
+let activeSkinTone = 0
+let skinToneText // eslint-disable-line no-unused-vars
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
@@ -70,6 +80,8 @@ Promise.resolve().then(() => {
     database || new Database({ dataSource: DEFAULT_DATA_SOURCE, locale: DEFAULT_LOCALE })
   }
 })
+
+$: skinToneText = skinToneTextForSkinTone(currentSkinTone)
 
 // TODO: Chrome has an unfortunate bug where we can't use a simple percent-based transform
 // here, becuause it's janky. You can especially see this on a Nexus 5.
@@ -236,6 +248,41 @@ async function onEmojiClick (event) {
     bubbles: true,
     composed: true
   }))
+}
+
+// eslint-disable-next-line no-unused-vars
+function onClickSkinTone (i) {
+  currentSkinTone = i
+  skintonePickerExpanded = false
+}
+
+// eslint-disable-next-line no-unused-vars
+function onClickSkintoneButton (event) {
+  skintonePickerExpanded = !skintonePickerExpanded
+  activeSkinTone = currentSkinTone
+}
+
+// eslint-disable-next-line no-unused-vars
+function onSkintoneKeydown (event) {
+  const { key } = event
+
+  const goToNextOrPrevious = (previous) => {
+    event.preventDefault()
+    event.stopPropagation()
+    activeSkinTone += (previous ? -1 : 1)
+    if (activeSkinTone < 0) {
+      activeSkinTone = skinTones.length - 1
+    } else if (activeSkinTone >= skinTones.length) {
+      activeSkinTone = 0
+    }
+  }
+
+  switch (key) {
+    case 'ArrowUp':
+      return goToNextOrPrevious(true)
+    case 'ArrowDown':
+      return goToNextOrPrevious(false)
+  }
 }
 
 export {

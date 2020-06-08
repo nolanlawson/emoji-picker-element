@@ -5,8 +5,17 @@
   "regionLabel": "Emoji picker",
   "search": "Search",
   "skinToneLabel": "Choose a skin tone",
+  "skinTonesTitle": "Skin tones",
   "searchResultsLabel": "Search results",
   "categoriesLabel": "Categories",
+  "skinTones": [
+    "Default",
+    "Light",
+    "Medium-Light",
+    "Medium",
+    "Medium-Dark",
+    "Dark"
+  ],
   "categories": {
     "smileys-emotion": "Smileys and emoticons",
     "people-body": "People and body",
