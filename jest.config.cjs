@@ -1,6 +1,6 @@
 module.exports = {
   testMatch: [
-    '<rootDir>/test/**/*.{spec,test}.{js,jsx,ts,tsx}'
+    '<rootDir>/test/spec/**/*.{spec,test}.{js,jsx,ts,tsx}'
   ],
   transform: {
     '^.+\\.js$': './config/babelJestTransform.cjs'

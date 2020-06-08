@@ -1,6 +1,6 @@
 import { basicBeforeEach, basicAfterEach, ALL_EMOJI, tick } from './shared'
 import { getAllByRole, getByRole } from '@testing-library/dom'
-import { Picker } from '../index.js'
+import { Picker } from '../../index.js'
 
 describe('Picker tests', () => {
   beforeEach(basicBeforeEach)

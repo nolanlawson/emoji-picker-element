@@ -1,6 +1,6 @@
 import allEmoji from 'emojibase-data/en/data.json'
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, truncatedEmoji } from './shared'
-import { Database } from '../index.js'
+import { Database } from '../../index.js'
 
 beforeEach(basicBeforeEach)
 afterEach(basicAfterEach)

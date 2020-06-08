@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+</head>
+<body>
+<script src="/node_modules/focus-visible/dist/focus-visible.js"></script>
+<script type="module">
+  (async () => {
+    const params = new URLSearchParams(location.search)
+    if (params.has('picker')) {
+      const { Picker } = await import('/index.js')
+      const picker = new Picker({
+        dataSource: '/node_modules/emojibase-data/en/data.json'
+      })
+      document.body.appendChild(picker)
+    } else if (params.has('compact')) {
+      window.json = await (await fetch('/node_modules/emojibase-data/en/compact.json')).json()
+    } else { // full json
+      window.json = await (await fetch('/node_modules/emojibase-data/en/data.json')).json()
+    }
+  })()
+</script>
+</body>
+</html>

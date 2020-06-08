@@ -1,5 +1,5 @@
 import allEmoji from 'emojibase-data/en/data.json'
-import { Database } from '../index.js'
+import { Database } from '../../index.js'
 import { pick } from 'lodash-es'
 import { basicAfterEach, basicBeforeEach, ALL_EMOJI, truncatedEmoji } from './shared'
 

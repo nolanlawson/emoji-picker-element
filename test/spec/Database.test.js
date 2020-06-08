@@ -1,4 +1,4 @@
-import { Database } from '../index.js'
+import { Database } from '../../index.js'
 import allEmoji from 'emojibase-data/en/data.json'
 import frEmoji from 'emojibase-data/fr/data.json'
 import {
