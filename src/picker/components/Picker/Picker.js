@@ -13,6 +13,8 @@ import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiS
 import { log } from '../../../shared/log'
 import { mark, stop } from '../../../shared/marks'
 import { applySkinTone } from '../../utils/applySkinTone'
+import { halt } from '../../utils/halt'
+import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 
 const TIMEOUT_BEFORE_LOADING_MESSAGE = 1000 // 1 second
 const SKIN_TONE_BASE_TEXT = '\u270c'
@@ -202,14 +204,8 @@ function onSearchKeydown (event) {
   }
 
   const goToNextOrPrevious = (previous) => {
-    event.preventDefault()
-    event.stopPropagation()
-    activeSearchItem += (previous ? -1 : 1)
-    if (activeSearchItem < 0) {
-      activeSearchItem = currentEmojis.length - 1
-    } else if (activeSearchItem >= currentEmojis.length) {
-      activeSearchItem = 0
-    }
+    halt(event)
+    activeSearchItem = incrementOrDecrement(previous, activeSearchItem, currentEmojis)
   }
 
   switch (event.key) {
@@ -217,6 +213,11 @@ function onSearchKeydown (event) {
       return goToNextOrPrevious(false)
     case 'ArrowUp':
       return goToNextOrPrevious(true)
+    case 'Enter':
+      if (activeSearchItem !== -1) {
+        halt(event)
+        return clickEmoji(currentEmojis[activeSearchItem])
+      }
   }
 }
 
@@ -226,10 +227,20 @@ function onNavKeydown (event) {
 
   switch (key) {
     case 'ArrowLeft':
+      halt(event)
       return target.previousSibling && target.previousSibling.focus()
     case 'ArrowRight':
+      halt(event)
       return target.nextSibling && target.nextSibling.focus()
   }
+}
+
+function clickEmoji (emojiData) {
+  rootElement.dispatchEvent(new CustomEvent('emoji-click', {
+    detail: emojiData,
+    bubbles: true,
+    composed: true
+  }))
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -238,16 +249,11 @@ async function onEmojiClick (event) {
   if (!target.classList.contains('emoji')) {
     return
   }
-  event.preventDefault()
-  event.stopPropagation()
+  halt(event)
   const unicode = target.id.substring(6) // remove 'emoji-'
 
   const emojiData = currentEmojis.find(_ => _.unicode === unicode)
-  rootElement.dispatchEvent(new CustomEvent('emoji-click', {
-    detail: emojiData,
-    bubbles: true,
-    composed: true
-  }))
+  clickEmoji(emojiData)
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -271,14 +277,8 @@ function onSkintoneKeydown (event) {
   }
 
   const goToNextOrPrevious = (previous) => {
-    event.preventDefault()
-    event.stopPropagation()
-    activeSkinTone += (previous ? -1 : 1)
-    if (activeSkinTone < 0) {
-      activeSkinTone = skinTones.length - 1
-    } else if (activeSkinTone >= skinTones.length) {
-      activeSkinTone = 0
-    }
+    halt(event)
+    activeSkinTone = incrementOrDecrement(previous, activeSkinTone, skinTones)
   }
 
   switch (key) {
@@ -288,8 +288,7 @@ function onSkintoneKeydown (event) {
       return goToNextOrPrevious(false)
     case 'Enter':
     case ' ':
-      event.preventDefault()
-      event.stopPropagation()
+      halt(event)
       return onClickSkinTone(activeSkinTone)
   }
 }
