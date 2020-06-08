@@ -23,7 +23,7 @@
     "benchmark:memory": "run-p --race benchmark:memory:server benchmark:memory:test",
     "benchmark:memory:server": "node ./test/memory/server.js",
     "benchmark:memory:test": "node ./test/memory/test.js",
-    "benchmark:bundlesize": "rollup -c ./test/bundlesize/rollup.config.js && bundlesize && rm -fr bundle.js",
+    "benchmark:bundlesize": "rollup -c ./test/bundlesize/rollup.config.js && bundlesize && rm -f bundle.js",
     "dev": "NODE_ENV=development rollup -c -w",
     "lint": "standard && stylelint '**/*.scss'",
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",
