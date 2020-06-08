@@ -484,3 +484,11 @@ Run the tests:
 Check code coverage:
 
     yarn cover
+
+Benchmark memory usage:
+
+    yarn benchmark:memory
+
+Benchmark bundle size:
+
+    yarn benchmark:bundlesize
