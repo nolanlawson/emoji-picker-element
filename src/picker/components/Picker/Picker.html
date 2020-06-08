@@ -104,7 +104,11 @@
                     aria-selected={searchMode && i === activeSearchItem}
                     class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                     id="emoji-{emoji.unicode}">
-              {emoji.unicode}
+              {#if currentSkinTone > 0 && emoji.skins && emoji.skins[currentSkinTone]}
+                {emoji.skins[currentSkinTone]}
+              {:else}
+                {emoji.unicode}
+              {/if}
             </button>
           {/each}
       </div>

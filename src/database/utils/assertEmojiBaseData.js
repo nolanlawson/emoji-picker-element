@@ -1,6 +1,12 @@
 const requiredKeys = [
-  'annotation', 'emoji', 'emoticon', 'group',
-  'order', 'shortcodes', 'tags', 'version'
+  'annotation',
+  'emoji',
+  'emoticon',
+  'group',
+  'order',
+  'shortcodes',
+  'tags',
+  'version'
 ]
 
 export function assertEmojiBaseData (emojiBaseData) {

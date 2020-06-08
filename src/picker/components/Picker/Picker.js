@@ -178,12 +178,34 @@ async function filterEmojisByVersion (emojis) {
   return emojis.filter(({ version }) => version <= emojiSupportLevel)
 }
 
+async function summarizeEmojis (emojis) {
+  const emojiSupportLevel = await emojiSupportLevelPromise
+  // We don't need all the data on every emoji, so we can conserve memory by removing it
+  // Also we can simplify the way we access the "skins" object
+  const toSimpleSkinsMap = skins => {
+    const res = {}
+    for (const skin of skins) {
+      // ignore arrays like [1, 2] with multiple skin tones
+      // also ignore variants that are in an unsupported emoji version
+      // (these do exist - variants from a different version than their base emoji)
+      if (typeof skin.tone === 'number' && skin.version <= emojiSupportLevel) {
+        res[skin.tone] = skin.unicode
+      }
+    }
+    return res
+  }
+  return emojis.map(({ unicode, skins }) => ({
+    unicode,
+    skins: skins && toSimpleSkinsMap(skins)
+  }))
+}
+
 async function getEmojisByGroup (group) {
-  return filterEmojisByVersion(await database.getEmojiByGroup(group))
+  return summarizeEmojis(await filterEmojisByVersion(await database.getEmojiByGroup(group)))
 }
 
 async function getEmojisBySearchQuery (query) {
-  return filterEmojisByVersion(await database.getEmojiBySearchQuery(query))
+  return summarizeEmojis(await filterEmojisByVersion(await database.getEmojiBySearchQuery(query)))
 }
 
 // eslint-disable-next-line no-unused-vars

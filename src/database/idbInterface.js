@@ -5,7 +5,7 @@ import {
   STORE_EMOJI,
   STORE_META
 } from './constants'
-import { transformEmojiBaseData } from './transformEmojiBaseData'
+import { transformEmojiBaseData } from './utils/transformEmojiBaseData'
 import { mark, stop } from '../shared/marks'
 import { extractTokens } from './utils/extractTokens'
 
