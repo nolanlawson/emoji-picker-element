@@ -56,7 +56,7 @@ This will log:
 
 ### Size
 
-`emoji-picker-element` has a default size, but you can change it to be whatever you want:
+`emoji-picker-element` has a default size, but you can change it to whatever you want:
 
 ```css
 emoji-picker {
