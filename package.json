@@ -32,6 +32,7 @@
     "lint": "standard && stylelint '**/*.scss'",
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",
     "test": "jest",
+    "test:adhoc": "node ./test/adhoc/server.js",
     "cover": "jest --coverage"
   },
   "repository": {

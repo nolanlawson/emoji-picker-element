@@ -229,13 +229,10 @@ async function getEmojisBySearchQuery (query) {
 
 // eslint-disable-next-line no-unused-vars
 function handleCategoryClick (category) {
-  // throttle to avoid input delays
-  requestIdleCallback(() => {
-    rawSearchText = ''
-    searchText = ''
-    activeSearchItem = -1
-    currentCategory = category
-  })
+  rawSearchText = ''
+  searchText = ''
+  activeSearchItem = -1
+  currentCategory = category
 }
 
 // eslint-disable-next-line no-unused-vars

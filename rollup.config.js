@@ -33,7 +33,7 @@ const baseConfig = {
       dev,
       preprocess: autoPreprocess()
     }),
-    analyze({ summaryOnly: true })
+    !dev && analyze({ summaryOnly: true })
   ],
   external: [
     './database.js',
