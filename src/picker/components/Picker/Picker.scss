@@ -1,14 +1,6 @@
 @import '../../styles/global.scss';
 
 //
-// private variables
-//
-
-.picker {
-  --total-emoji-size: calc(var(--emoji-size) + (2 * var(--emoji-padding)));
-}
-
-//
 // skintone picker
 //
 
@@ -21,6 +13,13 @@
   background: var(--background);
   border: var(--border-size) solid var(--border-color);
   border-radius: var(--skintone-border-radius);
+  will-change: transform;
+  transition: transform 0.2s ease-in-out;
+  transform-origin: center 0;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 

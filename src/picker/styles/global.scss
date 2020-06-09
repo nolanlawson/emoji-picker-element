@@ -23,6 +23,10 @@
   border: var(--border-size) solid var(--border-color);
   width: 100%;
   height: 100%;
+  overflow: hidden;
+
+  // private variables
+  --total-emoji-size: calc(var(--emoji-size) + (2 * var(--emoji-padding)));
 }
 
 // via https://stackoverflow.com/a/19758620

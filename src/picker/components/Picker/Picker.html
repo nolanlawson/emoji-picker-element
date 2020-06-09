@@ -2,7 +2,7 @@
 <section
   class="picker"
   aria-label={i18n.regionLabel}
-  style="--num-categories: {categories.length}; --indicator-opacity: {searchMode ? 0 : 1};"
+  {style}
   bind:this={rootElement}
 >
   <div class="search-row">
@@ -40,31 +40,31 @@
             on:click={onClickSkinToneButton}
     >{skinToneText}</button>
     <span id="skintone-description" class="sr-only">{i18n.skinToneDescription}</span>
-    {#if skinTonePickerExpanded}
-      <div id="skintone-list"
-           class="skintone-list"
-           role="listbox"
-           aria-label={i18n.skinTonesTitle}
-           aria-activedescendant="skintone-{activeSkinTone}"
-           on:keydown={onSkinToneOptionKeydown}
-           on:focusout={onSkinToneOptionsBlur}
-           on:click={onClickSkinToneOption}
+    <div id="skintone-list"
+         class="skintone-list {skinTonePickerExpanded ? '' : 'hidden'}"
+         style="{skinTonePickerExpanded ? 'transform: translateY(0);' : 'transform: translateY(calc(-1 * var(--num-skintones) * var(--total-emoji-size)))'}"
+         role="listbox"
+         aria-label={i18n.skinTonesTitle}
+         aria-activedescendant="skintone-{activeSkinTone}"
+         aria-hidden={!skinTonePickerExpanded}
+         on:keydown={onSkinToneOptionKeydown}
+         on:focusout={onSkinToneOptionsBlur}
+         on:click={onClickSkinToneOption}
+    >
+      {#each skinTones as skinTone, i (skinTone)}
+        <button id="skintone-{i}"
+                class="emoji skintone-option hide-focus {i === activeSkinTone ? 'active' : ''}"
+                aria-selected={i === activeSkinTone}
+                role="option"
+                tabindex="-1"
       >
-        {#each skinTones as skinTone, i (skinTone)}
-          <button id="skintone-{i}"
-                  class="emoji skintone-option hide-focus {i === activeSkinTone ? 'active' : ''}"
-                  aria-selected={i === activeSkinTone}
-                  role="option"
-                  tabindex="-1"
-        >
-            <!-- I would use an aria-label here, but Safari+VoiceOver does not read it
-                 out unless I do it this way -->
-            <span class="no-pointer" aria-hidden="true">{skinTone}</span>
-            <span class="sr-only">{i18n.skinTones[i]}</span>
-          </button>
-        {/each}
-      </div>
-    {/if}
+          <!-- I would use an aria-label here, but Safari+VoiceOver does not read it
+               out unless I do it this way -->
+          <span class="no-pointer" aria-hidden="true">{skinTone}</span>
+          <span class="sr-only">{i18n.skinTones[i]}</span>
+        </button>
+      {/each}
+    </div>
 
   </div>
   <div class="nav"

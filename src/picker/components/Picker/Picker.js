@@ -19,10 +19,10 @@ import { tick } from 'svelte'
 
 const TIMEOUT_BEFORE_LOADING_MESSAGE = 1000 // 1 second
 const SKIN_TONE_BASE_TEXT = '\u270c'
-const NUM_SKIN_TONES = 6
 
+const numSkinTones = 6
 const skinToneTextForSkinTone = i => (i > 0 ? applySkinTone(SKIN_TONE_BASE_TEXT, i) : SKIN_TONE_BASE_TEXT)
-const skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTone(i))
+const skinTones = Array(numSkinTones).fill().map((_, i) => skinToneTextForSkinTone(i))
 
 let database = null
 let currentEmojis = []
@@ -41,6 +41,7 @@ let skinTonePickerExpanded = false
 let currentSkinTone = 0
 let activeSkinTone = 0
 let skinToneText // eslint-disable-line no-unused-vars
+let style = '' // eslint-disable-line no-unused-vars
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
@@ -83,6 +84,11 @@ Promise.resolve().then(() => {
     database || new Database({ dataSource: DEFAULT_DATA_SOURCE, locale: DEFAULT_LOCALE })
   }
 })
+
+$: style = `
+  --num-categories: ${categories.length}; 
+  --indicator-opacity: ${searchMode ? 0 : 1}; 
+  --num-skintones: ${numSkinTones};`
 
 $: skinToneText = skinToneTextForSkinTone(currentSkinTone)
 
