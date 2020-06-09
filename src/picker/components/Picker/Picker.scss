@@ -20,6 +20,10 @@
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
+
+  &.no-animate {
+    transition: none;
+  }
 }
 
 

@@ -338,11 +338,15 @@ function onSkinToneOptionKeydown (event) {
 }
 
 // eslint-disable-next-line no-unused-vars
-async function onSkinToneOptionsBlur (event) {
-  const { relatedTarget } = event
+async function onSkinToneOptionsBlur () {
   // On blur outside of the skintone options, collapse the skintone picker.
   // Except if focus is just moving to another skintone option, e.g. pressing up/down to change focus
-  if (!relatedTarget || !relatedTarget.classList.contains('skintone-option')) {
+  // I would use relatedTarget here, but iOS Safari seems to have a bug where it does not figure out
+  // the relatedTarget correctly, so I delay with rAF instead
+  await new Promise(resolve => requestAnimationFrame(resolve))
+  const { activeElement } = rootElement.getRootNode()
+
+  if (!activeElement || !activeElement.classList.contains('skintone-option')) {
     skinTonePickerExpanded = false
   }
 }

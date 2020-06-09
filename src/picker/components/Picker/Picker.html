@@ -41,7 +41,7 @@
     >{skinToneText}</button>
     <span id="skintone-description" class="sr-only">{i18n.skinToneDescription}</span>
     <div id="skintone-list"
-         class="skintone-list {skinTonePickerExpanded ? '' : 'hidden'}"
+         class="skintone-list {skinTonePickerExpanded ? '' : 'hidden no-animate'}"
          style="{skinTonePickerExpanded ? 'transform: translateY(0);' : 'transform: translateY(calc(-1 * var(--num-skintones) * var(--total-emoji-size)))'}"
          role="listbox"
          aria-label={i18n.skinTonesTitle}
