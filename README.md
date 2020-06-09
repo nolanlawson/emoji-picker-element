@@ -3,7 +3,7 @@ emoji-picker-element
 
 A lightweight emoji picker, distributed as a custom element.
 
-It's built on top of IndexedDB, so it consumes far less memory than other emoji pickers.
+It's built on top of IndexedDB, so it consumes [far less memory](#benchmarks) than other emoji pickers.
 It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint.
 
 Design goals:
@@ -462,6 +462,29 @@ this, e.g. off-main-thread JSON parsing, but it's certainly possible!)
 ### Browser support
 
 `emoji-picker-element` only supports the latest versions of Chrome, Firefox, and Safari, as well as equivalent browsers (Edge, Opera, etc.).
+
+## Benchmarks
+
+Benchmark code can be found in the `test/` directory. See [Contributing](#contributing) for how to run the scripts.
+
+### Memory usage
+
+This test navigates to four pages: 1) an empty page, 2) the same page containing `emoji-picker-element` with the standard configuration, 3) a page containing the `emojibase` English `compact.json` object, and 4) a page containing the full `data.json` object.
+
+| Scenario | Bytes             | Relative to blank page |
+| -------- | ----------------- | ---------------------- |
+| blank    | 779 kB (779305)   | 0 B (0)                |
+| picker   | 1.44 MB (1436088) | 657 kB (656783)        |
+| compact  | 1.54 MB (1536847) | 758 kB (757542)        |
+| full     | 1.88 MB (1880465) | 1.1 MB (1101160)       |
+
+As you can see, `emoji-picker-element` consumes less memory than merely loading the JSON files into memory. So any emoji picker that keeps these JSON objects in memory is already using more memory than `emoji-picker-element`, in addition to whatever it's doing with JS/CSS/DOM.
+
+[`performance.measureMemory()`](https://web.dev/monitor-total-page-memory-usage/) in Chrome is used to calculate memory usage.
+
+### Bundle size
+
+26.99kB at the time of writing, for both the `Picker` and the `Database`.
 
 ## Contributing
 
