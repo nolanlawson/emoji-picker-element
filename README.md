@@ -8,8 +8,8 @@ It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint
 
 Design goals:
 
-- Store emoji data in IndexedDB, not memory
-- Render native emoji, no spritesheets
+- Store emoji data in IndexedDB
+- Render native emoji
 - Accessible
 - Drop-in as a vanilla web component
 
@@ -451,13 +451,13 @@ Using IndexedDB has a few advantages:
 
 1. We don't need to keep half a megabyte of emoji data in memory at all times.
 2. The second time your visitors visit your website, we don't even need to download, parse, and index the emoji data, because it's already available on their hard drive.
-3. Heck, you can even load the IndexedDB data in a web worker or service worker. That way, you only pay the UI thread cost of accessing IndexedDB, not of fetching the data, indexing the data, or inserting it into IndexedDB.
+3. Heck, you can even preload the IndexedDB data in a web worker or service worker. That way, you only pay the UI thread cost of accessing IndexedDB, not of fetching the data, indexing the data, or inserting it into IndexedDB.
 
 ### Native emoji
 
-To avoid downloading a large sprite sheet (which may look out-of-place on different platforms, or may have IP issues), `emoji-picker-element` only renders native emoji. This means it is limited to the emoji actually installed on the user's device.
+To avoid downloading a large sprite sheet that renders a particular emoji set (which may look out-of-place on different platforms, or may have IP issues), `emoji-picker-element` only renders native emoji. This means it is limited to the emoji actually installed on the user's device.
 
-To avoid rendering ugly unsupported or half-supported emoji, `emoji-picker-element` will automatically detect emoji support and only render the supported characters. (So no empty boxes or awkward double emoji.)
+To avoid rendering ugly unsupported or half-supported emoji, `emoji-picker-element` will automatically detect emoji support and only render the supported characters. (So no empty boxes or awkward double emoji.) If no color emoji are supported by the browser/OS, then an error message is displayed.
 
 ### JSON loading
 
@@ -487,10 +487,10 @@ This test navigates to four pages: 1) an empty page, 2) the same page containing
 
 | Scenario | Bytes             | Relative to blank page |
 | -------- | ----------------- | ---------------------- |
-| blank    | 779 kB (779305)   | 0 B (0)                |
-| picker   | 1.44 MB (1436088) | 657 kB (656783)        |
-| compact  | 1.54 MB (1536847) | 758 kB (757542)        |
-| full     | 1.88 MB (1880465) | 1.1 MB (1101160)       |
+| blank    | 763 kB (763097)   | 0 B (0)                |
+| picker   | 1.32 MB (1322356) | 559 kB (559259)        |
+| compact  | 1.53 MB (1533547) | 770 kB (770450)        |
+| full     | 1.87 MB (1868599) | 1.11 MB (1105502)      |
 
 As you can see, `emoji-picker-element` consumes less memory than merely loading the JSON files into memory. So any emoji picker that keeps these JSON objects in memory is already using more memory than `emoji-picker-element`, in addition to whatever it's doing with JS/CSS/DOM.
 
@@ -498,7 +498,7 @@ As you can see, `emoji-picker-element` consumes less memory than merely loading 
 
 ### Bundle size
 
-26.99kB at the time of writing, for both the `Picker` and the `Database`.
+30.13kB at the time of writing (minified but not gzipped, for both the `Picker` and the `Database` combined).
 
 ## Contributing
 
