@@ -138,7 +138,7 @@ const picker = new Picker();
 applyFocusVisiblePolyfill(picker.shadowRoot);
 ```
 
-`emoji-picker-element` already ships with the proper CSS for both the `:focus_visible` standard and the polyfill.
+`emoji-picker-element` already ships with the proper CSS for both the `:focus-visible` standard and the polyfill.
 
 ## JavaScript API
 
