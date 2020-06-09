@@ -1,8 +1,10 @@
 import express from 'express'
+import compression from 'compression'
 import fs from 'fs'
 const app = express()
 const port = 3000
 
+app.use(compression())
 app.use(express.static('./'))
 
 app.get('/', (req, res) => {

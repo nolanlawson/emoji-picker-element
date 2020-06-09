@@ -59,6 +59,7 @@
     "babel-jest": "^26.0.1",
     "blob-util": "^2.0.2",
     "bundlesize": "^0.18.0",
+    "compression": "^1.7.4",
     "emojibase-data": "^5.0.1",
     "express": "^4.17.1",
     "fake-indexeddb": "^3.0.1",
