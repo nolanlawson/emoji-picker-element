@@ -21,37 +21,46 @@
         autocapitalize="none"
         spellcheck="true"
         aria-controls="search-results"
+        aria-describedby="search-description"
         aria-autocomplete="list"
         aria-activedescendant={activeSearchItem === -1 ? '' : `emoji-${currentEmojis[activeSearchItem].unicode}`}
         bind:value={rawSearchText}
         on:keydown={onSearchKeydown}
       >
       <label class="sr-only" for="search">{i18n.search}</label>
+      <span id="search-description" class="sr-only">{i18n.searchDescription}</span>
     </div>
-    <button class="emoji {skintonePickerExpanded ? 'hide-focus' : ''}"
+    <button id="skintone-button"
+            class="emoji {skinTonePickerExpanded ? 'hide-focus' : ''}"
             aria-label={i18n.skinToneLabel}
+            aria-describedby="skintone-description"
             aria-haspopup="listbox"
-            aria-expanded={skintonePickerExpanded}
+            aria-expanded={skinTonePickerExpanded}
             aria-controls="skintone-list"
-            on:click={onClickSkintoneButton}
-            on:keydown={onSkintoneKeydown}>{skinToneText}</button>
-    {#if skintonePickerExpanded}
+            on:click={onClickSkinToneButton}
+    >{skinToneText}</button>
+    <span id="skintone-description" class="sr-only">{i18n.skinToneDescription}</span>
+    {#if skinTonePickerExpanded}
       <div id="skintone-list"
            class="skintone-list"
            role="listbox"
-           tabindex="-1"
            aria-label={i18n.skinTonesTitle}
            aria-activedescendant="skintone-{activeSkinTone}"
+           on:keydown={onSkinToneOptionKeydown}
+           on:focusout={onSkinToneOptionsBlur}
+           on:click={onClickSkinToneOption}
       >
         {#each skinTones as skinTone, i (skinTone)}
           <button id="skintone-{i}"
-                  class="emoji {i === activeSkinTone ? 'active' : ''}"
-                  aria-label={i18n.skinTones[i]}
+                  class="emoji skintone-option hide-focus {i === activeSkinTone ? 'active' : ''}"
                   aria-selected={i === activeSkinTone}
                   role="option"
                   tabindex="-1"
-                  on:click={() => onClickSkinTone(i)}>
-            {skinTone}
+        >
+            <!-- I would use an aria-label here, but Safari+VoiceOver does not read it
+                 out unless I do it this way -->
+            <span class="no-pointer" aria-hidden="true">{skinTone}</span>
+            <span class="sr-only">{i18n.skinTones[i]}</span>
           </button>
         {/each}
       </div>
@@ -102,6 +111,7 @@
           {#each currentEmojis as emoji, i (emoji.unicode)}
             <button role={searchMode ? 'option' : 'menuitem'}
                     aria-selected={searchMode && i === activeSearchItem}
+                    aria-label={emoji.description}
                     class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                     id="emoji-{emoji.unicode}">
               {#if currentSkinTone > 0 && emoji.skins && emoji.skins[currentSkinTone]}

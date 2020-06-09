@@ -4,9 +4,11 @@
   "networkError": "Could not load emoji. Try refreshing.",
   "regionLabel": "Emoji picker",
   "search": "Search",
-  "skinToneLabel": "Choose a skin tone",
+  "skinToneLabel": "Select a skin tone.",
+  "skinToneDescription": "When expanded, press up or down to select and enter to choose.",
   "skinTonesTitle": "Skin tones",
   "searchResultsLabel": "Search results",
+  "searchDescription": "When search results are available, press up or down to select and enter to choose.",
   "categoriesLabel": "Categories",
   "skinTones": [
     "Default",

@@ -15,6 +15,7 @@ import { mark, stop } from '../../../shared/marks'
 import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
+import { tick } from 'svelte'
 
 const TIMEOUT_BEFORE_LOADING_MESSAGE = 1000 // 1 second
 const SKIN_TONE_BASE_TEXT = '\u270c'
@@ -36,7 +37,7 @@ let currentCategoryIndex = 0
 let currentCategory = categories[currentCategoryIndex]
 let computedIndicatorWidth = 0
 let indicatorStyle = '' // eslint-disable-line no-unused-vars
-let skintonePickerExpanded = false
+let skinTonePickerExpanded = false
 let currentSkinTone = 0
 let activeSkinTone = 0
 let skinToneText // eslint-disable-line no-unused-vars
@@ -194,9 +195,10 @@ async function summarizeEmojis (emojis) {
     }
     return res
   }
-  return emojis.map(({ unicode, skins }) => ({
+  return emojis.map(({ unicode, skins, shortcodes, annotation }) => ({
     unicode,
-    skins: skins && toSimpleSkinsMap(skins)
+    skins: skins && toSimpleSkinsMap(skins),
+    description: `${unicode}, ${shortcodes ? shortcodes.join(', ') : ''}`
   }))
 }
 
@@ -268,7 +270,7 @@ function clickEmoji (emojiData) {
 // eslint-disable-next-line no-unused-vars
 async function onEmojiClick (event) {
   const { target } = event
-  if (!target.classList.contains('emoji')) {
+  if (!target.classList.contains('skintone-option')) {
     return
   }
   halt(event)
@@ -278,29 +280,47 @@ async function onEmojiClick (event) {
   clickEmoji(emojiData)
 }
 
-// eslint-disable-next-line no-unused-vars
-function onClickSkinTone (i) {
-  currentSkinTone = i
-  skintonePickerExpanded = false
+function focus (id) {
+  rootElement.getRootNode().getElementById(id).focus()
 }
 
 // eslint-disable-next-line no-unused-vars
-function onClickSkintoneButton (event) {
-  skintonePickerExpanded = !skintonePickerExpanded
+function onClickSkinToneOption (event) {
+  const { target } = event
+  if (!target.classList.contains('emoji')) {
+    return
+  }
+  halt(event)
+  const skinTone = parseInt(target.id.slice(9), 10) // remove 'skintone-' prefix
+  currentSkinTone = skinTone
+  skinTonePickerExpanded = false
+  focus('skintone-button')
+}
+
+// eslint-disable-next-line no-unused-vars
+async function onClickSkinToneButton (event) {
+  skinTonePickerExpanded = !skinTonePickerExpanded
   activeSkinTone = currentSkinTone
+  if (skinTonePickerExpanded) {
+    halt(event)
+    await tick()
+    focus(`skintone-${activeSkinTone}`)
+  }
 }
 
 // eslint-disable-next-line no-unused-vars
-function onSkintoneKeydown (event) {
+function onSkinToneOptionKeydown (event) {
   const { key } = event
 
-  if (!skintonePickerExpanded) {
+  if (!skinTonePickerExpanded) {
     return
   }
 
-  const goToNextOrPrevious = (previous) => {
+  const goToNextOrPrevious = async previous => {
     halt(event)
     activeSkinTone = incrementOrDecrement(previous, activeSkinTone, skinTones)
+    await tick()
+    focus(`skintone-${activeSkinTone}`)
   }
 
   switch (key) {
@@ -308,10 +328,16 @@ function onSkintoneKeydown (event) {
       return goToNextOrPrevious(true)
     case 'ArrowDown':
       return goToNextOrPrevious(false)
-    case 'Enter':
-    case ' ':
-      halt(event)
-      return onClickSkinTone(activeSkinTone)
+  }
+}
+
+// eslint-disable-next-line no-unused-vars
+async function onSkinToneOptionsBlur (event) {
+  const { relatedTarget } = event
+  // On blur outside of the skintone options, collapse the skintone picker.
+  // Except if focus is just moving to another skintone option, e.g. pressing up/down to change focus
+  if (!relatedTarget || !relatedTarget.classList.contains('skintone-option')) {
+    skinTonePickerExpanded = false
   }
 }
 
