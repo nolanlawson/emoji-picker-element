@@ -110,7 +110,7 @@
         >
           {#each currentEmojis as emoji, i (emoji.unicode)}
             <button role={searchMode ? 'option' : 'menuitem'}
-                    aria-selected={searchMode ? i === activeSearchItem : ''}
+                    {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
                     aria-label={emoji.description}
                     class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                     id="emoji-{emoji.unicode}">
