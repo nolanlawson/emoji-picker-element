@@ -6,6 +6,7 @@ import mainSvelte from 'rollup-plugin-svelte'
 import hotSvelte from 'rollup-plugin-svelte-hot'
 import autoPreprocess from 'svelte-preprocess'
 import { versionsAndTestEmoji } from './bin/versionsAndTestEmoji'
+import analyze from 'rollup-plugin-analyzer'
 
 const dev = process.env.NODE_ENV !== 'production'
 const svelte = dev ? hotSvelte : mainSvelte
@@ -31,7 +32,8 @@ const baseConfig = {
       customElement: true,
       dev,
       preprocess: autoPreprocess()
-    })
+    }),
+    analyze({ summaryOnly: true })
   ],
   external: [
     './database.js',
