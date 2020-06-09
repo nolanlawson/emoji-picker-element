@@ -110,7 +110,7 @@
         >
           {#each currentEmojis as emoji, i (emoji.unicode)}
             <button role={searchMode ? 'option' : 'menuitem'}
-                    aria-selected={searchMode && i === activeSearchItem}
+                    aria-selected={searchMode ? i === activeSearchItem : ''}
                     aria-label={emoji.description}
                     class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                     id="emoji-{emoji.unicode}">
@@ -125,6 +125,6 @@
     </div>
   {/if}
   <div aria-hidden="true" class="hidden abs-pos">
-    <button class="emoji baseline-emoji" bind:this={baselineEmoji}>😀</button>
+    <button tabindex="-1" class="emoji baseline-emoji" bind:this={baselineEmoji}>😀</button>
   </div>
 </section>

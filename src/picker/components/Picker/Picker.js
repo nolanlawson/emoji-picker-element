@@ -24,6 +24,7 @@ const numSkinTones = 6
 const skinToneTextForSkinTone = i => (i > 0 ? applySkinTone(SKIN_TONE_BASE_TEXT, i) : SKIN_TONE_BASE_TEXT)
 const skinTones = Array(numSkinTones).fill().map((_, i) => skinToneTextForSkinTone(i))
 
+let initialLoad = true
 let database = null
 let currentEmojis = []
 let rawSearchText = ''
@@ -174,6 +175,16 @@ function checkZwjSupport (zwjEmojisToCheck) {
   stop('checkZwjSupport')
   // force update
   currentEmojis = currentEmojis // eslint-disable-line no-self-assign
+  if (initialLoad) {
+    initialLoad = false
+    // see https://github.com/andrewiggins/afterframe
+    // we want to measure after style/layout are complete
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        stop('initialLoad')
+      })
+    })
+  }
 }
 
 function isZwjSupported (emoji) {

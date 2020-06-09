@@ -2,6 +2,7 @@ import SveltePicker from './components/Picker/Picker.svelte'
 import Database from './ImportedDatabase'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
 import enI18n from './i18n/en.json'
+import { mark } from '../shared/marks'
 
 export default class Picker extends SveltePicker {
   constructor ({
@@ -9,6 +10,7 @@ export default class Picker extends SveltePicker {
     dataSource = DEFAULT_DATA_SOURCE,
     i18n = enI18n
   } = {}) {
+    mark('initialLoad')
     // Make the API simpler, directly pass in the props
     // Also wrap the locale/dataSource into a Database object
     super({
