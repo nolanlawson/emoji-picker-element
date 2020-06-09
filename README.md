@@ -414,7 +414,7 @@ The reason for this is that `Picker` automatically registers itself as a custom 
 ```json
 [
   "annotation", "emoji", "emoticon", "group", 
-  "order", "shortcodes", "tags", "version"
+  "order", "shortcodes", "skins", "tags", "version"
 ]
 ```
 
