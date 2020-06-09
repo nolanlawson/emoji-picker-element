@@ -449,6 +449,7 @@ Using IndexedDB has a few advantages:
 
 1. We don't need to keep half a megabyte of emoji data in memory at all times.
 2. The second time your visitors visit your website, we don't even need to download, parse, and index the emoji data, because it's already available on their hard drive.
+3. Heck, you can even load the IndexedDB data in a web worker or service worker. That way, you only pay the UI thread cost of accessing IndexedDB, not of fetching the data, indexing the data, or inserting it into IndexedDB.
 
 ### Native emoji
 
