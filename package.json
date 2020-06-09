@@ -20,10 +20,12 @@
     "build:i18n-docs": "node ./bin/generateI18nDocs",
     "build:typedoc": "typedoc --out docs-tmp --theme markdown --excludePrivate --excludeNotExported --hideSources --hideBreadcrumbs ./src/types && node ./bin/generateTypeDocs && rm -fr docs-tmp",
     "build:types": "tsc -d --outDir ./ts-tmp ./src/types/*.ts && mv ./ts-tmp/*.d.ts ./ && rm -fr ts-tmp",
-    "benchmark:memory": "run-p --race benchmark:memory:server benchmark:memory:test",
+    "benchmark:bundle": "rollup -c ./test/bundlesize/rollup.config.js",
+    "benchmark:bundlesize": "run-s build:rollup benchmark:bundle benchmark:run-bundlesize",
+    "benchmark:memory": "run-s build:rollup benchmark:bundle && run-p --race benchmark:memory:server benchmark:memory:test",
     "benchmark:memory:server": "node ./test/memory/server.js",
     "benchmark:memory:test": "node ./test/memory/test.js",
-    "benchmark:bundlesize": "rollup -c ./test/bundlesize/rollup.config.js && bundlesize && rm -f bundle.js",
+    "benchmark:run-bundlesize": "bundlesize",
     "dev": "run-p --race dev:rollup dev:server",
     "dev:rollup": "NODE_ENV=development rollup -c -w",
     "dev:server": "node ./test/adhoc/server.js",
@@ -146,7 +148,7 @@
   "bundlesize": [
     {
       "path": "./bundle.js",
-      "maxSize": "30 kB",
+      "maxSize": "35 kB",
       "compression": "none"
     }
   ]

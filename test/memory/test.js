@@ -33,13 +33,14 @@ function printBytes (bytes) {
 
 async function main () {
   while (true) {
-    const resp = await fetch('http://localhost:3000')
-    if (resp.status === 200) {
-      break
-    } else {
-      console.log('Waiting for localhost:3000 to be availble')
-      await new Promise(resolve => setTimeout(resolve, 1000))
-    }
+    try {
+      const resp = await fetch('http://localhost:3000')
+      if (resp.status === 200) {
+        break
+      }
+    } catch (err) {}
+    console.log('Waiting for localhost:3000 to be availble')
+    await new Promise(resolve => setTimeout(resolve, 1000))
   }
   const results = []
   for (const scenario of scenarios) {

@@ -5,7 +5,7 @@ export default {
   output: {
     file: './bundle.js',
     format: 'iife',
-    name: 'EmojiPickerElement'
+    name: 'emojiPickerElement'
   },
   plugins: [
     terser()

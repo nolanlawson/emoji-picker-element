@@ -6,15 +6,19 @@
 </head>
 <body>
 <script src="/node_modules/focus-visible/dist/focus-visible.js"></script>
-<script type="module">
+<script>
   (async () => {
     const params = new URLSearchParams(location.search)
     if (params.has('picker')) {
-      const { Picker } = await import('/index.js')
-      const picker = new Picker({
-        dataSource: '/node_modules/emojibase-data/en/data.json'
-      })
-      document.body.appendChild(picker)
+      const script = document.createElement('script')
+      script.onload = () => {
+        const picker = new emojiPickerElement.Picker({
+          dataSource: '/node_modules/emojibase-data/en/data.json'
+        })
+        document.body.appendChild(picker)
+      }
+      script.src = '/bundle.js'
+      document.body.appendChild(script)
     } else if (params.has('compact')) {
       window.json = await (await fetch('/node_modules/emojibase-data/en/compact.json')).json()
     } else if (params.has('full')) {
