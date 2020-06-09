@@ -206,8 +206,10 @@ Here is the default English `i81n` object (`"en"` locale):
   "networkError": "Could not load emoji. Try refreshing.",
   "regionLabel": "Emoji picker",
   "search": "Search",
+  "searchDescription": "When search results are available, press up or down to select and enter to choose.",
   "searchResultsLabel": "Search results",
-  "skinToneLabel": "Choose a skin tone",
+  "skinToneDescription": "When expanded, press up or down to select and enter to choose.",
+  "skinToneLabel": "Select a skin tone.",
   "skinTones": [
     "Default",
     "Light",
