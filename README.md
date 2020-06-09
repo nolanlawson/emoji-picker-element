@@ -239,6 +239,8 @@ const database = new Database();
 await database.getEmojiBySearchPrefix('elephant'); // [{unicode: "🐘", ...}]
 ```
 
+Note that under the hood, IndexedDB data is partitioned based on the `locale`. So if you create two `Database`s with two different `locale`s, it will store twice as much data.
+
 Full API:
 
 <!-- database API start -->
@@ -420,9 +422,9 @@ The reason for this is that `Picker` automatically registers itself as a custom 
 
 You can fetch the emoji JSON file from wherever you want. However, it's recommended that your server expose an `ETag` header – if so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will fire off a `HEAD` request and just check the `ETag`.
 
-If the server hosting the JSON file is not the same as the one containing the emoji picker, then cross-origin server will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: *`. (Note that `jsdelivr` already does this, which is why it is the default.)
+If the server hosting the JSON file is not the same as the one containing the emoji picker, then the cross-origin server will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: *`. (Note that `jsdelivr` already does this, which is partly why it is the default.)
 
-Unfortunately [Safari does not support `Access-Control-Allow-Headers`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#Browser_compatibility), meaning that the `ETag` header will not be available cross-origin. In that case, `emoji-picker-element` will fall back to the less performant option. If you want to avoid this, host the JSON on the same server as your web app.
+Unfortunately [Safari does not currently support `Access-Control-Allow-Headers`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#Browser_compatibility), meaning that the `ETag` header will not be available cross-origin. In that case, `emoji-picker-element` will fall back to the less performant option. If you want to avoid this, host the JSON file on the same server as your web app.
 
 ### Offline-first
 
@@ -492,7 +494,7 @@ This test navigates to four pages: 1) an empty page, 2) the same page containing
 | compact  | 1.53 MB (1533547) | 770 kB (770450)        |
 | full     | 1.87 MB (1868599) | 1.11 MB (1105502)      |
 
-As you can see, `emoji-picker-element` consumes less memory than merely loading the JSON files into memory. So any emoji picker that keeps these JSON objects in memory is already using more memory than `emoji-picker-element`, in addition to whatever it's doing with JS/CSS/DOM.
+As you can see, `emoji-picker-element` consumes less memory than merely loading the JSON files and keeping the reference. So any emoji picker that keeps these JSON objects in memory is already using more memory than `emoji-picker-element`, in addition to whatever it's doing with JS/CSS/DOM.
 
 [`performance.measureMemory()`](https://web.dev/monitor-total-page-memory-usage/) in Chrome is used to calculate memory usage.
 
