@@ -10,4 +10,4 @@ global.Response = fetch.Response
 global.crypto = new Crypto()
 
 process.env.NODE_ENV = 'test'
-process.env.VERSIONS_AND_TEST_EMOJI = versionsAndTestEmoji
+process.env.VERSIONS_AND_TEST_EMOJI = JSON.stringify(versionsAndTestEmoji)

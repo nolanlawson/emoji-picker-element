@@ -8,7 +8,8 @@ module.exports = {
       "preprocess": true,
       "compilerOptions": {
         css: true,
-        customElement: true
+        customElement: true,
+        dev: false
       }
     }]
   },
