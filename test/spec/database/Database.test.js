@@ -106,7 +106,7 @@ describe('database tests', () => {
     await db.delete()
   })
 
-  test.skip('close and then use afterwards should work okay', async () => {
+  test('close and then use afterwards should work okay', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
     expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
     await db.close()
@@ -114,7 +114,7 @@ describe('database tests', () => {
     await db.delete()
   })
 
-  test.skip('delete and then use afterwards should work okay', async () => {
+  test('delete and then use afterwards should work okay', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
     expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
     await db.delete()
@@ -122,24 +122,19 @@ describe('database tests', () => {
     await db.delete()
   })
 
-  test('multiple databases, close one', async () => {
+  test('multiple databases on same source, close both', async () => {
     const db1 = new Database({ dataSource: ALL_EMOJI })
+    await db1.ready()
     const db2 = new Database({ dataSource: ALL_EMOJI })
+    await db2.ready()
     await db1.close()
-    await expect(() => db1.getEmojiByGroup(1)).rejects.toThrow()
-    await expect(() => db2.getEmojiByGroup(1)).rejects.toThrow()
+    expect((await db1.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    await db2.close()
+    expect((await db2.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
     const db3 = new Database({ dataSource: ALL_EMOJI })
     await db3.ready()
     await tick(7)
     await db3.delete()
-  })
-
-  test('multiple databases, delete one', async () => {
-    const db1 = new Database({ dataSource: ALL_EMOJI })
-    const db2 = new Database({ dataSource: ALL_EMOJI })
-    await db1.delete()
-    await expect(() => db1.getEmojiByGroup(1)).rejects.toThrow()
-    await expect(() => db2.getEmojiByGroup(1)).rejects.toThrow()
   })
 
   test('multiple databases in multiple locales', async () => {
@@ -158,7 +153,6 @@ describe('database tests', () => {
     await en.delete()
 
     // deleting en has no impact on fr
-    await expect(() => en.getEmojiBySearchQuery('monkey face')).rejects.toThrow()
     expect((await fr.getEmojiBySearchQuery('tête singe')).map(_ => _.annotation)).toStrictEqual(['tête de singe'])
 
     await en.delete()

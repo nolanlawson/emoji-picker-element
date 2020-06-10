@@ -52,6 +52,7 @@ export default class Database {
     this._locale = locale
     this._dbName = `emoji-picker-element-${this._locale}`
     this._db = undefined
+    this._lazyUpdate = undefined
     this._ready = this._init()
   }
 
@@ -63,52 +64,57 @@ export default class Database {
     if (empty) {
       await loadDataForFirstTime(db, dataSource)
     } else { // offline-first - do an update asynchronously
-      /* no await */ checkForUpdates(db, dataSource)
+      this._lazyUpdate = checkForUpdates(db, dataSource)
     }
   }
 
   async ready () {
+    if (!this._ready) {
+      this._ready = this._init()
+    }
     return this._ready
   }
 
   async getEmojiByGroup (group) {
     assertNumber(group)
-    await this._ready
+    await this.ready()
     const emojis = await getEmojiByGroup(this._db, group)
     return uniqEmoji(emojis)
   }
 
   async getEmojiBySearchQuery (query) {
     assertNonEmptyString(query)
-    await this._ready
+    await this.ready()
     const emojis = await getEmojiBySearchQuery(this._db, query)
     return uniqEmoji(emojis)
   }
 
   async getEmojiByShortcode (shortcode) {
     assertNonEmptyString(shortcode)
-    await this._ready
+    await this.ready()
     return getEmojiByShortcode(this._db, shortcode)
   }
 
   async getEmojiByUnicode (unicode) {
     assertNonEmptyString(unicode)
-    await this._ready
+    await this.ready()
     return getEmojiByUnicode(this._db, unicode)
   }
 
   async close () {
-    await this._ready
-    if (this._db) {
-      this._db = undefined
+    await this.ready()
+    await this._lazyUpdate
+    if (this._ready) {
+      this._db = this._ready = this._lazyUpdate = undefined
       await closeDatabase(this._dbName)
     }
   }
 
   async delete () {
-    await this._ready
+    await this.ready()
+    await this._lazyUpdate
     if (this._db) {
-      this._db = undefined
+      this._db = this._ready = this._lazyUpdate = undefined
       await deleteDatabase(this._dbName)
     }
   }
