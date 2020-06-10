@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ad-hoc emoji-picker-element test</title>
+  <meta name="viewport" content="width=device-width">
+</head>
+<body>
+<h1>Ad-hoc emoji-picker-element test</h1>
+<script src="/bundle.js"></script>
+<script>
+  (async () => {
+    const params = new URLSearchParams(location.search)
+    if (params.has('worker')) {
+      const worker = new Worker('/test/lighthouse/worker.js')
+      await new Promise((resolve, reject) => {
+        worker.addEventListener('message', () => {
+          worker.terminate()
+          resolve()
+        })
+        worker.addEventListener('error', reject)
+        worker.postMessage('init')
+      })
+    }
+    const picker = new emojiPickerElement.Picker({
+      dataSource: '/node_modules/emojibase-data/en/data.json'
+    })
+    document.body.appendChild(picker)
+  })()
+</script>
+</body>
+</html>

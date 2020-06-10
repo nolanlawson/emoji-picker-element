@@ -126,3 +126,4 @@ dist
 /docs-tmp
 /ts-tmp
 /bundle.js
+/database-bundle.js
