@@ -1,4 +1,4 @@
-import { basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
+import { basicAfterEach, basicBeforeEach, truncatedEmoji } from '../shared'
 import { Database } from '../../../index'
 import allEmoji from 'emojibase-data/en/data.json'
 
@@ -25,7 +25,7 @@ async function testDataChange (firstData, secondData, firstCallback, secondCallb
 
   db = new Database({ dataSource })
   await db.ready()
-  await tick(7)
+  await db._lazyUpdate
   await secondCallback(db, dataSource)
   await db.close()
 
@@ -34,7 +34,7 @@ async function testDataChange (firstData, secondData, firstCallback, secondCallb
 
   db = new Database({ dataSource })
   await db.ready()
-  await tick(7)
+  await db._lazyUpdate
 
   await thirdCallback(db, dataSource)
   await db.delete()
@@ -150,7 +150,7 @@ describe('database second load and update', () => {
 
     db = new Database({ dataSource })
     await db.ready()
-    await tick(7)
+    await db._lazyUpdate
     expect(fetch).toHaveBeenCalledTimes(2)
     expect(fetch).toHaveBeenLastCalledWith(dataSource, undefined)
     expect(fetch).toHaveBeenNthCalledWith(1, dataSource, { method: 'HEAD' })
@@ -163,7 +163,7 @@ describe('database second load and update', () => {
 
     db = new Database({ dataSource })
     await db.ready()
-    await tick(7)
+    await db._lazyUpdate
     expect(fetch).toHaveBeenCalledTimes(2)
     expect(fetch).toHaveBeenLastCalledWith(dataSource, undefined)
     expect(fetch).toHaveBeenNthCalledWith(1, dataSource, { method: 'HEAD' })
@@ -202,7 +202,7 @@ describe('database second load and update', () => {
 
     db = new Database({ dataSource: dataSource2 })
     await db.ready()
-    await tick(7)
+    await db._lazyUpdate
     expect(fetch).toHaveBeenCalledTimes(2)
     expect(fetch).toHaveBeenLastCalledWith(dataSource2, undefined)
     expect(fetch).toHaveBeenNthCalledWith(1, dataSource2, { method: 'HEAD' })
@@ -217,7 +217,7 @@ describe('database second load and update', () => {
 
     db = new Database({ dataSource: dataSource2 })
     await db.ready()
-    await tick(7)
+    await db._lazyUpdate
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(dataSource2, { method: 'HEAD' })
     expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()

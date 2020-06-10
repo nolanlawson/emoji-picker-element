@@ -101,7 +101,6 @@ describe('database tests', () => {
     await db.close()
     db = new Database({ dataSource: ALL_EMOJI })
     await db.ready()
-    await tick(7)
     await db.delete()
     await db.delete()
   })
@@ -133,7 +132,6 @@ describe('database tests', () => {
     expect((await db2.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
     const db3 = new Database({ dataSource: ALL_EMOJI })
     await db3.ready()
-    await tick(7)
     await db3.delete()
   })
 
