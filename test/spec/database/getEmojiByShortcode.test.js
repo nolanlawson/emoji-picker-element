@@ -1,10 +1,10 @@
-import { ALL_EMOJI, basicAfterEach, basicBeforeEach } from './shared'
-import { Database } from '../../index.js'
-
-beforeEach(basicBeforeEach)
-afterEach(basicAfterEach)
+import { ALL_EMOJI, basicAfterEach, basicBeforeEach } from '../shared'
+import { Database } from '../../../index.js'
 
 describe('getEmojiByShortcode', () => {
+  beforeEach(basicBeforeEach)
+  afterEach(basicAfterEach)
+
   test('basic test', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
     expect((await db.getEmojiByShortcode('monkey')).annotation).toEqual('monkey')

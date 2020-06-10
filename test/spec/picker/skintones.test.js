@@ -1,5 +1,5 @@
 import allEmojis from 'emojibase-data/en/data.json'
-import { applySkinTone } from '../../src/picker/utils/applySkinTone'
+import { applySkinTone } from '../../../src/picker/utils/applySkinTone'
 
 describe('skintones tests', () => {
   describe('data tests', () => {

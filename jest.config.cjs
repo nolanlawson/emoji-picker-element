@@ -8,7 +8,7 @@ module.exports = {
   moduleFileExtensions: ['js'],
   testPathIgnorePatterns: ['node_modules'],
   transformIgnorePatterns: ['<rootDir>/node_modules/(?!lodash-es)'],
-  bail: false,
+  bail: true,
   verbose: true,
   silent: false,
   setupFilesAfterEnv: [

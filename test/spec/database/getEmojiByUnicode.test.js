@@ -1,11 +1,11 @@
 import allEmoji from 'emojibase-data/en/data.json'
-import { ALL_EMOJI, basicAfterEach, basicBeforeEach, truncatedEmoji } from './shared'
-import { Database } from '../../index.js'
-
-beforeEach(basicBeforeEach)
-afterEach(basicAfterEach)
+import { ALL_EMOJI, basicAfterEach, basicBeforeEach, truncatedEmoji } from '../shared'
+import { Database } from '../../../index.js'
 
 describe('getEmojiByUnicode', () => {
+  beforeEach(basicBeforeEach)
+  afterEach(basicAfterEach)
+
   test('basic test', async () => {
     const pirate = allEmoji.find(_ => _.annotation === 'pirate flag')
     const emojiPlusPirateFlag = [

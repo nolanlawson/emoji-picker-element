@@ -1,10 +1,9 @@
-import { ALL_EMOJI, basicAfterEach, basicBeforeEach } from './shared'
-import { Database } from '../../index.js'
-
-beforeEach(basicBeforeEach)
-afterEach(basicAfterEach)
+import { ALL_EMOJI, basicAfterEach, basicBeforeEach } from '../shared'
+import { Database } from '../../../index.js'
 
 describe('getEmojiByGroup', () => {
+  beforeEach(basicBeforeEach)
+  afterEach(basicAfterEach)
   test('basic test', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
 

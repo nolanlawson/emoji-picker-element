@@ -1,9 +1,9 @@
-import { ALL_EMOJI, ALL_EMOJI_NO_ETAG, basicAfterEach, basicBeforeEach, truncatedEmoji } from './shared'
-
-beforeEach(basicBeforeEach)
-afterEach(basicAfterEach)
+import { ALL_EMOJI, ALL_EMOJI_NO_ETAG, basicAfterEach, basicBeforeEach, truncatedEmoji } from '../shared'
 
 describe('basic fetch tests', () => {
+  beforeEach(basicBeforeEach)
+  afterEach(basicAfterEach)
+
   test('make sure fetch-mock-jest is working correctly', async () => {
     expect(fetch).toHaveBeenCalledTimes(0)
     const resp = await fetch(ALL_EMOJI)
