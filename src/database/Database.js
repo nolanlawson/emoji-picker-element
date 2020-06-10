@@ -104,7 +104,7 @@ export default class Database {
   async close () {
     await this.ready()
     await this._lazyUpdate
-    if (this._ready) {
+    if (this._db) {
       this._db = this._ready = this._lazyUpdate = undefined
       await closeDatabase(this._dbName)
     }
