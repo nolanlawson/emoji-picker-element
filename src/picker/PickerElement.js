@@ -1,7 +1,7 @@
 import SveltePicker from './components/Picker/Picker.svelte'
 import Database from './ImportedDatabase'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
-import enI18n from './i18n/en.json'
+import enI18n from './i18n/en'
 import { mark } from '../shared/marks'
 
 export default class Picker extends SveltePicker {

@@ -1,4 +1,4 @@
-import { Database } from '../../../index.js'
+import Database from '../../../src/database/Database'
 import frEmoji from 'emojibase-data/fr/data.json'
 import {
   basicAfterEach, basicBeforeEach, ALL_EMOJI, ALL_EMOJI_MISCONFIGURED_ETAG,
@@ -74,7 +74,7 @@ describe('database tests', () => {
   })
 
   test('invalid emoji data', async () => {
-    const NULL = 'http://localhost/null.json'
+    const NULL = 'null.json'
     const NOT_ARRAY = 'not-array.json'
     const EMPTY = 'empty.json'
     const NULL_ARRAY = 'null-array.json'
