@@ -1,4 +1,4 @@
-import { basicAfterEach, basicBeforeEach, truncatedEmoji } from '../shared'
+import { ALL_EMOJI, ALL_EMOJI_NO_ETAG, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import { Database } from '../../../index'
 import allEmoji from 'emojibase-data/en/data.json'
 
@@ -222,6 +222,52 @@ describe('database second load and update', () => {
     expect(fetch).toHaveBeenLastCalledWith(dataSource2, { method: 'HEAD' })
     expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
     expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
+
+    await db.delete()
+  })
+
+  test('URL changed but ETag did not should still cause it to re-populate', async () => {
+    const otherSource = 'http://localhost/other.json'
+
+    let db = new Database({ dataSource: ALL_EMOJI_NO_ETAG })
+    await db.close()
+    mockEmoji(otherSource, truncatedEmoji, 'W/xxx')
+
+    db = new Database({ dataSource: otherSource })
+    await db.ready()
+    await tick(5) // the request is done asynchronously, so wait for it
+    expect(fetch).toHaveBeenCalledTimes(2)
+    expect(fetch).toHaveBeenNthCalledWith(1, otherSource, { method: 'HEAD' })
+    expect(fetch).toHaveBeenLastCalledWith(otherSource, undefined)
+    await db.delete()
+  })
+
+  test('ETag changed, database updates happen concurrently', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+    await db.close()
+
+    const changedEmoji = JSON.parse(JSON.stringify(truncatedEmoji))
+    const roflIndex = allEmoji.findIndex(_ => _.annotation === 'rolling on the floor laughing')
+    changedEmoji[roflIndex] = allEmoji.find(_ => _.annotation === 'pineapple') // replace rofl
+
+    // second time - update, data is v2
+    fetch.mockClear()
+    fetch.reset()
+    fetch.get(ALL_EMOJI, () => new Response(JSON.stringify(changedEmoji), { headers: { ETag: 'W/yyy' } }))
+    fetch.head(ALL_EMOJI, () => new Response(null, { headers: { ETag: 'W/yyy' } }))
+
+    // open two at once
+    const dbs = [
+      new Database({ dataSource: ALL_EMOJI }),
+      new Database({ dataSource: ALL_EMOJI })
+    ]
+
+    for (const otherDB of dbs) {
+      await otherDB.ready()
+      await otherDB._lazyUpdate
+      expect((await otherDB.getEmojiByShortcode('rofl'))).toBeFalsy()
+      expect((await otherDB.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
+    }
 
     await db.delete()
   })

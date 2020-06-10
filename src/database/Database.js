@@ -101,20 +101,25 @@ export default class Database {
     return getEmojiByUnicode(this._db, unicode)
   }
 
-  async close () {
-    await this.ready()
-    await this._lazyUpdate
+  async _shutdown () {
+    await this.ready() // reopen if we've already been closed/deleted
+    try {
+      await this._lazyUpdate // allow any lazy updates to process before closing/deleting
+    } catch (err) { /* ignore network errors (offline-first) */ }
     if (this._db) {
       this._db = this._ready = this._lazyUpdate = undefined
+      return true // we need to actually run the close/delete logic, so we return true
+    }
+  }
+
+  async close () {
+    if (await this._shutdown()) {
       await closeDatabase(this._dbName)
     }
   }
 
   async delete () {
-    await this.ready()
-    await this._lazyUpdate
-    if (this._db) {
-      this._db = this._ready = this._lazyUpdate = undefined
+    if (await this._shutdown()) {
       await deleteDatabase(this._dbName)
     }
   }

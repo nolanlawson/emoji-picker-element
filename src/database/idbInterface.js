@@ -22,10 +22,6 @@ export async function loadData (db, emojiBaseData, url, eTag) {
   mark('loadData')
   try {
     const transformedData = transformEmojiBaseData(emojiBaseData)
-    const [oldETag, oldUrl] = await get(db, STORE_META, [KEY_ETAG, KEY_URL])
-    if (oldETag === eTag && oldUrl === url) {
-      return
-    }
     await dbPromise(db, [STORE_EMOJI, STORE_META], MODE_READWRITE, ([emojiStore, metaStore]) => {
       let oldETag
       let oldUrl

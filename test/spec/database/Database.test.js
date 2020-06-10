@@ -24,7 +24,7 @@ describe('database tests', () => {
     await db.close()
     db = new Database({ dataSource: ALL_EMOJI })
     await db.ready()
-    await tick() // the HEAD request is done asynchronously, so wait for it
+    await tick(5) // the HEAD request is done asynchronously, so wait for it
     expect(fetch).toHaveBeenCalledTimes(2)
     expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI, { method: 'HEAD' })
     await db.delete()
@@ -38,7 +38,7 @@ describe('database tests', () => {
     await db.close()
     db = new Database({ dataSource: ALL_EMOJI_NO_ETAG })
     await db.ready()
-    await tick() // the request is done asynchronously, so wait for it
+    await tick(5) // the request is done asynchronously, so wait for it
     expect(fetch).toHaveBeenCalledTimes(3)
     expect(fetch).toHaveBeenNthCalledWith(2, ALL_EMOJI_NO_ETAG, { method: 'HEAD' })
     expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI_NO_ETAG, undefined)
@@ -66,7 +66,7 @@ describe('database tests', () => {
     await db.close()
     db = new Database({ dataSource: ALL_EMOJI_MISCONFIGURED_ETAG })
     await db.ready()
-    await tick() // the request is done asynchronously, so wait for it
+    await tick(5) // the request is done asynchronously, so wait for it
     expect(fetch).toHaveBeenCalledTimes(3)
     expect(fetch).toHaveBeenNthCalledWith(2, ALL_EMOJI_MISCONFIGURED_ETAG, { method: 'HEAD' })
     expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI_MISCONFIGURED_ETAG, undefined)
@@ -113,6 +113,22 @@ describe('database tests', () => {
     await db.delete()
   })
 
+  test('simultaneous closes', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    await Promise.all([db.close(), db.close()])
+    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    await db.delete()
+  })
+
+  test('simultaneous close and delete', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    await Promise.all([db.close(), db.delete()])
+    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    await db.delete()
+  })
+
   test('delete and then use afterwards should work okay', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
     expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
@@ -155,5 +171,18 @@ describe('database tests', () => {
 
     await en.delete()
     await fr.delete()
+  })
+
+  test('no error if you query one DB while closing another', async () => {
+    const db1 = new Database({ dataSource: ALL_EMOJI })
+    await db1.ready()
+    const db2 = new Database({ dataSource: ALL_EMOJI })
+    await db2.ready()
+    await db2._lazyUpdate
+    const queryPromise = db2.getEmojiByUnicode('🐵')
+    const closePromise = db1.close()
+    expect(await queryPromise)
+    await closePromise
+    await db1.delete()
   })
 })

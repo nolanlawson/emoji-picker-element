@@ -78,9 +78,10 @@ export function get (db, storeName, key) {
 
 export function closeDatabase (dbName) {
   // close any open requests
-  const openReq = openReqs[dbName]
-  if (openReq && openReq.result) {
-    openReq.result.close()
+  const req = openReqs[dbName]
+  const result = req && req.result
+  if (result) {
+    result.close()
   }
   delete openReqs[dbName]
   delete databaseCache[dbName]
@@ -89,12 +90,7 @@ export function closeDatabase (dbName) {
 export function deleteDatabase (dbName) {
   return new Promise((resolve, reject) => {
     // close any open requests
-    const openReq = openReqs[dbName]
-    if (openReq && openReq.result) {
-      openReq.result.close()
-    }
-    delete openReqs[dbName]
-    delete databaseCache[dbName]
+    closeDatabase(dbName)
     const req = indexedDB.deleteDatabase(dbName)
     req.onsuccess = () => resolve()
     req.onerror = () => reject(req.error)

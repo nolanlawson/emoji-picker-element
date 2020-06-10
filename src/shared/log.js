@@ -8,6 +8,7 @@ export function log () {
 }
 
 export function warn () {
+  /* istanbul ignore if */
   if (!isJest()) {
     console.warn(...arguments)
   }
