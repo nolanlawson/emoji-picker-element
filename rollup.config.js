@@ -1,6 +1,5 @@
 import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
-import json from '@rollup/plugin-json'
 import replace from '@rollup/plugin-replace'
 import mainSvelte from 'rollup-plugin-svelte'
 import hotSvelte from 'rollup-plugin-svelte-hot'
@@ -17,7 +16,6 @@ const baseConfig = {
   plugins: [
     resolve(),
     cjs(),
-    json(),
     replace({
       'process.env.NODE_ENV': dev ? '"development"' : '"production"',
       'process.env.PERF': !!process.env.PERF,

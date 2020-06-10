@@ -1099,13 +1099,6 @@
     magic-string "^0.25.2"
     resolve "^1.11.0"
 
-"@rollup/plugin-json@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-json/-/plugin-json-4.0.3.tgz#747e2c2884c5a0fa00b66c9c0f3f1012cddca534"
-  integrity sha512-QMUT0HZNf4CX17LMdwaslzlYHUKTYGuuk34yYIgZrNdu+pMEfqMS55gck7HEeHBKXHM4cz5Dg1OVwythDdbbuQ==
-  dependencies:
-    "@rollup/pluginutils" "^3.0.8"
-
 "@rollup/plugin-node-resolve@^7.1.3":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-7.1.3.tgz#80de384edfbd7bfc9101164910f86078151a3eca"
@@ -7555,6 +7548,12 @@ svelte-hmr@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.8.0.tgz#c02c9b5bbe2e8fa23f6f7e221aef4d00495d9e39"
   integrity sha512-2CIgd1q2ANQhKzboWHQEZqNX+2kSun12Z8WTy/REOY4ymekWm9C9tsHKdE8uxp2snVYC64RXI6iNgtqpWtSfXg==
+
+svelte-jester@nolanlawson/svelte-jester#auto-preprocess:
+  version "1.0.6"
+  resolved "https://codeload.github.com/nolanlawson/svelte-jester/tar.gz/a38d68b6e0f1cc2a80dd8a7e93fd46f6d85acc3b"
+  dependencies:
+    cosmiconfig "^6.0.0"
 
 svelte-preprocess@^3.7.4:
   version "3.7.4"

@@ -3,9 +3,16 @@ module.exports = {
     '<rootDir>/test/spec/**/*.{spec,test}.{js,jsx,ts,tsx}'
   ],
   transform: {
-    '^.+\\.js$': './config/babelJestTransform.cjs'
+    '^.+\\.js$': './config/babelJestTransform.cjs',
+    "^.+\\.svelte$": ["svelte-jester", {
+      "preprocess": true,
+      "compilerOptions": {
+        css: true,
+        customElement: true
+      }
+    }]
   },
-  moduleFileExtensions: ['js'],
+  moduleFileExtensions: ['js', 'svelte'],
   testPathIgnorePatterns: ['node_modules'],
   transformIgnorePatterns: ['<rootDir>/node_modules/(?!lodash-es)'],
   bail: true,

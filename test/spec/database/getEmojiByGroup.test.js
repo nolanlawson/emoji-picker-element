@@ -1,5 +1,5 @@
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach } from '../shared'
-import { Database } from '../../../index.js'
+import Database from '../../../src/database/Database'
 
 describe('getEmojiByGroup', () => {
   beforeEach(basicBeforeEach)

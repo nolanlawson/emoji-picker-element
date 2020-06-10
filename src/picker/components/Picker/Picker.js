@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
 
 import Database from '../../ImportedDatabase'
-import i18n from '../../i18n/en.json'
+import enI18n from '../../i18n/en'
 import { categories } from '../../categories'
 import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants'
 import { MIN_SEARCH_TEXT_LENGTH } from '../../../shared/constants'
@@ -24,6 +24,7 @@ const numSkinTones = 6
 const skinToneTextForSkinTone = i => (i > 0 ? applySkinTone(SKIN_TONE_BASE_TEXT, i) : SKIN_TONE_BASE_TEXT)
 const skinTones = Array(numSkinTones).fill().map((_, i) => skinToneTextForSkinTone(i))
 
+let i18n = enI18n
 let initialLoad = true
 let database = null
 let currentEmojis = []
