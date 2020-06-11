@@ -52,7 +52,7 @@ describe('Picker tests', () => {
   })
 
   test('basic search test', async () => {
-    await type(getByRole('textbox'), 'monk')
+    await type(getByRole('searchbox'), 'monk')
 
     await waitFor(() => expect(getAllByRole('option')).toHaveLength(2))
 
@@ -198,12 +198,12 @@ describe('Picker tests', () => {
   })
 
   test('press up/down on search input', async () => {
-    type(getByRole('textbox'), 'monk')
+    type(getByRole('searchbox'), 'monk')
     await waitFor(() => expect(getAllByRole('option')).toHaveLength(2))
 
     const pressKeyAndExpectAriaDescendant = async (key, emoji) => {
-      fireEvent.keyDown(getByRole('textbox'), { key, code: key })
-      await waitFor(() => expect(getByRole('textbox').getAttribute('aria-activedescendant')).toBe(`emoji-${emoji}`))
+      fireEvent.keyDown(getByRole('searchbox'), { key, code: key })
+      await waitFor(() => expect(getByRole('searchbox').getAttribute('aria-activedescendant')).toBe(`emoji-${emoji}`))
     }
 
     await pressKeyAndExpectAriaDescendant('ArrowDown', '🐵')
