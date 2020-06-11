@@ -4,6 +4,7 @@ import Picker from '../../../src/picker/PickerElement.js'
 import userEvent from '@testing-library/user-event'
 
 const { waitFor, fireEvent } = testingLibrary
+const { type } = userEvent
 
 describe('Picker tests', () => {
   let picker
@@ -30,6 +31,7 @@ describe('Picker tests', () => {
     basicAfterEach()
     await tick(20)
     await picker.database.delete()
+    document.body.removeChild(picker)
   })
 
   const numInGroup1 = truncatedEmoji.filter(_ => _.group === 0).length
@@ -50,7 +52,7 @@ describe('Picker tests', () => {
   })
 
   test('basic search test', async () => {
-    await userEvent.type(getByRole('textbox'), 'monk')
+    await type(getByRole('textbox'), 'monk')
 
     await waitFor(() => expect(getAllByRole('option')).toHaveLength(2))
 
@@ -110,5 +112,124 @@ describe('Picker tests', () => {
     await pressKeyAndExpectActiveTab('ArrowRight', 'Objects', 7)
     await pressKeyAndExpectActiveTab('ArrowRight', 'Symbols', 8)
     await pressKeyAndExpectActiveTab('ArrowRight', 'Flags', 9)
+  })
+
+  test('measures zwj emoji', async () => {
+    getByRole('tab', { name: 'Flags' }).click()
+    await tick(20)
+    await waitFor(() => expect(getAllByRole('menuitem'))
+      .toHaveLength(truncatedEmoji.filter(_ => _.group === 9).length))
+  })
+
+  test('click emoji and get an event', async () => {
+    let emoji
+    picker.addEventListener('emoji-click', event => {
+      emoji = event.detail
+    })
+
+    getByRole('menuitem', { name: /😀/ }).click()
+    await waitFor(() => expect(emoji).toStrictEqual({
+      emoji: {
+        annotation: 'grinning face',
+        group: 0,
+        order: 1,
+        shortcodes: ['gleeful'],
+        tags: ['face', 'grin'],
+        tokens: [':d', 'face', 'gleeful', 'grin', 'grinning'],
+        unicode: '😀',
+        version: 1,
+        emoticon: ':D'
+      },
+      skinTone: 0,
+      unicode: '😀'
+    }))
+
+    // choose a skin tone and then click an emoji where it would apply
+    getByRole('button', { name: /Choose a skin tone/ }).click()
+    await waitFor(() => expect(getByRole('option', { name: /Medium-Dark/ })).toBeVisible())
+    getByRole('option', { name: /Medium-Dark/ }).click()
+    await waitFor(
+      () => expect(getByRole('button', { name: 'Choose a skin tone (currently Medium-Dark)' })).toBeVisible()
+    )
+    getByRole('tab', { name: /People/ }).click()
+    await waitFor(() => expect(getByRole('menuitem', { name: /👍/ })).toBeVisible())
+    getByRole('menuitem', { name: /👍/ }).click()
+    await waitFor(() => expect(emoji).toStrictEqual({
+      emoji: {
+        annotation: 'thumbs up',
+        group: 1,
+        order: 280,
+        shortcodes: ['thumbsup', '+1', 'yes'],
+        tags: ['+1', 'hand', 'thumb', 'up'],
+        tokens: ['+1', 'hand', 'thumb', 'thumbs', 'thumbsup', 'up', 'yes'],
+        unicode: '👍️',
+        version: 0.6,
+        skins: [
+          { tone: 1, unicode: '👍🏻', version: 1 },
+          { tone: 2, unicode: '👍🏼', version: 1 },
+          { tone: 3, unicode: '👍🏽', version: 1 },
+          { tone: 4, unicode: '👍🏾', version: 1 },
+          { tone: 5, unicode: '👍🏿', version: 1 }
+        ]
+      },
+      skinTone: 4,
+      unicode: '👍🏾'
+    }))
+
+    // then click one that has no skins
+    getByRole('tab', { name: /Smileys/ }).click()
+    await waitFor(() => expect(getByRole('menuitem', { name: /😀/ })).toBeVisible())
+    getByRole('menuitem', { name: /😀/ }).click()
+    await waitFor(() => expect(emoji).toStrictEqual({
+      emoji: {
+        annotation: 'grinning face',
+        group: 0,
+        order: 1,
+        shortcodes: ['gleeful'],
+        tags: ['face', 'grin'],
+        tokens: [':d', 'face', 'gleeful', 'grin', 'grinning'],
+        unicode: '😀',
+        version: 1,
+        emoticon: ':D'
+      },
+      skinTone: 4,
+      unicode: '😀'
+    }))
+  })
+
+  test('press up/down on search input', async () => {
+    type(getByRole('textbox'), 'monk')
+    await waitFor(() => expect(getAllByRole('option')).toHaveLength(2))
+
+    const pressKeyAndExpectAriaDescendant = async (key, emoji) => {
+      fireEvent.keyDown(getByRole('textbox'), { key, code: key })
+      await waitFor(() => expect(getByRole('textbox').getAttribute('aria-activedescendant')).toBe(`emoji-${emoji}`))
+    }
+
+    await pressKeyAndExpectAriaDescendant('ArrowDown', '🐵')
+    await pressKeyAndExpectAriaDescendant('ArrowDown', '🐒')
+    await pressKeyAndExpectAriaDescendant('ArrowUp', '🐵')
+    await pressKeyAndExpectAriaDescendant('ArrowUp', '🐒')
+
+    let emoji
+    picker.addEventListener('emoji-click', event => {
+      emoji = event.detail
+    })
+
+    fireEvent.keyDown(activeElement(), { key: 'Enter', code: 'Enter' })
+    await waitFor(() => expect(emoji).toStrictEqual({
+      emoji: {
+        annotation: 'monkey',
+        group: 3,
+        order: 2658,
+        shortcodes: ['monkey'],
+        tags: ['monkey'],
+        tokens: ['monkey'],
+        unicode: '🐒',
+        version: 0.6
+      },
+      skinTone: 0,
+      unicode: '🐒'
+    }))
   })
 })

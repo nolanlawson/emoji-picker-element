@@ -110,6 +110,7 @@ $: indicatorStyle = (resizeObserverSupported
 // eslint-disable-next-line no-unused-vars
 function calculateWidth (indicator) {
   let resizeObserver
+  /* istanbul ignore if */
   if (resizeObserverSupported) {
     resizeObserver = new ResizeObserver(entries => {
       computedIndicatorWidth = entries[0].contentRect.width
@@ -119,6 +120,7 @@ function calculateWidth (indicator) {
 
   return {
     destroy () {
+      /* istanbul ignore if */
       if (resizeObserver) {
         resizeObserver.disconnect()
       }
@@ -174,6 +176,7 @@ function checkZwjSupport (zwjEmojisToCheck) {
     // compare sizes rounded to 1/10 of a pixel to avoid issues with slightly different measurements (e.g. GNOME Web)
     const supported = emojiWidth.toFixed(1) === baselineEmojiWidth.toFixed(1)
     supportedZwjEmojis.set(emoji.unicode, supported)
+    /* istanbul ignore if */
     if (!supported) {
       log('Filtered unsupported emoji', emoji.unicode)
     }
@@ -221,7 +224,7 @@ async function summarizeEmojis (emojis) {
   return emojis.map(({ unicode, skins, shortcodes, annotation }) => ({
     unicode,
     skins: skins && toSimpleSkinsMap(skins),
-    description: `${unicode}, ${shortcodes ? shortcodes.join(', ') : ''}`
+    description: `${unicode}, ${shortcodes.join(', ')}`
   }))
 }
 
@@ -260,7 +263,7 @@ function onSearchKeydown (event) {
     case 'Enter':
       if (activeSearchItem !== -1) {
         halt(event)
-        return clickEmoji(currentEmojis[activeSearchItem])
+        return clickEmoji(currentEmojis[activeSearchItem].unicode)
       }
   }
 }
@@ -279,9 +282,23 @@ function onNavKeydown (event) {
   }
 }
 
-function clickEmoji (emojiData) {
+async function clickEmoji (unicode) {
+  const [emojiSupportLevel, emoji] = await Promise.all([
+    emojiSupportLevelPromise,
+    database.getEmojiByUnicode(unicode)
+  ])
+  if (currentSkinTone) {
+    const foundSkin = (emoji.skins || []).find(_ => _.tone === currentSkinTone)
+    if (foundSkin && foundSkin.version <= emojiSupportLevel) {
+      unicode = foundSkin.unicode
+    }
+  }
   rootElement.dispatchEvent(new CustomEvent('emoji-click', {
-    detail: emojiData,
+    detail: {
+      emoji,
+      skinTone: currentSkinTone,
+      unicode
+    },
     bubbles: true,
     composed: true
   }))
@@ -290,14 +307,13 @@ function clickEmoji (emojiData) {
 // eslint-disable-next-line no-unused-vars
 async function onEmojiClick (event) {
   const { target } = event
-  if (!target.classList.contains('skintone-option')) {
+  if (!target.classList.contains('emoji')) {
     return
   }
   halt(event)
   const unicode = target.id.substring(6) // remove 'emoji-'
 
-  const emojiData = currentEmojis.find(_ => _.unicode === unicode)
-  clickEmoji(emojiData)
+  clickEmoji(unicode)
 }
 
 function focus (id) {
