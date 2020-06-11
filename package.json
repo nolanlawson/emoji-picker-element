@@ -58,6 +58,7 @@
     "@rollup/plugin-replace": "^2.3.2",
     "@testing-library/dom": "^7.10.1",
     "@testing-library/jest-dom": "^5.9.0",
+    "@testing-library/user-event": "^11.4.1",
     "babel-jest": "^26.0.1",
     "blob-util": "^2.0.2",
     "bundlesize": "^0.18.0",

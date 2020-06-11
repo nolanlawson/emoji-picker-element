@@ -4,7 +4,7 @@ export default {
   networkError: 'Could not load emoji. Try refreshing.',
   regionLabel: 'Emoji picker',
   search: 'Search',
-  skinToneLabel: 'Choose a skin tone',
+  skinToneLabel: 'Choose a skin tone (currently {skinTone})',
   skinToneDescription: 'When expanded, press up or down to select and enter to choose.',
   skinTonesTitle: 'Skin tones',
   searchResultsLabel: 'Search results',

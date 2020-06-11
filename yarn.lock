@@ -1188,6 +1188,13 @@
     lodash "^4.17.15"
     redent "^3.0.0"
 
+"@testing-library/user-event@^11.4.1":
+  version "11.4.1"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-11.4.1.tgz#2134e4cbbb345dbc49001123ff9a036f09259464"
+  integrity sha512-ZaK+3AmocU2WjJ7UyrlnmdPecYt4fridqMwrniENCqoy/Pj2Nc9tTnpjCvMN/Ql/DQ0eRqfBoZdKNqYPBMZFhA==
+  dependencies:
+    "@babel/runtime" "^7.10.2"
+
 "@types/asn1js@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@types/asn1js/-/asn1js-0.0.1.tgz#ef8b9f9708cb1632a1c3a9cd27717caabe793bc2"

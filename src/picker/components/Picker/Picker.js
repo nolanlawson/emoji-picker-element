@@ -44,6 +44,7 @@ let currentSkinTone = 0
 let activeSkinTone = 0
 let skinToneText // eslint-disable-line no-unused-vars
 let style = '' // eslint-disable-line no-unused-vars
+let skinToneButtonLabel = '' // eslint-disable-line no-unused-vars
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
@@ -93,6 +94,7 @@ $: style = `
   --num-skintones: ${numSkinTones};`
 
 $: skinToneText = skinToneTextForSkinTone(currentSkinTone)
+$: skinToneButtonLabel = i18n.skinToneLabel.replace('{skinTone}', i18n.skinTones[currentSkinTone])
 
 // TODO: Chrome has an unfortunate bug where we can't use a simple percent-based transform
 // here, becuause it's janky. You can especially see this on a Nexus 5.
@@ -164,6 +166,9 @@ function checkZwjSupport (zwjEmojisToCheck) {
   const rootNode = rootElement.getRootNode()
   for (const emoji of zwjEmojisToCheck) {
     const domNode = rootNode.getElementById(`emoji-${emoji.unicode}`)
+    if (!domNode) { // happens rarely, mostly in jest tests
+      continue
+    }
     const emojiWidth = calculateTextWidth(domNode)
     const baselineEmojiWidth = getBaselineEmojiWidth()
     // compare sizes rounded to 1/10 of a pixel to avoid issues with slightly different measurements (e.g. GNOME Web)

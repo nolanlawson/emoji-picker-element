@@ -32,7 +32,8 @@
     </div>
     <button id="skintone-button"
             class="emoji {skinTonePickerExpanded ? 'hide-focus' : ''}"
-            aria-label={i18n.skinToneLabel}
+            aria-label={skinToneButtonLabel}
+            title={skinToneButtonLabel}
             aria-describedby="skintone-description"
             aria-haspopup="listbox"
             aria-expanded={skinTonePickerExpanded}
@@ -112,6 +113,7 @@
             <button role={searchMode ? 'option' : 'menuitem'}
                     {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
                     aria-label={emoji.description}
+                    title={emoji.description}
                     class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                     id="emoji-{emoji.unicode}">
               {#if currentSkinTone > 0 && emoji.skins && emoji.skins[currentSkinTone]}
