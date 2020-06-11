@@ -1,4 +1,4 @@
-import { basicBeforeEach, basicAfterEach, ALL_EMOJI, truncatedEmoji } from '../shared'
+import { basicBeforeEach, basicAfterEach, ALL_EMOJI, truncatedEmoji, tick } from '../shared'
 import * as testingLibrary from '@testing-library/dom'
 import Picker from '../../../src/picker/PickerElement.js'
 import userEvent from '@testing-library/user-event'
@@ -28,6 +28,7 @@ describe('Picker tests', () => {
   })
   afterEach(async () => {
     basicAfterEach()
+    await tick(20)
     await picker.database.delete()
   })
 
@@ -63,13 +64,12 @@ describe('Picker tests', () => {
     await fireEvent.click(getByRole('button', { name: 'Choose a skin tone (currently Default)' }))
     await waitFor(() => expect(getByRole('listbox', { name: 'Skin tones' })).toBeVisible())
     expect(getAllByRole('option')).toHaveLength(6)
-    expect(getByRole('option', { name: 'Default', selected: true })).toBeVisible()
-    getByRole('option', { name: 'Default', selected: true }).focus() // have to explicitly focus for some reason (?)
+    getByRole('option', { name: 'Default', selected: true }).focus()
+    await waitFor(() => expect(getByRole('option', { name: 'Default', selected: true })).toBe(activeElement()))
 
     const pressKeyAndExpectActiveOption = async (key, name) => {
       await fireEvent.keyDown(activeElement(), { key, code: key })
-      await waitFor(() => expect(getByRole('option', { name, selected: true })).toBeVisible())
-      getByRole('option', { name, selected: true }).focus() // have to explicitly focus for some reason (?)
+      await waitFor(() => expect(getByRole('option', { name, selected: true })).toBe(activeElement()))
     }
 
     await pressKeyAndExpectActiveOption('ArrowDown', 'Light')
@@ -95,8 +95,7 @@ describe('Picker tests', () => {
     const pressKeyAndExpectActiveTab = async (key, name, group) => {
       await fireEvent.keyDown(activeElement(), { key, code: key })
       await fireEvent.click(activeElement())
-      await waitFor(() => expect(getByRole('tab', { name, selected: true })).toBeVisible())
-      getByRole('tab', { name, selected: true }).focus() // have to explicitly focus for some reason (?)
+      await waitFor(() => expect(getByRole('tab', { name, selected: true })).toBe(activeElement()))
       await expectGroupLength(group)
     }
 
