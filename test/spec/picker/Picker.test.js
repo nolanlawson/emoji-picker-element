@@ -61,6 +61,10 @@ describe('Picker tests', () => {
   })
 
   test('basic skintone test', async () => {
+    let event
+    picker.addEventListener('skin-tone-change', newEvent => {
+      event = newEvent
+    })
     await waitFor(() => expect(getByRole('button', { name: 'Choose a skin tone (currently Default)' })).toBeVisible())
     expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0)
     await fireEvent.click(getByRole('button', { name: 'Choose a skin tone (currently Default)' }))
@@ -74,16 +78,23 @@ describe('Picker tests', () => {
       await waitFor(() => expect(getByRole('option', { name, selected: true })).toBe(activeElement()))
     }
 
-    await pressKeyAndExpectActiveOption('ArrowDown', 'Light')
-    await pressKeyAndExpectActiveOption('ArrowDown', 'Medium-Light')
-    await pressKeyAndExpectActiveOption('ArrowUp', 'Light')
-    await pressKeyAndExpectActiveOption('ArrowUp', 'Default')
-    await pressKeyAndExpectActiveOption('ArrowUp', 'Dark')
+    await pressKeyAndExpectActiveOption('ArrowDown', 'Light', 1)
+    await pressKeyAndExpectActiveOption('ArrowDown', 'Medium-Light', 2)
+    await pressKeyAndExpectActiveOption('ArrowUp', 'Light', 1)
+    await pressKeyAndExpectActiveOption('ArrowUp', 'Default', 0)
+    await pressKeyAndExpectActiveOption('ArrowUp', 'Dark', 5)
 
     await fireEvent.click(activeElement(), { key: 'Enter', code: 'Enter' })
 
+    await waitFor(() => expect(event && event.detail).toStrictEqual({ skinTone: 5 }))
     await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
     expect(getByRole('button', { name: 'Choose a skin tone (currently Dark)' })).toBeVisible()
+
+    getByRole('button', { name: 'Choose a skin tone (currently Dark)' }).click()
+    await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(1))
+    getByRole('option', { name: 'Default' }).click()
+    await waitFor(() => expect(event && event.detail).toStrictEqual({ skinTone: 0 }))
+    expect(getByRole('button', { name: 'Choose a skin tone (currently Default)' })).toBeVisible()
   })
 
   test('nav keyboard test', async () => {

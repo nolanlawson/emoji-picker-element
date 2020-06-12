@@ -378,23 +378,67 @@ all wait for this promise to resolve before doing anything.
 
 <!-- database API end -->
 
-### Emoji object
+### Events
 
-This object is returned as the Event `detail` in the `emoji-click` event, or when querying the Database. Here is the format:
+#### `emoji-click`
 
-```ts
-interface Emoji {
-  annotation: string;
-  emoticon?: string;
-  group: number;
-  name: string;
-  order: number;
-  shortcodes: string[];
-  tags?: string[];
-  version: number;
-  unicode: string;
+The `emoji-click` event is fired when an emoji is selected by the user. Example format:
+
+```javascript
+{
+  emoji: {
+    annotation: 'thumbs up',
+    group: 1,
+    order: 280,
+    shortcodes: ['thumbsup', '+1', 'yes'],
+    tags: ['+1', 'hand', 'thumb', 'up'],
+    tokens: ['+1', 'hand', 'thumb', 'thumbs', 'thumbsup', 'up', 'yes'],
+    unicode: '👍️',
+    version: 0.6,
+    skins: [
+      { tone: 1, unicode: '👍🏻', version: 1 },
+      { tone: 2, unicode: '👍🏼', version: 1 },
+      { tone: 3, unicode: '👍🏽', version: 1 },
+      { tone: 4, unicode: '👍🏾', version: 1 },
+      { tone: 5, unicode: '👍🏿', version: 1 }
+    ]
+  },
+  skinTone: 4,
+  unicode: '👍🏾'
 }
 ```
+
+And usage:
+
+```js
+picker.addEventListener('emoji-click', event => {
+  console.log(event.detail); // will log something like the above
+});
+```
+
+Note that `unicode` will represent whatever the emoji should look like
+with the given `skinTone`. If the `skinTone` is 0, or if the emoji has
+no skin tones, then no skin tone is applied to `unicode`.
+
+#### `skin-tone-change`
+
+This event is fired whenever the user selects a new skin tone. Example format:
+
+```js
+{
+  skinTone: 6
+}
+```
+
+And usage:
+
+```js
+picker.addEventListener('skin-tone-change', event => {
+  console.log(event.detail); // will log something like the above
+})
+```
+
+Note that skin tones are an integer from 0 (default) to 1 (light) through 6 (dark).
 
 ### Tree-shaking
 

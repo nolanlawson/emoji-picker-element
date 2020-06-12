@@ -282,6 +282,14 @@ function onNavKeydown (event) {
   }
 }
 
+function fireEvent (name, detail) {
+  rootElement.dispatchEvent(new CustomEvent(name, {
+    detail,
+    bubbles: true,
+    composed: true
+  }))
+}
+
 async function clickEmoji (unicode) {
   const [emojiSupportLevel, emoji] = await Promise.all([
     emojiSupportLevelPromise,
@@ -293,15 +301,11 @@ async function clickEmoji (unicode) {
       unicode = foundSkin.unicode
     }
   }
-  rootElement.dispatchEvent(new CustomEvent('emoji-click', {
-    detail: {
-      emoji,
-      skinTone: currentSkinTone,
-      unicode
-    },
-    bubbles: true,
-    composed: true
-  }))
+  fireEvent('emoji-click', {
+    emoji,
+    skinTone: currentSkinTone,
+    unicode
+  })
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -331,6 +335,7 @@ function onClickSkinToneOption (event) {
   currentSkinTone = skinTone
   skinTonePickerExpanded = false
   focus('skintone-button')
+  fireEvent('skin-tone-change', { skinTone })
 }
 
 // eslint-disable-next-line no-unused-vars

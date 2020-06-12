@@ -48,3 +48,29 @@ export interface I18nCategories {
   symbols: string,
   flags: string
 }
+
+export interface EmojiClickEventDetail {
+  emoji: Emoji,
+  skinTone: number,
+  unicode: string,
+}
+
+export interface SkinToneChangeEventDetail {
+  skinTone: number
+}
+
+// via https://stackoverflow.com/a/55032655/680742
+type Modify<T, R> = Omit<T, keyof R> & R;
+
+export type EmojiClickEvent = Modify<UIEvent, {
+  detail: EmojiClickEventDetail
+}>
+
+export type SkinToneChangeEvent = Modify<UIEvent, {
+  detail: SkinToneChangeEventDetail
+}>
+
+export interface EmojiPickerEventMap {
+  "emoji-click": EmojiClickEvent;
+  "skin-tone-change": SkinToneChangeEvent;
+}
