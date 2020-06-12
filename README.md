@@ -374,6 +374,39 @@ Get the user's preferred skin tone. Returns 0 if not found.
 
 ___
 
+####  getTopFavoriteEmoji
+
+▸ **getTopFavoriteEmoji**(`n`: number): *Promise‹Emoji]›*
+
+Get the top favorite emoji in descending order. If there are no favorite emoji yet, returns an empty array.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`n` | number | maximum number of results to return  |
+
+**Returns:** *Promise‹[Emoji]›*
+
+___
+
+####  incrementFavoriteEmojiCount
+
+▸ **incrementFavoriteEmojiCount**(`unicode`: string): *Promise‹void›*
+
+Increment the favorite count for an emoji by one. The unicode string must be non-empty. It should
+correspond to the base (non-skin-tone) unicode string from the emoji object.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`unicode` | string | unicode of the emoji to increment  |
+
+**Returns:** *Promise‹void›*
+
+___
+
 ####  ready
 
 ▸ **ready**(): *Promise‹void›*
@@ -390,7 +423,7 @@ ___
 
 ####  setPreferredSkinTone
 
-▸ **setPreferredSkinTone**(`skinTone`: SkinTone): *Promise‹void›*
+▸ **setPreferredSkinTone**(`skinTone`: [SkinTone): *Promise‹void›*
 
 Set the user's preferred skin tone. Non-numbers throw an error.
 
