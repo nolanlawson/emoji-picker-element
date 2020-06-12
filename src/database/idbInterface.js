@@ -1,5 +1,6 @@
 import { dbPromise } from './databaseLifecycle'
 import {
+  INDEX_COUNT,
   INDEX_GROUP_AND_ORDER, INDEX_TOKENS, KEY_ETAG, KEY_URL,
   MODE_READONLY, MODE_READWRITE,
   STORE_EMOJI, STORE_FAVORITES,
@@ -164,24 +165,26 @@ export function set (db, storeName, key, value) {
 export function incrementFavoriteEmojiCount (db, unicode) {
   return dbPromise(db, STORE_FAVORITES, MODE_READWRITE, (store, cb) => {
     store.get(unicode).onsuccess = e => {
-      const result = e.target.result || { unicode, count: 0 }
-      result.count++
-      store.put(result)
+      const result = e.target.result || 0
+      store.put(result + 1, unicode)
       cb()
     }
   })
 }
 
 export function getTopFavoriteEmoji (db, n) {
+  if (n === 0) {
+    return []
+  }
   return dbPromise(db, [STORE_FAVORITES, STORE_EMOJI], MODE_READONLY, ([favoritesStore, emojiStore], cb) => {
     const results = []
-    const cursor = favoritesStore.openCursor(undefined, 'prev')
-    cursor.onsuccess = e => {
+    favoritesStore.index(INDEX_COUNT).openCursor(undefined, 'prev').onsuccess = e => {
       const cursor = e.target.result
       if (!cursor) {
         return cb(results)
       }
-      emojiStore.get(cursor.value.unicode).onsuccess = e => {
+      // TODO: this could be optimized by doing the get and the cursor.continue() in parallel
+      emojiStore.get(cursor.primaryKey).onsuccess = e => {
         const emoji = e.target.result
         if (emoji) {
           results.push(emoji)

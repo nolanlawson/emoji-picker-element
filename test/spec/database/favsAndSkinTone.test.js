@@ -30,9 +30,56 @@ describe('database tests', () => {
     expect(await db.getTopFavoriteEmoji(10)).toStrictEqual([
       transformedEmoji.find(_ => _.unicode === '🐵')
     ])
-    // TODO: test more than 10 favorite emoji
-    // TODO: test nonexistent emoji
-    // TODO: add typescript documentation
-    // TODO: can we just index the key of a keyvalue store?
+
+    for (let i = 0; i < 3; i++) {
+      await db.incrementFavoriteEmojiCount('🐒')
+    }
+    for (let i = 0; i < 2; i++) {
+      await db.incrementFavoriteEmojiCount('😀')
+    }
+    expect(await db.getTopFavoriteEmoji(10)).toStrictEqual([
+      transformedEmoji.find(_ => _.unicode === '🐒'),
+      transformedEmoji.find(_ => _.unicode === '😀'),
+      transformedEmoji.find(_ => _.unicode === '🐵')
+    ])
+  })
+
+  test('emoji favorite counts', async () => {
+    await db.incrementFavoriteEmojiCount('🐵')
+    const emojis = ['🐒', '😀', '🐵', '😅', '🤣', '🖐️', '🤏', '✌️', '🐶', '🎉', '✨']
+
+    for (let i = 0; i < emojis.length; i++) {
+      for (let j = 0; j < emojis.length - i + 1; j++) {
+        await db.incrementFavoriteEmojiCount(emojis[i])
+      }
+    }
+
+    expect((await db.getTopFavoriteEmoji(10)).map(_ => _.unicode)).toStrictEqual(
+      emojis.slice(0, 10)
+    )
+    expect((await db.getTopFavoriteEmoji(11)).map(_ => _.unicode)).toStrictEqual(
+      emojis.slice(0, 11)
+    )
+    expect((await db.getTopFavoriteEmoji(3)).map(_ => _.unicode)).toStrictEqual(
+      emojis.slice(0, 3)
+    )
+    expect((await db.getTopFavoriteEmoji(0)).map(_ => _.unicode)).toStrictEqual(
+      []
+    )
+  })
+
+  test('nonexistent emoji in favorites are ignored', async () => {
+    await db.incrementFavoriteEmojiCount('fake')
+    expect((await db.getTopFavoriteEmoji(10)).map(_ => _.unicode)).toStrictEqual(
+      []
+    )
+    await db.incrementFavoriteEmojiCount('0')
+    expect((await db.getTopFavoriteEmoji(10)).map(_ => _.unicode)).toStrictEqual(
+      []
+    )
+    await db.incrementFavoriteEmojiCount('🐒')
+    expect((await db.getTopFavoriteEmoji(10)).map(_ => _.unicode)).toStrictEqual(
+      ['🐒']
+    )
   })
 })

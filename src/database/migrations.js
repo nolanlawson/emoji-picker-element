@@ -6,7 +6,7 @@ import {
   STORE_EMOJI,
   STORE_KEYVALUE,
   STORE_FAVORITES,
-  INDEX_TOKENS, FIELD_COUNT, INDEX_COUNT
+  INDEX_TOKENS, INDEX_COUNT
 } from './constants'
 
 function initialMigration (db, tx, done) {
@@ -27,8 +27,8 @@ function initialMigration (db, tx, done) {
     [INDEX_TOKENS]: [FIELD_TOKENS, /* multiEntry */ true],
     [INDEX_GROUP_AND_ORDER]: [[FIELD_GROUP, FIELD_ORDER]]
   })
-  createObjectStore(STORE_FAVORITES, /* keyPath */ FIELD_UNICODE, {
-    [INDEX_COUNT]: [FIELD_COUNT]
+  createObjectStore(STORE_FAVORITES, undefined, {
+    [INDEX_COUNT]: ['']
   })
   done()
 }
