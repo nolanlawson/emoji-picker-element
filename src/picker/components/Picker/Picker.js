@@ -221,10 +221,10 @@ async function summarizeEmojis (emojis) {
     }
     return res
   }
-  return emojis.map(({ unicode, skins, shortcodes, annotation }) => ({
+  return emojis.map(({ unicode, skins, shortcodes }) => ({
     unicode,
     skins: skins && toSimpleSkinsMap(skins),
-    description: `${unicode}, ${shortcodes.join(', ')}`
+    shortcodes: shortcodes
   }))
 }
 
