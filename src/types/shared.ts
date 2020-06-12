@@ -35,6 +35,7 @@ export interface PickerConstructorOptions {
   dataSource?: string
   locale?: string
   i18n?: I18n
+  skinToneEmoji?: string
 }
 
 export interface I18n {

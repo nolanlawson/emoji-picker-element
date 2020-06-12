@@ -1,20 +1,23 @@
 import {I18n, PickerConstructorOptions, EmojiPickerEventMap, EmojiClickEvent, SkinToneChangeEvent} from "./shared";
 
 export default class Picker extends HTMLElement {
-  dataSource: string;
-  locale: string;
-  i18n: I18n;
+  dataSource: string
+  locale: string
+  i18n: I18n
+  skinToneEmoji: string
 
   /**
    *
    * @param dataSource - URL to fetch the emojibase data from
    * @param locale - Locale string
    * @param i18n - i18n object (see below for details)
+   * @param skinToneEmoji - the emoji to use for the skin tone picker
    */
   constructor({
                 dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json',
                 locale = 'en',
-                i18n
+                i18n,
+                skinToneEmoji = '🖐️'
               }: PickerConstructorOptions = {}) {
     super()
   }

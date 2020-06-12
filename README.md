@@ -165,8 +165,9 @@ The `new Picker(options)` constructor supports several options:
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from |
-`i18n` | I18n | - | i18n object (see below for details)  |
+`i18n` | I18n | - | i18n object (see below for details) |
 `locale` | string | "en" | Locale string |
+`skinToneEmoji` | string | "🖐️" | the emoji to use for the skin tone picker  |
 
 **Returns:** *Picker*
 
@@ -363,6 +364,16 @@ Name | Type | Description |
 
 ___
 
+####  getPreferredSkinTone
+
+▸ **getPreferredSkinTone**(): *Promise‹SkinTone›*
+
+Get the user's preferred skin tone. Returns 0 if not found.
+
+**Returns:** *Promise‹SkinTone›*
+
+___
+
 ####  ready
 
 ▸ **ready**(): *Promise‹void›*
@@ -372,6 +383,22 @@ the Database could not initialize.
 
 Note that you don't need to do this before calling other APIs – they will
 all wait for this promise to resolve before doing anything.
+
+**Returns:** *Promise‹void›*
+
+___
+
+####  setPreferredSkinTone
+
+▸ **setPreferredSkinTone**(`skinTone`: SkinTone): *Promise‹void›*
+
+Set the user's preferred skin tone. Non-numbers throw an error.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`skinTone` | SkinTone | preferred skin tone  |
 
 **Returns:** *Promise‹void›*
 

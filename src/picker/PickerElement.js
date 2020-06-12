@@ -3,12 +3,14 @@ import Database from './ImportedDatabase'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
 import enI18n from './i18n/en'
 import { mark } from '../shared/marks'
+import { DEFAULT_SKIN_TONE_EMOJI } from './constants'
 
 export default class Picker extends SveltePicker {
   constructor ({
     locale = DEFAULT_LOCALE,
     dataSource = DEFAULT_DATA_SOURCE,
-    i18n = enI18n
+    i18n = enI18n,
+    skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
   } = {}) {
     mark('initialLoad')
     // Make the API simpler, directly pass in the props
@@ -16,7 +18,8 @@ export default class Picker extends SveltePicker {
     super({
       props: {
         database: new Database({ dataSource, locale }),
-        i18n
+        i18n,
+        skinToneEmoji
       }
     })
     this._locale = locale
@@ -25,7 +28,7 @@ export default class Picker extends SveltePicker {
   }
 
   static get observedAttributes () {
-    return ['locale', 'dataSource', 'i18n']
+    return ['locale', 'dataSource', 'i18n', 'skinToneEmoji']
   }
 
   get locale () {

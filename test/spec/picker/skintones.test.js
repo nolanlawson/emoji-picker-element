@@ -20,7 +20,6 @@ describe('skintones tests', () => {
               const actualUnicode = applySkinTone(emoji.emoji, skin.tone)
               if (actualUnicode !== skin.emoji) {
                 wrong.push({ emoji, actualUnicode, skin })
-                applySkinTone(emoji.emoji, skin.tone)
               } else {
                 right.push({ emoji, actualUnicode, skin })
               }
@@ -31,10 +30,24 @@ describe('skintones tests', () => {
       }
       console.log('wrong', wrong.length, 'right', right.length)
       for (const w of wrong) {
-        console.log('\n' + debugIt(w.emoji.emoji).join(',') + '\n' +
+        console.log('\n' + w.emoji.emoji + '\n' + debugIt(w.emoji.emoji).join(',') + '\n' +
           debugIt(w.skin.emoji).join(',') + '\n' +
           debugIt(w.actualUnicode).join(',') + '\n\n')
       }
+      console.log('Right')
+      for (const r of right) {
+        console.log('\n' + r.emoji.emoji + '\n' + debugIt(r.emoji.emoji).join(',') + '\n' +
+          debugIt(r.skin.emoji).join(',') + '\n' +
+          debugIt(r.actualUnicode).join(',') + '\n\n')
+      }
+    })
+
+    test('can compute some correct unicode tones', () => {
+      expect(applySkinTone('👍', 0)).toBe('👍')
+      expect(applySkinTone('👍', 3)).toBe('👍🏽')
+      expect(applySkinTone('🧘‍♀️', 3)).toBe('🧘🏽‍♀️')
+      expect(applySkinTone('🤌', 2)).toBe('🤌🏼')
+      expect(applySkinTone('🖐️', 5)).toBe('🖐🏿')
     })
   })
 })

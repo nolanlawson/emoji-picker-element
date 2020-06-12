@@ -2,6 +2,7 @@ import { basicBeforeEach, basicAfterEach, ALL_EMOJI, truncatedEmoji, tick } from
 import * as testingLibrary from '@testing-library/dom'
 import Picker from '../../../src/picker/PickerElement.js'
 import userEvent from '@testing-library/user-event'
+import { DEFAULT_SKIN_TONE_EMOJI } from '../../../src/picker/constants'
 
 const { waitFor, fireEvent } = testingLibrary
 const { type } = userEvent
@@ -242,5 +243,12 @@ describe('Picker tests', () => {
       skinTone: 0,
       unicode: '🐒'
     }))
+  })
+
+  test('Change default skin tone emoji', async () => {
+    expect(getByRole('button', { name: /Choose a skin tone/ }).innerHTML).toContain(DEFAULT_SKIN_TONE_EMOJI)
+    picker.skinToneEmoji = '👇'
+    await waitFor(() => expect(getByRole('button', { name: /Choose a skin tone/ }).innerHTML)
+      .toContain('👇'))
   })
 })

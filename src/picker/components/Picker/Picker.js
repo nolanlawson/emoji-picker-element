@@ -4,7 +4,7 @@ import Database from '../../ImportedDatabase'
 import enI18n from '../../i18n/en'
 import { categories } from '../../categories'
 import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants'
-import { MIN_SEARCH_TEXT_LENGTH } from '../../../shared/constants'
+import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { calculateTextWidth } from '../../utils/calculateTextWidth'
 import { hasZwj } from '../../utils/hasZwj'
@@ -16,14 +16,9 @@ import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import { tick } from 'svelte'
+import { DEFAULT_SKIN_TONE_EMOJI, TIMEOUT_BEFORE_LOADING_MESSAGE } from '../../constants'
 
-const TIMEOUT_BEFORE_LOADING_MESSAGE = 1000 // 1 second
-const SKIN_TONE_BASE_TEXT = '\u270c'
-
-const numSkinTones = 6
-const skinToneTextForSkinTone = i => (i > 0 ? applySkinTone(SKIN_TONE_BASE_TEXT, i) : SKIN_TONE_BASE_TEXT)
-const skinTones = Array(numSkinTones).fill().map((_, i) => skinToneTextForSkinTone(i))
-
+let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
 let i18n = enI18n
 let initialLoad = true
 let database = null
@@ -45,6 +40,8 @@ let activeSkinTone = 0
 let skinToneText // eslint-disable-line no-unused-vars
 let style = '' // eslint-disable-line no-unused-vars
 let skinToneButtonLabel = '' // eslint-disable-line no-unused-vars
+let skinToneTextForSkinTone = ''
+let skinTones = []
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
@@ -92,10 +89,12 @@ Promise.resolve().then(() => {
 $: style = `
   --num-categories: ${categories.length}; 
   --indicator-opacity: ${searchMode ? 0 : 1}; 
-  --num-skintones: ${numSkinTones};`
+  --num-skintones: ${NUM_SKIN_TONES};`
 
 $: skinToneText = skinToneTextForSkinTone(currentSkinTone)
 $: skinToneButtonLabel = i18n.skinToneLabel.replace('{skinTone}', i18n.skinTones[currentSkinTone])
+$: skinToneTextForSkinTone = i => applySkinTone(skinToneEmoji, i)
+$: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTone(i))
 
 // TODO: Chrome has an unfortunate bug where we can't use a simple percent-based transform
 // here, becuause it's janky. You can especially see this on a Nexus 5.
@@ -390,5 +389,6 @@ async function onSkinToneOptionsBlur () {
 
 export {
   database,
-  i18n
+  i18n,
+  skinToneEmoji
 }
