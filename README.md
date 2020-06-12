@@ -426,7 +426,7 @@ This event is fired whenever the user selects a new skin tone. Example format:
 
 ```js
 {
-  skinTone: 6
+  skinTone: 5
 }
 ```
 
@@ -438,7 +438,7 @@ picker.addEventListener('skin-tone-change', event => {
 })
 ```
 
-Note that skin tones are an integer from 0 (default) to 1 (light) through 6 (dark).
+Note that skin tones are an integer from 0 (default) to 1 (light) through 5 (dark).
 
 ### Tree-shaking
 
