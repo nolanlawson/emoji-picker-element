@@ -3,18 +3,18 @@ import {
   INDEX_GROUP_AND_ORDER, INDEX_TOKENS, KEY_ETAG, KEY_URL,
   MODE_READONLY, MODE_READWRITE,
   STORE_EMOJI,
-  STORE_META
+  STORE_KEYVALUE
 } from './constants'
 import { transformEmojiBaseData } from './utils/transformEmojiBaseData'
 import { mark, stop } from '../shared/marks'
 import { extractTokens } from './utils/extractTokens'
 
 export async function isEmpty (db) {
-  return !(await get(db, STORE_META, KEY_URL))
+  return !(await get(db, STORE_KEYVALUE, KEY_URL))
 }
 
 export async function hasData (db, url, eTag) {
-  const [oldETag, oldUrl] = await get(db, STORE_META, [KEY_ETAG, KEY_URL])
+  const [oldETag, oldUrl] = await get(db, STORE_KEYVALUE, [KEY_ETAG, KEY_URL])
   return (oldETag === eTag && oldUrl === url)
 }
 
@@ -22,7 +22,7 @@ export async function loadData (db, emojiBaseData, url, eTag) {
   mark('loadData')
   try {
     const transformedData = transformEmojiBaseData(emojiBaseData)
-    await dbPromise(db, [STORE_EMOJI, STORE_META], MODE_READWRITE, ([emojiStore, metaStore]) => {
+    await dbPromise(db, [STORE_EMOJI, STORE_KEYVALUE], MODE_READWRITE, ([emojiStore, metaStore]) => {
       let oldETag
       let oldUrl
       let oldKeys

@@ -65,6 +65,7 @@ $: {
     }, TIMEOUT_BEFORE_LOADING_MESSAGE)
     try {
       await database.ready()
+      currentSkinTone = await database.getPreferredSkinTone()
     } catch (err) {
       console.error(err)
       message = i18n.networkError
@@ -336,6 +337,7 @@ function onClickSkinToneOption (event) {
   skinTonePickerExpanded = false
   focus('skintone-button')
   fireEvent('skin-tone-change', { skinTone })
+  /* no await */ database.setPreferredSkinTone(skinTone)
 }
 
 // eslint-disable-next-line no-unused-vars

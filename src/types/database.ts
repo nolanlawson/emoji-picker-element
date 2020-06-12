@@ -1,4 +1,4 @@
-import { Emoji, DatabaseConstructorOptions } from "./shared";
+import {Emoji, DatabaseConstructorOptions, SkinTone} from "./shared";
 
 export default class Database {
 
@@ -69,6 +69,22 @@ export default class Database {
    */
   getEmojiByUnicode(unicode: string): Promise<Emoji | null> {
     return Promise.resolve(null)
+  }
+
+  /**
+   * Get the user's preferred skin tone. Returns 0 if not found.
+   */
+  getPreferredSkinTone(): Promise<SkinTone> {
+    return Promise.resolve(1)
+  }
+
+  /**
+   * Set the user's preferred skin tone. Non-numbers throw an error.
+   *
+   * @param skinTone - preferred skin tone
+   */
+  setPreferredSkinTone(skinTone: SkinTone): Promise<void> {
+    return Promise.resolve()
   }
 
   /**

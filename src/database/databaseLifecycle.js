@@ -1,5 +1,5 @@
 import { migrations } from './migrations'
-import { DB_VERSION_CURRENT, MODE_READONLY } from './constants'
+import { DB_VERSION_CURRENT, MODE_READONLY, MODE_READWRITE } from './constants'
 import { mark, stop } from '../shared/marks'
 
 const openReqs = {}
@@ -73,6 +73,13 @@ export function get (db, storeName, key) {
     } else {
       store.get(key).onsuccess = e => cb(e.target.result)
     }
+  })
+}
+
+export function set (db, storeName, key, value) {
+  return dbPromise(db, storeName, MODE_READWRITE, (store, cb) => {
+    store.put(value, key)
+    cb()
   })
 }
 

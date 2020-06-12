@@ -1,9 +1,9 @@
 import { assertNonEmptyString } from './utils/assertNonEmptyString'
 import { assertNumber } from './utils/assertNumber'
-import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from './constants'
+import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE, KEY_PREFERRED_SKINTONE, STORE_KEYVALUE } from './constants'
 import { uniqEmoji } from './utils/uniqEmoji'
 import { jsonChecksum } from './utils/jsonChecksum'
-import { closeDatabase, deleteDatabase, openDatabase } from './databaseLifecycle'
+import { closeDatabase, deleteDatabase, openDatabase, get, set } from './databaseLifecycle'
 import {
   isEmpty, hasData, loadData, getEmojiByGroup,
   getEmojiBySearchQuery, getEmojiByShortcode, getEmojiByUnicode
@@ -99,6 +99,17 @@ export default class Database {
     assertNonEmptyString(unicode)
     await this.ready()
     return getEmojiByUnicode(this._db, unicode)
+  }
+
+  async getPreferredSkinTone () {
+    await this.ready()
+    return (await get(this._db, STORE_KEYVALUE, KEY_PREFERRED_SKINTONE)) || 0
+  }
+
+  async setPreferredSkinTone (skinTone) {
+    assertNumber(skinTone)
+    await this.ready()
+    return set(this._db, STORE_KEYVALUE, KEY_PREFERRED_SKINTONE, skinTone)
   }
 
   async _shutdown () {

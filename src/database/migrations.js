@@ -4,7 +4,9 @@ import {
   FIELD_TOKENS,
   INDEX_GROUP_AND_ORDER,
   STORE_EMOJI,
-  STORE_META, INDEX_TOKENS
+  STORE_KEYVALUE,
+  STORE_FAVORITES,
+  INDEX_TOKENS
 } from './constants'
 
 function initialMigration (db, tx, done) {
@@ -20,11 +22,12 @@ function initialMigration (db, tx, done) {
     return store
   }
 
-  createObjectStore(STORE_META)
+  createObjectStore(STORE_KEYVALUE)
   createObjectStore(STORE_EMOJI, { keyPath: FIELD_UNICODE }, [
     { indexName: INDEX_TOKENS, keyPath: FIELD_TOKENS, multiEntry: true },
     { indexName: INDEX_GROUP_AND_ORDER, keyPath: [FIELD_GROUP, FIELD_ORDER] }
   ])
+  createObjectStore(STORE_FAVORITES, { keyPath: FIELD_UNICODE })
   done()
 }
 
