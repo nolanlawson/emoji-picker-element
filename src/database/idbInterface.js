@@ -1,8 +1,8 @@
-import { dbPromise, get } from './databaseLifecycle'
+import { dbPromise } from './databaseLifecycle'
 import {
   INDEX_GROUP_AND_ORDER, INDEX_TOKENS, KEY_ETAG, KEY_URL,
   MODE_READONLY, MODE_READWRITE,
-  STORE_EMOJI,
+  STORE_EMOJI, STORE_FAVORITES,
   STORE_KEYVALUE
 } from './constants'
 import { transformEmojiBaseData } from './utils/transformEmojiBaseData'
@@ -132,5 +132,65 @@ export async function getEmojiByShortcode (db, shortcode) {
 export async function getEmojiByUnicode (db, unicode) {
   return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
     emojiStore.get(unicode).onsuccess = e => cb(e.target.result || null)
+  })
+}
+
+export function get (db, storeName, key) {
+  return dbPromise(db, storeName, MODE_READONLY, (store, cb) => {
+    if (Array.isArray(key)) {
+      const res = Array(key.length)
+      let todo = 0
+      for (let i = 0; i < key.length; i++) {
+        store.get(key[i]).onsuccess = e => {
+          res[i] = e.target.result
+          if (++todo === key.length) {
+            cb(res)
+          }
+        }
+      }
+    } else {
+      store.get(key).onsuccess = e => cb(e.target.result)
+    }
+  })
+}
+
+export function set (db, storeName, key, value) {
+  return dbPromise(db, storeName, MODE_READWRITE, (store, cb) => {
+    store.put(value, key)
+    cb()
+  })
+}
+
+export function incrementFavoriteEmojiCount (db, unicode) {
+  return dbPromise(db, STORE_FAVORITES, MODE_READWRITE, (store, cb) => {
+    store.get(unicode).onsuccess = e => {
+      const result = e.target.result || { unicode, count: 0 }
+      result.count++
+      store.put(result)
+      cb()
+    }
+  })
+}
+
+export function getTopFavoriteEmoji (db, n) {
+  return dbPromise(db, [STORE_FAVORITES, STORE_EMOJI], MODE_READONLY, ([favoritesStore, emojiStore], cb) => {
+    const results = []
+    const cursor = favoritesStore.openCursor(undefined, 'prev')
+    cursor.onsuccess = e => {
+      const cursor = e.target.result
+      if (!cursor) {
+        return cb(results)
+      }
+      emojiStore.get(cursor.value.unicode).onsuccess = e => {
+        const emoji = e.target.result
+        if (emoji) {
+          results.push(emoji)
+          if (results.length === n) {
+            return cb(results)
+          }
+        }
+        cursor.continue()
+      }
+    }
   })
 }

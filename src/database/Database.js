@@ -1,12 +1,18 @@
 import { assertNonEmptyString } from './utils/assertNonEmptyString'
 import { assertNumber } from './utils/assertNumber'
-import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE, KEY_PREFERRED_SKINTONE, STORE_KEYVALUE } from './constants'
+import {
+  DEFAULT_DATA_SOURCE,
+  DEFAULT_LOCALE,
+  KEY_PREFERRED_SKINTONE,
+  STORE_KEYVALUE
+} from './constants'
 import { uniqEmoji } from './utils/uniqEmoji'
 import { jsonChecksum } from './utils/jsonChecksum'
-import { closeDatabase, deleteDatabase, openDatabase, get, set } from './databaseLifecycle'
+import { closeDatabase, deleteDatabase, openDatabase } from './databaseLifecycle'
 import {
   isEmpty, hasData, loadData, getEmojiByGroup,
-  getEmojiBySearchQuery, getEmojiByShortcode, getEmojiByUnicode
+  getEmojiBySearchQuery, getEmojiByShortcode, getEmojiByUnicode,
+  get, set, getTopFavoriteEmoji, incrementFavoriteEmojiCount
 } from './idbInterface'
 import { log } from '../shared/log'
 import { getETag, getETagAndData } from './utils/ajax'
@@ -110,6 +116,18 @@ export default class Database {
     assertNumber(skinTone)
     await this.ready()
     return set(this._db, STORE_KEYVALUE, KEY_PREFERRED_SKINTONE, skinTone)
+  }
+
+  async incrementFavoriteEmojiCount (unicode) {
+    assertNonEmptyString(unicode)
+    await this.ready()
+    return incrementFavoriteEmojiCount(this._db, unicode)
+  }
+
+  async getTopFavoriteEmoji (n) {
+    assertNumber(n)
+    await this.ready()
+    return getTopFavoriteEmoji(this._db, n)
   }
 
   async _shutdown () {

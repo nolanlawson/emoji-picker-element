@@ -1,5 +1,5 @@
 import { migrations } from './migrations'
-import { DB_VERSION_CURRENT, MODE_READONLY, MODE_READWRITE } from './constants'
+import { DB_VERSION_CURRENT } from './constants'
 import { mark, stop } from '../shared/marks'
 
 const openReqs = {}
@@ -54,32 +54,6 @@ export async function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
 
     tx.oncomplete = () => resolve(res)
     tx.onerror = () => reject(tx.error)
-  })
-}
-
-export function get (db, storeName, key) {
-  return dbPromise(db, storeName, MODE_READONLY, (store, cb) => {
-    if (Array.isArray(key)) {
-      const res = Array(key.length)
-      let todo = 0
-      for (let i = 0; i < key.length; i++) {
-        store.get(key[i]).onsuccess = e => {
-          res[i] = e.target.result
-          if (++todo === key.length) {
-            cb(res)
-          }
-        }
-      }
-    } else {
-      store.get(key).onsuccess = e => cb(e.target.result)
-    }
-  })
-}
-
-export function set (db, storeName, key, value) {
-  return dbPromise(db, storeName, MODE_READWRITE, (store, cb) => {
-    store.put(value, key)
-    cb()
   })
 }
 

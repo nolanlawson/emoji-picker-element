@@ -6,16 +6,16 @@ import {
   STORE_EMOJI,
   STORE_KEYVALUE,
   STORE_FAVORITES,
-  INDEX_TOKENS
+  INDEX_TOKENS, FIELD_COUNT, INDEX_COUNT
 } from './constants'
 
 function initialMigration (db, tx, done) {
-  function createObjectStore (name, init, indexes) {
-    const store = init
-      ? db.createObjectStore(name, init)
+  function createObjectStore (name, keyPath, indexes) {
+    const store = keyPath
+      ? db.createObjectStore(name, { keyPath })
       : db.createObjectStore(name)
     if (indexes) {
-      for (const { indexName, keyPath, multiEntry } of indexes) {
+      for (const [indexName, [keyPath, multiEntry]] of Object.entries(indexes)) {
         store.createIndex(indexName, keyPath, { multiEntry })
       }
     }
@@ -23,11 +23,13 @@ function initialMigration (db, tx, done) {
   }
 
   createObjectStore(STORE_KEYVALUE)
-  createObjectStore(STORE_EMOJI, { keyPath: FIELD_UNICODE }, [
-    { indexName: INDEX_TOKENS, keyPath: FIELD_TOKENS, multiEntry: true },
-    { indexName: INDEX_GROUP_AND_ORDER, keyPath: [FIELD_GROUP, FIELD_ORDER] }
-  ])
-  createObjectStore(STORE_FAVORITES)
+  createObjectStore(STORE_EMOJI, /* keyPath */ FIELD_UNICODE, {
+    [INDEX_TOKENS]: [FIELD_TOKENS, /* multiEntry */ true],
+    [INDEX_GROUP_AND_ORDER]: [[FIELD_GROUP, FIELD_ORDER]]
+  })
+  createObjectStore(STORE_FAVORITES, /* keyPath */ FIELD_UNICODE, {
+    [INDEX_COUNT]: [FIELD_COUNT]
+  })
   done()
 }
 

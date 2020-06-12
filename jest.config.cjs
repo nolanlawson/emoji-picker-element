@@ -4,9 +4,9 @@ module.exports = {
   ],
   transform: {
     '^.+\\.js$': './config/babelJestTransform.cjs',
-    "^.+\\.svelte$": ["svelte-jester", {
-      "preprocess": true,
-      "compilerOptions": {
+    '^.+\\.svelte$': ['svelte-jester', {
+      preprocess: true,
+      compilerOptions: {
         css: true,
         customElement: true,
         dev: false
