@@ -224,7 +224,7 @@ async function summarizeEmojis (emojis) {
   return emojis.map(({ unicode, skins, shortcodes }) => ({
     unicode,
     skins: skins && toSimpleSkinsMap(skins),
-    shortcodes: shortcodes
+    shortcodes
   }))
 }
 
