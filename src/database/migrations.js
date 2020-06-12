@@ -27,7 +27,7 @@ function initialMigration (db, tx, done) {
     { indexName: INDEX_TOKENS, keyPath: FIELD_TOKENS, multiEntry: true },
     { indexName: INDEX_GROUP_AND_ORDER, keyPath: [FIELD_GROUP, FIELD_ORDER] }
   ])
-  createObjectStore(STORE_FAVORITES, { keyPath: FIELD_UNICODE })
+  createObjectStore(STORE_FAVORITES)
   done()
 }
 
