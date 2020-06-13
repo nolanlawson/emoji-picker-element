@@ -4,21 +4,35 @@
 // skintone picker
 //
 
+.skintone-button-wrapper {
+  background: var(--background);
+  z-index: 3;
+}
+
+.skintone-button-wrapper.expanded {
+  z-index: 1; // place behind the skintone dropdown after the listbox has animated
+}
+
 .skintone-list {
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 1;
+  z-index: 2;
   overflow: visible;
   background: var(--background);
-  border: var(--border-size) solid var(--border-color);
-  border-radius: var(--skintone-border-radius);
+  border-bottom: var(--border-size) solid var(--border-color);
+  border-radius: 0 0 var(--skintone-border-radius) var(--skintone-border-radius);
   will-change: transform;
   transition: transform 0.2s ease-in-out;
   transform-origin: center 0;
 
   @media (prefers-reduced-motion: reduce) {
-    transition: none;
+    // We still want the transition event to fire, so we can listen for the transitionend event
+    // but unfortunately transition: none would just eliminate this entirely. So just make it
+    // effectively instant. I found 0.001s looks best in Firefox (avoids a jerky split-second animation)
+    // while still fixing WebKit (which doesn't work if you set 0s or transition-delay: -1s or other hacks).
+    // see also: https://github.com/jensimmons/cssremedy/issues/11
+    transition-duration: 0.001s;
   }
 
   &.no-animate {

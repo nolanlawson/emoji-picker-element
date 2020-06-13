@@ -31,16 +31,18 @@
       <label class="sr-only" for="search">{i18n.search}</label>
       <span id="search-description" class="sr-only">{i18n.searchDescription}</span>
     </div>
-    <button id="skintone-button"
-            class="emoji {skinTonePickerExpanded ? 'hide-focus' : ''}"
-            aria-label={skinToneButtonLabel}
-            title={skinToneButtonLabel}
-            aria-describedby="skintone-description"
-            aria-haspopup="listbox"
-            aria-expanded={skinTonePickerExpanded}
-            aria-controls="skintone-list"
-            on:click={onClickSkinToneButton}
-    >{skinToneText}</button>
+    <div class="skintone-button-wrapper {skinTonePickerExpandedAfterAnimation ? 'expanded' : ''}">
+      <button id="skintone-button"
+              class="emoji {skinTonePickerExpanded ? 'hide-focus' : ''}"
+              aria-label={skinToneButtonLabel}
+              title={skinToneButtonLabel}
+              aria-describedby="skintone-description"
+              aria-haspopup="listbox"
+              aria-expanded={skinTonePickerExpanded}
+              aria-controls="skintone-list"
+              on:click={onClickSkinToneButton}
+      >{skinToneText}</button>
+    </div>
     <span id="skintone-description" class="sr-only">{i18n.skinToneDescription}</span>
     <div id="skintone-list"
          class="skintone-list {skinTonePickerExpanded ? '' : 'hidden no-animate'}"
@@ -52,6 +54,7 @@
          on:keydown={onSkinToneOptionKeydown}
          on:focusout={onSkinToneOptionsBlur}
          on:click={onClickSkinToneOption}
+         bind:this={skinToneDropdown}
     >
       {#each skinTones as skinTone, i (skinTone)}
         <button id="skintone-{i}"

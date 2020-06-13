@@ -42,6 +42,8 @@ let currentCategory = categories[currentCategoryIndex]
 let computedIndicatorWidth = 0
 let indicatorStyle = '' // eslint-disable-line no-unused-vars
 let skinTonePickerExpanded = false
+let skinTonePickerExpandedAfterAnimation = false // eslint-disable-line no-unused-vars
+let skinToneDropdown
 let currentSkinTone = 0
 let activeSkinTone = 0
 let skinToneText // eslint-disable-line no-unused-vars
@@ -427,6 +429,19 @@ async function onClickSkinToneButton (event) {
     halt(event)
     await tick()
     focus(`skintone-${activeSkinTone}`)
+  }
+}
+
+// To make the animation nicer, change the z-index of the skintone picker button
+// *after* the animation has played. This makes it appear that the picker box
+// is expanding "below" the button
+$: {
+  if (skinTonePickerExpanded) {
+    skinToneDropdown.addEventListener('transitionend', () => {
+      skinTonePickerExpandedAfterAnimation = true
+    }, { once: true })
+  } else {
+    skinTonePickerExpandedAfterAnimation = false
   }
 }
 
