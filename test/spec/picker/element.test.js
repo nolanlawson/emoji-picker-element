@@ -4,7 +4,7 @@ import {
   basicBeforeEach,
   FR_EMOJI,
   mockFrenchDataSource,
-  tick
+  tick, truncatedEmoji
 } from '../shared'
 import Picker from '../../../src/picker/PickerElement'
 import { getAllByRole, getByRole, waitFor } from '@testing-library/dom'
@@ -13,6 +13,7 @@ import { mergeI18n } from '../../../src/picker/utils/mergeI18n'
 import enI18n from '../../../src/picker/i18n/en'
 import Database from '../../../src/database/Database'
 import { DEFAULT_SKIN_TONE_EMOJI } from '../../../src/picker/constants'
+import { DEFAULT_DATA_SOURCE } from '../../../src/database/constants'
 const { type, clear } = userEvent
 
 describe('element tests', () => {
@@ -83,6 +84,7 @@ describe('element tests', () => {
         }
       }
       await tick(20)
+      expect(picker.i18n).toStrictEqual(enI18n)
       picker.i18n = partialFrI18n
       expect(getByRole(container, 'searchbox', { name: 'Recherche' })).toBeVisible()
       expect(getByRole(container, 'tab', { name: 'Sourires et emoticons' })).toBeVisible()
@@ -90,7 +92,9 @@ describe('element tests', () => {
     })
 
     test('can change default skin tone emoji', async () => {
-      expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain(DEFAULT_SKIN_TONE_EMOJI)
+      expect(picker.skinToneEmoji).toBe(DEFAULT_SKIN_TONE_EMOJI)
+      expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML)
+        .toContain(DEFAULT_SKIN_TONE_EMOJI)
       picker.skinToneEmoji = '👇'
       expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('👇')
       picker.skinToneEmoji = '👋'
@@ -100,6 +104,25 @@ describe('element tests', () => {
     test('can get the locale/dataSource', () => {
       expect(picker.locale).toBe('en')
       expect(picker.dataSource).toBe(ALL_EMOJI)
+    })
+  })
+
+  describe('defaults test', () => {
+    beforeEach(() => {
+      fetch.get(DEFAULT_DATA_SOURCE, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/aaa' } }))
+      fetch.head(DEFAULT_DATA_SOURCE, () => new Response(null, { headers: { ETag: 'W/aaa' } }))
+    })
+
+    afterEach(basicAfterEach)
+
+    test('has a default locale/dataSource', async () => {
+      const picker = new Picker()
+      const container = picker.shadowRoot.querySelector('.picker')
+      await tick(20)
+
+      await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
+
+      await picker.database.delete()
     })
   })
 })

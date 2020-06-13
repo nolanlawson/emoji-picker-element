@@ -27,10 +27,6 @@ export default class Picker extends SveltePicker {
     this._updateScheduled = undefined
   }
 
-  static get observedAttributes () {
-    return ['locale', 'dataSource', 'i18n', 'skinToneEmoji']
-  }
-
   get locale () {
     return this._locale
   }
