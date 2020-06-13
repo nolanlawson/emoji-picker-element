@@ -92,7 +92,7 @@ $: {
 // the dataSource, which is bad. Delaying with a microtask avoids this.
 Promise.resolve().then(() => {
   if (!database) {
-    database || new Database({ dataSource: DEFAULT_DATA_SOURCE, locale: DEFAULT_LOCALE })
+    database = database || new Database({ dataSource: DEFAULT_DATA_SOURCE, locale: DEFAULT_LOCALE })
   }
 })
 
@@ -123,7 +123,7 @@ $: {
       currentSkinTone = await database.getPreferredSkinTone()
     }
   }
-  updatePreferredSkinTone()
+  /* no await */ updatePreferredSkinTone()
 }
 
 $: {
@@ -134,7 +134,7 @@ $: {
       )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
     }
   }
-  updateDefaultFavoriteEmojis()
+  /* no await */ updateDefaultFavoriteEmojis()
 }
 
 $: {
@@ -153,7 +153,7 @@ $: {
   }
 
   if (database && shouldUpdateFavorites) {
-    updateFavorites()
+    /* no await */ updateFavorites()
   }
 }
 
@@ -187,7 +187,7 @@ function calculateWidth (node, onUpdate) {
       onUpdate(entries[0].contentRect.width)
     })
     resizeObserver.observe(node)
-  } else {
+  } else { // just set the width once, don't bother trying to track it
     requestAnimationFrame(() => {
       onUpdate(node.getBoundingClientRect().width)
     })
@@ -216,7 +216,7 @@ $: {
       currentEmojis = await getEmojisByGroup(currentCategory.group)
     }
   }
-  updateEmojis()
+  /* no await */ updateEmojis()
 }
 $: {
   requestIdleCallback(() => {
@@ -366,23 +366,15 @@ function fireEvent (name, detail) {
 }
 
 async function clickEmoji (unicode) {
-  const [emojiSupportLevel, emoji] = await Promise.all([
-    emojiSupportLevelPromise,
-    database.getEmojiByUnicode(unicode)
-  ])
-  let unicodeWithSkin = unicode
-  if (currentSkinTone) {
-    const foundSkin = (emoji.skins || []).find(_ => _.tone === currentSkinTone)
-    if (foundSkin && foundSkin.version <= emojiSupportLevel) {
-      unicodeWithSkin = foundSkin.unicode
-    }
-  }
+  const emoji = await database.getEmojiByUnicode(unicode)
+  const emojiSummary = [...currentEmojis, ...currentFavorites].find(_ => _.unicode === unicode)
+  const skinTonedUnicode = unicodeWithSkin(emojiSummary, currentSkinTone)
   await database.incrementFavoriteEmojiCount(unicode)
   shouldUpdateFavorites = shouldUpdateFavorites // eslint-disable-line no-self-assign
   fireEvent('emoji-click', {
     emoji,
     skinTone: currentSkinTone,
-    unicode: unicodeWithSkin
+    unicode: skinTonedUnicode
   })
 }
 
@@ -395,7 +387,7 @@ async function onEmojiClick (event) {
   halt(event)
   const unicode = target.dataset.emoji
 
-  clickEmoji(unicode)
+  /* no await */ clickEmoji(unicode)
 }
 
 function focus (id) {
@@ -472,6 +464,14 @@ function emojiLabel (emoji) {
 // eslint-disable-next-line no-unused-vars
 function emojiTitle (emoji) {
   return emoji.shortcodes.join(', ')
+}
+
+// eslint-disable-next-line no-unused-vars
+function unicodeWithSkin (emoji, currentSkinTone) {
+  if (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) {
+    return emoji.skins[currentSkinTone]
+  }
+  return emoji.unicode
 }
 
 export {

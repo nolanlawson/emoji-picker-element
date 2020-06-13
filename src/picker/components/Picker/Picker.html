@@ -119,11 +119,7 @@
                     title={emojiTitle(emoji)}
                     class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                     data-emoji={emoji.unicode}>
-              {#if currentSkinTone > 0 && emoji.skins && emoji.skins[currentSkinTone]}
-                {emoji.skins[currentSkinTone]}
-              {:else}
-                {emoji.unicode}
-              {/if}
+              {unicodeWithSkin(emoji, currentSkinTone)}
             </button>
           {/each}
       </div>
@@ -141,11 +137,7 @@
               title={emojiTitle(emoji)}
               class="emoji"
               data-emoji={emoji.unicode}>
-        {#if currentSkinTone > 0 && emoji.skins && emoji.skins[currentSkinTone]}
-          {emoji.skins[currentSkinTone]}
-        {:else}
-          {emoji.unicode}
-        {/if}
+        {unicodeWithSkin(emoji, currentSkinTone)}
       </button>
     {/each}
   </div>
