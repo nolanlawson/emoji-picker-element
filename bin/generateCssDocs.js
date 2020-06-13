@@ -27,8 +27,8 @@ function extractCSSVariables (node) {
 // into the README as documentation
 async function generateMarkdownTable (css) {
   const ast = postcss.parse(css)
-  const hosts = ast.nodes.filter(({ selector }) => ([':host', ':host,\n:host(.light)'].includes(selector)))
-  const darkHosts = ast.nodes.filter(({ selector }) => selector === ':host(.dark)')
+  const hosts = ast.nodes.filter(({ selector }) => ([':host', ':host, :host(.light) .picker'].includes(selector)))
+  const darkHosts = ast.nodes.filter(({ selector }) => selector === ':host(.dark), .picker.prefers-dark')
   const vars = hosts.map(extractCSSVariables).flat()
   const darkVars = darkHosts.map(extractCSSVariables).flat()
 

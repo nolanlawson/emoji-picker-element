@@ -94,6 +94,10 @@ function unicodeWithSkin (emoji, currentSkinTone) {
 // Determine the emoji support level (in requestIdleCallback)
 //
 
+// We could just use CSS to detect dark mode, but it bloats the JS bundle by .2KB
+// due to the duplicated CSS rules
+const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches // eslint-disable-line no-unused-vars
+
 emojiSupportLevelPromise.then(level => {
   if (!level) {
     message = i18n.emojiUnsupported

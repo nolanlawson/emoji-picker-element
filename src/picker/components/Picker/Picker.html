@@ -1,6 +1,6 @@
 <svelte:options tag={null} />
 <section
-  class="picker"
+  class="picker { prefersDark ? 'prefers-dark ' : ''}"
   aria-label={i18n.regionLabel}
   {style}
   bind:this={rootElement}

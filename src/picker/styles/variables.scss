@@ -61,19 +61,12 @@
   font-family: sans-serif;
 }
 
-:host,
-:host(.light) {
+:host, :host(.light) .picker {
   @include colors(false);
 }
 
-:host(.dark) {
+:host(.dark), .picker.prefers-dark {
   @include colors(true);
-}
-
-@media (prefers-color-scheme: dark) {
-  :host {
-    @include colors(true);
-  }
 }
 
 // Nexus 5
