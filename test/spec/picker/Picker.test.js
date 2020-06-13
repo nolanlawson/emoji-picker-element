@@ -2,7 +2,6 @@ import { basicBeforeEach, basicAfterEach, ALL_EMOJI, truncatedEmoji, tick } from
 import * as testingLibrary from '@testing-library/dom'
 import Picker from '../../../src/picker/PickerElement.js'
 import userEvent from '@testing-library/user-event'
-import { DEFAULT_SKIN_TONE_EMOJI } from '../../../src/picker/constants'
 
 const { waitFor, fireEvent } = testingLibrary
 const { type } = userEvent
@@ -46,12 +45,16 @@ describe('Picker tests', () => {
     expect(getAllByRole('tab')).toHaveLength(9)
 
     expect(getByRole('tab', { name: 'Smileys and emoticons', selected: true })).toBeVisible()
-    expect(testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup1)
+    await waitFor(() => expect(
+      testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup1)
+    )
 
     expect(getByRole('tab', { name: 'People and body' })).toBeVisible()
     fireEvent.click(getByRole('tab', { name: 'People and body' }))
 
-    await waitFor(() => expect(testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup2))
+    await waitFor(() => expect(
+      testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup2))
+
     expect(getByRole('tab', { name: 'People and body', selected: true })).toBeVisible()
   })
 
@@ -86,6 +89,8 @@ describe('Picker tests', () => {
     await pressKeyAndExpectActiveOption('ArrowDown', 'Medium-Light', 2)
     await pressKeyAndExpectActiveOption('ArrowUp', 'Light', 1)
     await pressKeyAndExpectActiveOption('ArrowUp', 'Default', 0)
+    await pressKeyAndExpectActiveOption('ArrowUp', 'Dark', 5)
+    await pressKeyAndExpectActiveOption('ArrowDown', 'Default', 5)
     await pressKeyAndExpectActiveOption('ArrowUp', 'Dark', 5)
 
     await fireEvent.click(activeElement(), { key: 'Enter', code: 'Enter' })
@@ -248,10 +253,12 @@ describe('Picker tests', () => {
     }))
   })
 
-  test('Change default skin tone emoji', async () => {
-    expect(getByRole('button', { name: /Choose a skin tone/ }).innerHTML).toContain(DEFAULT_SKIN_TONE_EMOJI)
-    picker.skinToneEmoji = '👇'
-    await waitFor(() => expect(getByRole('button', { name: /Choose a skin tone/ }).innerHTML)
-      .toContain('👇'))
+  test('Closes skintone picker when blurred', async () => {
+    fireEvent.click(getByRole('button', { name: /Choose a skin tone/ }))
+    await waitFor(() => expect(getByRole('listbox', { name: 'Skin tones' })).toBeVisible())
+    // Simulating a focusout event is hard, have to both focus and blur
+    getByRole('searchbox').focus()
+    fireEvent.focusOut(getByRole('listbox', { name: 'Skin tones' }))
+    await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
   })
 })

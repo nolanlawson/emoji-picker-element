@@ -1,4 +1,5 @@
 import allEmoji from 'emojibase-data/en/data.json'
+import frEmoji from 'emojibase-data/fr/data.json'
 
 export function truncateEmoji (allEmoji) {
   // just take the first few emoji from each category, or else it takes forever to insert
@@ -18,10 +19,12 @@ export function truncateEmoji (allEmoji) {
 }
 
 export const truncatedEmoji = truncateEmoji(allEmoji)
+const truncatedFrEmoji = truncateEmoji(frEmoji)
 
 export const ALL_EMOJI = 'http://localhost/emoji.json'
 export const ALL_EMOJI_NO_ETAG = 'http://localhost/emoji-no-etag.json'
 export const ALL_EMOJI_MISCONFIGURED_ETAG = 'http://localhost/emoji-misconfigured-etag.json'
+export const FR_EMOJI = 'http://localhost/fr.json'
 
 export function basicBeforeEach () {
   fetch
@@ -48,4 +51,9 @@ export async function tick (times = 1) {
   for (let i = 0; i < times; i++) {
     await new Promise(resolve => setTimeout(resolve))
   }
+}
+
+export function mockFrenchDataSource () {
+  fetch.get(FR_EMOJI, () => new Response(JSON.stringify(truncatedFrEmoji), { headers: { ETag: 'W/zzz' } }))
+  fetch.head(FR_EMOJI, () => new Response(null, { headers: { ETag: 'W/zzz' } }))
 }

@@ -31,9 +31,9 @@
     "dev:server": "node ./test/adhoc/server.js",
     "lint": "standard && stylelint '**/*.scss'",
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",
-    "test": "jest --clearCache && jest",
+    "test": "jest --no-cache",
     "test:adhoc": "node ./test/adhoc/server.js",
-    "cover": "jest --clearCache && jest --coverage"
+    "cover": "jest --no-cache --coverage"
   },
   "repository": {
     "type": "git",

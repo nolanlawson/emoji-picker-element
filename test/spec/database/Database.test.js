@@ -1,8 +1,7 @@
 import Database from '../../../src/database/Database'
-import frEmoji from 'emojibase-data/fr/data.json'
 import {
   basicAfterEach, basicBeforeEach, ALL_EMOJI, ALL_EMOJI_MISCONFIGURED_ETAG,
-  ALL_EMOJI_NO_ETAG, truncateEmoji, tick
+  ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI
 } from '../shared'
 
 describe('database tests', () => {
@@ -152,14 +151,10 @@ describe('database tests', () => {
   })
 
   test('multiple databases in multiple locales', async () => {
-    const truncatedFrEmoji = truncateEmoji(frEmoji)
-    const dataSourceFr = 'http://localhost/fr.json'
-
-    fetch.get(dataSourceFr, () => new Response(JSON.stringify(truncatedFrEmoji), { headers: { ETag: 'W/zzz' } }))
-    fetch.head(dataSourceFr, () => new Response(null, { headers: { ETag: 'W/zzz' } }))
+    mockFrenchDataSource()
 
     const en = new Database({ dataSource: ALL_EMOJI })
-    const fr = new Database({ dataSource: dataSourceFr, locale: 'fr' })
+    const fr = new Database({ dataSource: FR_EMOJI, locale: 'fr' })
 
     expect((await en.getEmojiBySearchQuery('monkey face')).map(_ => _.annotation)).toStrictEqual(['monkey face'])
     expect((await fr.getEmojiBySearchQuery('tête singe')).map(_ => _.annotation)).toStrictEqual(['tête de singe'])

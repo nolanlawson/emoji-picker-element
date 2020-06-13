@@ -24,6 +24,8 @@ describe('Favorites UI', () => {
     document.body.appendChild(picker)
     const container = picker.shadowRoot.querySelector('.picker')
 
+    await tick(20)
+
     // using a testId because testing-library seems to think role=menu has no aria-label
     const favoritesBar = getByTestId(container, 'favorites')
     expect(favoritesBar).toBeVisible()

@@ -23,6 +23,7 @@ import {
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
 import { uniqBy } from '../../../shared/uniqBy'
+import { mergeI18n } from '../../utils/mergeI18n'
 
 let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
 let i18n = enI18n
@@ -65,9 +66,6 @@ emojiSupportLevelPromise.then(level => {
 $: {
   // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
   async function handleDatabaseLoading () {
-    if (!database) {
-      return
-    }
     const timeoutHandle = setTimeout(() => {
       message = i18n.loading
     }, TIMEOUT_BEFORE_LOADING_MESSAGE)
@@ -83,7 +81,9 @@ $: {
       }
     }
   }
-  /* no await */ handleDatabaseLoading()
+  if (database) {
+    /* no await */ handleDatabaseLoading()
+  }
 }
 
 // TODO: this is a bizarre way to set these default properties, but currently Svelte
@@ -92,9 +92,15 @@ $: {
 // the dataSource, which is bad. Delaying with a microtask avoids this.
 Promise.resolve().then(() => {
   if (!database) {
-    database = database || new Database({ dataSource: DEFAULT_DATA_SOURCE, locale: DEFAULT_LOCALE })
+    database = new Database({ dataSource: DEFAULT_DATA_SOURCE, locale: DEFAULT_LOCALE })
   }
 })
+
+$: {
+  if (i18n !== enI18n) {
+    i18n = mergeI18n(enI18n, i18n) // if partial translations are provided, merge with English
+  }
+}
 
 $: style = `
   --num-categories: ${categories.length}; 
@@ -112,10 +118,14 @@ $: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTon
 // (where ResizeObserver is supported).
 const resizeObserverSupported = typeof ResizeObserver === 'function'
 $: currentCategoryIndex = categories.findIndex(_ => _.group === currentCategory.group)
-$: indicatorStyle = (resizeObserverSupported
-  ? `transform: translateX(${currentCategoryIndex * computedIndicatorWidth}px);` // exact pixels
-  : `transform: translateX(${currentCategoryIndex * 100}%);`// fallback to percent-based
-)
+$: {
+  /* istanbul ignore if */
+  if (resizeObserverSupported) {
+    indicatorStyle = `transform: translateX(${currentCategoryIndex * computedIndicatorWidth}px);` // exact pixels
+  } else {
+    indicatorStyle = `transform: translateX(${currentCategoryIndex * 100}%);`// fallback to percent-based
+  }
+}
 
 $: {
   async function updatePreferredSkinTone () {
