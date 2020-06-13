@@ -16,7 +16,13 @@ import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import { tick } from 'svelte'
-import { DEFAULT_SKIN_TONE_EMOJI, TIMEOUT_BEFORE_LOADING_MESSAGE } from '../../constants'
+import {
+  DEFAULT_NUM_COLUMNS,
+  DEFAULT_SKIN_TONE_EMOJI,
+  MOST_COMMONLY_USED_EMOJI,
+  TIMEOUT_BEFORE_LOADING_MESSAGE
+} from '../../constants'
+import { uniqBy } from '../../../shared/uniqBy'
 
 let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
 let i18n = enI18n
@@ -42,6 +48,11 @@ let style = '' // eslint-disable-line no-unused-vars
 let skinToneButtonLabel = '' // eslint-disable-line no-unused-vars
 let skinToneTextForSkinTone = ''
 let skinTones = []
+let currentFavorites = [] // eslint-disable-line no-unused-vars
+let defaultFavoriteEmojisPromise
+let numColumns = DEFAULT_NUM_COLUMNS
+let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
+let shouldUpdateFavorites = {} // hack to force svelte to recalc favorites
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
@@ -62,7 +73,6 @@ $: {
     }, TIMEOUT_BEFORE_LOADING_MESSAGE)
     try {
       await database.ready()
-      currentSkinTone = await database.getPreferredSkinTone()
     } catch (err) {
       console.error(err)
       message = i18n.networkError
@@ -107,15 +117,80 @@ $: indicatorStyle = (resizeObserverSupported
   : `transform: translateX(${currentCategoryIndex * 100}%);`// fallback to percent-based
 )
 
+$: {
+  async function updatePreferredSkinTone () {
+    if (database) {
+      currentSkinTone = await database.getPreferredSkinTone()
+    }
+  }
+  updatePreferredSkinTone()
+}
+
+$: {
+  async function updateDefaultFavoriteEmojis () {
+    if (database) {
+      defaultFavoriteEmojisPromise = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
+        database.getEmojiByUnicode(unicode)
+      )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
+    }
+  }
+  updateDefaultFavoriteEmojis()
+}
+
+$: {
+  async function getFavorites () {
+    const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
+    const defaultFavorites = await defaultFavoriteEmojisPromise
+    const favs = uniqBy([
+      ...dbFavorites,
+      ...defaultFavorites
+    ], _ => _.unicode).slice(0, numColumns)
+    return summarizeEmojis(favs)
+  }
+
+  async function updateFavorites () {
+    currentFavorites = await getFavorites()
+  }
+
+  if (database && shouldUpdateFavorites) {
+    updateFavorites()
+  }
+}
+
 // eslint-disable-next-line no-unused-vars
-function calculateWidth (indicator) {
+function calculateIndicatorWidth (node) {
+  return calculateWidth(node, width => {
+    computedIndicatorWidth = width
+  })
+}
+
+// eslint-disable-next-line no-unused-vars
+function calculateEmojiGridWith (node) {
+  return calculateWidth(node, width => {
+    // Whenever the main emoji grid changes size, we need to
+    // 1) Re-calculate the --num-columns var because it may have changed
+    // 2) Re-calculate the scrollbar width because it may have changed (i.e. because the number of items changed)
+    const propValue = getComputedStyle(rootElement).getPropertyValue('--num-columns')
+    const newNumColumns = parseInt(propValue, 10) || DEFAULT_NUM_COLUMNS // in Jest we can't compute custom props
+    const parentWidth = node.parentElement.getBoundingClientRect().width
+    const newScrollbarWidth = parentWidth - width
+    numColumns = newNumColumns
+    scrollbarWidth = newScrollbarWidth
+  })
+}
+
+function calculateWidth (node, onUpdate) {
   let resizeObserver
   /* istanbul ignore if */
   if (resizeObserverSupported) {
     resizeObserver = new ResizeObserver(entries => {
-      computedIndicatorWidth = entries[0].contentRect.width
+      onUpdate(entries[0].contentRect.width)
     })
-    resizeObserver.observe(indicator)
+    resizeObserver.observe(node)
+  } else {
+    requestAnimationFrame(() => {
+      onUpdate(node.getBoundingClientRect().width)
+    })
   }
 
   return {
@@ -167,7 +242,7 @@ function checkZwjSupport (zwjEmojisToCheck) {
   mark('checkZwjSupport')
   const rootNode = rootElement.getRootNode()
   for (const emoji of zwjEmojisToCheck) {
-    const domNode = rootNode.getElementById(`emoji-${emoji.unicode}`)
+    const domNode = rootNode.querySelector(`[data-emoji=${JSON.stringify(emoji.unicode)}]`)
     if (!domNode) { // happens rarely, mostly in jest tests
       continue
     }
@@ -295,16 +370,19 @@ async function clickEmoji (unicode) {
     emojiSupportLevelPromise,
     database.getEmojiByUnicode(unicode)
   ])
+  let unicodeWithSkin = unicode
   if (currentSkinTone) {
     const foundSkin = (emoji.skins || []).find(_ => _.tone === currentSkinTone)
     if (foundSkin && foundSkin.version <= emojiSupportLevel) {
-      unicode = foundSkin.unicode
+      unicodeWithSkin = foundSkin.unicode
     }
   }
+  await database.incrementFavoriteEmojiCount(unicode)
+  shouldUpdateFavorites = shouldUpdateFavorites // eslint-disable-line no-self-assign
   fireEvent('emoji-click', {
     emoji,
     skinTone: currentSkinTone,
-    unicode
+    unicode: unicodeWithSkin
   })
 }
 
@@ -315,7 +393,7 @@ async function onEmojiClick (event) {
     return
   }
   halt(event)
-  const unicode = target.id.substring(6) // remove 'emoji-'
+  const unicode = target.dataset.emoji
 
   clickEmoji(unicode)
 }
@@ -385,6 +463,15 @@ async function onSkinToneOptionsBlur () {
   if (!activeElement || !activeElement.classList.contains('skintone-option')) {
     skinTonePickerExpanded = false
   }
+}
+// eslint-disable-next-line no-unused-vars
+function emojiLabel (emoji) {
+  return emoji.unicode + ', ' + emoji.shortcodes.join(', ')
+}
+
+// eslint-disable-next-line no-unused-vars
+function emojiTitle (emoji) {
+  return emoji.shortcodes.join(', ')
 }
 
 export {

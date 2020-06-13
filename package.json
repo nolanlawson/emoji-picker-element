@@ -108,6 +108,7 @@
       "customElements",
       "CustomEvent",
       "fetch",
+      "getComputedStyle",
       "indexedDB",
       "IDBKeyRange",
       "matchMedia",

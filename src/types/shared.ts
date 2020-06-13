@@ -52,6 +52,7 @@ export interface I18n {
   skinTones: string[]
   searchDescription: string
   skinToneDescription: string
+  favoritesLabel: string
 }
 
 export interface I18nCategories {

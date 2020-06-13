@@ -93,7 +93,7 @@
        aria-hidden="true">
     <div class="indicator"
          style={indicatorStyle}
-         use:calculateWidth>
+         use:calculateIndicatorWidth>
     </div>
   </div>
   {#if message}
@@ -110,14 +110,15 @@
              role={searchMode ? 'listbox' : 'menu'}
              aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
              id="search-results"
+             use:calculateEmojiGridWith
         >
           {#each currentEmojis as emoji, i (emoji.unicode)}
             <button role={searchMode ? 'option' : 'menuitem'}
                     {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
-                    aria-label={emoji.unicode + ', ' + emoji.shortcodes.join(', ')}
-                    title={emoji.shortcodes.join(', ')}
-                    class="tabpanel-emoji emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
-                    id="emoji-{emoji.unicode}">
+                    aria-label={emojiLabel(emoji)}
+                    title={emojiTitle(emoji)}
+                    class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
+                    data-emoji={emoji.unicode}>
               {#if currentSkinTone > 0 && emoji.skins && emoji.skins[currentSkinTone]}
                 {emoji.skins[currentSkinTone]}
               {:else}
@@ -128,6 +129,26 @@
       </div>
     </div>
   {/if}
+  <div class="favorites emoji-menu"
+       role="menu"
+       aria-label={i18n.favoritesLabel}
+       style="padding-right: {scrollbarWidth}px;"
+       on:click={onEmojiClick}
+       data-testid="favorites">
+    {#each currentFavorites as emoji, i (emoji.unicode)}
+      <button role="menuitem"
+              aria-label={emojiLabel(emoji)}
+              title={emojiTitle(emoji)}
+              class="emoji"
+              data-emoji={emoji.unicode}>
+        {#if currentSkinTone > 0 && emoji.skins && emoji.skins[currentSkinTone]}
+          {emoji.skins[currentSkinTone]}
+        {:else}
+          {emoji.unicode}
+        {/if}
+      </button>
+    {/each}
+  </div>
   <div aria-hidden="true" class="hidden abs-pos">
     <button tabindex="-1" class="emoji baseline-emoji" bind:this={baselineEmoji}>😀</button>
   </div>

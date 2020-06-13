@@ -156,6 +156,15 @@ input.search {
   }
 }
 
+// favorites
+
+.favorites {
+  display: flex;
+  flex-direction: row;
+  border-top: var(--border-size) solid var(--border-color);
+  contain: content;
+}
+
 //
 // unsupported warning
 //

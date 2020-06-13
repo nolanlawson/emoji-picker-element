@@ -11,13 +11,14 @@ describe('Picker tests', () => {
   let picker
   let container
 
-  const { getAllByRole, getByRole, queryAllByRole } = new Proxy(testingLibrary, {
+  const proxy = new Proxy(testingLibrary, {
     get (obj, prop) {
       return function (...args) {
         return obj[prop](container, ...args)
       }
     }
   })
+  const { getAllByRole, getByRole, queryAllByRole } = proxy
 
   const activeElement = () => container.getRootNode().activeElement
 
@@ -26,7 +27,9 @@ describe('Picker tests', () => {
     picker = new Picker({ dataSource: ALL_EMOJI, locale: 'en' })
     document.body.appendChild(picker)
     container = picker.shadowRoot.querySelector('.picker')
-    await waitFor(() => expect(getAllByRole('menuitem')).toHaveLength(numInGroup1))
+    await waitFor(() => expect(
+      testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup1)
+    )
   })
   afterEach(async () => {
     basicAfterEach()
@@ -43,12 +46,12 @@ describe('Picker tests', () => {
     expect(getAllByRole('tab')).toHaveLength(9)
 
     expect(getByRole('tab', { name: 'Smileys and emoticons', selected: true })).toBeVisible()
-    expect(getAllByRole('menuitem')).toHaveLength(numInGroup1)
+    expect(testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup1)
 
     expect(getByRole('tab', { name: 'People and body' })).toBeVisible()
     fireEvent.click(getByRole('tab', { name: 'People and body' }))
 
-    await waitFor(() => expect(getAllByRole('menuitem')).toHaveLength(numInGroup2))
+    await waitFor(() => expect(testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup2))
     expect(getByRole('tab', { name: 'People and body', selected: true })).toBeVisible()
   })
 
@@ -102,7 +105,7 @@ describe('Picker tests', () => {
     getByRole('tab', { name: 'Smileys and emoticons', selected: true }).focus()
 
     const expectGroupLength = async group => {
-      await waitFor(() => expect(getAllByRole('menuitem'))
+      await waitFor(() => expect(testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem'))
         .toHaveLength(truncatedEmoji.filter(_ => _.group === group).length))
     }
 
@@ -129,7 +132,7 @@ describe('Picker tests', () => {
   test('measures zwj emoji', async () => {
     getByRole('tab', { name: 'Flags' }).click()
     await tick(20)
-    await waitFor(() => expect(getAllByRole('menuitem'))
+    await waitFor(() => expect(testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem'))
       .toHaveLength(truncatedEmoji.filter(_ => _.group === 9).length))
   })
 
