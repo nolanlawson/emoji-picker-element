@@ -99,36 +99,39 @@
          use:calculateIndicatorWidth>
     </div>
   </div>
-  {#if message}
-    <div class="message">{message}</div>
-  {:else}
-    <div class="tabpanel"
-         role={searchMode ? 'region' : 'tabpanel'}
-         aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
-         id={searchMode ? '' : `tab-${currentCategory.group}`}
-         tabindex="0"
-         on:click={onEmojiClick}
-    >
-        <div class="emoji-menu"
-             role={searchMode ? 'listbox' : 'menu'}
-             aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
-             id="search-results"
-             use:calculateEmojiGridWith
-        >
-          {#each currentEmojis as emoji, i (emoji.unicode)}
-            <button role={searchMode ? 'option' : 'menuitem'}
-                    {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
-                    aria-label={emojiLabel(emoji)}
-                    title={emojiTitle(emoji)}
-                    class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
-                    data-emoji={emoji.unicode}>
-              {unicodeWithSkin(emoji, currentSkinTone)}
-            </button>
-          {/each}
-      </div>
+
+  <div class="message {message ? '' : 'gone'}"
+       role="alert"
+       aria-live="polite">
+    {message}
+  </div>
+
+  <div class="tabpanel {message ? 'gone': ''}"
+       role={searchMode ? 'region' : 'tabpanel'}
+       aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
+       id={searchMode ? '' : `tab-${currentCategory.group}`}
+       tabindex="0"
+       on:click={onEmojiClick}
+  >
+      <div class="emoji-menu"
+           role={searchMode ? 'listbox' : 'menu'}
+           aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
+           id="search-results"
+           use:calculateEmojiGridWith
+      >
+        {#each currentEmojis as emoji, i (emoji.unicode)}
+          <button role={searchMode ? 'option' : 'menuitem'}
+                  {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
+                  aria-label={emojiLabel(emoji)}
+                  title={emojiTitle(emoji)}
+                  class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
+                  data-emoji={emoji.unicode}>
+            {unicodeWithSkin(emoji, currentSkinTone)}
+          </button>
+        {/each}
     </div>
-  {/if}
-  <div class="favorites emoji-menu"
+  </div>
+  <div class="favorites emoji-menu {message ? 'gone': ''}"
        role="menu"
        aria-label={i18n.favoritesLabel}
        style="padding-right: {scrollbarWidth}px;"

@@ -19,9 +19,20 @@ describe('offline first', () => {
 
     db = new Database({ dataSource: ALL_EMOJI })
     await db.ready()
-    expect(() => db._lazyUpdate).rejects.toThrow()
+    await expect(() => db._lazyUpdate).rejects.toThrow()
     expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
     await db.close()
     await db.delete()
+  })
+
+  test('basic error test', async () => {
+    const ERROR = 'error.json'
+    fetch.get(ERROR, { body: null, status: 500 })
+    fetch.head(ERROR, { body: null, status: 500 })
+
+    const db = new Database({ dataSource: ERROR })
+    await (expect(() => db.ready())).rejects.toThrow()
+
+    await new Database({ dataSource: ALL_EMOJI }).delete()
   })
 })

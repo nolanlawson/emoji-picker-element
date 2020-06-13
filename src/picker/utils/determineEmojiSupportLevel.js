@@ -1,6 +1,6 @@
 // rather than check every emoji ever, which would be expensive, just check some representatives from the
 // different emoji releases to determine what the font supports
-import isEmoji from 'if-emoji'
+import isEmoji from 'if-emoji/src/index.js'
 import { mark, stop } from '../../shared/marks'
 
 // In production mode, preprocess the file so we don't have to run a bunch of logic and can
