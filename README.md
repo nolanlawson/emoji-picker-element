@@ -203,6 +203,7 @@ Here is the default English `i81n` object (`"en"` locale):
   },
   "categoriesLabel": "Categories",
   "emojiUnsupported": "Your browser does not support color emoji.",
+  "favoritesLabel": "Favorites",
   "loading": "Loading…",
   "networkError": "Could not load emoji. Try refreshing.",
   "regionLabel": "Emoji picker",
