@@ -16,10 +16,8 @@ export async function isEmpty (db) {
 }
 
 export async function hasData (db, url, eTag) {
-  const [oldETag, oldUrl] = await Promise.all([
-    get(db, STORE_KEYVALUE, KEY_ETAG),
-    get(db, STORE_KEYVALUE, KEY_URL)
-  ])
+  const [oldETag, oldUrl] = await Promise.all([KEY_ETAG, KEY_URL]
+    .map(key => get(db, STORE_KEYVALUE, key)))
   return (oldETag === eTag && oldUrl === url)
 }
 
