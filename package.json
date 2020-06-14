@@ -154,6 +154,11 @@
       "path": "./bundle.js",
       "maxSize": "40 kB",
       "compression": "none"
+    },
+    {
+      "path": "./bundle.js",
+      "maxSize": "15 kB",
+      "compression": "brotli"
     }
   ]
 }
