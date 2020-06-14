@@ -5,13 +5,17 @@ import { mark, stop } from '../shared/marks'
 const openReqs = {}
 const databaseCache = {}
 
-function createDatabase (dbName) {
-  return new Promise((resolve, reject) => {
-    mark('createDatabase')
+function handleOpenOrDeleteReq (resolve, reject, req) {
+  req.onerror = () => reject(req.error)
+  req.onblocked = () => reject(new Error('IDB blocked'))
+  req.onsuccess = () => resolve(req.result)
+}
+
+async function createDatabase (dbName) {
+  mark('createDatabase')
+  const db = await new Promise((resolve, reject) => {
     const req = indexedDB.open(dbName, DB_VERSION_CURRENT)
     openReqs[dbName] = req
-    req.onerror = reject
-    req.onblocked = () => reject(new Error(`Database ${dbName} blocked`))
     req.onupgradeneeded = e => {
       const db = req.result
       const tx = e.currentTarget.transaction
@@ -27,11 +31,10 @@ function createDatabase (dbName) {
       }
       doNextMigration()
     }
-    req.onsuccess = () => {
-      stop('createDatabase')
-      resolve(req.result)
-    }
+    handleOpenOrDeleteReq(resolve, reject, req)
   })
+  stop('createDatabase')
+  return db
 }
 
 export function openDatabase (dbName) {
@@ -41,7 +44,7 @@ export function openDatabase (dbName) {
   return databaseCache[dbName]
 }
 
-export async function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
+export function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(storeName, readOnlyOrReadWrite)
     const store = typeof storeName === 'string'
@@ -73,8 +76,6 @@ export function deleteDatabase (dbName) {
     // close any open requests
     closeDatabase(dbName)
     const req = indexedDB.deleteDatabase(dbName)
-    req.onsuccess = () => resolve()
-    req.onerror = () => reject(req.error)
-    req.onblocked = () => reject(new Error(`Database ${dbName} blocked`))
+    handleOpenOrDeleteReq(resolve, reject, req)
   })
 }

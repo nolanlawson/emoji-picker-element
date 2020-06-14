@@ -9,13 +9,17 @@ import {
 import { transformEmojiBaseData } from './utils/transformEmojiBaseData'
 import { mark, stop } from '../shared/marks'
 import { extractTokens } from './utils/extractTokens'
+import { getAllIDB, getAllKeysIDB, getIDB } from './idbUtil'
 
 export async function isEmpty (db) {
   return !(await get(db, STORE_KEYVALUE, KEY_URL))
 }
 
 export async function hasData (db, url, eTag) {
-  const [oldETag, oldUrl] = await get(db, STORE_KEYVALUE, [KEY_ETAG, KEY_URL])
+  const [oldETag, oldUrl] = await Promise.all([
+    get(db, STORE_KEYVALUE, KEY_ETAG),
+    get(db, STORE_KEYVALUE, KEY_URL)
+  ])
   return (oldETag === eTag && oldUrl === url)
 }
 
@@ -56,20 +60,20 @@ export async function loadData (db, emojiBaseData, url, eTag) {
         metaStore.put(url, KEY_URL)
       }
 
-      metaStore.get(KEY_ETAG).onsuccess = e => {
-        oldETag = e.target.result
+      getIDB(metaStore, KEY_ETAG, result => {
+        oldETag = result
         checkFetched()
-      }
+      })
 
-      metaStore.get(KEY_URL).onsuccess = e => {
-        oldUrl = e.target.result
+      getIDB(metaStore, KEY_URL, result => {
+        oldUrl = result
         checkFetched()
-      }
+      })
 
-      emojiStore.getAllKeys().onsuccess = e => {
-        oldKeys = e.target.result
+      getAllKeysIDB(emojiStore, undefined, result => {
+        oldKeys = result
         checkFetched()
-      }
+      })
     })
   } finally {
     stop('loadData')
@@ -79,9 +83,7 @@ export async function loadData (db, emojiBaseData, url, eTag) {
 export async function getEmojiByGroup (db, group) {
   return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
     const range = IDBKeyRange.bound([group, 0], [group + 1, 0], false, true)
-    emojiStore.index(INDEX_GROUP_AND_ORDER).getAll(range).onsuccess = e => {
-      cb(e.target.result)
-    }
+    getAllIDB(emojiStore.index(INDEX_GROUP_AND_ORDER), range, cb)
   })
 }
 
@@ -114,10 +116,10 @@ export async function getEmojiBySearchQuery (db, query) {
       const range = i === tokens.length - 1
         ? IDBKeyRange.bound(token, token + '\uffff', false, true) // treat last token as a prefix search
         : IDBKeyRange.only(token) // treat all other tokens as an exact match
-      emojiStore.index(INDEX_TOKENS).getAll(range).onsuccess = e => {
-        intermediateResults.push(e.target.result)
+      getAllIDB(emojiStore.index(INDEX_TOKENS), range, result => {
+        intermediateResults.push(result)
         checkDone()
-      }
+      })
     }
   })
 }
@@ -131,44 +133,28 @@ export async function getEmojiByShortcode (db, shortcode) {
 }
 
 export async function getEmojiByUnicode (db, unicode) {
-  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
-    emojiStore.get(unicode).onsuccess = e => cb(e.target.result || null)
-  })
+  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => (
+    getIDB(emojiStore, unicode, result => cb(result || null))
+  ))
 }
 
 export function get (db, storeName, key) {
-  return dbPromise(db, storeName, MODE_READONLY, (store, cb) => {
-    if (Array.isArray(key)) {
-      const res = Array(key.length)
-      let todo = 0
-      for (let i = 0; i < key.length; i++) {
-        store.get(key[i]).onsuccess = e => {
-          res[i] = e.target.result
-          if (++todo === key.length) {
-            cb(res)
-          }
-        }
-      }
-    } else {
-      store.get(key).onsuccess = e => cb(e.target.result)
-    }
-  })
+  return dbPromise(db, storeName, MODE_READONLY, (store, cb) => (
+    getIDB(store, key, cb)
+  ))
 }
 
 export function set (db, storeName, key, value) {
-  return dbPromise(db, storeName, MODE_READWRITE, (store, cb) => {
+  return dbPromise(db, storeName, MODE_READWRITE, (store) => (
     store.put(value, key)
-    cb()
-  })
+  ))
 }
 
 export function incrementFavoriteEmojiCount (db, unicode) {
-  return dbPromise(db, STORE_FAVORITES, MODE_READWRITE, (store, cb) => {
-    store.get(unicode).onsuccess = e => {
-      const result = e.target.result || 0
-      store.put(result + 1, unicode)
-      cb()
-    }
+  return dbPromise(db, STORE_FAVORITES, MODE_READWRITE, (store) => {
+    getIDB(store, unicode, result => (
+      store.put((result || 0) + 1, unicode)
+    ))
   })
 }
 
@@ -184,8 +170,7 @@ export function getTopFavoriteEmoji (db, n) {
         return cb(results)
       }
       // TODO: this could be optimized by doing the get and the cursor.continue() in parallel
-      emojiStore.get(cursor.primaryKey).onsuccess = e => {
-        const emoji = e.target.result
+      getIDB(emojiStore, cursor.primaryKey, emoji => {
         if (emoji) {
           results.push(emoji)
           if (results.length === n) {
@@ -193,7 +178,7 @@ export function getTopFavoriteEmoji (db, n) {
           }
         }
         cursor.continue()
-      }
+      })
     }
   })
 }
