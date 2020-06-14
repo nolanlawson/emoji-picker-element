@@ -165,4 +165,16 @@ describe('getEmojiBySearchQuery', () => {
 
     await db.delete()
   })
+
+  test('emoticons, shortcodes', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+
+    expect((await db.getEmojiBySearchQuery(';)')).map(_ => _.annotation)).toStrictEqual(['winking face'])
+    expect((await db.getEmojiBySearchQuery(':wink:')).map(_ => _.annotation)).toStrictEqual(['winking face'])
+    expect((await db.getEmojiBySearchQuery(' :wink: ')).map(_ => _.annotation)).toStrictEqual(['winking face'])
+    expect((await db.getEmojiBySearchQuery(':)')).map(_ => _.annotation)).toStrictEqual(['slightly smiling face'])
+    expect((await db.getEmojiBySearchQuery(' :) ')).map(_ => _.annotation)).toStrictEqual(['slightly smiling face'])
+
+    await db.delete()
+  })
 })
