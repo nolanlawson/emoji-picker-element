@@ -109,6 +109,8 @@ export default class Database {
    * Closes the underlying IndexedDB connection. The Database is not usable after that (or any other Databases
    * with the same locale).
    *
+   * Note that as soon as any other non-close/delete method is called, the database will automatically reopen.
+   *
    */
   close(): Promise<void> {
     return Promise.resolve()
@@ -117,6 +119,8 @@ export default class Database {
   /**
    * Deletes the underlying IndexedDB database. The Database is not usable after that (or any other Databases
    * with the same locale).
+   *
+   * Note that as soon as any other non-close/delete method is called, the database will be recreated.
    *
    */
   delete(): Promise<void> {

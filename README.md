@@ -276,6 +276,8 @@ Name | Type | Default | Description |
 Closes the underlying IndexedDB connection. The Database is not usable after that (or any other Databases
 with the same locale).
 
+Note that as soon as any other non-close/delete method is called, the database will automatically reopen.
+
 **Returns:** *Promise‹void›*
 
 ___
@@ -286,6 +288,8 @@ ___
 
 Deletes the underlying IndexedDB database. The Database is not usable after that (or any other Databases
 with the same locale).
+
+Note that as soon as any other non-close/delete method is called, the database will be recreated.
 
 **Returns:** *Promise‹void›*
 
