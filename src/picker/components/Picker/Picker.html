@@ -123,8 +123,8 @@
         {#each currentEmojis as emoji, i (emoji.unicode)}
           <button role={searchMode ? 'option' : 'menuitem'}
                   {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
-                  aria-label={emojiLabel(emoji)}
-                  title={emojiTitle(emoji)}
+                  aria-label={emoji.label}
+                  title={emoji.title}
                   class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                   data-emoji={emoji.unicode}>
             {unicodeWithSkin(emoji, currentSkinTone)}
@@ -140,8 +140,8 @@
        data-testid="favorites">
     {#each currentFavorites as emoji, i (emoji.unicode)}
       <button role="menuitem"
-              aria-label={emojiLabel(emoji)}
-              title={emojiTitle(emoji)}
+              aria-label={emoji.label}
+              title={emoji.title}
               class="emoji"
               data-emoji={emoji.unicode}>
         {unicodeWithSkin(emoji, currentSkinTone)}

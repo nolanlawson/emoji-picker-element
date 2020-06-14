@@ -3,43 +3,54 @@ import Database from '../../../src/database/Database'
 
 const customEmojis = [
   {
-    shortcode: 'CapitalLettersLikeThis',
+    name: 'CapitalLettersLikeThis',
+    shortcodes: ['CapitalLettersLikeThis'],
     url: 'caps.png'
   },
   {
-    shortcode: 'underscores_like_this',
+    name: 'underscores_like_this',
+    shortcodes: ['underscores_like_this'],
     url: 'underscores.png'
   },
   {
-    shortcode: 'a',
+    name: 'a',
+    shortcodes: ['a'],
     url: 'a.png'
   },
   {
-    shortcode: 'z',
+    name: 'z',
+    shortcodes: ['z'],
     url: 'z.png'
   },
   {
-    shortcode: 'monkey', // conflicts with native emoji
+    name: 'monkey',
+    shortcodes: ['monkey'], // conflicts with native emoji
     url: 'monkey.png'
   },
   {
-    shortcode: 'multiple_results_match',
+    name: 'multiple_results_match',
+    shortcodes: ['multiple_results_match'],
     url: 'multiple1.png'
   },
   {
-    shortcode: 'multiple_results_match_too',
+    name: 'multiple_results_match_too',
+    shortcodes: ['multiple_results_match_too'],
     url: 'multiple2.png'
   },
   {
-    shortcode: 'multiple_results_match_again',
+    name: 'multiple_results_match_again',
+    shortcodes: ['multiple_results_match_again'],
     url: 'multiple3.png'
   }
 ]
 
-const summarize = ({ unicode, shortcode, url }) => {
-  const res = { shortcode, url }
+const summarize = ({ unicode, shortcodes, url, name }) => {
+  const res = { shortcodes, url }
   if (unicode) {
     res.unicode = unicode
+  }
+  if (name) {
+    res.name = name
   }
   return res
 }
@@ -48,7 +59,7 @@ const summaryByUnicode = unicode => {
   const emoji = truncatedEmoji.find(_ => _.emoji === unicode)
   return summarize({
     unicode: emoji.emoji,
-    shortcode: emoji.shortcode
+    shortcodes: emoji.shortcodes
   })
 }
 
@@ -77,17 +88,17 @@ describe('custom emoji', () => {
     db.customEmoji = customEmojis
     expect(db.customEmoji).toStrictEqual(customEmojis)
     expect(await db.getEmojiByShortcode('capitalletterslikethis')).toStrictEqual(
-      { shortcode: 'CapitalLettersLikeThis', url: 'caps.png' }
+      { name: 'CapitalLettersLikeThis', shortcodes: ['CapitalLettersLikeThis'], url: 'caps.png' }
     )
     expect(await db.getEmojiByShortcode('underscores_like_this')).toStrictEqual(
-      { shortcode: 'underscores_like_this', url: 'underscores.png' }
+      { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' }
     )
     expect(await db.getEmojiByShortcode('Underscores_Like_This')).toStrictEqual(
-      { shortcode: 'underscores_like_this', url: 'underscores.png' }
+      { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' }
     )
     // custom emoji take precedence over native in case of conflict
     expect(await db.getEmojiByShortcode('monkey')).toStrictEqual(
-      { shortcode: 'monkey', url: 'monkey.png' }
+      { name: 'monkey', shortcodes: ['monkey'], url: 'monkey.png' }
     )
   })
 
@@ -95,47 +106,115 @@ describe('custom emoji', () => {
     db.customEmoji = customEmojis
 
     expect((await db.getEmojiBySearchQuery('monkey')).map(summarize)).toStrictEqual([
-      { shortcode: 'monkey', url: 'monkey.png' },
+      { name: 'monkey', shortcodes: ['monkey'], url: 'monkey.png' },
       summaryByUnicode('🐵'),
       summaryByUnicode('🐒')
     ])
 
     expect((await db.getEmojiBySearchQuery('undersc'))).toStrictEqual([
-      { shortcode: 'underscores_like_this', url: 'underscores.png' }
+      { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' }
     ])
 
     expect((await db.getEmojiBySearchQuery('underscores lik'))).toStrictEqual([
-      { shortcode: 'underscores_like_this', url: 'underscores.png' }
+      { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' }
     ])
 
-    expect((await db.getEmojiBySearchQuery('undersc like'))).toStrictEqual([
-    ])
-    expect((await db.getEmojiBySearchQuery('undersc lik'))).toStrictEqual([
-    ])
+    expect((await db.getEmojiBySearchQuery('undersc like'))).toStrictEqual([])
+    expect((await db.getEmojiBySearchQuery('undersc lik'))).toStrictEqual([])
 
     expect((await db.getEmojiBySearchQuery('underscores like'))).toStrictEqual([
-      { shortcode: 'underscores_like_this', url: 'underscores.png' }
+      { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' }
     ])
     expect((await db.getEmojiBySearchQuery('underscores like th'))).toStrictEqual([
-      { shortcode: 'underscores_like_this', url: 'underscores.png' }
+      { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' }
     ])
     expect((await db.getEmojiBySearchQuery('underscores like this'))).toStrictEqual([
-      { shortcode: 'underscores_like_this', url: 'underscores.png' }
+      { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' }
     ])
 
     expect((await db.getEmojiBySearchQuery('multiple match'))).toStrictEqual([
       {
-        shortcode: 'multiple_results_match',
+        name: 'multiple_results_match',
+        shortcodes: ['multiple_results_match'],
         url: 'multiple1.png'
       },
       {
-        shortcode: 'multiple_results_match_again',
+        name: 'multiple_results_match_again',
+        shortcodes: ['multiple_results_match_again'],
         url: 'multiple3.png'
       },
       {
-        shortcode: 'multiple_results_match_too',
+        name: 'multiple_results_match_too',
+        shortcodes: ['multiple_results_match_too'],
         url: 'multiple2.png'
       }
+    ])
+  })
+
+  test('increment favorites with custom', async () => {
+    db.customEmoji = customEmojis
+
+    const counts = {
+      '🐵': 5,
+      '🐒': 4,
+      '🤣': 2,
+      '🖐️': 1,
+      '🤏': 6,
+      '✌️': 8,
+      '🐶': 9,
+      '🎉': 3,
+      '✨': 3,
+      CapitalLettersLikeThis: 3,
+      underscores_like_this: 6,
+      monkey: 5
+    }
+
+    for (const [unicodeOrShortcode, count] of Object.entries(counts)) {
+      for (let i = 0; i < count; i++) {
+        await db.incrementFavoriteEmojiCount(unicodeOrShortcode)
+      }
+    }
+
+    expect((await db.getTopFavoriteEmoji(10)).map(summarize)).toStrictEqual([
+      summaryByUnicode('🐶'),
+      summaryByUnicode('✌️'),
+      summaryByUnicode('🤏'),
+      { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' },
+      summaryByUnicode('🐵'),
+      { name: 'monkey', shortcodes: ['monkey'], url: 'monkey.png' },
+      summaryByUnicode('🐒'),
+      summaryByUnicode('🎉'),
+      summaryByUnicode('✨'),
+      { name: 'CapitalLettersLikeThis', shortcodes: ['CapitalLettersLikeThis'], url: 'caps.png' }
+    ])
+
+    expect((await db.getTopFavoriteEmoji(20)).map(summarize)).toStrictEqual([
+      summaryByUnicode('🐶'),
+      summaryByUnicode('✌️'),
+      summaryByUnicode('🤏'),
+      { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' },
+      summaryByUnicode('🐵'),
+      { name: 'monkey', shortcodes: ['monkey'], url: 'monkey.png' },
+      summaryByUnicode('🐒'),
+      summaryByUnicode('🎉'),
+      summaryByUnicode('✨'),
+      { name: 'CapitalLettersLikeThis', shortcodes: ['CapitalLettersLikeThis'], url: 'caps.png' },
+      summaryByUnicode('🤣'),
+      summaryByUnicode('🖐️')
+    ])
+
+    db.customEmoji = []
+    // favorites are now in the database but missing from the in-memory index, so we should just skip them
+    expect((await db.getTopFavoriteEmoji(10)).map(summarize)).toStrictEqual([
+      summaryByUnicode('🐶'),
+      summaryByUnicode('✌️'),
+      summaryByUnicode('🤏'),
+      summaryByUnicode('🐵'),
+      summaryByUnicode('🐒'),
+      summaryByUnicode('🎉'),
+      summaryByUnicode('✨'),
+      summaryByUnicode('🤣'),
+      summaryByUnicode('🖐️')
     ])
   })
 })

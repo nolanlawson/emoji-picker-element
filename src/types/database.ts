@@ -93,11 +93,11 @@ export default class Database {
   /**
    * Increment the favorite count for an emoji by one. The unicode string must be non-empty. It should
    * correspond to the base (non-skin-tone) unicode string from the emoji object, or in the case of
-   * custom emoji, it should be the shortcode.
+   * custom emoji, it should be the name.
    *
-   * @param unicodeOrShortcode - unicode of the native emoji, or shortcode of a custom emoji
+   * @param unicodeOrName - unicode of a native emoji, or name of a custom emoji
    */
-  incrementFavoriteEmojiCount (unicodeOrShortcode: string): Promise<void> {
+  incrementFavoriteEmojiCount (unicodeOrName: string): Promise<void> {
     return Promise.resolve()
   }
 

@@ -10,7 +10,8 @@ export default class Picker extends SveltePicker {
     locale = DEFAULT_LOCALE,
     dataSource = DEFAULT_DATA_SOURCE,
     i18n = enI18n,
-    skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
+    skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI,
+    customEmoji = []
   } = {}) {
     mark('initialLoad')
     // Make the API simpler, directly pass in the props
@@ -19,7 +20,8 @@ export default class Picker extends SveltePicker {
       props: {
         database: new Database({ dataSource, locale }),
         i18n,
-        skinToneEmoji
+        skinToneEmoji,
+        customEmoji
       }
     })
     this._locale = locale

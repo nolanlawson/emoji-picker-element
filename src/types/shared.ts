@@ -90,12 +90,13 @@ export type SkinToneChangeEvent = Modify<UIEvent, {
 }>
 
 export interface EmojiPickerEventMap {
-  "emoji-click": EmojiClickEvent;
-  "skin-tone-change": SkinToneChangeEvent;
+  "emoji-click": EmojiClickEvent
+  "skin-tone-change": SkinToneChangeEvent
 }
 
 export interface CustomEmoji {
-  shortcode: string,
+  name: string
+  shortcodes: string[]
   url: string
 }
 

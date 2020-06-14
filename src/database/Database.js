@@ -129,10 +129,10 @@ export default class Database {
     return set(this._db, STORE_KEYVALUE, KEY_PREFERRED_SKINTONE, skinTone)
   }
 
-  async incrementFavoriteEmojiCount (unicodeOrShortcode) {
-    assertNonEmptyString(unicodeOrShortcode)
+  async incrementFavoriteEmojiCount (unicodeOrName) {
+    assertNonEmptyString(unicodeOrName)
     await this.ready()
-    return incrementFavoriteEmojiCount(this._db, unicodeOrShortcode)
+    return incrementFavoriteEmojiCount(this._db, unicodeOrName)
   }
 
   async getTopFavoriteEmoji (limit) {

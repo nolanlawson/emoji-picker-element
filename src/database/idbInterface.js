@@ -166,13 +166,13 @@ export function getTopFavoriteEmoji (db, customEmojiIndex, limit) {
         cursor.continue()
       }
 
-      const unicodeOrShortcode = cursor.primaryKey
-      const custom = customEmojiIndex.byShortcode(unicodeOrShortcode)
+      const unicodeOrName = cursor.primaryKey
+      const custom = customEmojiIndex.byName(unicodeOrName)
       if (custom) {
         return addResult(custom)
       }
       // TODO: this could be optimized by doing the get and the cursor.continue() in parallel
-      getIDB(emojiStore, unicodeOrShortcode, emoji => {
+      getIDB(emojiStore, unicodeOrName, emoji => {
         if (emoji) {
           return addResult(emoji)
         }

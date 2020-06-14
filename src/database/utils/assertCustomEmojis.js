@@ -1,5 +1,6 @@
 const requiredKeys = [
-  'shortcode',
+  'name',
+  'shortcodes',
   'url'
 ]
 

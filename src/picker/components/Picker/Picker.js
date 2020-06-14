@@ -24,6 +24,7 @@ import {
 } from '../../constants'
 import { uniqBy } from '../../../shared/uniqBy'
 import { mergeI18n } from '../../utils/mergeI18n'
+import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 
 let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
 let i18n = enI18n
@@ -56,6 +57,7 @@ let defaultFavoriteEmojisPromise
 let numColumns = DEFAULT_NUM_COLUMNS
 let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
 let shouldUpdateFavorites = {} // hack to force svelte to recalc favorites
+let customEmoji = []
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
@@ -97,6 +99,12 @@ Promise.resolve().then(() => {
     database = new Database({ dataSource: DEFAULT_DATA_SOURCE, locale: DEFAULT_LOCALE })
   }
 })
+
+$: {
+  if (customEmoji && database) {
+    database.customEmoji = customEmoji
+  }
+}
 
 $: {
   if (i18n !== enI18n) {
@@ -293,26 +301,7 @@ async function filterEmojisByVersion (emojis) {
 }
 
 async function summarizeEmojis (emojis) {
-  const emojiSupportLevel = await emojiSupportLevelPromise
-  // We don't need all the data on every emoji, so we can conserve memory by removing it
-  // Also we can simplify the way we access the "skins" object
-  const toSimpleSkinsMap = skins => {
-    const res = {}
-    for (const skin of skins) {
-      // ignore arrays like [1, 2] with multiple skin tones
-      // also ignore variants that are in an unsupported emoji version
-      // (these do exist - variants from a different version than their base emoji)
-      if (typeof skin.tone === 'number' && skin.version <= emojiSupportLevel) {
-        res[skin.tone] = skin.unicode
-      }
-    }
-    return res
-  }
-  return emojis.map(({ unicode, skins, shortcodes }) => ({
-    unicode,
-    skins: skins && toSimpleSkinsMap(skins),
-    shortcodes
-  }))
+  return summarizeEmojisForUI(emojis, await emojiSupportLevelPromise)
 }
 
 async function getEmojisByGroup (group) {
@@ -480,18 +469,12 @@ async function onSkinToneOptionsBlur () {
     skinTonePickerExpanded = false
   }
 }
-// eslint-disable-next-line no-unused-vars
-function emojiLabel (emoji) {
-  return emoji.unicode + ', ' + emoji.shortcodes.join(', ')
-}
-
-// eslint-disable-next-line no-unused-vars
-function emojiTitle (emoji) {
-  return emoji.shortcodes.join(', ')
-}
 
 // eslint-disable-next-line no-unused-vars
 function unicodeWithSkin (emoji, currentSkinTone) {
+  if (!emoji.unicode) { // custom emoji
+    return ''
+  }
   if (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) {
     return emoji.skins[currentSkinTone]
   }
@@ -501,5 +484,6 @@ function unicodeWithSkin (emoji, currentSkinTone) {
 export {
   database,
   i18n,
-  skinToneEmoji
+  skinToneEmoji,
+  customEmoji
 }

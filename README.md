@@ -542,15 +542,19 @@ Custom emoji should follow the format:
 ```js
 [
   {
-    shortcode: 'foo',
+    name: 'foo',
+    shortcodes: ['foo'],
     url: 'http://example.com/foo.png'
   },
   {
-    shortcode: 'bar',
+    name: 'bar',
+    shortcodes: ['bar'],
     url: 'http://example.com/bar.png'
   }  
 ]
 ```
+
+Note that names are assumed to be unique (case-insensitive), and it's assumed that the `shortcodes` have at least one entry.
 
 To pass custom emoji into the `Picker`:
 
