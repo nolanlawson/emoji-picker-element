@@ -26,6 +26,7 @@ describe('Picker tests', () => {
     picker = new Picker({ dataSource: ALL_EMOJI, locale: 'en' })
     document.body.appendChild(picker)
     container = picker.shadowRoot.querySelector('.picker')
+    await tick(20)
     await waitFor(() => expect(
       testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup1)
     )

@@ -21,6 +21,18 @@ const customEmojis = [
   {
     shortcode: 'monkey', // conflicts with native emoji
     url: 'monkey.png'
+  },
+  {
+    shortcode: 'multiple_results_match',
+    url: 'multiple1.png'
+  },
+  {
+    shortcode: 'multiple_results_match_too',
+    url: 'multiple2.png'
+  },
+  {
+    shortcode: 'multiple_results_match_again',
+    url: 'multiple3.png'
   }
 ]
 
@@ -55,9 +67,10 @@ describe('custom emoji', () => {
 
   test('errors', () => {
     db.customEmoji = [] // empty arrays are fine
-    expect(() => { db.customEmoji = null }).toThrow()
-    expect(() => { db.customEmoji = 'foo' }).toThrow()
-    expect(() => { db.customEmoji = [{}] }).toThrow()
+    expect(() => { db.customEmoji = null }).toThrow(/Expected custom emojis/)
+    expect(() => { db.customEmoji = 'foo' }).toThrow(/Expected custom emojis/)
+    expect(() => { db.customEmoji = [{}] }).toThrow(/Expected custom emojis/)
+    expect(() => { db.customEmoji = [null] }).toThrow(/Expected custom emojis/)
   })
 
   test('getEmojiByShortcode', async () => {
@@ -108,6 +121,21 @@ describe('custom emoji', () => {
     ])
     expect((await db.getEmojiBySearchQuery('underscores like this'))).toStrictEqual([
       { shortcode: 'underscores_like_this', url: 'underscores.png' }
+    ])
+
+    expect((await db.getEmojiBySearchQuery('multiple match'))).toStrictEqual([
+      {
+        shortcode: 'multiple_results_match',
+        url: 'multiple1.png'
+      },
+      {
+        shortcode: 'multiple_results_match_again',
+        url: 'multiple3.png'
+      },
+      {
+        shortcode: 'multiple_results_match_too',
+        url: 'multiple2.png'
+      }
     ])
   })
 })

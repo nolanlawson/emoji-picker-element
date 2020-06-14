@@ -1,6 +1,7 @@
 import { trie } from './utils/trie'
 import { extractTokens } from './utils/extractTokens'
 import { assertCustomEmojis } from './utils/assertCustomEmojis'
+import { findCommonMembers } from './utils/findCommonMembers'
 
 export function customEmojiIndex (customEmojis) {
   assertCustomEmojis(customEmojis)
@@ -17,15 +18,7 @@ export function customEmojiIndex (customEmojis) {
       ...searchTokens.slice(0, -1).map(byExactMatch),
       byPrefix(searchTokens[searchTokens.length - 1])
     ]
-    const shortestArray = intermediateResults.sort((a, b) => (a.length < b.length ? -1 : 1))[0]
-    const results = []
-    for (const item of shortestArray) {
-      // if this item is included in every array in the intermediate results, add it to the final results
-      if (!intermediateResults.some(array => array.findIndex(_ => _.shortcode === item.shortcode) === -1)) {
-        results.push(item)
-      }
-    }
-    return results.sort((a, b) => a.shortcode < b.shortcode ? -1 : 1)
+    return findCommonMembers(intermediateResults, _ => _.shortcode).sort((a, b) => a.shortcode < b.shortcode ? -1 : 1)
   }
 
   // shortcodes to custom emoji

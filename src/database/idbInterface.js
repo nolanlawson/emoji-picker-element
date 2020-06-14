@@ -10,6 +10,7 @@ import { transformEmojiBaseData } from './utils/transformEmojiBaseData'
 import { mark, stop } from '../shared/marks'
 import { extractTokens } from './utils/extractTokens'
 import { getAllIDB, getAllKeysIDB, getIDB } from './idbUtil'
+import { findCommonMembers } from './utils/findCommonMembers'
 
 export async function isEmpty (db) {
   return !(await get(db, STORE_KEYVALUE, KEY_URL))
@@ -94,14 +95,7 @@ export async function getEmojiBySearchQuery (db, query) {
     }
 
     const onDone = () => {
-      const results = []
-      const shortestArray = intermediateResults.sort((a, b) => (a.length < b.length ? -1 : 1))[0]
-      for (const item of shortestArray) {
-        // if this item is included in every array in the intermediate results, add it to the final results
-        if (!intermediateResults.some(array => array.findIndex(_ => _.unicode === item.unicode) === -1)) {
-          results.push(item)
-        }
-      }
+      const results = findCommonMembers(intermediateResults, _ => _.unicode)
       cb(results.sort((a, b) => a.order < b.order ? -1 : 1))
     }
 
