@@ -427,8 +427,7 @@ async function onClickSkinToneButton (event) {
   activeSkinTone = currentSkinTone
   if (skinTonePickerExpanded) {
     halt(event)
-    await tick()
-    focus(`skintone-${activeSkinTone}`)
+    requestAnimationFrame(() => focus(`skintone-${activeSkinTone}`))
   }
 }
 
