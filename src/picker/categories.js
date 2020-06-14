@@ -6,7 +6,7 @@ export const categories = [
   [4, '🍎', 'food-drink'],
   [5, '🏠️', 'travel-places'],
   [6, '⚽', 'activities'],
-  [7, '✏', 'objects'],
-  [8, '✅', 'symbols'],
+  [7, '📝', 'objects'],
+  [8, '⛔️', 'symbols'],
   [9, '🏁', 'flags']
 ].map(([group, emoji, name]) => ({ group, emoji, name }))
