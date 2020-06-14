@@ -42,15 +42,11 @@ export async function loadData (db, emojiBaseData, url, eTag) {
           // check again within the transaction to guard against concurrency, e.g. multiple browser tabs
           return
         }
-        if (oldKeys.length) {
-          for (const key of oldKeys) {
-            emojiStore.delete(key)
-          }
+        // delete old data
+        for (const key of oldKeys) {
+          emojiStore.delete(key)
         }
-        insertData()
-      }
-
-      function insertData () {
+        // insert new data
         for (const data of transformedData) {
           emojiStore.put(data)
         }
