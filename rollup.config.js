@@ -28,6 +28,7 @@ const baseConfig = {
     svelte({
       css: true,
       customElement: true,
+      accessors: false,
       dev,
       preprocess: autoPreprocess()
     }),
