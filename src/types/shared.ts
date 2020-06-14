@@ -7,7 +7,7 @@ export enum SkinTone {
   Dark = 5
 }
 
-export interface Emoji {
+export interface NativeEmoji {
   annotation: string
   emoticon?: string
   group: number
@@ -98,3 +98,5 @@ export interface CustomEmoji {
   shortcode: string,
   url: string
 }
+
+export type Emoji = NativeEmoji | CustomEmoji

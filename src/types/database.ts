@@ -1,4 +1,4 @@
-import {Emoji, DatabaseConstructorOptions, SkinTone, CustomEmoji} from "./shared";
+import {Emoji, DatabaseConstructorOptions, SkinTone, CustomEmoji, NativeEmoji} from "./shared";
 
 export default class Database {
 
@@ -31,12 +31,13 @@ export default class Database {
   }
 
   /**
-   * Returns all emoji belonging to a group, ordered by `order`.
+   * Returns all emoji belonging to a group, ordered by `order`. Only returns native emoji;
+   * custom emoji don't belong to a group.
    *
    * Non-numbers throw an error.
    * @param group - the group number
    */
-  getEmojiByGroup(group: number): Promise<Emoji[]> {
+  getEmojiByGroup(group: number): Promise<NativeEmoji[]> {
     return Promise.resolve([])
   }
 
@@ -69,7 +70,7 @@ export default class Database {
    * Empty/null strings throw an error.
    * @param unicode - unicode string
    */
-  getEmojiByUnicode(unicode: string): Promise<Emoji | null> {
+  getEmojiByUnicode(unicode: string): Promise<NativeEmoji | null> {
     return Promise.resolve(null)
   }
 
@@ -111,8 +112,6 @@ export default class Database {
   /**
    * Set the custom emoji for this database. Throws an error if custom emoji are not in the correct format.
    *
-   * Note that custom emoji are kept in-memory, not in IndexedDB. So they are not shared against separate
-   * Database instances.
    *
    * @param customEmoji
    */

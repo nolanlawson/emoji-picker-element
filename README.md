@@ -263,10 +263,33 @@ same underlying IndexedDB connection and database.
 
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
+`customEmoji` | CustomEmoji] | [] | Array of custom emoji  |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from |
-`locale` | string | "en" | Locale string  |
+`locale` | string | "en" | Locale string |
 
-**Returns:** *Database*
+**Returns:** *[Database*
+
+### Accessors
+
+####  customEmoji
+
+• **get customEmoji**(): *CustomEmoji]*
+
+Return the custom emoji associated with this Database, or the empty array if none.
+
+**Returns:** *[CustomEmoji]*
+
+• **set customEmoji**(`customEmoji`: [CustomEmoji]): *void*
+
+Set the custom emoji for this database. Throws an error if custom emoji are not in the correct format.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`customEmoji` | [CustomEmoji] |   |
+
+**Returns:** *void*
 
 
 
@@ -298,9 +321,10 @@ ___
 
 ####  getEmojiByGroup
 
-▸ **getEmojiByGroup**(`group`: number): *Promise‹Emoji]›*
+▸ **getEmojiByGroup**(`group`: number): *Promise‹[NativeEmoji]›*
 
-Returns all emoji belonging to a group, ordered by `order`.
+Returns all emoji belonging to a group, ordered by `order`. Only returns native emoji;
+custom emoji don't belong to a group.
 
 Non-numbers throw an error.
 
@@ -310,7 +334,7 @@ Name | Type | Description |
 ------ | ------ | ------ |
 `group` | number | the group number  |
 
-**Returns:** *Promise‹[Emoji]›*
+**Returns:** *Promise‹[NativeEmoji]›*
 
 ___
 
@@ -354,7 +378,7 @@ ___
 
 ####  getEmojiByUnicode
 
-▸ **getEmojiByUnicode**(`unicode`: string): *Promise‹Emoji | null›*
+▸ **getEmojiByUnicode**(`unicode`: string): *Promise‹NativeEmoji | null›*
 
 Return a single emoji matching the unicode string, or null if not found.
 
@@ -366,7 +390,7 @@ Name | Type | Description |
 ------ | ------ | ------ |
 `unicode` | string | unicode string  |
 
-**Returns:** *Promise‹Emoji | null›*
+**Returns:** *Promise‹NativeEmoji | null›*
 
 ___
 
@@ -382,7 +406,7 @@ ___
 
 ####  getTopFavoriteEmoji
 
-▸ **getTopFavoriteEmoji**(`n`: number): *Promise‹Emoji]›*
+▸ **getTopFavoriteEmoji**(`limit`: number): *Promise‹Emoji]›*
 
 Get the top favorite emoji in descending order. If there are no favorite emoji yet, returns an empty array.
 
@@ -390,7 +414,7 @@ Get the top favorite emoji in descending order. If there are no favorite emoji y
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`n` | number | maximum number of results to return  |
+`limit` | number | maximum number of results to return  |
 
 **Returns:** *Promise‹[Emoji]›*
 
@@ -398,16 +422,17 @@ ___
 
 ####  incrementFavoriteEmojiCount
 
-▸ **incrementFavoriteEmojiCount**(`unicode`: string): *Promise‹void›*
+▸ **incrementFavoriteEmojiCount**(`unicodeOrShortcode`: string): *Promise‹void›*
 
 Increment the favorite count for an emoji by one. The unicode string must be non-empty. It should
-correspond to the base (non-skin-tone) unicode string from the emoji object.
+correspond to the base (non-skin-tone) unicode string from the emoji object, or in the case of
+custom emoji, it should be the shortcode.
 
 **Parameters:**
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`unicode` | string | unicode of the emoji to increment  |
+`unicodeOrShortcode` | string | unicode of the native emoji, or shortcode of a custom emoji  |
 
 **Returns:** *Promise‹void›*
 
