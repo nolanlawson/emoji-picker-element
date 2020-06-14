@@ -29,6 +29,7 @@ export interface EmojiSkin {
 export interface DatabaseConstructorOptions {
   dataSource?: string
   locale?: string
+  customEmoji?: CustomEmoji[]
 }
 
 export interface PickerConstructorOptions {
@@ -91,4 +92,9 @@ export type SkinToneChangeEvent = Modify<UIEvent, {
 export interface EmojiPickerEventMap {
   "emoji-click": EmojiClickEvent;
   "skin-tone-change": SkinToneChangeEvent;
+}
+
+export interface CustomEmoji {
+  shortcode: string,
+  url: string
 }

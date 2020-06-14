@@ -152,25 +152,37 @@ export function incrementFavoriteEmojiCount (db, unicode) {
   })
 }
 
-export function getTopFavoriteEmoji (db, n) {
-  if (n === 0) {
+export function getTopFavoriteEmoji (db, customEmojiIndex, limit) {
+  if (limit === 0) {
     return []
   }
   return dbPromise(db, [STORE_FAVORITES, STORE_EMOJI], MODE_READONLY, ([favoritesStore, emojiStore], cb) => {
     const results = []
     favoritesStore.index(INDEX_COUNT).openCursor(undefined, 'prev').onsuccess = e => {
       const cursor = e.target.result
-      if (!cursor) {
+      if (!cursor) { // no more results
         return cb(results)
       }
-      // TODO: this could be optimized by doing the get and the cursor.continue() in parallel
-      getIDB(emojiStore, cursor.primaryKey, emoji => {
-        if (emoji) {
-          results.push(emoji)
-          if (results.length === n) {
-            return cb(results)
-          }
+
+      function addResult (result) {
+        results.push(result)
+        if (results.length === limit) {
+          return cb(results) // done, reached the limit
         }
+        cursor.continue()
+      }
+
+      const unicodeOrShortcode = cursor.primaryKey
+      const custom = customEmojiIndex.byShortcode(unicodeOrShortcode)
+      if (custom) {
+        return addResult(custom)
+      }
+      // TODO: this could be optimized by doing the get and the cursor.continue() in parallel
+      getIDB(emojiStore, unicodeOrShortcode, emoji => {
+        if (emoji) {
+          return addResult(emoji)
+        }
+        // emoji not found somehow, ignore (may happen if custom emoji change)
         cursor.continue()
       })
     }

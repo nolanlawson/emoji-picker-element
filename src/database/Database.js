@@ -16,6 +16,7 @@ import {
 } from './idbInterface'
 import { log } from '../shared/log'
 import { getETag, getETagAndData } from './utils/ajax'
+import { customEmojiIndex } from './customEmojiIndex'
 
 async function checkForUpdates (db, dataSource) {
   // just do a simple HEAD request first to see if the eTags match
@@ -53,12 +54,14 @@ async function loadDataForFirstTime (db, dataSource) {
 }
 
 export default class Database {
-  constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE } = {}) {
+  constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE, customEmoji = [] } = {}) {
     this._dataSource = dataSource
     this._locale = locale
     this._dbName = `emoji-picker-element-${this._locale}`
     this._db = undefined
     this._lazyUpdate = undefined
+    this._custom = customEmojiIndex(customEmoji)
+
     this._ready = this._init()
   }
 
@@ -91,13 +94,21 @@ export default class Database {
   async getEmojiBySearchQuery (query) {
     assertNonEmptyString(query)
     await this.ready()
-    const emojis = await getEmojiBySearchQuery(this._db, query)
-    return uniqEmoji(emojis)
+    const customs = this._custom.search(query)
+    const natives = uniqEmoji(await getEmojiBySearchQuery(this._db, query))
+    return [
+      ...customs,
+      ...natives
+    ]
   }
 
   async getEmojiByShortcode (shortcode) {
     assertNonEmptyString(shortcode)
     await this.ready()
+    const custom = this._custom.byShortcode(shortcode)
+    if (custom) {
+      return custom
+    }
     return getEmojiByShortcode(this._db, shortcode)
   }
 
@@ -118,16 +129,24 @@ export default class Database {
     return set(this._db, STORE_KEYVALUE, KEY_PREFERRED_SKINTONE, skinTone)
   }
 
-  async incrementFavoriteEmojiCount (unicode) {
-    assertNonEmptyString(unicode)
+  async incrementFavoriteEmojiCount (unicodeOrShortcode) {
+    assertNonEmptyString(unicodeOrShortcode)
     await this.ready()
-    return incrementFavoriteEmojiCount(this._db, unicode)
+    return incrementFavoriteEmojiCount(this._db, unicodeOrShortcode)
   }
 
-  async getTopFavoriteEmoji (n) {
-    assertNumber(n)
+  async getTopFavoriteEmoji (limit) {
+    assertNumber(limit)
     await this.ready()
-    return getTopFavoriteEmoji(this._db, n)
+    return getTopFavoriteEmoji(this._db, this._custom, limit)
+  }
+
+  set customEmoji (customEmojis) {
+    this._custom = customEmojiIndex(customEmojis)
+  }
+
+  get customEmoji () {
+    return this._custom.all
   }
 
   async _shutdown () {

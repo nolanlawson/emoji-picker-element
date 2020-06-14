@@ -1,7 +1,7 @@
 emoji-picker-element
 ====
 
-A lightweight emoji picker, distributed as a custom element.
+A lightweight emoji picker, built as a custom element.
 
 It's built on top of IndexedDB, so it consumes [far less memory](#benchmarks) than other emoji pickers.
 It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint.
@@ -9,9 +9,10 @@ It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint
 Design goals:
 
 - Store emoji data in IndexedDB
-- Render native emoji
+- Render native emoji, no spritesheets
 - Accessible
 - Drop-in as a vanilla web component
+- Support custom emoji
 
 ## Install
 
@@ -504,6 +505,50 @@ picker.addEventListener('skin-tone-change', event => {
 ```
 
 Note that skin tones are an integer from 0 (default) to 1 (light) through 5 (dark).
+
+### Custom emoji
+
+Both the Picker and the Database support custom emoji. Unlike regular emoji, custom emoji
+are kept in-memory. (It's assumed that they're small, and they might frequently change, so
+there's not much point in storing them in IndexedDB.)
+
+Custom emoji should follow the format:
+
+```js
+[
+  {
+    shortcode: 'foo',
+    url: 'http://example.com/foo.png'
+  },
+  {
+    shortcode: 'bar',
+    url: 'http://example.com/bar.png'
+  }  
+]
+```
+
+To pass custom emoji into the `Picker`:
+
+```js
+const picker = new Picker({
+  customEmoji: [/* ... */]
+})
+```
+
+Or the `Database`:
+
+```js
+const database = new Database({
+  customEmoji: [/* ... */]
+})
+```
+
+It can also be set at runtime:
+
+```js
+picker.customEmoji = [/* ... */ ]
+database.customEmoji = [/* ... */ ]
+```
 
 ### Tree-shaking
 

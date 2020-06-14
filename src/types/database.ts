@@ -1,4 +1,4 @@
-import {Emoji, DatabaseConstructorOptions, SkinTone} from "./shared";
+import {Emoji, DatabaseConstructorOptions, SkinTone, CustomEmoji} from "./shared";
 
 export default class Database {
 
@@ -10,10 +10,12 @@ export default class Database {
    *
    * @param dataSource - URL to fetch the emojibase data from
    * @param locale - Locale string
+   * @param customEmoji - Array of custom emoji
    */
   constructor({
                 dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json',
-                locale = 'en'
+                locale = 'en',
+                customEmoji = []
               }: DatabaseConstructorOptions = {}) {
   }
 
@@ -89,20 +91,39 @@ export default class Database {
 
   /**
    * Increment the favorite count for an emoji by one. The unicode string must be non-empty. It should
-   * correspond to the base (non-skin-tone) unicode string from the emoji object.
+   * correspond to the base (non-skin-tone) unicode string from the emoji object, or in the case of
+   * custom emoji, it should be the shortcode.
    *
-   * @param unicode - unicode of the emoji to increment
+   * @param unicodeOrShortcode - unicode of the native emoji, or shortcode of a custom emoji
    */
-  incrementFavoriteEmojiCount (unicode: string): Promise<void> {
+  incrementFavoriteEmojiCount (unicodeOrShortcode: string): Promise<void> {
     return Promise.resolve()
   }
 
   /**
    * Get the top favorite emoji in descending order. If there are no favorite emoji yet, returns an empty array.
-   * @param n - maximum number of results to return
+   * @param limit - maximum number of results to return
    */
-  getTopFavoriteEmoji (n: number): Promise<Emoji[]> {
+  getTopFavoriteEmoji (limit: number): Promise<Emoji[]> {
     return Promise.resolve([])
+  }
+
+  /**
+   * Set the custom emoji for this database. Throws an error if custom emoji are not in the correct format.
+   *
+   * Note that custom emoji are kept in-memory, not in IndexedDB. So they are not shared against separate
+   * Database instances.
+   *
+   * @param customEmoji
+   */
+  set customEmoji(customEmoji: CustomEmoji[]) {
+  }
+
+  /**
+   * Return the custom emoji associated with this Database, or the empty array if none.
+   */
+  get customEmoji(): CustomEmoji[] {
+    return []
   }
 
   /**
