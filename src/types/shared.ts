@@ -57,6 +57,7 @@ export interface I18n {
 }
 
 export interface I18nCategories {
+  custom: string,
   'smileys-emotion': string
   'people-body': string
   'animals-nature': string

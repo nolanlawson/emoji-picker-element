@@ -192,6 +192,7 @@ Here is the default English `i81n` object (`"en"` locale):
 ```json
 {
   "categories": {
+    "custom": "Custom",
     "smileys-emotion": "Smileys and emoticons",
     "people-body": "People and body",
     "animals-nature": "Animals and nature",
@@ -319,9 +320,25 @@ Note that as soon as any other non-close/delete method is called, the database w
 
 ___
 
+####  getCustomEmojiByName
+
+▸ **getCustomEmojiByName**(`name`: string): *[CustomEmoji | null*
+
+Return the custom emoji corresponding to the string name, or null if not found. Throws if the name is empty.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`name` | string |   |
+
+**Returns:** *CustomEmoji | null*
+
+___
+
 ####  getEmojiByGroup
 
-▸ **getEmojiByGroup**(`group`: number): *Promise‹[NativeEmoji]›*
+▸ **getEmojiByGroup**(`group`: number): *Promise‹NativeEmoji]›*
 
 Returns all emoji belonging to a group, ordered by `order`. Only returns native emoji;
 custom emoji don't belong to a group.
@@ -422,17 +439,17 @@ ___
 
 ####  incrementFavoriteEmojiCount
 
-▸ **incrementFavoriteEmojiCount**(`unicodeOrShortcode`: string): *Promise‹void›*
+▸ **incrementFavoriteEmojiCount**(`unicodeOrName`: string): *Promise‹void›*
 
 Increment the favorite count for an emoji by one. The unicode string must be non-empty. It should
 correspond to the base (non-skin-tone) unicode string from the emoji object, or in the case of
-custom emoji, it should be the shortcode.
+custom emoji, it should be the name.
 
 **Parameters:**
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`unicodeOrShortcode` | string | unicode of the native emoji, or shortcode of a custom emoji  |
+`unicodeOrName` | string | unicode of a native emoji, or name of a custom emoji  |
 
 **Returns:** *Promise‹void›*
 
