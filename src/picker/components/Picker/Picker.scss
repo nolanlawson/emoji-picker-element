@@ -79,9 +79,13 @@ button.emoji,
   line-height: 1;
   overflow: hidden;
   font-family: var(--font-family);
+  -webkit-tap-highlight-color: transparent; // see https://stackoverflow.com/a/21003770/680742
 
-  &:hover {
-    background: var(--button-hover-background);
+  // see https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/
+  @media(hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--button-hover-background);
+    }
   }
 
   &:active,
