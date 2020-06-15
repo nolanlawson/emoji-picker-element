@@ -5,6 +5,8 @@ const LIGHT_SKIN_TONE = 0x1F3FB
 const LIGHT_SKIN_TONE_MODIFIER = 0xdffb
 
 // TODO: this is a naive implementation, we can improve it later
+// It's only used for the skintone picker, so as long as people don't customize with
+// really exotic emoji then it should work fine
 export function applySkinTone (str, skinTone) {
   if (skinTone === 0) {
     return str
