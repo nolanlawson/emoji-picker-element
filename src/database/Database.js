@@ -112,10 +112,14 @@ export default class Database {
     return getEmojiByShortcode(this._db, shortcode)
   }
 
-  async getEmojiByUnicode (unicode) {
-    assertNonEmptyString(unicode)
+  async getEmojiByUnicodeOrName (unicodeOrName) {
+    assertNonEmptyString(unicodeOrName)
     await this.ready()
-    return getEmojiByUnicode(this._db, unicode)
+    const custom = this._custom.byName(unicodeOrName)
+    if (custom) {
+      return custom
+    }
+    return getEmojiByUnicode(this._db, unicodeOrName)
   }
 
   async getPreferredSkinTone () {
@@ -147,11 +151,6 @@ export default class Database {
 
   get customEmoji () {
     return this._custom.all
-  }
-
-  getCustomEmojiByName (name) {
-    assertNonEmptyString(name)
-    return this._custom.byName(name) || null
   }
 
   async _shutdown () {

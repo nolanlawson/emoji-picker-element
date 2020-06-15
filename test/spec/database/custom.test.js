@@ -220,12 +220,12 @@ describe('custom emoji', () => {
 
   test('get custom emoji by name', async () => {
     db.customEmoji = customEmojis
-    expect(db.getCustomEmojiByName('underscores_like_this')).toStrictEqual(
+    expect(await db.getEmojiByUnicodeOrName('underscores_like_this')).toStrictEqual(
       { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' }
     )
-    expect(db.getCustomEmojiByName('capitalletterslikethis')).toStrictEqual(
+    expect(await db.getEmojiByUnicodeOrName('capitalletterslikethis')).toStrictEqual(
       { name: 'CapitalLettersLikeThis', shortcodes: ['CapitalLettersLikeThis'], url: 'caps.png' }
     )
-    expect(db.getCustomEmojiByName('unknown')).toBeNull()
+    expect(await db.getEmojiByUnicodeOrName('unknown')).toBeNull()
   })
 })

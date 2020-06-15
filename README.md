@@ -320,25 +320,9 @@ Note that as soon as any other non-close/delete method is called, the database w
 
 ___
 
-####  getCustomEmojiByName
-
-▸ **getCustomEmojiByName**(`name`: string): *[CustomEmoji | null*
-
-Return the custom emoji corresponding to the string name, or null if not found. Throws if the name is empty.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`name` | string |   |
-
-**Returns:** *CustomEmoji | null*
-
-___
-
 ####  getEmojiByGroup
 
-▸ **getEmojiByGroup**(`group`: number): *Promise‹NativeEmoji]›*
+▸ **getEmojiByGroup**(`group`: number): *Promise‹[NativeEmoji]›*
 
 Returns all emoji belonging to a group, ordered by `order`. Only returns native emoji;
 custom emoji don't belong to a group.
@@ -393,11 +377,12 @@ Name | Type | Description |
 
 ___
 
-####  getEmojiByUnicode
+####  getEmojiByUnicodeOrName
 
-▸ **getEmojiByUnicode**(`unicode`: string): *Promise‹NativeEmoji | null›*
+▸ **getEmojiByUnicodeOrName**(`unicodeOrName`: string): *Promise‹Emoji | null›*
 
-Return a single emoji matching the unicode string, or null if not found.
+Return a single native emoji matching the unicode string, or
+a custom emoji matching the name, or null if not found.
 
 Empty/null strings throw an error.
 
@@ -405,9 +390,9 @@ Empty/null strings throw an error.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`unicode` | string | unicode string  |
+`unicodeOrName` | string | unicode (native emoji) or name (custom emoji)  |
 
-**Returns:** *Promise‹NativeEmoji | null›*
+**Returns:** *Promise‹Emoji | null›*
 
 ___
 

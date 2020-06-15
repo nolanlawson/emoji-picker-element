@@ -20,7 +20,7 @@ describe('offline first', () => {
     db = new Database({ dataSource: ALL_EMOJI })
     await db.ready()
     await expect(() => db._lazyUpdate).rejects.toThrow()
-    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await db.close()
     await db.delete()
   })

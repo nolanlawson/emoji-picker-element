@@ -106,33 +106,33 @@ describe('database tests', () => {
 
   test('close and then use afterwards should work okay', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
-    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await db.close()
-    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await db.delete()
   })
 
   test('simultaneous closes', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
-    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await Promise.all([db.close(), db.close()])
-    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await db.delete()
   })
 
   test('simultaneous close and delete', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
-    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await Promise.all([db.close(), db.delete()])
-    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await db.delete()
   })
 
   test('delete and then use afterwards should work okay', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
-    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await db.delete()
-    expect((await db.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await db.delete()
   })
 
@@ -142,9 +142,9 @@ describe('database tests', () => {
     const db2 = new Database({ dataSource: ALL_EMOJI })
     await db2.ready()
     await db1.close()
-    expect((await db1.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db1.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await db2.close()
-    expect((await db2.getEmojiByUnicode('🐵')).annotation).toBe('monkey face')
+    expect((await db2.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     const db3 = new Database({ dataSource: ALL_EMOJI })
     await db3.ready()
     await db3.delete()
@@ -174,7 +174,7 @@ describe('database tests', () => {
     const db2 = new Database({ dataSource: ALL_EMOJI })
     await db2.ready()
     await db2._lazyUpdate
-    const queryPromise = db2.getEmojiByUnicode('🐵')
+    const queryPromise = db2.getEmojiByUnicodeOrName('🐵')
     const closePromise = db1.close()
     expect(await queryPromise)
     await closePromise

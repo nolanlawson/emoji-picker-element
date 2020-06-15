@@ -158,7 +158,7 @@ $: {
   async function updateDefaultFavoriteEmojis () {
     if (database) {
       defaultFavoriteEmojis = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
-        database.getEmojiByUnicode(unicode)
+        database.getEmojiByUnicodeOrName(unicode)
       )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
     }
   }
@@ -387,8 +387,7 @@ function fireEvent (name, detail) {
 }
 
 async function clickEmoji (unicodeOrName) {
-  const emoji = database.getCustomEmojiByName(unicodeOrName) ||
-    await database.getEmojiByUnicode(unicodeOrName)
+  const emoji = await database.getEmojiByUnicodeOrName(unicodeOrName)
   const emojiSummary = [...currentEmojis, ...currentFavorites]
     .find(_ => (_.unicode === unicodeOrName || _.name === unicodeOrName))
   const skinTonedUnicode = emojiSummary.unicode && unicodeWithSkin(emojiSummary, currentSkinTone)

@@ -65,12 +65,13 @@ export default class Database {
   }
 
   /**
-   * Return a single emoji matching the unicode string, or null if not found.
+   * Return a single native emoji matching the unicode string, or
+   * a custom emoji matching the name, or null if not found.
    *
    * Empty/null strings throw an error.
-   * @param unicode - unicode string
+   * @param unicodeOrName - unicode (native emoji) or name (custom emoji)
    */
-  getEmojiByUnicode(unicode: string): Promise<NativeEmoji | null> {
+  getEmojiByUnicodeOrName(unicodeOrName: string): Promise<Emoji | null> {
     return Promise.resolve(null)
   }
 
@@ -123,15 +124,6 @@ export default class Database {
    */
   get customEmoji(): CustomEmoji[] {
     return []
-  }
-
-  /**
-   * Return the custom emoji corresponding to the string name, or null if not found. Throws if the name is empty.
-   *
-   * @param name
-   */
-  getCustomEmojiByName(name: string): CustomEmoji | null {
-    return null
   }
 
   /**
