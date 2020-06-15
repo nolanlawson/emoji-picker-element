@@ -312,7 +312,11 @@ $: {
 }
 
 function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
-  checkZwjSupport(zwjEmojisToCheck, rootElement.getRootNode(), baselineEmoji)
+  const rootNode = rootElement.getRootNode()
+  const emojiToDomNode = emoji => (
+    rootNode.querySelector(`[data-emoji=${JSON.stringify(emoji.unicode)}]`)
+  )
+  checkZwjSupport(zwjEmojisToCheck, baselineEmoji, emojiToDomNode)
   // force update
   currentEmojis = currentEmojis // eslint-disable-line no-self-assign
   if (initialLoad) {

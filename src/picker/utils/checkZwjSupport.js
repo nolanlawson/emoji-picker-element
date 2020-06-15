@@ -5,10 +5,10 @@ import { log } from '../../shared/log'
 
 let baselineEmojiWidth
 
-export function checkZwjSupport (zwjEmojisToCheck, rootNode, baselineEmoji) {
+export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode) {
   mark('checkZwjSupport')
   for (const emoji of zwjEmojisToCheck) {
-    const domNode = rootNode.querySelector(`[data-emoji=${JSON.stringify(emoji.unicode)}]`)
+    const domNode = emojiToDomNode(emoji)
     if (!domNode) { // happens rarely, mostly in jest tests
       continue
     }
