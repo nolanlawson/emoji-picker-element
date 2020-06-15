@@ -6,10 +6,12 @@ import { findCommonMembers } from './utils/findCommonMembers'
 export function customEmojiIndex (customEmojis) {
   assertCustomEmojis(customEmojis)
 
+  const sortByName = (a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
+
   //
   // all()
   //
-  const all = customEmojis.sort((a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
+  const all = customEmojis.sort(sortByName)
 
   //
   // search()
@@ -25,13 +27,11 @@ export function customEmojiIndex (customEmojis) {
   // is treated as a prefix search, but every other one is treated as an exact match.
   // Then we AND the results together
   const search = query => {
-    const searchTokens = extractTokens(query)
-    const intermediateResults = [
-      ...searchTokens.slice(0, -1).map(searchByExactMatch),
-      searchByPrefix(searchTokens[searchTokens.length - 1])
-    ]
-    return findCommonMembers(intermediateResults, _ => _.name)
-      .sort((a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
+    const tokens = extractTokens(query)
+    const intermediateResults = tokens.map((token, i) => (
+      (i < tokens.length - 1 ? searchByExactMatch : searchByPrefix)(token)
+    ))
+    return findCommonMembers(intermediateResults, _ => _.name).sort(sortByName)
   }
 
   //
