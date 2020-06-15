@@ -2,6 +2,7 @@ import { basicBeforeEach, basicAfterEach, ALL_EMOJI, truncatedEmoji, tick } from
 import * as testingLibrary from '@testing-library/dom'
 import Picker from '../../../src/picker/PickerElement.js'
 import userEvent from '@testing-library/user-event'
+import { categories } from '../../../src/picker/categories'
 
 const { waitFor, fireEvent } = testingLibrary
 const { type } = userEvent
@@ -43,7 +44,7 @@ describe('Picker tests', () => {
 
   test('basic picker test', async () => {
     await waitFor(() => expect(getByRole('button', { name: 'Choose a skin tone (currently Default)' })).toBeVisible())
-    expect(getAllByRole('tab')).toHaveLength(9)
+    expect(getAllByRole('tab')).toHaveLength(categories.length)
 
     expect(getByRole('tab', { name: 'Smileys and emoticons', selected: true })).toBeVisible()
     await waitFor(() => expect(

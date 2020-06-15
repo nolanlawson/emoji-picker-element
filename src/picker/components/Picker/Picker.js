@@ -2,7 +2,7 @@
 
 import Database from '../../ImportedDatabase'
 import enI18n from '../../i18n/en'
-import { categories as defaultCategories } from '../../categories'
+import { categories as defaultCategories, customCategory } from '../../categories'
 import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
@@ -124,7 +124,7 @@ $: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTon
 
 $: {
   if (customEmoji && customEmoji.length) {
-    categories = [{ name: i18n.categories.custom, group: -1, emoji: '✨' }, ...defaultCategories]
+    categories = [customCategory, ...defaultCategories]
   } else if (categories !== defaultCategories) {
     categories = defaultCategories
   }
