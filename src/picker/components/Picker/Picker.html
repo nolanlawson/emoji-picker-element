@@ -86,7 +86,7 @@
               aria-label={i18n.categories[category.name]}
               aria-selected={currentCategory.group === category.group}
               title={i18n.categories[category.name]}
-              on:click={() => handleCategoryClick(category)}>
+              on:click={() => onCategoryClick(category)}>
         <div class="emoji">
           {category.emoji}
         </div>

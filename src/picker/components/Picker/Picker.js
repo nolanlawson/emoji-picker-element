@@ -360,14 +360,6 @@ async function getEmojisBySearchQuery (query) {
   return summarizeEmojis(await filterEmojisByVersion(await database.getEmojiBySearchQuery(query)))
 }
 
-// eslint-disable-next-line no-unused-vars
-function handleCategoryClick (category) {
-  rawSearchText = ''
-  searchText = ''
-  activeSearchItem = -1
-  currentCategoryIndex = categories.findIndex(_ => _.group === category.group)
-}
-
 //
 // Handle user input on the search input
 //
@@ -406,6 +398,14 @@ function onSearchKeydown (event) {
 //
 // Handle user input on nav
 //
+
+// eslint-disable-next-line no-unused-vars
+function onCategoryClick (category) {
+  rawSearchText = ''
+  searchText = ''
+  activeSearchItem = -1
+  currentCategoryIndex = categories.findIndex(_ => _.group === category.group)
+}
 
 // eslint-disable-next-line no-unused-vars
 function onNavKeydown (event) {
