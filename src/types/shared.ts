@@ -70,8 +70,9 @@ export interface I18nCategories {
 
 export interface EmojiClickEventDetail {
   emoji: Emoji,
-  skinTone: SkinTone,
-  unicode: string,
+  skinTone: SkinTone
+  unicode?: string
+  name?: string
 }
 
 export interface SkinToneChangeEventDetail {

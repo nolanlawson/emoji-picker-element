@@ -393,13 +393,13 @@ async function clickEmoji (unicodeOrName) {
     .find(_ => (_.unicode === unicodeOrName || _.name === unicodeOrName))
   const skinTonedUnicode = emojiSummary.unicode && unicodeWithSkin(emojiSummary, currentSkinTone)
   await database.incrementFavoriteEmojiCount(unicodeOrName)
-  // force favorites to re-render
-  defaultFavoriteEmojis = defaultFavoriteEmojis // eslint-disable-line no-self-assign
+  // eslint-disable-next-line no-self-assign
+  defaultFavoriteEmojis = defaultFavoriteEmojis // force favorites to re-render
   fireEvent('emoji-click', {
     emoji,
     skinTone: currentSkinTone,
-    unicode: skinTonedUnicode,
-    name: emojiSummary.name
+    ...(skinTonedUnicode && { unicode: skinTonedUnicode }),
+    ...(emojiSummary.name && { name: emojiSummary.name })
   })
 }
 

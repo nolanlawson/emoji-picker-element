@@ -151,7 +151,7 @@ export default class Database {
 
   getCustomEmojiByName (name) {
     assertNonEmptyString(name)
-    return this._custom.byName(name)
+    return this._custom.byName(name) || null
   }
 
   async _shutdown () {

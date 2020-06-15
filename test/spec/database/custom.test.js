@@ -217,4 +217,15 @@ describe('custom emoji', () => {
       summaryByUnicode('🖐️')
     ])
   })
+
+  test('get custom emoji by name', async () => {
+    db.customEmoji = customEmojis
+    expect(db.getCustomEmojiByName('underscores_like_this')).toStrictEqual(
+      { name: 'underscores_like_this', shortcodes: ['underscores_like_this'], url: 'underscores.png' }
+    )
+    expect(db.getCustomEmojiByName('capitalletterslikethis')).toStrictEqual(
+      { name: 'CapitalLettersLikeThis', shortcodes: ['CapitalLettersLikeThis'], url: 'caps.png' }
+    )
+    expect(db.getCustomEmojiByName('unknown')).toBeNull()
+  })
 })
