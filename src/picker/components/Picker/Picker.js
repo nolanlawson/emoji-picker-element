@@ -54,7 +54,7 @@ let currentFavorites = [] // eslint-disable-line no-unused-vars
 let defaultFavoriteEmojis
 let numColumns = DEFAULT_NUM_COLUMNS
 let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
-let customEmoji
+let customEmoji = undefined
 let currentCategoryIndex = 0
 let categories = defaultCategories
 let currentCategory
