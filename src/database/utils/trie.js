@@ -28,10 +28,8 @@ export function trie (arr, itemToTokens) {
   }
 
   const search = (query, exact) => {
-    let i = -1
-    const len = query.length
     let currentMap = map
-    while (++i < len) {
+    for (let i = 0; i < query.length; i++) {
       const char = query.charAt(i)
       const nextMap = currentMap.get(char)
       if (nextMap) {
