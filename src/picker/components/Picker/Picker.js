@@ -16,7 +16,7 @@ import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import { tick } from 'svelte'
 import {
   DEFAULT_NUM_COLUMNS,
-  DEFAULT_SKIN_TONE_EMOJI,
+  DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
@@ -140,6 +140,7 @@ Promise.resolve().then(() => {
 //
 
 $: style = `
+  --font-family: ${FONT_FAMILY};
   --num-categories: ${categories.length}; 
   --indicator-opacity: ${searchMode ? 0 : 1}; 
   --num-skintones: ${NUM_SKIN_TONES};`

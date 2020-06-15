@@ -1,12 +1,15 @@
-import allEmoji from 'emojibase-data/en/data.json'
-
-const versions = [...new Set(allEmoji.map(_ => _.version))].sort((a, b) => a < b ? -1 : 1)
-
-export const versionsAndTestEmoji = Object.fromEntries(versions.map(version => {
-  // find one good representative emoji to test. Ideally its should be one that's short
-  const emoji = allEmoji.find(_ => _.version === version).emoji
-  return [
-    emoji,
-    version
-  ]
-}))
+// Find one good representative emoji to test. Ideally it should have color in the center.
+// For some inspiration, see: https://about.gitlab.com/blog/2018/05/30/journey-in-native-unicode-emoji/
+export const versionsAndTestEmoji = {
+  '😃': 0.6,
+  '😐️': 0.7,
+  '😀': 1,
+  '👁️‍🗨️': 2,
+  '🤣': 3,
+  '👱‍♀️': 4,
+  '🤩': 5,
+  '🥰': 11, // smiling face with hearts
+  '🥻': 12, // sari
+  '🧑‍🦰': 12.1, // person: red hair
+  '🥲': 13 // smiling face with tear
+}
