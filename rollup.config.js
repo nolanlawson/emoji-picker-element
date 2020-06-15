@@ -3,8 +3,9 @@ import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import mainSvelte from 'rollup-plugin-svelte'
 import hotSvelte from 'rollup-plugin-svelte-hot'
-import autoPreprocess from 'svelte-preprocess'
+import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
+import cssnano from 'cssnano'
 
 const dev = process.env.NODE_ENV !== 'production'
 const svelte = dev ? hotSvelte : mainSvelte
@@ -27,7 +28,16 @@ const baseConfig = {
       css: true,
       customElement: true,
       dev,
-      preprocess: autoPreprocess()
+      preprocess: preprocess({
+        scss: true,
+        postcss: {
+          plugins: [
+            cssnano({
+              preset: 'default'
+            })
+          ]
+        }
+      })
     }),
     !dev && analyze({ summaryOnly: true })
   ],
