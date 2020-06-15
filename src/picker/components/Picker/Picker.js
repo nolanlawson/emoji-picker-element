@@ -26,10 +26,14 @@ import { uniqBy } from '../../../shared/uniqBy'
 import { mergeI18n } from '../../utils/mergeI18n'
 import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 
+// public
 let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
 let i18n = enI18n
-let initialLoad = true
 let database = null
+let customEmoji = null
+
+// private
+let initialLoad = true
 let currentEmojis = []
 let rawSearchText = ''
 let searchText = ''
@@ -54,7 +58,6 @@ let currentFavorites = [] // eslint-disable-line no-unused-vars
 let defaultFavoriteEmojis
 let numColumns = DEFAULT_NUM_COLUMNS
 let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
-let customEmoji = undefined
 let currentCategoryIndex = 0
 let categories = defaultCategories
 let currentCategory
