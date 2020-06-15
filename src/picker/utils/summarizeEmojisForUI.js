@@ -1,5 +1,7 @@
 // We don't need all the data on every emoji, and there are specific things we need
 // for the UI, so build a "view model" from the emoji object we got from the database
+import { uniq } from '../../shared/uniq'
+
 export function summarizeEmojisForUI (emojis, emojiSupportLevel) {
   const toSimpleSkinsMap = skins => {
     const res = {}
@@ -14,12 +16,13 @@ export function summarizeEmojisForUI (emojis, emojiSupportLevel) {
     return res
   }
 
-  return emojis.map(({ unicode, skins, shortcodes, url }) => ({
+  return emojis.map(({ unicode, skins, shortcodes, url, name }) => ({
     unicode,
+    name,
     skins: skins && toSimpleSkinsMap(skins),
-    shortcodes,
+    label: uniq([(unicode || name), ...shortcodes]).join(', '),
+    title: shortcodes.join(', '),
     url,
-    label: (unicode ? (unicode + ', ') : '') + shortcodes.join(', '),
-    title: shortcodes.join(', ')
+    id: unicode || name
   }))
 }

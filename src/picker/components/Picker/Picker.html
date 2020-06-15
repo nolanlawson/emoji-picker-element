@@ -120,14 +120,18 @@
            id="search-results"
            use:calculateEmojiGridWith
       >
-        {#each currentEmojis as emoji, i (emoji.unicode)}
+        {#each currentEmojis as emoji, i (emoji.id)}
           <button role={searchMode ? 'option' : 'menuitem'}
                   {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
                   aria-label={emoji.label}
                   title={emoji.title}
                   class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
-                  data-emoji={emoji.unicode}>
-            {unicodeWithSkin(emoji, currentSkinTone)}
+                  data-emoji={emoji.id}>
+            {#if emoji.unicode}
+              {unicodeWithSkin(emoji, currentSkinTone)}
+            {:else}
+              <div class="custom-emoji" style="background-image: url({emoji.url});"></div>
+            {/if}
           </button>
         {/each}
     </div>
@@ -138,13 +142,21 @@
        style="padding-right: {scrollbarWidth}px;"
        on:click={onEmojiClick}
        data-testid="favorites">
-    {#each currentFavorites as emoji, i (emoji.unicode)}
+    <!-- TODO: the reason so much of this emoji logic is duplicated is because it would be wasteful
+         or incorrect to extract this logic into a custom Svelte component, because in customElements
+         mode, Svelte will render _all_ components as custom elements. Ideally we just want one
+         custom element wrapper around the outer component -->
+    {#each currentFavorites as emoji, i (emoji.id)}
       <button role="menuitem"
               aria-label={emoji.label}
               title={emoji.title}
               class="emoji"
-              data-emoji={emoji.unicode}>
-        {unicodeWithSkin(emoji, currentSkinTone)}
+              data-emoji={emoji.id}>
+        {#if emoji.unicode}
+          {unicodeWithSkin(emoji, currentSkinTone)}
+        {:else}
+          <div class="custom-emoji" style="background-image: url({emoji.url});"></div>
+        {/if}
       </button>
     {/each}
   </div>

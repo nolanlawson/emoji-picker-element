@@ -20,6 +20,7 @@ export default {
     'Dark'
   ],
   categories: {
+    custom: 'Custom',
     'smileys-emotion': 'Smileys and emoticons',
     'people-body': 'People and body',
     'animals-nature': 'Animals and nature',

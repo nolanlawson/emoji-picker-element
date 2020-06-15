@@ -149,6 +149,11 @@ export default class Database {
     return this._custom.all
   }
 
+  getCustomEmojiByName (name) {
+    assertNonEmptyString(name)
+    return this._custom.byName(name)
+  }
+
   async _shutdown () {
     await this.ready() // reopen if we've already been closed/deleted
     try {

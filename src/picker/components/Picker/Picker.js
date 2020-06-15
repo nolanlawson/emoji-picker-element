@@ -2,7 +2,7 @@
 
 import Database from '../../ImportedDatabase'
 import enI18n from '../../i18n/en'
-import { categories } from '../../categories'
+import { categories as defaultCategories } from '../../categories'
 import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
@@ -38,8 +38,6 @@ let baselineEmoji
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
 let message // eslint-disable-line no-unused-vars
-let currentCategoryIndex = 0
-let currentCategory = categories[currentCategoryIndex]
 let computedIndicatorWidth = 0
 let indicatorStyle = '' // eslint-disable-line no-unused-vars
 let skinTonePickerExpanded = false
@@ -53,11 +51,13 @@ let skinToneButtonLabel = '' // eslint-disable-line no-unused-vars
 let skinToneTextForSkinTone = ''
 let skinTones = []
 let currentFavorites = [] // eslint-disable-line no-unused-vars
-let defaultFavoriteEmojisPromise
+let defaultFavoriteEmojis
 let numColumns = DEFAULT_NUM_COLUMNS
 let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
-let shouldUpdateFavorites = {} // hack to force svelte to recalc favorites
-let customEmoji = []
+let customEmoji
+let currentCategoryIndex = 0
+let categories = defaultCategories
+let currentCategory
 
 const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
 
@@ -122,12 +122,20 @@ $: skinToneButtonLabel = i18n.skinToneLabel.replace('{skinTone}', i18n.skinTones
 $: skinToneTextForSkinTone = i => applySkinTone(skinToneEmoji, i)
 $: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTone(i))
 
+$: {
+  if (customEmoji && customEmoji.length) {
+    categories = [{ name: i18n.categories.custom, group: -1, emoji: '✨' }, ...defaultCategories]
+  } else if (categories !== defaultCategories) {
+    categories = defaultCategories
+  }
+}
+$: currentCategory = categories[currentCategoryIndex]
+
 // TODO: Chrome has an unfortunate bug where we can't use a simple percent-based transform
 // here, becuause it's janky. You can especially see this on a Nexus 5.
 // So we calculate of the indicator and use exact pixel values in the animation instead
 // (where ResizeObserver is supported).
 const resizeObserverSupported = typeof ResizeObserver === 'function'
-$: currentCategoryIndex = categories.findIndex(_ => _.group === currentCategory.group)
 $: {
   /* istanbul ignore if */
   if (resizeObserverSupported) {
@@ -149,7 +157,7 @@ $: {
 $: {
   async function updateDefaultFavoriteEmojis () {
     if (database) {
-      defaultFavoriteEmojisPromise = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
+      defaultFavoriteEmojis = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
         database.getEmojiByUnicode(unicode)
       )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
     }
@@ -159,12 +167,12 @@ $: {
 
 $: {
   async function getFavorites () {
+    log('getFavorites')
     const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
-    const defaultFavorites = await defaultFavoriteEmojisPromise
     const favs = uniqBy([
       ...dbFavorites,
-      ...defaultFavorites
-    ], _ => _.unicode).slice(0, numColumns)
+      ...defaultFavoriteEmojis
+    ], _ => (_.unicode || _.name)).slice(0, numColumns)
     return summarizeEmojis(favs)
   }
 
@@ -172,7 +180,7 @@ $: {
     currentFavorites = await getFavorites()
   }
 
-  if (database && shouldUpdateFavorites) {
+  if (database && defaultFavoriteEmojis) {
     /* no await */ updateFavorites()
   }
 }
@@ -231,7 +239,7 @@ $: {
     } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
       searchMode = true
       currentEmojis = await getEmojisBySearchQuery(searchText)
-    } else {
+    } else if (currentCategory) {
       searchMode = false
       currentEmojis = await getEmojisByGroup(currentCategory.group)
     }
@@ -249,7 +257,9 @@ $: {
 // We want to treat these the same as unsupported emojis, so we compare their
 // widths against the baseline widths and remove them as necessary
 $: {
-  const zwjEmojisToCheck = currentEmojis.filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
+  const zwjEmojisToCheck = currentEmojis
+    .filter(emoji => emoji.unicode) // filter custom emoji
+    .filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
   if (zwjEmojisToCheck.length) {
     // render now, check their length later
     requestAnimationFrame(() => checkZwjSupport(zwjEmojisToCheck))
@@ -292,7 +302,7 @@ function checkZwjSupport (zwjEmojisToCheck) {
 }
 
 function isZwjSupported (emoji) {
-  return !hasZwj(emoji) || supportedZwjEmojis.get(emoji.unicode)
+  return !emoji.unicode || !hasZwj(emoji) || supportedZwjEmojis.get(emoji.unicode)
 }
 
 async function filterEmojisByVersion (emojis) {
@@ -305,7 +315,17 @@ async function summarizeEmojis (emojis) {
 }
 
 async function getEmojisByGroup (group) {
-  return summarizeEmojis(await filterEmojisByVersion(await database.getEmojiByGroup(group)))
+  log('getEmojiByGroup')
+  if (typeof group === 'undefined') {
+    return []
+  }
+  let emojis
+  if (group === -1) { // custom
+    emojis = customEmoji
+  } else {
+    emojis = await filterEmojisByVersion(await database.getEmojiByGroup(group))
+  }
+  return summarizeEmojis(emojis)
 }
 
 async function getEmojisBySearchQuery (query) {
@@ -317,7 +337,7 @@ function handleCategoryClick (category) {
   rawSearchText = ''
   searchText = ''
   activeSearchItem = -1
-  currentCategory = category
+  currentCategoryIndex = categories.findIndex(_ => _.group === category.group)
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -366,16 +386,20 @@ function fireEvent (name, detail) {
   }))
 }
 
-async function clickEmoji (unicode) {
-  const emoji = await database.getEmojiByUnicode(unicode)
-  const emojiSummary = [...currentEmojis, ...currentFavorites].find(_ => _.unicode === unicode)
-  const skinTonedUnicode = unicodeWithSkin(emojiSummary, currentSkinTone)
-  await database.incrementFavoriteEmojiCount(unicode)
-  shouldUpdateFavorites = shouldUpdateFavorites // eslint-disable-line no-self-assign
+async function clickEmoji (unicodeOrName) {
+  const emoji = database.getCustomEmojiByName(unicodeOrName) ||
+    await database.getEmojiByUnicode(unicodeOrName)
+  const emojiSummary = [...currentEmojis, ...currentFavorites]
+    .find(_ => (_.unicode === unicodeOrName || _.name === unicodeOrName))
+  const skinTonedUnicode = emojiSummary.unicode && unicodeWithSkin(emojiSummary, currentSkinTone)
+  await database.incrementFavoriteEmojiCount(unicodeOrName)
+  // force favorites to re-render
+  defaultFavoriteEmojis = defaultFavoriteEmojis // eslint-disable-line no-self-assign
   fireEvent('emoji-click', {
     emoji,
     skinTone: currentSkinTone,
-    unicode: skinTonedUnicode
+    unicode: skinTonedUnicode,
+    name: emojiSummary.name
   })
 }
 
@@ -386,9 +410,9 @@ async function onEmojiClick (event) {
     return
   }
   halt(event)
-  const unicode = target.dataset.emoji
+  const id = target.dataset.emoji
 
-  /* no await */ clickEmoji(unicode)
+  /* no await */ clickEmoji(id)
 }
 
 function focus (id) {
@@ -472,9 +496,6 @@ async function onSkinToneOptionsBlur () {
 
 // eslint-disable-next-line no-unused-vars
 function unicodeWithSkin (emoji, currentSkinTone) {
-  if (!emoji.unicode) { // custom emoji
-    return ''
-  }
   if (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) {
     return emoji.skins[currentSkinTone]
   }

@@ -126,6 +126,15 @@ export default class Database {
   }
 
   /**
+   * Return the custom emoji corresponding to the string name, or null if not found. Throws if the name is empty.
+   *
+   * @param name
+   */
+  getCustomEmojiByName(name: string): CustomEmoji | null {
+    return null
+  }
+
+  /**
    * Closes the underlying IndexedDB connection. The Database is not usable after that (or any other Databases
    * with the same locale).
    *
