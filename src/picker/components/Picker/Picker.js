@@ -6,12 +6,10 @@ import { categories as defaultCategories, customCategory } from '../../categorie
 import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
-import { calculateTextWidth } from '../../utils/calculateTextWidth'
 import { hasZwj } from '../../utils/hasZwj'
-import { thunk } from '../../utils/thunk'
 import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiSupport'
 import { log } from '../../../shared/log'
-import { mark, stop } from '../../../shared/marks'
+import { stop } from '../../../shared/marks'
 import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
@@ -25,6 +23,9 @@ import {
 import { uniqBy } from '../../../shared/uniqBy'
 import { mergeI18n } from '../../utils/mergeI18n'
 import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
+import { calculateWidth, resizeObserverSupported } from '../../utils/calculateWidth'
+import { checkZwjSupport } from '../../utils/checkZwjSupport'
+import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 
 // public
 let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
@@ -62,13 +63,44 @@ let currentCategoryIndex = 0
 let categories = defaultCategories
 let currentCategory
 
-const getBaselineEmojiWidth = thunk(() => calculateTextWidth(baselineEmoji))
+//
+// Utils/helpers
+//
+
+function focus (id) {
+  rootElement.getRootNode().getElementById(id).focus()
+}
+
+// fire a custom event that crosses the shadow boundary
+function fireEvent (name, detail) {
+  rootElement.dispatchEvent(new CustomEvent(name, {
+    detail,
+    bubbles: true,
+    composed: true
+  }))
+}
+
+// eslint-disable-next-line no-unused-vars
+function unicodeWithSkin (emoji, currentSkinTone) {
+  if (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) {
+    return emoji.skins[currentSkinTone]
+  }
+  return emoji.unicode
+}
+
+//
+// Determine the emoji support level (in requestIdleCallback)
+//
 
 emojiSupportLevelPromise.then(level => {
   if (!level) {
     message = i18n.emojiUnsupported
   }
 })
+
+//
+// Set or update the database object
+//
 
 $: {
   // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
@@ -103,11 +135,18 @@ Promise.resolve().then(() => {
   }
 })
 
-$: {
-  if (customEmoji && database) {
-    database.customEmoji = customEmoji
-  }
-}
+//
+// Global styles for the entire picker
+//
+
+$: style = `
+  --num-categories: ${categories.length}; 
+  --indicator-opacity: ${searchMode ? 0 : 1}; 
+  --num-skintones: ${NUM_SKIN_TONES};`
+
+//
+// Set or update the i18n
+//
 
 $: {
   if (i18n !== enI18n) {
@@ -115,15 +154,15 @@ $: {
   }
 }
 
-$: style = `
-  --num-categories: ${categories.length}; 
-  --indicator-opacity: ${searchMode ? 0 : 1}; 
-  --num-skintones: ${NUM_SKIN_TONES};`
+//
+// Set or update the customEmoji
+//
 
-$: skinToneText = skinToneTextForSkinTone(currentSkinTone)
-$: skinToneButtonLabel = i18n.skinToneLabel.replace('{skinTone}', i18n.skinTones[currentSkinTone])
-$: skinToneTextForSkinTone = i => applySkinTone(skinToneEmoji, i)
-$: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTone(i))
+$: {
+  if (customEmoji && database) {
+    database.customEmoji = customEmoji
+  }
+}
 
 $: {
   if (customEmoji && customEmoji.length) {
@@ -132,21 +171,10 @@ $: {
     categories = defaultCategories
   }
 }
-$: currentCategory = categories[currentCategoryIndex]
 
-// TODO: Chrome has an unfortunate bug where we can't use a simple percent-based transform
-// here, becuause it's janky. You can especially see this on a Nexus 5.
-// So we calculate of the indicator and use exact pixel values in the animation instead
-// (where ResizeObserver is supported).
-const resizeObserverSupported = typeof ResizeObserver === 'function'
-$: {
-  /* istanbul ignore if */
-  if (resizeObserverSupported) {
-    indicatorStyle = `transform: translateX(${currentCategoryIndex * computedIndicatorWidth}px);` // exact pixels
-  } else {
-    indicatorStyle = `transform: translateX(${currentCategoryIndex * 100}%);`// fallback to percent-based
-  }
-}
+//
+// Set or update the preferred skin tone
+//
 
 $: {
   async function updatePreferredSkinTone () {
@@ -156,6 +184,15 @@ $: {
   }
   /* no await */ updatePreferredSkinTone()
 }
+
+$: skinToneText = skinToneTextForSkinTone(currentSkinTone)
+$: skinToneButtonLabel = i18n.skinToneLabel.replace('{skinTone}', i18n.skinTones[currentSkinTone])
+$: skinToneTextForSkinTone = i => applySkinTone(skinToneEmoji, i)
+$: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTone(i))
+
+//
+// Set or update the favorites emojis
+//
 
 $: {
   async function updateDefaultFavoriteEmojis () {
@@ -188,21 +225,19 @@ $: {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
-function calculateIndicatorWidth (node) {
-  return calculateWidth(node, width => {
-    computedIndicatorWidth = width
-  })
-}
+//
+// Calculate the width of the emoji grid. This serves two purposes:
+// 1) Re-calculate the --num-columns var because it may have changed
+// 2) Re-calculate the scrollbar width because it may have changed
+//   (i.e. because the number of items changed)
+//
 
 // eslint-disable-next-line no-unused-vars
 function calculateEmojiGridWith (node) {
   return calculateWidth(node, width => {
-    // Whenever the main emoji grid changes size, we need to
-    // 1) Re-calculate the --num-columns var because it may have changed
-    // 2) Re-calculate the scrollbar width because it may have changed (i.e. because the number of items changed)
-    const propValue = getComputedStyle(rootElement).getPropertyValue('--num-columns')
-    const newNumColumns = parseInt(propValue, 10) || DEFAULT_NUM_COLUMNS // in Jest we can't compute custom props
+    const newNumColumns = process.env.NODE_ENV === 'test'
+      ? DEFAULT_NUM_COLUMNS
+      : parseInt(getComputedStyle(rootElement).getPropertyValue('--num-columns'), 10)
     const parentWidth = node.parentElement.getBoundingClientRect().width
     const newScrollbarWidth = parentWidth - width
     numColumns = newNumColumns
@@ -210,29 +245,40 @@ function calculateEmojiGridWith (node) {
   })
 }
 
-function calculateWidth (node, onUpdate) {
-  let resizeObserver
+//
+// Update the current category based on the currentCategoryIndex
+//
+
+$: currentCategory = categories[currentCategoryIndex]
+
+//
+// Animate the indicator
+//
+
+// eslint-disable-next-line no-unused-vars
+function calculateIndicatorWidth (node) {
+  return calculateWidth(node, width => {
+    computedIndicatorWidth = width
+  })
+}
+
+// TODO: Chrome has an unfortunate bug where we can't use a simple percent-based transform
+// here, becuause it's janky. You can especially see this on a Nexus 5.
+// So we calculate of the indicator and use exact pixel values in the animation instead
+// (where ResizeObserver is supported).
+$: {
   /* istanbul ignore if */
   if (resizeObserverSupported) {
-    resizeObserver = new ResizeObserver(entries => {
-      onUpdate(entries[0].contentRect.width)
-    })
-    resizeObserver.observe(node)
-  } else { // just set the width once, don't bother trying to track it
-    requestAnimationFrame(() => {
-      onUpdate(node.getBoundingClientRect().width)
-    })
-  }
-
-  return {
-    destroy () {
-      /* istanbul ignore if */
-      if (resizeObserver) {
-        resizeObserver.disconnect()
-      }
-    }
+    indicatorStyle = `transform: translateX(${currentCategoryIndex * computedIndicatorWidth}px);` // exact pixels
+  } else {
+    indicatorStyle = `transform: translateX(${currentCategoryIndex * 100}%);`// fallback to percent-based
   }
 }
+
+//
+// Set or update the currentEmojis. Check for invalid ZWJ renderings
+// (i.e. double emoji).
+//
 
 $: {
   async function updateEmojis () {
@@ -249,12 +295,6 @@ $: {
   }
   /* no await */ updateEmojis()
 }
-$: {
-  requestIdleCallback(() => {
-    searchText = rawSearchText // defer to avoid input delays
-    activeSearchItem = -1
-  })
-}
 
 // Some emojis have their ligatures rendered as two or more consecutive emojis
 // We want to treat these the same as unsupported emojis, so we compare their
@@ -265,42 +305,23 @@ $: {
     .filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
   if (zwjEmojisToCheck.length) {
     // render now, check their length later
-    requestAnimationFrame(() => checkZwjSupport(zwjEmojisToCheck))
+    requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
   } else {
     currentEmojis = currentEmojis.filter(isZwjSupported)
   }
 }
 
-function checkZwjSupport (zwjEmojisToCheck) {
-  mark('checkZwjSupport')
-  const rootNode = rootElement.getRootNode()
-  for (const emoji of zwjEmojisToCheck) {
-    const domNode = rootNode.querySelector(`[data-emoji=${JSON.stringify(emoji.unicode)}]`)
-    if (!domNode) { // happens rarely, mostly in jest tests
-      continue
-    }
-    const emojiWidth = calculateTextWidth(domNode)
-    const baselineEmojiWidth = getBaselineEmojiWidth()
-    // compare sizes rounded to 1/10 of a pixel to avoid issues with slightly different measurements (e.g. GNOME Web)
-    const supported = emojiWidth.toFixed(1) === baselineEmojiWidth.toFixed(1)
-    supportedZwjEmojis.set(emoji.unicode, supported)
-    /* istanbul ignore if */
-    if (!supported) {
-      log('Filtered unsupported emoji', emoji.unicode)
-    }
-  }
-  stop('checkZwjSupport')
+function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
+  checkZwjSupport(zwjEmojisToCheck, rootElement.getRootNode(), baselineEmoji)
   // force update
   currentEmojis = currentEmojis // eslint-disable-line no-self-assign
   if (initialLoad) {
     initialLoad = false
+    // Measure after style/layout are complete
     // see https://github.com/andrewiggins/afterframe
-    // we want to measure after style/layout are complete
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        stop('initialLoad')
-      })
-    })
+    if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
+      requestPostAnimationFrame(() => stop('initialLoad'))
+    }
   }
 }
 
@@ -343,6 +364,17 @@ function handleCategoryClick (category) {
   currentCategoryIndex = categories.findIndex(_ => _.group === category.group)
 }
 
+//
+// Handle user input on the search input
+//
+
+$: {
+  requestIdleCallback(() => {
+    searchText = rawSearchText // defer to avoid input delays
+    activeSearchItem = -1
+  })
+}
+
 // eslint-disable-next-line no-unused-vars
 function onSearchKeydown (event) {
   if (!searchMode || !currentEmojis.length) {
@@ -367,6 +399,10 @@ function onSearchKeydown (event) {
   }
 }
 
+//
+// Handle user input on nav
+//
+
 // eslint-disable-next-line no-unused-vars
 function onNavKeydown (event) {
   const { target, key } = event
@@ -381,13 +417,9 @@ function onNavKeydown (event) {
   }
 }
 
-function fireEvent (name, detail) {
-  rootElement.dispatchEvent(new CustomEvent(name, {
-    detail,
-    bubbles: true,
-    composed: true
-  }))
-}
+//
+// Handle user input on an emoji
+//
 
 async function clickEmoji (unicodeOrName) {
   const emoji = await database.getEmojiByUnicodeOrName(unicodeOrName)
@@ -417,9 +449,9 @@ async function onEmojiClick (event) {
   /* no await */ clickEmoji(id)
 }
 
-function focus (id) {
-  rootElement.getRootNode().getElementById(id).focus()
-}
+//
+// Handle user input on the skintone picker
+//
 
 // eslint-disable-next-line no-unused-vars
 function onClickSkinToneOption (event) {
@@ -494,14 +526,6 @@ async function onSkinToneOptionsBlur () {
   if (!activeElement || !activeElement.classList.contains('skintone-option')) {
     skinTonePickerExpanded = false
   }
-}
-
-// eslint-disable-next-line no-unused-vars
-function unicodeWithSkin (emoji, currentSkinTone) {
-  if (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) {
-    return emoji.skins[currentSkinTone]
-  }
-  return emoji.unicode
 }
 
 export {
