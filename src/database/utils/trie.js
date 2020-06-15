@@ -9,7 +9,7 @@ export function trie (arr, itemToTokens) {
     const tokens = itemToTokens(item)
     for (const token of tokens) {
       let currentMap = map
-      for (let i = 0, len = token.length; i < len; i++) {
+      for (let i = 0; i < token.length; i++) {
         const char = token.charAt(i)
         let nextMap = currentMap.get(char)
         if (!nextMap) {
@@ -61,11 +61,5 @@ export function trie (arr, itemToTokens) {
     return results
   }
 
-  const byPrefix = query => search(query, false)
-  const byExactMatch = query => search(query, true)
-
-  return {
-    byPrefix,
-    byExactMatch
-  }
+  return search
 }

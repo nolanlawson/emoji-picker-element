@@ -46,6 +46,7 @@ describe('Favorites UI', () => {
     expect(getAllByRole(favoritesBar, 'menuitem').map(_ => _.getAttribute('data-emoji'))).toStrictEqual(
       MOST_COMMONLY_USED_EMOJI.slice(0, 8)
     )
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /🤣/ })).toBeVisible())
     fireEvent.click(getByRole(container, 'menuitem', { name: /🤣/ }))
     await waitFor(() => expect(getAllByRole(favoritesBar, 'menuitem')
       .map(_ => _.getAttribute('data-emoji'))).toStrictEqual([

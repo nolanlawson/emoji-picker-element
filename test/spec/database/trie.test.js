@@ -5,7 +5,9 @@ describe('trie tests', () => {
     const mapper = _ => ([_])
     const items = ['ban', 'bananas', 'banana', 'tomato', 'bandana', 'bandanas']
 
-    const { byPrefix, byExactMatch } = trie(items, mapper)
+    const search = trie(items, mapper)
+    const byPrefix = _ => search(_, false)
+    const byExactMatch = _ => search(_, true)
 
     expect(byPrefix('banan')).toStrictEqual(['banana', 'bananas'])
     expect(byPrefix('ban')).toStrictEqual(['ban', 'banana', 'bananas', 'bandana', 'bandanas'])
@@ -26,7 +28,9 @@ describe('trie tests', () => {
     const mapper = _ => _.split(/\s+/)
     const items = ['banana phone', 'banana split', 'gone bananas', 'bunch of bananas']
 
-    const { byPrefix, byExactMatch } = trie(items, mapper)
+    const search = trie(items, mapper)
+    const byPrefix = _ => search(_, false)
+    const byExactMatch = _ => search(_, true)
 
     expect(byPrefix('ban').sort()).toStrictEqual(items.sort())
     expect(byPrefix('banana').sort()).toStrictEqual(items.sort())
