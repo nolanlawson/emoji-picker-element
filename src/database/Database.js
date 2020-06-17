@@ -55,9 +55,9 @@ async function loadDataForFirstTime (db, dataSource) {
 
 export default class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE, customEmoji = [] } = {}) {
-    this._dataSource = dataSource
-    this._locale = locale
-    this._dbName = `emoji-picker-element-${this._locale}`
+    this.dataSource = dataSource
+    this.locale = locale
+    this._dbName = `emoji-picker-element-${this.locale}`
     this._db = undefined
     this._lazyUpdate = undefined
     this._custom = customEmojiIndex(customEmoji)
@@ -67,7 +67,7 @@ export default class Database {
 
   async _init () {
     const db = this._db = await openDatabase(this._dbName)
-    const dataSource = this._dataSource
+    const dataSource = this.dataSource
     const empty = await isEmpty(db)
 
     if (empty) {

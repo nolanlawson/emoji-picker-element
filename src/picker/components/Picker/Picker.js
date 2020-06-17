@@ -9,7 +9,6 @@ import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { hasZwj } from '../../utils/hasZwj'
 import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiSupport'
 import { log } from '../../../shared/log'
-import { stop } from '../../../shared/marks'
 import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
@@ -26,8 +25,11 @@ import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 import { calculateWidth, resizeObserverSupported } from '../../utils/calculateWidth'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
+import { stop } from '../../../shared/marks'
 
 // public
+let locale = null
+let dataSource = null
 let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
 let i18n = enI18n
 let database = null
@@ -131,10 +133,16 @@ $: {
 // but are only set later. This would cause a double render or a double-fetch of
 // the dataSource, which is bad. Delaying with a microtask avoids this.
 Promise.resolve().then(() => {
-  if (!database) {
-    database = new Database({ dataSource: DEFAULT_DATA_SOURCE, locale: DEFAULT_LOCALE })
-  }
+  log('setting locale and dataSource to default')
+  locale = locale || DEFAULT_LOCALE
+  dataSource = dataSource || DEFAULT_DATA_SOURCE
 })
+$: {
+  if (locale && dataSource && (!database || (database.locale !== locale && database.dataSource !== dataSource))) {
+    log('creating database', { locale, dataSource })
+    database = new Database({ dataSource, locale })
+  }
+}
 
 //
 // Global styles for the entire picker
@@ -323,11 +331,11 @@ function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
   checkZwjSupport(zwjEmojisToCheck, baselineEmoji, emojiToDomNode)
   // force update
   currentEmojis = currentEmojis // eslint-disable-line no-self-assign
-  if (initialLoad) {
-    initialLoad = false
-    // Measure after style/layout are complete
-    // see https://github.com/andrewiggins/afterframe
-    if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
+  if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
+    if (initialLoad) {
+      initialLoad = false
+      // Measure after style/layout are complete
+      // see https://github.com/andrewiggins/afterframe
       requestPostAnimationFrame(() => stop('initialLoad'))
     }
   }
@@ -562,6 +570,8 @@ async function onSkinToneOptionsBlur () {
 }
 
 export {
+  locale,
+  dataSource,
   database,
   i18n,
   skinToneEmoji,
