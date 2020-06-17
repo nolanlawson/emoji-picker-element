@@ -2,6 +2,9 @@
 // See https://about.gitlab.com/blog/2018/05/30/journey-in-native-unicode-emoji/
 // and https://www.npmjs.com/package/if-emoji for inspiration
 // This implementation is largely borrowed from if-emoji, adding the font-family
+
+/* istanbul ignore file */
+
 import { FONT_FAMILY } from '../constants'
 
 const getTextFeature = (text, color) => {

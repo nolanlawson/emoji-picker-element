@@ -8,6 +8,7 @@ export function determineEmojiSupportLevel () {
   mark('determineEmojiSupportLevel')
   let res
   for (const [emoji, version] of Object.entries(versionsAndTestEmoji)) {
+    /* istanbul ignore else */
     if (testColorEmojiSupported(emoji)) {
       res = version
     } else {
