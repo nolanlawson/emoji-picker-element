@@ -16,13 +16,14 @@ export function summarizeEmojisForUI (emojis, emojiSupportLevel) {
     return res
   }
 
-  return emojis.map(({ unicode, skins, shortcodes, url, name }) => ({
+  return emojis.map(({ unicode, skins, shortcodes, url, name, category }) => ({
     unicode,
     name,
     skins: skins && toSimpleSkinsMap(skins),
     label: uniq([(unicode || name), ...shortcodes]).join(', '),
     title: shortcodes.join(', '),
     url,
-    id: unicode || name
+    id: unicode || name,
+    category
   }))
 }

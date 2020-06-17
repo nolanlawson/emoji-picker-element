@@ -7,7 +7,7 @@ import Picker from '../../../src/picker/PickerElement'
 import allData from 'emojibase-data/en/data.json'
 import { MOST_COMMONLY_USED_EMOJI } from '../../../src/picker/constants'
 import { uniqBy } from '../../../src/shared/uniqBy'
-import { categories } from '../../../src/picker/categories'
+import { groups } from '../../../src/picker/groups'
 
 describe('Favorites UI', () => {
   let picker
@@ -73,13 +73,13 @@ describe('Favorites UI', () => {
       }
     ]
 
-    await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(categories.length))
+    await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length))
 
     // when setting custom emoji, they can appear in the favorites
 
     picker.customEmoji = customEmoji
 
-    await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(categories.length + 1))
+    await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length + 1))
 
     expect(getByRole(container, 'tab', { name: 'Custom', selected: true })).toBeVisible()
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /transparent/i })).toBeVisible())
@@ -98,7 +98,7 @@ describe('Favorites UI', () => {
     // when setting custom emoji back to [], the favorites bar removes the custom emoji
     picker.customEmoji = []
 
-    await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(categories.length))
+    await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length))
 
     await waitFor(
       () => expect(queryAllByRole(getByTestId(container, 'favorites'), 'menuitem', { name: /transparent/i })).toHaveLength(0)

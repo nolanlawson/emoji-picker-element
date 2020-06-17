@@ -2,7 +2,7 @@ import { basicBeforeEach, basicAfterEach, ALL_EMOJI, truncatedEmoji, tick } from
 import * as testingLibrary from '@testing-library/dom'
 import Picker from '../../../src/picker/PickerElement.js'
 import userEvent from '@testing-library/user-event'
-import { categories } from '../../../src/picker/categories'
+import { groups } from '../../../src/picker/groups'
 
 const { waitFor, fireEvent } = testingLibrary
 const { type } = userEvent
@@ -44,7 +44,7 @@ describe('Picker tests', () => {
 
   test('basic picker test', async () => {
     await waitFor(() => expect(getByRole('button', { name: 'Choose a skin tone (currently Default)' })).toBeVisible())
-    expect(getAllByRole('tab')).toHaveLength(categories.length)
+    expect(getAllByRole('tab')).toHaveLength(groups.length)
 
     expect(getByRole('tab', { name: 'Smileys and emoticons', selected: true })).toBeVisible()
     await waitFor(() => expect(
@@ -262,5 +262,41 @@ describe('Picker tests', () => {
     getByRole('searchbox').focus()
     fireEvent.focusOut(getByRole('listbox', { name: 'Skin tones' }))
     await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
+  })
+
+  test('Custom emoji with categories', async () => {
+    picker.customEmoji = [
+      {
+        name: 'monkey',
+        shortcodes: ['monkey'],
+        url: 'monkey.png',
+        category: 'Primates'
+      },
+      {
+        name: 'donkey',
+        shortcodes: ['donkey'],
+        url: 'donkey.png',
+        category: 'Ungulates'
+      },
+      {
+        name: 'horse',
+        shortcodes: ['horse'],
+        url: 'horse.png',
+        category: 'Ungulates'
+      },
+      {
+        name: 'human',
+        shortcodes: ['human'],
+        url: 'human.png'
+      }
+    ]
+    await waitFor(() => expect(getAllByRole('tab')).toHaveLength(groups.length + 1))
+    await waitFor(() => expect(getAllByRole('menu')).toHaveLength(4)) // favorites + three custom categories
+    await waitFor(() => expect(getByRole('menuitem', { name: 'human' })).toBeVisible())
+    await waitFor(() => expect(getByRole('menuitem', { name: 'donkey' })).toBeVisible())
+    await waitFor(() => expect(getByRole('menuitem', { name: 'monkey' })).toBeVisible())
+    await waitFor(() => expect(getByRole('menuitem', { name: 'horse' })).toBeVisible())
+    // TODO: can't actually test the category names because they're only exposed as menus, and
+    // testing-library doesn't seem to understand that menus can have aria-labels
   })
 })

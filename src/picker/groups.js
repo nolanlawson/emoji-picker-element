@@ -1,5 +1,5 @@
 // via https://unpkg.com/browse/emojibase-data@5.0.1/meta/groups.json
-const allCategories = [
+const allGroups = [
   [-1, '✨', 'custom'],
   [0, '😀', 'smileys-emotion'],
   [1, '👋', 'people-body'],
@@ -10,7 +10,7 @@ const allCategories = [
   [7, '📝', 'objects'],
   [8, '⛔️', 'symbols'],
   [9, '🏁', 'flags']
-].map(([group, emoji, name]) => ({ group, emoji, name }))
+].map(([id, emoji, name]) => ({ id, emoji, name }))
 
-export const categories = allCategories.slice(1)
-export const customCategory = allCategories[0]
+export const groups = allGroups.slice(1)
+export const customGroup = allGroups[0]

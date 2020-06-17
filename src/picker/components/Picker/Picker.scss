@@ -68,6 +68,11 @@ $skintoneZIndex3: 3;
   width: 100%;
 }
 
+.category {
+  padding: var(--emoji-padding);
+  font-size: var(--category-font-size);
+}
+
 //
 // emoji
 //
@@ -137,7 +142,7 @@ button.emoji,
 .indicator {
   $opacityAnim: 0.1s;
   $transformAnim: 0.25s;
-  width: calc(100% / var(--num-categories));
+  width: calc(100% / var(--num-groups));
   height: var(--indicator-height);
   opacity: var(--indicator-opacity);
   background-color: var(--indicator-color);

@@ -2,7 +2,7 @@
 
 import Database from '../../ImportedDatabase'
 import enI18n from '../../i18n/en'
-import { categories as defaultCategories, customCategory } from '../../categories'
+import { groups as defaultGroups, customGroup } from '../../groups'
 import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
@@ -36,7 +36,7 @@ let customEmoji = null
 // private
 let initialLoad = true
 let currentEmojis = []
-let currentEmojisWithCategories = []
+let currentEmojisWithCategories = [] // eslint-disable-line no-unused-vars
 let rawSearchText = ''
 let searchText = ''
 let rootElement
@@ -60,9 +60,9 @@ let currentFavorites = [] // eslint-disable-line no-unused-vars
 let defaultFavoriteEmojis
 let numColumns = DEFAULT_NUM_COLUMNS
 let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
-let currentCategoryIndex = 0
-let categories = defaultCategories
-let currentCategory
+let currentGroupIndex = 0
+let groups = defaultGroups
+let currentGroup
 
 //
 // Utils/helpers
@@ -142,7 +142,7 @@ Promise.resolve().then(() => {
 
 $: style = `
   --font-family: ${FONT_FAMILY};
-  --num-categories: ${categories.length}; 
+  --num-groups: ${groups.length}; 
   --indicator-opacity: ${searchMode ? 0 : 1}; 
   --num-skintones: ${NUM_SKIN_TONES};`
 
@@ -168,9 +168,9 @@ $: {
 
 $: {
   if (customEmoji && customEmoji.length) {
-    categories = [customCategory, ...defaultCategories]
-  } else if (categories !== defaultCategories) {
-    categories = defaultCategories
+    groups = [customGroup, ...defaultGroups]
+  } else if (groups !== defaultGroups) {
+    groups = defaultGroups
   }
 }
 
@@ -248,10 +248,10 @@ function calculateEmojiGridWith (node) {
 }
 
 //
-// Update the current category based on the currentCategoryIndex
+// Update the current group based on the currentGroupIndex
 //
 
-$: currentCategory = categories[currentCategoryIndex]
+$: currentGroup = groups[currentGroupIndex]
 
 //
 // Animate the indicator
@@ -271,9 +271,9 @@ function calculateIndicatorWidth (node) {
 $: {
   /* istanbul ignore if */
   if (resizeObserverSupported) {
-    indicatorStyle = `transform: translateX(${currentCategoryIndex * computedIndicatorWidth}px);` // exact pixels
+    indicatorStyle = `transform: translateX(${currentGroupIndex * computedIndicatorWidth}px);` // exact pixels
   } else {
-    indicatorStyle = `transform: translateX(${currentCategoryIndex * 100}%);`// fallback to percent-based
+    indicatorStyle = `transform: translateX(${currentGroupIndex * 100}%);`// fallback to percent-based
   }
 }
 
@@ -290,9 +290,9 @@ $: {
     } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
       searchMode = true
       currentEmojis = await getEmojisBySearchQuery(searchText)
-    } else if (currentCategory) {
+    } else if (currentGroup) {
       searchMode = false
-      currentEmojis = await getEmojisByGroup(currentCategory.group)
+      currentEmojis = await getEmojisByGroup(currentGroup.id)
     }
   }
   /* no await */ updateEmojis()
@@ -368,20 +368,20 @@ async function getEmojisBySearchQuery (query) {
 //
 
 $: {
-  function calculateCurrentEmojisWithCategories() {
-    const categoriesToEmoji = {}
-    for (const currentEmoji of currentEmojis) {
-      const category = currentEmoji.category || ''
-      if (currentEmoji.category) {
-        categoriesToEmoji[category] = categoriesToEmoji[category] || []
-        categoriesToEmoji[category].push(currentEmoji)
+  function calculateCurrentEmojisWithCategories () {
+    const categoriesToEmoji = new Map()
+    for (const emoji of currentEmojis) {
+      const category = emoji.category || ''
+      let emojis = categoriesToEmoji.get(category)
+      if (!emojis) {
+        emojis = []
+        categoriesToEmoji.set(category, emojis)
       }
+      emojis.push(emoji)
     }
-    const res = []
-    for (const key of Object.keys(categoriesToEmoji).sort()) {
-      res.push({ category: key, emojis: categoriesToEmoji[key] })
-    }
-    return res
+    return [...categoriesToEmoji.entries()]
+      .map(([category, emojis]) => ({ category, emojis }))
+      .sort((a, b) => a.category < b.category ? -1 : 1)
   }
 
   currentEmojisWithCategories = calculateCurrentEmojisWithCategories()
@@ -427,11 +427,11 @@ function onSearchKeydown (event) {
 //
 
 // eslint-disable-next-line no-unused-vars
-function onCategoryClick (category) {
+function onNavClick (group) {
   rawSearchText = ''
   searchText = ''
   activeSearchItem = -1
-  currentCategoryIndex = categories.findIndex(_ => _.group === category.group)
+  currentGroupIndex = groups.findIndex(_ => _.id === group.id)
 }
 
 // eslint-disable-next-line no-unused-vars

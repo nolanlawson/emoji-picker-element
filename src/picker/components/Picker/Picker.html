@@ -78,19 +78,19 @@
   </div>
   <div class="nav"
        role="tablist"
-       style="grid-template-columns: repeat({categories.length}, 1fr);"
+       style="grid-template-columns: repeat({groups.length}, 1fr);"
        aria-label={i18n.categoriesLabel}
        on:keydown={onNavKeydown}>
-    {#each categories as category (category.group)}
+    {#each groups as group (group.id)}
       <button role="tab"
               class="nav-button"
-              aria-controls="tab-{category.group}"
-              aria-label={i18n.categories[category.name]}
-              aria-selected={currentCategory.group === category.group}
-              title={i18n.categories[category.name]}
-              on:click={() => onCategoryClick(category)}>
+              aria-controls="tab-{group.id}"
+              aria-label={i18n.categories[group.name]}
+              aria-selected={group.id === group.id}
+              title={i18n.categories[group.name]}
+              on:click={() => onNavClick(group)}>
         <div class="emoji">
-          {category.emoji}
+          {group.emoji}
         </div>
       </button>
     {/each}
@@ -111,41 +111,41 @@
 
   <div class="tabpanel {message ? 'gone': ''}"
        role={searchMode ? 'region' : 'tabpanel'}
-       aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
-       id={searchMode ? '' : `tab-${currentCategory.group}`}
+       aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentGroup.name]}
+       id={searchMode ? '' : `tab-${currentGroup.id}`}
        tabindex="0"
        on:click={onEmojiClick}
   >
-  {#each currentEmojisWithCategories as emojiWithCategory (emojiWithCategory.category)}
-    <div class="emoji-menu"
-         role={searchMode ? 'listbox' : 'menu'}
-         aria-label={searchMode ? i18n.searchResultsLabel : emojiWithCategory.category ? emojiWithCategory.category : i18n.categories[currentCategory.name]}
-         {...(searchMode ? { 'id': 'search-results' } : null)}
-         use:calculateEmojiGridWith
-    >
-      {#if currentEmojisWithCategories.length}
-        <span class="category" aria-hidden="true">
-          {emojiWithCategory.category ? emojiWithCategory.category : i18n.categories[currentCategory.name]}
-        </span>
+    {#each currentEmojisWithCategories as emojiWithCategory (emojiWithCategory.category)}
+      {#if currentEmojisWithCategories.length > 1}
+        <div class="category" aria-hidden="true">
+          {emojiWithCategory.category || i18n.categories[currentGroup.name]}
+        </div>
       {/if}
-      {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
-        <button role={searchMode ? 'option' : 'menuitem'}
-                {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
-                aria-label={emoji.label}
-                title={emoji.title}
-                class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
-                data-emoji={emoji.id}>
-          {#if emoji.unicode}
-            {unicodeWithSkin(emoji, currentSkinTone)}
-          {:else}
-            <img class="custom-emoji"
-                 src={emoji.url}
-                 loading="lazy"
-                 alt=""
-            />
-          {/if}
-        </button>
-      {/each}
+      <div class="emoji-menu"
+           role={searchMode ? 'listbox' : 'menu'}
+           aria-label={searchMode ? i18n.searchResultsLabel : (emojiWithCategory.category || i18n.categories[currentGroup.name])}
+           {...(searchMode ? { 'id': 'search-results' } : null)}
+           use:calculateEmojiGridWith
+      >
+        {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
+          <button role={searchMode ? 'option' : 'menuitem'}
+                  {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
+                  aria-label={emoji.label}
+                  title={emoji.title}
+                  class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
+                  data-emoji={emoji.id}>
+            {#if emoji.unicode}
+              {unicodeWithSkin(emoji, currentSkinTone)}
+            {:else}
+              <img class="custom-emoji"
+                   src={emoji.url}
+                   loading="lazy"
+                   alt=""
+              />
+            {/if}
+          </button>
+        {/each}
       </div>
     {/each}
   </div>
