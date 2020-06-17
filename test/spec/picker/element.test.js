@@ -9,33 +9,19 @@ import {
 import Picker from '../../../src/picker/PickerElement'
 import { getAllByRole, getByRole, waitFor } from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
-import { mergeI18n } from '../../../src/picker/utils/mergeI18n'
 import enI18n from '../../../src/picker/i18n/en'
 import Database from '../../../src/database/Database'
 import { DEFAULT_SKIN_TONE_EMOJI } from '../../../src/picker/constants'
 import { DEFAULT_DATA_SOURCE } from '../../../src/database/constants'
 const { type, clear } = userEvent
 
+const frI18n = JSON.parse(JSON.stringify(enI18n))
+
+frI18n.search = 'Recherche'
+frI18n.skinTones[0] = 'Défaut'
+frI18n.categories['smileys-emotion'] = 'Sourires et emoticons'
+
 describe('element tests', () => {
-  describe('data tests', () => {
-    test('can merge i18n object, partial translation', async () => {
-      const partialFrI18n = {
-        search: 'Recherche',
-        skinTones: [
-          'Défaut'
-        ],
-        categories: {
-          'smileys-emotion': 'Sourires et emoticons'
-        }
-      }
-      const expected = JSON.parse(JSON.stringify(enI18n))
-      expected.search = partialFrI18n.search
-      expected.skinTones[0] = partialFrI18n.skinTones[0]
-      expected.categories['smileys-emotion'] = partialFrI18n.categories['smileys-emotion']
-      const mergedI18n = mergeI18n(enI18n, partialFrI18n)
-      expect(mergedI18n).toStrictEqual(expected)
-    })
-  })
   describe('UI tests', () => {
     let picker
     let container
@@ -74,18 +60,8 @@ describe('element tests', () => {
     })
 
     test('can dynamically change i18n', async () => {
-      const partialFrI18n = {
-        search: 'Recherche',
-        skinTones: [
-          'Défaut'
-        ],
-        categories: {
-          'smileys-emotion': 'Sourires et emoticons'
-        }
-      }
-      await tick(20)
-      expect(picker.i18n).toStrictEqual(enI18n)
-      picker.i18n = partialFrI18n
+      picker.i18n = frI18n
+      await tick(10)
       expect(getByRole(container, 'searchbox', { name: 'Recherche' })).toBeVisible()
       expect(getByRole(container, 'tab', { name: 'Sourires et emoticons' })).toBeVisible()
       expect(getByRole(container, 'button', { name: 'Choose a skin tone (currently Défaut)' })).toBeVisible()

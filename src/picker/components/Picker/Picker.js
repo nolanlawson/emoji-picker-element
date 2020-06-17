@@ -20,7 +20,6 @@ import {
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
 import { uniqBy } from '../../../shared/uniqBy'
-import { mergeI18n } from '../../utils/mergeI18n'
 import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 import { calculateWidth, resizeObserverSupported } from '../../utils/calculateWidth'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
@@ -153,16 +152,6 @@ $: style = `
   --num-groups: ${groups.length}; 
   --indicator-opacity: ${searchMode ? 0 : 1}; 
   --num-skintones: ${NUM_SKIN_TONES};`
-
-//
-// Set or update the i18n
-//
-
-$: {
-  if (i18n !== enI18n) {
-    i18n = mergeI18n(enI18n, i18n) // if partial translations are provided, merge with English
-  }
-}
 
 //
 // Set or update the customEmoji
