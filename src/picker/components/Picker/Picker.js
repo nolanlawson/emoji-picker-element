@@ -90,6 +90,15 @@ function unicodeWithSkin (emoji, currentSkinTone) {
   return emoji.unicode
 }
 
+// eslint-disable-next-line no-unused-vars
+function emojiToHtml (emoji, currentSkinTone) {
+  if (emoji.unicode) {
+    return unicodeWithSkin(emoji, currentSkinTone)
+  } else {
+    return `<img class="custom-emoji" src=${emoji.url} loading=lazy alt=''/>`
+  }
+}
+
 //
 // Determine the emoji support level (in requestIdleCallback)
 //

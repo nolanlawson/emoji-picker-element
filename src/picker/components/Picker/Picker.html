@@ -133,15 +133,7 @@
                   title={emoji.title}
                   class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                   data-emoji={emoji.id}>
-            {#if emoji.unicode}
-              {unicodeWithSkin(emoji, currentSkinTone)}
-            {:else}
-              <img class="custom-emoji"
-                   src={emoji.url}
-                   loading="lazy"
-                   alt=""
-              />
-            {/if}
+            {@html emojiToHtml(emoji)}
           </button>
         {/each}
       </div>
@@ -163,15 +155,7 @@
               title={emoji.title}
               class="emoji"
               data-emoji={emoji.id}>
-        {#if emoji.unicode}
-          {unicodeWithSkin(emoji, currentSkinTone)}
-        {:else}
-          <img class="custom-emoji"
-               src={emoji.url}
-               loading="lazy"
-               alt=""
-          />
-        {/if}
+        {@html emojiToHtml(emoji, currentSkinTone)}
       </button>
     {/each}
   </div>
