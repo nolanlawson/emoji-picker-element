@@ -192,7 +192,7 @@ $: {
         return skins.find(skin => skin.tone === tone).unicode
       })
     } else {
-      skinTones = skinToneNumbers.map(_ => skinToneEmoji)
+      skinTones = [skinToneEmoji]
     }
   }
   /* no await */ updateSkinTones()
