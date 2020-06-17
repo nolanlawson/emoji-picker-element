@@ -117,11 +117,9 @@
        on:click={onEmojiClick}
   >
     {#each currentEmojisWithCategories as emojiWithCategory (emojiWithCategory.category)}
-      {#if currentEmojisWithCategories.length > 1}
-        <div class="category" aria-hidden="true">
-          {emojiWithCategory.category || i18n.categories[currentGroup.name]}
-        </div>
-      {/if}
+      <div class="category {currentEmojisWithCategories.length > 1 ? '' : 'gone'}" aria-hidden="true">
+        {emojiWithCategory.category || i18n.categories[currentGroup.name]}
+      </div>
       <div class="emoji-menu"
            role={searchMode ? 'listbox' : 'menu'}
            aria-label={searchMode ? i18n.searchResultsLabel : (emojiWithCategory.category || i18n.categories[currentGroup.name])}
