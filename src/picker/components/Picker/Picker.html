@@ -125,12 +125,12 @@
       <div class="emoji-menu"
            role={searchMode ? 'listbox' : 'menu'}
            aria-label={searchMode ? i18n.searchResultsLabel : (emojiWithCategory.category || i18n.categories[currentGroup.name])}
-           {...(searchMode ? { 'id': 'search-results' } : null)}
+           id={searchMode ? 'search-results' : ''}
            use:calculateEmojiGridWith
       >
         {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
           <button role={searchMode ? 'option' : 'menuitem'}
-                  {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
+                  aria-selected={searchMode ? i == activeSearchItem : ''}
                   aria-label={emoji.label}
                   title={emoji.title}
                   class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
