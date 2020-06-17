@@ -4,11 +4,34 @@
   <meta charset="UTF-8">
   <title>Ad-hoc emoji-picker-element test</title>
   <meta name="viewport" content="width=device-width">
+  <style>
+    body {
+      margin: 0 auto;
+      max-width: 600px;
+    }
+    h1 {
+      padding: 0 10px;
+    }
+    emoji-picker {
+      margin: 0 auto;
+    }
+    @media screen and (max-width: 320px) {
+      emoji-picker {
+        width: 100%;
+      }
+      h1 {
+        font-size: 1.125rem;
+      }
+    }
+    @media screen and (max-width: 240px) {
+      emoji-picker {
+        height: 80vh;
+      }
+    }
+  </style>
 </head>
 <body>
 <h1>Ad-hoc emoji-picker-element test</h1>
-<div class="container">
-</div>
 <script src="/node_modules/focus-visible/dist/focus-visible.js"></script>
 <script type="module">
   import { Picker } from '/index.js'
@@ -30,7 +53,7 @@
     })
     picker.addEventListener('emoji-click', e => console.log(e))
     applyFocusVisiblePolyfill(picker.shadowRoot)
-    document.querySelector('.container').appendChild(picker)
+    document.body.appendChild(picker)
   })()
 </script>
 </body>

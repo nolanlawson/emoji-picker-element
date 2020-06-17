@@ -128,6 +128,8 @@ Here is a full list of options:
 
 <!-- CSS variable options end -->
 
+Note that the above values are tweaked slightly for very small screen sizes (e.g. iPhone 4, JioPhone 2). Details are in [variables.scss](https://github.com/nolanlawson/emoji-picker-element/blob/master/src/picker/styles/variables.scss).
+
 ### Focus outline
 
 For accessibility reasons, `emoji-picker-element` displays a prominent focus ring. If you want to hide the focus ring for non-keyboard users (e.g. mouse and touch only), then use the [focus-visible](https://github.com/WICG/focus-visible) polyfill, e.g.:

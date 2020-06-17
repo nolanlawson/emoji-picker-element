@@ -1,23 +1,29 @@
 @import '../../styles/global.scss';
 
+// These z-indexes are used to manage the skintone picker animation and make it look nicer.
+// The skintone picker should appear to expand "behind" the skintone button.
+$skintoneZIndex1: 1;
+$skintoneZIndex2: 2;
+$skintoneZIndex3: 3;
+
 //
 // skintone picker
 //
 
 .skintone-button-wrapper {
   background: var(--background);
-  z-index: 3;
+  z-index: $skintoneZIndex3;
 }
 
 .skintone-button-wrapper.expanded {
-  z-index: 1; // place behind the skintone dropdown after the listbox has animated
+  z-index: $skintoneZIndex1; // place behind the skintone dropdown after the listbox has animated
 }
 
 .skintone-list {
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 2;
+  z-index: $skintoneZIndex2;
   overflow: visible;
   background: var(--background);
   border-bottom: var(--border-size) solid var(--border-color);
@@ -149,16 +155,25 @@ button.emoji,
 // search
 //
 
+.pad-top {
+  width: 100%;
+  height: var(--emoji-padding);
+  z-index: $skintoneZIndex3;
+  background: var(--background);
+}
+
+
 .search-row {
   display: flex;
   align-items: center;
   position: relative;
+  padding-left: var(--emoji-padding);
+  padding-bottom: var(--emoji-padding);
 }
 
 .search-wrapper {
   flex: 1;
   min-width: 0;
-  padding-left: 0.5rem;
 }
 
 input.search {

@@ -70,3 +70,20 @@
     @include colors(true);
   }
 }
+
+// iPhone 4, iPhone SE 1st generation
+@media screen and (max-width: 320px) {
+  :host {
+    --num-columns: 6;
+    --emoji-padding: 0.25rem;
+  }
+}
+
+// JioPhone 2, Nokia 8110 4G, KaiOS devices generally
+@media screen and (max-width: 240px) {
+  :host {
+    --num-columns: 6;
+    --emoji-size: 1.125rem;
+    --emoji-padding: 0.125rem;
+  }
+}
