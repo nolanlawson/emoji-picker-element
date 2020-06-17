@@ -103,9 +103,8 @@ button.emoji,
 .custom-emoji {
   height: var(--total-emoji-size);
   width: var(--total-emoji-size);
-  background-position: center center;
-  background-size: contain;
-  background-repeat: no-repeat;
+  padding: var(--emoji-padding);
+  object-fit: contain;
   pointer-events: none;
 }
 

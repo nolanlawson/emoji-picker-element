@@ -132,7 +132,11 @@
             {#if emoji.unicode}
               {unicodeWithSkin(emoji, currentSkinTone)}
             {:else}
-              <div class="custom-emoji" style="background-image: url({emoji.url});"></div>
+              <img class="custom-emoji"
+                   src={emoji.url}
+                   loading="lazy"
+                   alt=""
+              />
             {/if}
           </button>
         {/each}
@@ -157,7 +161,11 @@
         {#if emoji.unicode}
           {unicodeWithSkin(emoji, currentSkinTone)}
         {:else}
-          <div class="custom-emoji" style="background-image: url({emoji.url});"></div>
+          <img class="custom-emoji"
+               src={emoji.url}
+               loading="lazy"
+               alt=""
+          />
         {/if}
       </button>
     {/each}
