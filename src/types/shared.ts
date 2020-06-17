@@ -100,6 +100,7 @@ export interface CustomEmoji {
   name: string
   shortcodes: string[]
   url: string
+  category?: string
 }
 
 export type Emoji = NativeEmoji | CustomEmoji

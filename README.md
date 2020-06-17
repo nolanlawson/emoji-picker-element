@@ -546,19 +546,30 @@ Custom emoji should follow the format:
 ```js
 [
   {
-    name: 'foo',
-    shortcodes: ['foo'],
-    url: 'http://example.com/foo.png'
+    name: 'Garfield',
+    shortcodes: ['garfield'],
+    url: 'http://example.com/garfield.png',
+    category: 'Cats'
   },
   {
-    name: 'bar',
-    shortcodes: ['bar'],
-    url: 'http://example.com/bar.png'
+    name: 'Heathcliff',
+    shortcodes: ['heathcliff'],
+    url: 'http://example.com/heathcliff.png',
+    category: 'Cats'
+  },
+  {
+    name: 'Scooby-Doo',
+    shortcodes: ['scooby'],
+    url: 'http://example.com/scooby.png',
+    category: 'Dogs'
   }  
 ]
 ```
 
 Note that names are assumed to be unique (case-insensitive), and it's assumed that the `shortcodes` have at least one entry.
+
+The `category` is optional. If you don't provide it, then the custom emoji will appear in a
+single category called "Custom".
 
 To pass custom emoji into the `Picker`:
 
@@ -576,7 +587,7 @@ const database = new Database({
 })
 ```
 
-It can also be set at runtime:
+Custom emoji can also be set at runtime:
 
 ```js
 picker.customEmoji = [/* ... */ ]
