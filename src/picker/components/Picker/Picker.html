@@ -161,5 +161,8 @@
   </div>
   <div aria-hidden="true" class="hidden abs-pos">
     <button tabindex="-1" class="emoji baseline-emoji" bind:this={baselineEmoji}>😀</button>
+
+    <!-- TODO: adding a fake hidden div so that Svelte doesn't remove the styles for .custom-emoji -->
+    <div class="custom-emoji"></div>
   </div>
 </section>
