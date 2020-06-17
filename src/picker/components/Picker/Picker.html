@@ -59,7 +59,7 @@
          on:click={onClickSkinToneOption}
          bind:this={skinToneDropdown}
     >
-      {#each skinTones as skinTone, i (skinTone)}
+      {#each skinTones as skinTone, i (i)}
         <button id="skintone-{i}"
                 class="emoji skintone-option hide-focus {i === activeSkinTone ? 'active' : ''}"
                 aria-selected={i === activeSkinTone}

@@ -9,7 +9,6 @@ import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { hasZwj } from '../../utils/hasZwj'
 import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiSupport'
 import { log } from '../../../shared/log'
-import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import { tick } from 'svelte'
@@ -181,7 +180,24 @@ $: {
   /* no await */ updatePreferredSkinTone()
 }
 
-$: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => applySkinTone(skinToneEmoji, i))
+$: {
+  async function updateSkinTones () {
+    const skinToneNumbers = Array(NUM_SKIN_TONES).fill().map((_, i) => i)
+    if (database) {
+      const { skins } = await database.getEmojiByUnicodeOrName(skinToneEmoji)
+      skinTones = skinToneNumbers.map(tone => {
+        if (tone === 0) {
+          return skinToneEmoji
+        }
+        return skins.find(skin => skin.tone === tone).unicode
+      })
+    } else {
+      skinTones = skinToneNumbers.map(_ => skinToneEmoji)
+    }
+  }
+  /* no await */ updateSkinTones()
+}
+
 $: skinToneButtonText = skinTones[currentSkinTone]
 $: skinToneButtonLabel = i18n.skinToneLabel.replace('{skinTone}', i18n.skinTones[currentSkinTone])
 
