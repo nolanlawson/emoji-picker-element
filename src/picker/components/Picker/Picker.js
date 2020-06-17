@@ -52,10 +52,9 @@ let skinTonePickerExpandedAfterAnimation = false // eslint-disable-line no-unuse
 let skinToneDropdown
 let currentSkinTone = 0
 let activeSkinTone = 0
-let skinToneText // eslint-disable-line no-unused-vars
+let skinToneButtonText // eslint-disable-line no-unused-vars
 let style = '' // eslint-disable-line no-unused-vars
 let skinToneButtonLabel = '' // eslint-disable-line no-unused-vars
-let skinToneTextForSkinTone = ''
 let skinTones = []
 let currentFavorites = [] // eslint-disable-line no-unused-vars
 let defaultFavoriteEmojis
@@ -84,10 +83,7 @@ function fireEvent (name, detail) {
 
 // eslint-disable-next-line no-unused-vars
 function unicodeWithSkin (emoji, currentSkinTone) {
-  if (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) {
-    return emoji.skins[currentSkinTone]
-  }
-  return emoji.unicode
+  return (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
 }
 
 //
@@ -185,10 +181,9 @@ $: {
   /* no await */ updatePreferredSkinTone()
 }
 
-$: skinToneText = skinToneTextForSkinTone(currentSkinTone)
+$: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => applySkinTone(skinToneEmoji, i))
+$: skinToneButtonText = skinTones[currentSkinTone]
 $: skinToneButtonLabel = i18n.skinToneLabel.replace('{skinTone}', i18n.skinTones[currentSkinTone])
-$: skinToneTextForSkinTone = i => applySkinTone(skinToneEmoji, i)
-$: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTone(i))
 
 //
 // Set or update the favorites emojis
@@ -196,28 +191,24 @@ $: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => skinToneTextForSkinTon
 
 $: {
   async function updateDefaultFavoriteEmojis () {
-    if (database) {
-      defaultFavoriteEmojis = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
-        database.getEmojiByUnicodeOrName(unicode)
-      )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
-    }
+    defaultFavoriteEmojis = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
+      database.getEmojiByUnicodeOrName(unicode)
+    )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
   }
-  /* no await */ updateDefaultFavoriteEmojis()
+  if (database) {
+    /* no await */ updateDefaultFavoriteEmojis()
+  }
 }
 
 $: {
-  async function getFavorites () {
-    log('getFavorites')
+  async function updateFavorites () {
+    log('updateFavorites')
     const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
-    const favs = uniqBy([
+    const favorites = await summarizeEmojis(uniqBy([
       ...dbFavorites,
       ...defaultFavoriteEmojis
-    ], _ => (_.unicode || _.name)).slice(0, numColumns)
-    return summarizeEmojis(favs)
-  }
-
-  async function updateFavorites () {
-    currentFavorites = await getFavorites()
+    ], _ => (_.unicode || _.name)).slice(0, numColumns))
+    currentFavorites = favorites
   }
 
   if (database && defaultFavoriteEmojis) {
