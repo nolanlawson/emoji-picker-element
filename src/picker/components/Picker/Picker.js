@@ -36,6 +36,7 @@ let customEmoji = null
 // private
 let initialLoad = true
 let currentEmojis = []
+let currentEmojisWithCategories = []
 let rawSearchText = ''
 let searchText = ''
 let rootElement
@@ -359,6 +360,31 @@ async function getEmojisByGroup (group) {
 
 async function getEmojisBySearchQuery (query) {
   return summarizeEmojis(await filterEmojisByVersion(await database.getEmojiBySearchQuery(query)))
+}
+
+//
+// Derive currentEmojisWithCategories from currentEmojis. This is always done even if there
+// are no categories, because it's just easier to code the HTML this way.
+//
+
+$: {
+  function calculateCurrentEmojisWithCategories() {
+    const categoriesToEmoji = {}
+    for (const currentEmoji of currentEmojis) {
+      const category = currentEmoji.category || ''
+      if (currentEmoji.category) {
+        categoriesToEmoji[category] = categoriesToEmoji[category] || []
+        categoriesToEmoji[category].push(currentEmoji)
+      }
+    }
+    const res = []
+    for (const key of Object.keys(categoriesToEmoji).sort()) {
+      res.push({ category: key, emojis: categoriesToEmoji[key] })
+    }
+    return res
+  }
+
+  currentEmojisWithCategories = calculateCurrentEmojisWithCategories()
 }
 
 //

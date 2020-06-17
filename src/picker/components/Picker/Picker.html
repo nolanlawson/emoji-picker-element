@@ -116,31 +116,38 @@
        tabindex="0"
        on:click={onEmojiClick}
   >
-      <div class="emoji-menu"
-           role={searchMode ? 'listbox' : 'menu'}
-           aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentCategory.name]}
-           id="search-results"
-           use:calculateEmojiGridWith
-      >
-        {#each currentEmojis as emoji, i (emoji.id)}
-          <button role={searchMode ? 'option' : 'menuitem'}
-                  {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
-                  aria-label={emoji.label}
-                  title={emoji.title}
-                  class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
-                  data-emoji={emoji.id}>
-            {#if emoji.unicode}
-              {unicodeWithSkin(emoji, currentSkinTone)}
-            {:else}
-              <img class="custom-emoji"
-                   src={emoji.url}
-                   loading="lazy"
-                   alt=""
-              />
-            {/if}
-          </button>
-        {/each}
-    </div>
+  {#each currentEmojisWithCategories as emojiWithCategory (emojiWithCategory.category)}
+    <div class="emoji-menu"
+         role={searchMode ? 'listbox' : 'menu'}
+         aria-label={searchMode ? i18n.searchResultsLabel : emojiWithCategory.category ? emojiWithCategory.category : i18n.categories[currentCategory.name]}
+         {...(searchMode ? { 'id': 'search-results' } : null)}
+         use:calculateEmojiGridWith
+    >
+      {#if currentEmojisWithCategories.length}
+        <span class="category" aria-hidden="true">
+          {emojiWithCategory.category ? emojiWithCategory.category : i18n.categories[currentCategory.name]}
+        </span>
+      {/if}
+      {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
+        <button role={searchMode ? 'option' : 'menuitem'}
+                {...(searchMode ? { 'aria-selected': i == activeSearchItem } : null)}
+                aria-label={emoji.label}
+                title={emoji.title}
+                class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
+                data-emoji={emoji.id}>
+          {#if emoji.unicode}
+            {unicodeWithSkin(emoji, currentSkinTone)}
+          {:else}
+            <img class="custom-emoji"
+                 src={emoji.url}
+                 loading="lazy"
+                 alt=""
+            />
+          {/if}
+        </button>
+      {/each}
+      </div>
+    {/each}
   </div>
   <div class="favorites emoji-menu {message ? 'gone': ''}"
        role="menu"
