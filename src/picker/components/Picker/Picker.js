@@ -162,6 +162,7 @@ $: {
 
 $: {
   if (customEmoji && database) {
+    log('updating custom emoji')
     database.customEmoji = customEmoji
   }
 }
@@ -284,6 +285,7 @@ $: {
 
 $: {
   async function updateEmojis () {
+    log('updateEmojis')
     if (!database) {
       searchMode = false
       currentEmojis = []
@@ -345,7 +347,7 @@ async function summarizeEmojis (emojis) {
 }
 
 async function getEmojisByGroup (group) {
-  log('getEmojiByGroup')
+  log('getEmojiByGroup', group)
   if (typeof group === 'undefined') {
     return []
   }

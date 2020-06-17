@@ -55,6 +55,10 @@
 
 :host {
   @include sizes();
+  display: flex;
+  width: min-content;
+  height: 400px;
+  font-family: sans-serif;
 }
 
 :host,
@@ -72,11 +76,18 @@
   }
 }
 
+// Nexus 5
+
+@media screen and (max-width: 360px) {
+  :host {
+    --emoji-padding: 0.25rem;
+  }
+}
+
 // iPhone 4, iPhone SE 1st generation
 @media screen and (max-width: 320px) {
   :host {
     --num-columns: 6;
-    --emoji-padding: 0.25rem;
   }
 }
 
@@ -86,5 +97,6 @@
     --num-columns: 6;
     --emoji-size: 1.125rem;
     --emoji-padding: 0.125rem;
+    height: 240px;
   }
 }

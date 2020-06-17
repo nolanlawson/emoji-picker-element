@@ -8,13 +8,6 @@
   box-sizing: border-box;
 }
 
-:host {
-  display: flex;
-  width: min-content;
-  height: 400px;
-  font-family: sans-serif;
-}
-
 .picker {
   contain: content;
   display: flex;
