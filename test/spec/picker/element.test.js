@@ -72,9 +72,15 @@ describe('element tests', () => {
       expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML)
         .toContain(DEFAULT_SKIN_TONE_EMOJI)
       picker.skinToneEmoji = '👇'
-      expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('👇')
+      await tick(20)
+      await waitFor(
+        () => expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('👇')
+      )
       picker.skinToneEmoji = '👋'
-      expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('👋')
+      await tick(20)
+      await waitFor(
+        () => expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('👋')
+      )
     })
 
     test('can get the locale/dataSource', () => {

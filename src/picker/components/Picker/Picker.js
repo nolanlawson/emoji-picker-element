@@ -54,7 +54,7 @@ let activeSkinTone = 0
 let skinToneButtonText // eslint-disable-line no-unused-vars
 let style = '' // eslint-disable-line no-unused-vars
 let skinToneButtonLabel = '' // eslint-disable-line no-unused-vars
-let skinTones = []
+let skinTones = [skinToneEmoji]
 let currentFavorites = [] // eslint-disable-line no-unused-vars
 let defaultFavoriteEmojis
 let numColumns = DEFAULT_NUM_COLUMNS
@@ -183,19 +183,19 @@ $: {
 $: {
   async function updateSkinTones () {
     const skinToneNumbers = Array(NUM_SKIN_TONES).fill().map((_, i) => i)
-    if (database) {
-      const { skins } = await database.getEmojiByUnicodeOrName(skinToneEmoji)
-      skinTones = skinToneNumbers.map(tone => {
-        if (tone === 0) {
-          return skinToneEmoji
-        }
-        return skins.find(skin => skin.tone === tone).unicode
-      })
-    } else {
-      skinTones = [skinToneEmoji]
-    }
+
+    const { skins } = await database.getEmojiByUnicodeOrName(skinToneEmoji)
+    skinTones = skinToneNumbers.map(tone => {
+      if (tone === 0) {
+        return skinToneEmoji
+      }
+      return skins.find(skin => skin.tone === tone).unicode
+    })
   }
+
+  if (database) {
   /* no await */ updateSkinTones()
+  }
 }
 
 $: skinToneButtonText = skinTones[currentSkinTone]
