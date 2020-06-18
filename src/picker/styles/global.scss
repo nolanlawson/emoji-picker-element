@@ -2,9 +2,9 @@
 @import './resets.scss';
 @import './focus.scss';
 
-*,
-*::before,
-*::after {
+.picker *,
+.picker *::before,
+.picker *::after {
   box-sizing: border-box;
 }
 

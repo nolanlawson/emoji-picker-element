@@ -26,7 +26,7 @@ const baseConfig = {
     }),
     svelte({
       css: true,
-      customElement: true,
+      customElement: false,
       dev,
       preprocess: preprocess({
         scss: true,

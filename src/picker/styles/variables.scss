@@ -53,7 +53,7 @@
   }
 }
 
-:host {
+.picker {
   @include sizes();
   display: flex;
   width: min-content;
@@ -61,17 +61,16 @@
   font-family: sans-serif;
 }
 
-:host,
-:host(.light) {
+.picker.light {
   @include colors(false);
 }
 
-:host(.dark) {
+.picker.dark {
   @include colors(true);
 }
 
 @media (prefers-color-scheme: dark) {
-  :host {
+  .picker {
     @include colors(true);
   }
 }
@@ -79,7 +78,7 @@
 // Nexus 5
 
 @media screen and (max-width: 360px) {
-  :host {
+  .picker {
     --emoji-padding: 0.25rem;
   }
 }
