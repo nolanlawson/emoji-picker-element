@@ -136,8 +136,10 @@
             {#if emoji.unicode}
               {unicodeWithSkin(emoji, currentSkinTone)}
             {:else}
-              <div class="custom-emoji"
-                   style="background-image: url({emoji.url});"
+              <img class="custom-emoji"
+                   src={emoji.url}
+                   loading="lazy"
+                   alt=""
               />
             {/if}
           </button>
