@@ -124,6 +124,7 @@ describe('Picker tests', () => {
     }
 
     await expectGroupLength(0)
+    await pressKeyAndExpectActiveTab('ArrowLeft', 'Smileys and emoticons', 0)
     await pressKeyAndExpectActiveTab('ArrowRight', 'People and body', 1)
     await pressKeyAndExpectActiveTab('ArrowRight', 'Animals and nature', 3)
     await pressKeyAndExpectActiveTab('ArrowLeft', 'People and body', 1)
@@ -133,6 +134,7 @@ describe('Picker tests', () => {
     await pressKeyAndExpectActiveTab('ArrowRight', 'Activities', 6)
     await pressKeyAndExpectActiveTab('ArrowRight', 'Objects', 7)
     await pressKeyAndExpectActiveTab('ArrowRight', 'Symbols', 8)
+    await pressKeyAndExpectActiveTab('ArrowRight', 'Flags', 9)
     await pressKeyAndExpectActiveTab('ArrowRight', 'Flags', 9)
   })
 

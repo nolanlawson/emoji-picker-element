@@ -428,13 +428,18 @@ function onNavClick (group) {
 function onNavKeydown (event) {
   const { target, key } = event
 
+  const doFocus = el => {
+    if (el) {
+      halt(event)
+      el.focus()
+    }
+  }
+
   switch (key) {
     case 'ArrowLeft':
-      halt(event)
-      return target.previousSibling && target.previousSibling.focus()
+      return doFocus(target.previousSibling)
     case 'ArrowRight':
-      halt(event)
-      return target.nextSibling && target.nextSibling.focus()
+      return doFocus(target.nextSibling)
   }
 }
 
