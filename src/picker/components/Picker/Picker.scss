@@ -111,6 +111,9 @@ button.emoji,
   padding: var(--emoji-padding);
   object-fit: contain;
   pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: var(--emoji-size) var(--emoji-size);
 }
 
 //
