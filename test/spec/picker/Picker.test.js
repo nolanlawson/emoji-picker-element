@@ -3,6 +3,7 @@ import * as testingLibrary from '@testing-library/dom'
 import Picker from '../../../src/picker/PickerElement.js'
 import userEvent from '@testing-library/user-event'
 import { groups } from '../../../src/picker/groups'
+import Database from '../../../src/database/Database'
 
 const { waitFor, fireEvent } = testingLibrary
 const { type } = userEvent
@@ -33,10 +34,12 @@ describe('Picker tests', () => {
     )
   })
   afterEach(async () => {
-    basicAfterEach()
     await tick(20)
-    await picker.database.delete()
     document.body.removeChild(picker)
+    await tick(20)
+    await new Database({ dataSource: ALL_EMOJI, locale: 'en' }).delete()
+    await tick(20)
+    basicAfterEach()
   })
 
   const numInGroup1 = truncatedEmoji.filter(_ => _.group === 0).length

@@ -10,6 +10,19 @@ const scenarios = [
   'full'
 ]
 
+async function waitForServerReady () {
+  while (true) {
+    try {
+      const resp = await fetch('http://localhost:3000')
+      if (resp.status === 200) {
+        break
+      }
+    } catch (err) {}
+    console.log('Waiting for localhost:3000 to be available')
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+}
+
 async function measureMemory (scenario) {
   const browser = await puppeteer.launch({
     headless: false, // required for performance.measureMemory()
@@ -32,16 +45,7 @@ function printBytes (bytes) {
 }
 
 async function main () {
-  while (true) {
-    try {
-      const resp = await fetch('http://localhost:3000')
-      if (resp.status === 200) {
-        break
-      }
-    } catch (err) {}
-    console.log('Waiting for localhost:3000 to be availble')
-    await new Promise(resolve => setTimeout(resolve, 1000))
-  }
+  await waitForServerReady()
   const results = []
   for (const scenario of scenarios) {
     const bytes = await measureMemory(scenario)

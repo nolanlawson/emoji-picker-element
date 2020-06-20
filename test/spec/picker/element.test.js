@@ -35,11 +35,12 @@ describe('element tests', () => {
       await tick(20)
     })
     afterEach(async () => {
+      document.body.removeChild(picker)
+      await tick(20)
       await new Database({ dataSource: FR_EMOJI, locale: 'fr' }).delete()
       await new Database({ dataSource: ALL_EMOJI, locale: 'en' }).delete()
       await tick(20)
       basicAfterEach()
-      document.body.removeChild(picker)
     })
 
     test('changing locale/dataSource causes only one network request', async () => {
@@ -98,7 +99,8 @@ describe('element tests', () => {
 
       await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
-      await picker.database.delete()
+      await new Database().delete()
+      await tick(20)
     })
   })
 })

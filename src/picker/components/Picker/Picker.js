@@ -12,7 +12,6 @@ import { log } from '../../../shared/log'
 import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
-import { tick } from 'svelte'
 import {
   DEFAULT_NUM_COLUMNS,
   DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY,
@@ -25,6 +24,7 @@ import { calculateWidth, resizeObserverSupported } from '../../utils/calculateWi
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 import { stop } from '../../../shared/marks'
+import { onMount, onDestroy, tick } from 'svelte'
 
 // public
 let locale = null
@@ -127,8 +127,10 @@ $: {
 // renders custom elements in an odd way - props are not set when calling the constructor,
 // but are only set later. This would cause a double render or a double-fetch of
 // the dataSource, which is bad. Delaying with a microtask avoids this.
-Promise.resolve().then(() => {
-  log('setting locale and dataSource to default')
+// See https://github.com/sveltejs/svelte/pull/4527
+onMount(async () => {
+  await tick()
+  log('props ready: setting locale and dataSource to default')
   locale = locale || DEFAULT_LOCALE
   dataSource = dataSource || DEFAULT_DATA_SOURCE
 })
@@ -138,6 +140,13 @@ $: {
     database = new Database({ dataSource, locale })
   }
 }
+
+onDestroy(async () => {
+  if (database) {
+    log('closing database')
+    await database.close()
+  }
+})
 
 //
 // Global styles for the entire picker

@@ -734,3 +734,7 @@ Benchmark memory usage:
 Benchmark bundle size:
 
     yarn benchmark:bundlesize
+
+Run memory leak test:
+
+    yarn test:leak

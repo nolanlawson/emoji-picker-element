@@ -8,6 +8,9 @@ import allData from 'emojibase-data/en/data.json'
 import { MOST_COMMONLY_USED_EMOJI } from '../../../src/picker/constants'
 import { uniqBy } from '../../../src/shared/uniqBy'
 import { groups } from '../../../src/picker/groups'
+import Database from '../../../src/database/Database'
+
+const dataSource = 'with-favs.json'
 
 describe('Favorites UI', () => {
   let picker
@@ -15,7 +18,6 @@ describe('Favorites UI', () => {
 
   beforeEach(async () => {
     basicBeforeEach()
-    const dataSource = 'with-favs.json'
 
     const dataWithFavorites = uniqBy([
       ...truncatedEmoji,
@@ -32,10 +34,12 @@ describe('Favorites UI', () => {
     await tick(20)
   })
   afterEach(async () => {
-    basicAfterEach()
     await tick(20)
-    await picker.database.delete()
     document.body.removeChild(picker)
+    await tick(20)
+    await new Database({ dataSource, locale: 'en' }).delete()
+    await tick(20)
+    basicAfterEach()
   })
 
   test('Favorites UI basic test', async () => {

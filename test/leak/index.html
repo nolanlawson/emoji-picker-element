@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+</head>
+<body>
+<script type="module">
+  import Picker from '/picker.js'
+  window.addPicker = function addPicker() {
+    document.body.appendChild(new Picker({
+      dataSource: '/node_modules/emojibase-data/en/data.json'
+    }))
+  }
+  window.removePicker = function removePicker() {
+    document.body.removeChild(document.querySelector('emoji-picker'))
+  }
+</script>
+</body>
+</html>
