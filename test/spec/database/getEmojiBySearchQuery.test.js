@@ -177,4 +177,13 @@ describe('getEmojiBySearchQuery', () => {
 
     await db.delete()
   })
+
+  test('more emoticons', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+    const emoticons = truncatedEmoji.map(_ => _.emoticon).filter(Boolean)
+    for (const emoticon of emoticons) {
+      expect((await db.getEmojiBySearchQuery(emoticon)).map(_ => _.emoticon)).toContain(emoticon)
+    }
+    await db.delete()
+  })
 })
