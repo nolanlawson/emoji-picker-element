@@ -63,6 +63,7 @@ let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
 let currentGroupIndex = 0
 let groups = defaultGroups
 let currentGroup
+let loaded = false // eslint-disable-line no-unused-vars
 
 //
 // Utils/helpers
@@ -108,6 +109,7 @@ $: {
     }, TIMEOUT_BEFORE_LOADING_MESSAGE)
     try {
       await database.ready()
+      loaded = true
     } catch (err) {
       console.error(err)
       message = i18n.networkError
