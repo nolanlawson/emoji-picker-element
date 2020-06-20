@@ -1,8 +1,9 @@
 import Database from '../../../src/database/Database'
 import {
   basicAfterEach, basicBeforeEach, ALL_EMOJI, ALL_EMOJI_MISCONFIGURED_ETAG,
-  ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI
+  ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI, truncatedEmoji
 } from '../shared'
+import trimEmojiData from '../../../src/trimEmojiData'
 
 describe('database tests', () => {
   beforeEach(basicBeforeEach)
@@ -179,5 +180,21 @@ describe('database tests', () => {
     expect(await queryPromise)
     await closePromise
     await db1.delete()
+  })
+
+  test('basic trimEmojiData test', async () => {
+    const trimmed = trimEmojiData(truncatedEmoji)
+    const dataSource = 'trimmed.js'
+    fetch.get(dataSource, () => new Response(JSON.stringify(trimmed), { headers: { ETag: 'W/trim' } }))
+    fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/trim' } }))
+
+    const db = new Database({ dataSource })
+    const emojis = await db.getEmojiBySearchQuery('face')
+    expect(emojis.length).toBe(28)
+    const thumbsUp = await db.getEmojiBySearchQuery('+1')
+    expect(thumbsUp[0].skins).toHaveLength(5)
+    const gleeful = await db.getEmojiBySearchQuery('gleeful')
+    expect(gleeful[0].emoticon).toEqual(':D')
+    await db.delete()
   })
 })

@@ -55,14 +55,23 @@ const entryPoints = [
   {
     input: './src/database/Database.js',
     output: './database.js'
+  },
+  {
+    input: './src/trimEmojiData.js',
+    output: './trimEmojiData.js'
+  },
+  {
+    input: './src/trimEmojiData.js',
+    output: './trimEmojiData.cjs',
+    format: 'cjs'
   }
 ]
 
-export default entryPoints.map(({ input, output }) => ({
+export default entryPoints.map(({ input, output, format = 'es' }) => ({
   ...baseConfig,
   input,
   output: {
-    format: 'es',
+    format,
     file: output,
     sourcemap: dev
   }

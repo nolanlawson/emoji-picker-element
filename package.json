@@ -10,6 +10,7 @@
     "database.js*",
     "index.js*",
     "picker.js*",
+    "trimEmojiData.*",
     "*.d.ts"
   ],
   "scripts": {
@@ -104,7 +105,9 @@
     "ignore": [
       "/database.js",
       "/index.js",
-      "/picker.js"
+      "/picker.js",
+      "/trimEmojiData.js",
+      "/trimEmojiData.cjs"
     ],
     "global": [
       "btoa",

@@ -122,6 +122,9 @@ dist
 /picker.d.ts
 /database.d.ts
 /shared.d.ts
+/trimEmojiData.js
+/trimEmojiData.cjs
+/trimEmojiData.d.ts
 
 /docs-tmp
 /ts-tmp

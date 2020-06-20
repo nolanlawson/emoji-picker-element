@@ -610,20 +610,30 @@ The reason for this is that `Picker` automatically registers itself as a custom 
 
 ### Data source and JSON format
 
-`emoji-picker-element` requires the _full_ [emojibase-data](https://github.com/milesj/emojibase) JSON file, not the "compact" one. If you would like to trim the JSON file down even further, then you can modify the JSON to only contain these keys:
-
-```json
-[
-  "annotation", "emoji", "emoticon", "group", 
-  "order", "shortcodes", "skins", "tags", "version"
-]
-```
+`emoji-picker-element` requires the _full_ [emojibase-data](https://github.com/milesj/emojibase) JSON file, not the "compact" one (e.g. `emojibase-data/en/data.json`, not `emojibase-data/en/compact.json`).
 
 You can fetch the emoji JSON file from wherever you want. However, it's recommended that your server expose an `ETag` header – if so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will fire off a `HEAD` request and just check the `ETag`.
 
 If the server hosting the JSON file is not the same as the one containing the emoji picker, then the cross-origin server will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: *`. (Note that `jsdelivr` already does this, which is partly why it is the default.)
 
 Unfortunately [Safari does not currently support `Access-Control-Allow-Headers`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#Browser_compatibility), meaning that the `ETag` header will not be available cross-origin. In that case, `emoji-picker-element` will fall back to the less performant option. If you want to avoid this, host the JSON file on the same server as your web app.
+
+### Trimming the emojibase data
+
+If you are hosting the JSON file yourself and would like it to be as small as possible, then you can use the utility `trimEmojiData` function:
+
+```js
+import trimEmojiData from 'emoji-picker-element/trimEmojiData.js';
+import emojiBaseData from 'emojibase-data/en/data.json';
+
+const trimmedData = trimEmojiData(emojiBaseData);
+```
+
+Or if your version of Node doesn't support ES modules:
+
+```js
+const trimEmojiData = require('emoji-picker-element/trimEmojiData.cjs');
+```
 
 ### Offline-first
 

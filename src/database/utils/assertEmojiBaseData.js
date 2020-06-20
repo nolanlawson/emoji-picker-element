@@ -1,13 +1,4 @@
-const requiredKeys = [
-  'annotation',
-  'emoji',
-  'emoticon',
-  'group',
-  'order',
-  'shortcodes',
-  'tags',
-  'version'
-]
+import { requiredKeys } from './requiredKeys'
 
 export function assertEmojiBaseData (emojiBaseData) {
   if (!emojiBaseData ||
