@@ -65,9 +65,6 @@ Features:
     + [Native emoji](#native-emoji)
     + [JSON loading](#json-loading)
     + [Browser support](#browser-support)
-  * [Benchmarks](#benchmarks)
-    + [Memory usage](#memory-usage)
-    + [Bundle size](#bundle-size)
   * [Contributing](#contributing)
 
 <!-- toc end -->
@@ -211,8 +208,6 @@ import { Picker } from 'emoji-picker-element';
 const picker = new Picker();
 document.body.appendChild(picker);
 ```
-
-#### Constructor
 
 The `new Picker(options)` constructor supports several options:
 
@@ -760,29 +755,6 @@ this, e.g. off-main-thread JSON parsing, but it's certainly possible!)
 ### Browser support
 
 `emoji-picker-element` only supports the latest versions of Chrome, Firefox, and Safari, as well as equivalent browsers (Edge, Opera, etc.).
-
-## Benchmarks
-
-Benchmark code can be found in the `test/` directory. See [Contributing](#contributing) for how to run the scripts.
-
-### Memory usage
-
-This test navigates to four pages: 1) an empty page, 2) the same page containing `emoji-picker-element` with the standard configuration, 3) a page containing the `emojibase` English `compact.json` object, and 4) a page containing the full `data.json` object.
-
-| Scenario | Bytes             | Relative to blank page |
-| -------- | ----------------- | ---------------------- |
-| blank    | 763 kB (763097)   | 0 B (0)                |
-| picker   | 1.32 MB (1322356) | 559 kB (559259)        |
-| compact  | 1.53 MB (1533547) | 770 kB (770450)        |
-| full     | 1.87 MB (1868599) | 1.11 MB (1105502)      |
-
-As you can see, `emoji-picker-element` consumes less memory than merely loading the JSON files and keeping the reference. So any emoji picker that keeps these JSON objects in memory is already using more memory than `emoji-picker-element`, in addition to whatever it's doing with JS/CSS/DOM.
-
-[`performance.measureMemory()`](https://web.dev/monitor-total-page-memory-usage/) in Chrome is used to calculate memory usage.
-
-### Bundle size
-
-30.13kB at the time of writing (minified but not gzipped, for both the `Picker` and the `Database` combined).
 
 ## Contributing
 
