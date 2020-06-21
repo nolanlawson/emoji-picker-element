@@ -11,16 +11,18 @@
     "index.js*",
     "picker.js*",
     "trimEmojiData.*",
+    "svelte.js*",
     "*.d.ts"
   ],
   "scripts": {
     "prepare": "run-s build",
-    "build": "run-s build:rollup build:css-docs build:i18n-docs build:types build:typedoc",
+    "build": "run-s build:rollup build:css-docs build:i18n-docs build:types build:typedoc build:toc",
     "build:rollup": "NODE_ENV=production rollup -c",
     "build:css-docs": "node ./bin/generateCssDocs",
     "build:i18n-docs": "node ./bin/generateI18nDocs",
     "build:typedoc": "typedoc --target ES5 --out docs-tmp --theme markdown --excludePrivate --excludeNotExported --hideSources --hideBreadcrumbs ./src/types && node ./bin/generateTypeDocs && rm -fr docs-tmp",
     "build:types": "tsc --target ES5 -d --outDir ./ts-tmp ./src/types/*.ts && mv ./ts-tmp/*.d.ts ./ && rm -fr ts-tmp",
+    "build:toc": "node ./bin/generateTOC",
     "benchmark:bundlesize": "run-s build:rollup benchmark:bundle benchmark:run-bundlesize",
     "benchmark:bundle": "rollup -c ./test/bundlesize/rollup.config.js",
     "benchmark:memory": "run-s build:rollup benchmark:bundle && run-p --race benchmark:memory:server benchmark:memory:test",
@@ -78,6 +80,7 @@
     "lint-staged": "^10.2.7",
     "lodash-es": "^4.17.15",
     "markdown-table": "^2.0.0",
+    "markdown-toc": "^1.2.0",
     "node-fetch": "^2.6.0",
     "npm-run-all": "^4.1.5",
     "postcss": "^7.0.32",
@@ -107,7 +110,8 @@
       "/index.js",
       "/picker.js",
       "/trimEmojiData.js",
-      "/trimEmojiData.cjs"
+      "/trimEmojiData.cjs",
+      "/svelte.js"
     ],
     "global": [
       "btoa",

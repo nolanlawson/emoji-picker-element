@@ -15,13 +15,12 @@ function removeLinks (str) {
 }
 
 function incrementHeadings (str) {
-  return str.replaceAll(/#{2,}/g, _ => `#${_}`) // increase indent of headings by one
+  return str.replaceAll(/#+/g, _ => `##${_}`) // increase indent of headings by two
 }
 
 async function injectDatabaseDocs () {
   let docs = await readFile('./docs-tmp/classes/_database_.database.md', 'utf8')
-  docs = docs.substring(docs.indexOf('###  constructor'))
-  docs = docs.replace('## Methods', '')
+  docs = docs.substring(docs.lastIndexOf('## Constructors'))
   docs = removeLinks(docs)
   docs = incrementHeadings(docs)
 
@@ -30,10 +29,8 @@ async function injectDatabaseDocs () {
 
 async function injectPickerDocs () {
   let docs = await readFile('./docs-tmp/classes/_picker_.picker.md', 'utf8')
-  docs = docs.substring(docs.indexOf('###  constructor'))
-  docs = docs.replace(/## Properties.*/s, '')
+  docs = docs.substring(docs.indexOf('Name | Type'), docs.indexOf('**Returns:**'))
   docs = removeLinks(docs)
-  docs = incrementHeadings(docs)
 
   await replaceInReadme(PICKER_START_MARKER, PICKER_END_MARKER, docs)
 }

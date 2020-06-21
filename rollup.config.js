@@ -64,15 +64,24 @@ const entryPoints = [
     input: './src/trimEmojiData.js',
     output: './trimEmojiData.cjs',
     format: 'cjs'
+  },
+  {
+    input: './src/picker/PickerElement.js',
+    output: './svelte.js',
+    external: ['svelte', 'svelte/internal']
   }
 ]
 
-export default entryPoints.map(({ input, output, format = 'es' }) => ({
-  ...baseConfig,
-  input,
-  output: {
-    format,
-    file: output,
-    sourcemap: dev
+export default entryPoints.map(({ input, output, format = 'es', external = [] }) => {
+  const res = {
+    ...baseConfig,
+    input,
+    output: {
+      format,
+      file: output,
+      sourcemap: dev
+    }
   }
-}))
+  res.external = [...res.external, ...external]
+  return res
+})

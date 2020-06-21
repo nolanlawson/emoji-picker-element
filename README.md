@@ -1,18 +1,76 @@
 emoji-picker-element
 ====
 
+```html
+<emoji-picker></emoji-picker>
+```
+
 A lightweight emoji picker, built as a custom element.
 
-It's built on top of IndexedDB, so it consumes [far less memory](#benchmarks) than other emoji pickers.
+It uses IndexedDB, so it consumes [far less memory](#benchmarks) than other emoji pickers.
 It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint.
 
-Design goals:
+Features:
 
-- Store emoji data in IndexedDB
-- Render native emoji, no spritesheets
+- Stores emoji data in IndexedDB
+- Renders native emoji only
 - Accessible
 - Drop-in as a vanilla web component
 - Support custom emoji
+
+**Table of contents:**
+
+<!-- toc start -->
+
+- [emoji-picker-element](#emoji-picker-element)
+  * [Install](#install)
+  * [Usage](#usage)
+  * [Styling](#styling)
+    + [Size](#size)
+    + [Dark mode](#dark-mode)
+    + [CSS variables](#css-variables)
+    + [Focus outline](#focus-outline)
+  * [JavaScript API](#javascript-api)
+    + [Picker](#picker)
+      - [i18n structure](#i18n-structure)
+    + [Database](#database)
+      - [Constructors](#constructors)
+        * [constructor](#constructor)
+      - [Accessors](#accessors)
+        * [customEmoji](#customemoji)
+      - [Methods](#methods)
+        * [close](#close)
+        * [delete](#delete)
+        * [getEmojiByGroup](#getemojibygroup)
+        * [getEmojiBySearchQuery](#getemojibysearchquery)
+        * [getEmojiByShortcode](#getemojibyshortcode)
+        * [getEmojiByUnicodeOrName](#getemojibyunicodeorname)
+        * [getPreferredSkinTone](#getpreferredskintone)
+        * [getTopFavoriteEmoji](#gettopfavoriteemoji)
+        * [incrementFavoriteEmojiCount](#incrementfavoriteemojicount)
+        * [ready](#ready)
+        * [setPreferredSkinTone](#setpreferredskintone)
+    + [Events](#events)
+      - [`emoji-click`](#emoji-click)
+      - [`skin-tone-change`](#skin-tone-change)
+    + [Custom emoji](#custom-emoji)
+    + [Tree-shaking](#tree-shaking)
+    + [Within a Svelte project](#within-a-svelte-project)
+  * [Data and offline](#data-and-offline)
+    + [Data source and JSON format](#data-source-and-json-format)
+    + [Trimming the emojibase data](#trimming-the-emojibase-data)
+    + [Offline-first](#offline-first)
+  * [Design decisions](#design-decisions)
+    + [IndexedDB](#indexeddb)
+    + [Native emoji](#native-emoji)
+    + [JSON loading](#json-loading)
+    + [Browser support](#browser-support)
+  * [Benchmarks](#benchmarks)
+    + [Memory usage](#memory-usage)
+    + [Bundle size](#bundle-size)
+  * [Contributing](#contributing)
+
+<!-- toc end -->
 
 ## Install
 
@@ -146,23 +204,19 @@ applyFocusVisiblePolyfill(picker.shadowRoot);
 
 ### Picker
 
+Basic usage:
+
 ```js
 import { Picker } from 'emoji-picker-element';
 const picker = new Picker();
 document.body.appendChild(picker);
 ```
 
+#### Constructor
+
 The `new Picker(options)` constructor supports several options:
 
 <!-- picker API start -->
-
-####  constructor
-
-\+ **new Picker**(`__namedParameters`: object): *Picker*
-
-**Parameters:**
-
-▪`Default value`  **__namedParameters**: *object*= {}
 
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
@@ -171,11 +225,18 @@ Name | Type | Default | Description |
 `locale` | string | "en" | Locale string |
 `skinToneEmoji` | string | "🖐️" | the emoji to use for the skin tone picker  |
 
-**Returns:** *Picker*
-
 
 
 <!-- picker API end -->
+
+For instance:
+
+```js
+const picker = new Picker({
+  locale: 'fr',
+  dataSource: '/fr-emoji.json'
+})
+```
 
 These values can also be set at runtime, e.g.:
 
@@ -250,7 +311,9 @@ Full API:
 
 <!-- database API start -->
 
-####  constructor
+#### Constructors
+
+#####  constructor
 
 \+ **new Database**(`__namedParameters`: object): *Database*
 
@@ -271,9 +334,9 @@ Name | Type | Default | Description |
 
 **Returns:** *[Database*
 
-### Accessors
+#### Accessors
 
-####  customEmoji
+#####  customEmoji
 
 • **get customEmoji**(): *CustomEmoji]*
 
@@ -293,9 +356,9 @@ Name | Type | Description |
 
 **Returns:** *void*
 
+#### Methods
 
-
-####  close
+#####  close
 
 ▸ **close**(): *Promise‹void›*
 
@@ -308,7 +371,7 @@ Note that as soon as any other non-close/delete method is called, the database w
 
 ___
 
-####  delete
+#####  delete
 
 ▸ **delete**(): *Promise‹void›*
 
@@ -321,7 +384,7 @@ Note that as soon as any other non-close/delete method is called, the database w
 
 ___
 
-####  getEmojiByGroup
+#####  getEmojiByGroup
 
 ▸ **getEmojiByGroup**(`group`: number): *Promise‹[NativeEmoji]›*
 
@@ -340,7 +403,7 @@ Name | Type | Description |
 
 ___
 
-####  getEmojiBySearchQuery
+#####  getEmojiBySearchQuery
 
 ▸ **getEmojiBySearchQuery**(`query`: string): *Promise‹[Emoji]›*
 
@@ -358,7 +421,7 @@ Name | Type | Description |
 
 ___
 
-####  getEmojiByShortcode
+#####  getEmojiByShortcode
 
 ▸ **getEmojiByShortcode**(`shortcode`: string): *Promise‹[Emoji | null›*
 
@@ -378,7 +441,7 @@ Name | Type | Description |
 
 ___
 
-####  getEmojiByUnicodeOrName
+#####  getEmojiByUnicodeOrName
 
 ▸ **getEmojiByUnicodeOrName**(`unicodeOrName`: string): *Promise‹Emoji | null›*
 
@@ -397,7 +460,7 @@ Name | Type | Description |
 
 ___
 
-####  getPreferredSkinTone
+#####  getPreferredSkinTone
 
 ▸ **getPreferredSkinTone**(): *Promise‹SkinTone›*
 
@@ -407,7 +470,7 @@ Get the user's preferred skin tone. Returns 0 if not found.
 
 ___
 
-####  getTopFavoriteEmoji
+#####  getTopFavoriteEmoji
 
 ▸ **getTopFavoriteEmoji**(`limit`: number): *Promise‹Emoji]›*
 
@@ -423,7 +486,7 @@ Name | Type | Description |
 
 ___
 
-####  incrementFavoriteEmojiCount
+#####  incrementFavoriteEmojiCount
 
 ▸ **incrementFavoriteEmojiCount**(`unicodeOrName`: string): *Promise‹void›*
 
@@ -441,7 +504,7 @@ Name | Type | Description |
 
 ___
 
-####  ready
+#####  ready
 
 ▸ **ready**(): *Promise‹void›*
 
@@ -455,7 +518,7 @@ all wait for this promise to resolve before doing anything.
 
 ___
 
-####  setPreferredSkinTone
+#####  setPreferredSkinTone
 
 ▸ **setPreferredSkinTone**(`skinTone`: [SkinTone): *Promise‹void›*
 
@@ -603,6 +666,18 @@ import Database from 'emoji-picker-element/database';
 ```
 
 The reason for this is that `Picker` automatically registers itself as a custom element, following [web component best practices](https://justinfagnani.com/2019/11/01/how-to-publish-web-components-to-npm/). But this adds side effects, so bundlers like Webpack and Rollup do not tree-shake as well, unless the modules are imported from completely separate files.
+
+### Within a Svelte project
+
+`emoji-picker-element` is explicitly designed as a custom element, and won't work
+as a direct Svelte component. However, if you're already using Svelte 3, then you
+can avoid importing Svelte twice by using:
+
+```js
+import Picker from 'emoji-picker-element/svelte'
+```
+
+`svelte.js` is the same as `picker.js`, except it `import`s Svelte rather than bundling it.
 
 ## Data and offline
 

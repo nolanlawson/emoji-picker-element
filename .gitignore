@@ -127,6 +127,8 @@ dist
 /trimEmojiData.cjs
 /trimEmojiData.cjs.map
 /trimEmojiData.d.ts
+/svelte.js
+/svelte.js.map
 
 /docs-tmp
 /ts-tmp
