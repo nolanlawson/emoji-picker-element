@@ -65,9 +65,7 @@
                 title={i18n.skinTones[i]}
                 tabindex="-1"
                 aria-label={i18n.skinTones[i]}
-      >
-          {skinTone}
-        </button>
+        >{skinTone}</button>
       {/each}
     </div>
 
@@ -84,26 +82,22 @@
               aria-label={i18n.categories[group.name]}
               aria-selected={currentGroup.id === group.id}
               title={i18n.categories[group.name]}
-              on:click={() => onNavClick(group)}>
-        <div class="emoji">
-          {group.emoji}
-        </div>
-      </button>
+              on:click={() => onNavClick(group)}
+      ><div class="emoji">{group.emoji}</div></button>
     {/each}
   </div>
   <div class="indicator-wrapper"
        aria-hidden="true">
     <div class="indicator"
          style={indicatorStyle}
-         use:calculateIndicatorWidth>
-    </div>
+         use:calculateIndicatorWidth
+    ></div>
   </div>
 
   <div class="message {message ? '' : 'gone'}"
        role="alert"
-       aria-live="polite">
-    {message}
-  </div>
+       aria-live="polite"
+  >{message}</div>
 
   <!-- tabindex is so people can scroll up and down with the keyboard -->
   <div class="tabpanel {(!loaded || message) ? 'gone': ''}"
