@@ -8,26 +8,25 @@
   <!-- using a spacer div because this allows us to cover up the skintone picker animation -->
   <div class="pad-top"></div>
   <div class="search-row">
-    <div class="search-wrapper"
-         role="combobox"
-         aria-expanded={!!(searchMode && currentEmojis.length)}
-         aria-controls="search-results"
-         aria-haspopup="listbox"
-         aria-label={i18n.search}
-    >
+    <div class="search-wrapper">
+      <!-- no need for aria-haspopup=listbox, it's the default for role=combobox
+           https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/combobox/aria1.1pattern/listbox-combo.html
+           -->
       <input
         id="search"
         class="search"
         type="search"
+        role="combobox"
         enterkeyhint="search"
         placeholder={i18n.search}
         autocapitalize="none"
         autocomplete="off"
         spellcheck="true"
+        aria-expanded={!!(searchMode && currentEmojis.length)}
         aria-controls="search-results"
         aria-describedby="search-description"
         aria-autocomplete="list"
-        aria-activedescendant={activeSearchItem === -1 ? '' : `emoji-${currentEmojis[activeSearchItem].unicode}`}
+        aria-activedescendant={activeSearchItem === -1 ? '' : `emoji-${activeSearchItem}`}
         bind:value={rawSearchText}
         on:keydown={onSearchKeydown}
       >
@@ -53,7 +52,6 @@
          role="listbox"
          aria-label={i18n.skinTonesTitle}
          aria-activedescendant="skintone-{activeSkinTone}"
-         aria-hidden={!skinTonePickerExpanded}
          on:keydown={onSkinToneOptionKeydown}
          on:focusout={onSkinToneOptionsBlur}
          on:click={onClickSkinToneOption}
@@ -66,11 +64,9 @@
                 role="option"
                 title={i18n.skinTones[i]}
                 tabindex="-1"
+                aria-label={i18n.skinTones[i]}
       >
-          <!-- I would use an aria-label here, but Safari+VoiceOver does not read it
-               out unless I do it this way -->
-          <span class="no-pointer" aria-hidden="true">{skinTone}</span>
-          <span class="sr-only">{i18n.skinTones[i]}</span>
+          {skinTone}
         </button>
       {/each}
     </div>
@@ -86,7 +82,7 @@
               class="nav-button"
               aria-controls="tab-{group.id}"
               aria-label={i18n.categories[group.name]}
-              aria-selected={group.id === group.id}
+              aria-selected={currentGroup.id === group.id}
               title={i18n.categories[group.name]}
               on:click={() => onNavClick(group)}>
         <div class="emoji">
@@ -109,6 +105,7 @@
     {message}
   </div>
 
+  <!-- tabindex is so people can scroll up and down with the keyboard -->
   <div class="tabpanel {(!loaded || message) ? 'gone': ''}"
        role={searchMode ? 'region' : 'tabpanel'}
        aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentGroup.name]}
@@ -142,6 +139,7 @@
                   aria-label={emoji.label}
                   title={emoji.title}
                   class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
+                  id={searchMode ? `emoji-${i}`: undefined}
                   data-emoji={emoji.id}>
             {#if emoji.unicode}
               {unicodeWithSkin(emoji, currentSkinTone)}
