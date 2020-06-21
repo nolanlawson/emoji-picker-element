@@ -7,7 +7,7 @@ emoji-picker-element
 
 A lightweight emoji picker, built as a custom element.
 
-It uses IndexedDB, so it consumes [far less memory](#benchmarks) than other emoji pickers.
+It uses IndexedDB, so it consumes far less memory than other emoji pickers.
 It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint.
 
 Features:
