@@ -303,5 +303,9 @@ describe('Picker tests', () => {
     await waitFor(() => expect(getByRole('menuitem', { name: 'horse' })).toBeVisible())
     // TODO: can't actually test the category names because they're only exposed as menus, and
     // testing-library doesn't seem to understand that menus can have aria-labels
+
+    // try searching
+    await type(getByRole('searchbox'), 'donkey')
+    await waitFor(() => expect(getByRole('option', { name: 'donkey' })).toBeVisible())
   })
 })

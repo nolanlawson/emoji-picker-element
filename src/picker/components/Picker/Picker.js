@@ -338,7 +338,8 @@ function isZwjSupported (emoji) {
 
 async function filterEmojisByVersion (emojis) {
   const emojiSupportLevel = await emojiSupportLevelPromise
-  return emojis.filter(({ version }) => version <= emojiSupportLevel)
+  // !version corresponds to custom emoji
+  return emojis.filter(({ version }) => !version || version <= emojiSupportLevel)
 }
 
 async function summarizeEmojis (emojis) {
@@ -350,13 +351,9 @@ async function getEmojisByGroup (group) {
   if (typeof group === 'undefined') {
     return []
   }
-  let emojis
-  if (group === -1) { // custom
-    emojis = customEmoji
-  } else {
-    emojis = await filterEmojisByVersion(await database.getEmojiByGroup(group))
-  }
-  return summarizeEmojis(emojis)
+  // -1 is custom emoji
+  const emoji = group === -1 ? customEmoji : await database.getEmojiByGroup(group)
+  return summarizeEmojis(await filterEmojisByVersion(emoji))
 }
 
 async function getEmojisBySearchQuery (query) {
