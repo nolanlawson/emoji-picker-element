@@ -28,14 +28,54 @@
         height: 80vh;
       }
     }
+    pre {
+      margin: 5px;
+      padding: 5px;
+      background: #333;
+      color: white;
+      position: fixed;
+      right: 0;
+      bottom: 0;
+    }
+
+    button.delete {
+      position: fixed;
+      left: 5px;
+      bottom: 5px;
+      padding: 5px;
+    }
   </style>
 </head>
 <body>
 <h1>Ad-hoc emoji-picker-element test</h1>
+<button class="delete">Delete database</button>
 <script src="/node_modules/focus-visible/dist/focus-visible.js"></script>
 <script type="module">
-  import { Picker } from '/index.js'
+  import { Picker, Database } from '/index.js'
   (async () => {
+    if (typeof PerformanceObserver !== 'undefined') {
+      const observer = new PerformanceObserver(entries => {
+        const entry = entries.getEntriesByName('initialLoad')[0]
+        if (entry) {
+          const pre = document.createElement('pre')
+          pre.innerHTML = 'initialLoad: ' + entry.duration.toFixed(2) + 'ms'
+          document.body.appendChild(pre)
+          observer.disconnect()
+        }
+      })
+      observer.observe({
+        entryTypes: ['measure']
+      })
+    }
+
+    const opts = {
+      dataSource: '/node_modules/emojibase-data/en/data.json'
+    }
+
+    document.querySelector('.delete').addEventListener('click', () => {
+      new Database(opts).delete()
+    })
+
     const params = new URLSearchParams(location.search)
     if (params.has('worker')) {
       const worker = new Worker('/test/adhoc/worker.js', { type: 'module' })
@@ -48,9 +88,7 @@
         worker.postMessage('init')
       })
     }
-    const picker = new Picker({
-      dataSource: '/node_modules/emojibase-data/en/data.json'
-    })
+    const picker = new Picker(opts)
     picker.addEventListener('emoji-click', e => console.log(e))
     applyFocusVisiblePolyfill(picker.shadowRoot)
     document.body.appendChild(picker)
