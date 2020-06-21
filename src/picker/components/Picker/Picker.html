@@ -52,6 +52,7 @@
          role="listbox"
          aria-label={i18n.skinTonesTitle}
          aria-activedescendant="skintone-{activeSkinTone}"
+         aria-hidden={!skinTonePickerExpanded}
          on:keydown={onSkinToneOptionKeydown}
          on:focusout={onSkinToneOptionsBlur}
          on:click={onClickSkinToneOption}

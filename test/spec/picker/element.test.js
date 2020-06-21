@@ -46,7 +46,7 @@ describe('element tests', () => {
     test('changing locale/dataSource causes only one network request', async () => {
       expect(fetch).toHaveBeenCalledTimes(1)
       expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI, undefined)
-      await type(getByRole(container, 'searchbox'), 'monkey face')
+      await type(getByRole(container, 'combobox'), 'monkey face')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1))
       expect(getByRole(container, 'option', { name: /🐵/ })).toBeVisible()
       picker.locale = 'fr'
@@ -54,8 +54,8 @@ describe('element tests', () => {
       await tick(20)
       expect(fetch).toHaveBeenCalledTimes(2)
       expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
-      await clear(getByRole(container, 'searchbox'))
-      await type(getByRole(container, 'searchbox'), 'singe tête')
+      await clear(getByRole(container, 'combobox'))
+      await type(getByRole(container, 'combobox'), 'singe tête')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1))
       expect(getByRole(container, 'option', { name: /🐵/ })).toBeVisible()
     })
@@ -63,7 +63,7 @@ describe('element tests', () => {
     test('can dynamically change i18n', async () => {
       picker.i18n = frI18n
       await tick(10)
-      expect(getByRole(container, 'searchbox', { name: 'Recherche' })).toBeVisible()
+      expect(getByRole(container, 'combobox', { name: 'Recherche' })).toBeVisible()
       expect(getByRole(container, 'tab', { name: 'Sourires et emoticons' })).toBeVisible()
       expect(getByRole(container, 'button', { name: 'Choose a skin tone (currently Défaut)' })).toBeVisible()
     })

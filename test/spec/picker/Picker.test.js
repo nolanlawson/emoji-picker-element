@@ -64,7 +64,7 @@ describe('Picker tests', () => {
   })
 
   test('basic search test', async () => {
-    await type(getByRole('searchbox'), 'monk')
+    await type(getByRole('combobox'), 'monk')
 
     await waitFor(() => expect(getAllByRole('option')).toHaveLength(2))
 
@@ -225,12 +225,15 @@ describe('Picker tests', () => {
   })
 
   test('press up/down on search input', async () => {
-    type(getByRole('searchbox'), 'monk')
+    type(getByRole('combobox'), 'monk')
     await waitFor(() => expect(getAllByRole('option')).toHaveLength(2))
 
     const pressKeyAndExpectAriaDescendant = async (key, emoji) => {
-      fireEvent.keyDown(getByRole('searchbox'), { key, code: key })
-      await waitFor(() => expect(getByRole('searchbox').getAttribute('aria-activedescendant')).toBe(`emoji-${emoji}`))
+      fireEvent.keyDown(getByRole('combobox'), { key, code: key })
+      await waitFor(() => {
+        return expect(getByRole('combobox').getAttribute('aria-activedescendant'))
+          .toBe(getByRole('option', { name: new RegExp(emoji) }).getAttribute('id'))
+      })
     }
 
     await pressKeyAndExpectAriaDescendant('ArrowDown', '🐵')
@@ -264,7 +267,7 @@ describe('Picker tests', () => {
     fireEvent.click(getByRole('button', { name: /Choose a skin tone/ }))
     await waitFor(() => expect(getByRole('listbox', { name: 'Skin tones' })).toBeVisible())
     // Simulating a focusout event is hard, have to both focus and blur
-    getByRole('searchbox').focus()
+    getByRole('combobox').focus()
     fireEvent.focusOut(getByRole('listbox', { name: 'Skin tones' }))
     await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
   })
@@ -305,7 +308,7 @@ describe('Picker tests', () => {
     // testing-library doesn't seem to understand that menus can have aria-labels
 
     // try searching
-    await type(getByRole('searchbox'), 'donkey')
+    await type(getByRole('combobox'), 'donkey')
     await waitFor(() => expect(getByRole('option', { name: 'donkey' })).toBeVisible())
   })
 })
