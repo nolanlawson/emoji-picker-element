@@ -116,13 +116,23 @@
        tabindex="0"
        on:click={onEmojiClick}
   >
-    {#each currentEmojisWithCategories as emojiWithCategory (emojiWithCategory.category)}
-      <div class="category {currentEmojisWithCategories.length > 1 ? '' : 'gone'}" aria-hidden="true">
-        {emojiWithCategory.category || i18n.categories[currentGroup.name]}
+    {#each currentEmojisWithCategories as emojiWithCategory, i (emojiWithCategory.category)}
+      <div
+        id="menu-label-{i}"
+        class="category {currentEmojisWithCategories.length > 1 ? '' : 'gone'}"
+        aria-hidden="true">
+        <!-- This logic is a bit complicated in order to avoid a flash of the word "Custom" while switching
+             from a tabpanel with custom emoji to a regular group. I.e. we don't want it to suddenly flash
+             from "Custom" to "Smileys and emoticons" when you click the second nav button. -->
+        {searchMode ? i18n.searchResultsLabel : (
+          emojiWithCategory.category ? emojiWithCategory.category : (
+            currentEmojisWithCategories.length > 1 ? i18n.categories.custom : i18n.categories[currentGroup.name]
+          )
+        )}
       </div>
       <div class="emoji-menu"
            role={searchMode ? 'listbox' : 'menu'}
-           aria-label={searchMode ? i18n.searchResultsLabel : (emojiWithCategory.category || i18n.categories[currentGroup.name])}
+           aria-labelledby="menu-label-{i}"
            id={searchMode ? 'search-results' : ''}
            use:calculateEmojiGridWith
       >
