@@ -10,6 +10,26 @@ import cssnano from 'cssnano'
 const dev = process.env.NODE_ENV !== 'production'
 const svelte = dev ? hotSvelte : mainSvelte
 
+const preprocessConfig = preprocess({
+  scss: true,
+  postcss: {
+    plugins: [
+      cssnano({
+        preset: 'default'
+      })
+    ]
+  }
+})
+
+const origMarkup = preprocessConfig.markup
+// minify the HTML by removing extra whitespace
+// TODO: this is fragile, but it also results in a lot of bundlesize savings. let's find a better solution
+preprocessConfig.markup = async function () {
+  const res = await origMarkup.apply(this, arguments)
+  res.code = res.code.replace(/([>}])\s+([<{])/sg, '$1$2')
+  return res
+}
+
 // Build Database.test.js and Picker.js as separate modules at build times so that they are properly tree-shakeable.
 // Most of this has to happen because customElements.define() has side effects
 const baseConfig = {
@@ -28,16 +48,7 @@ const baseConfig = {
       css: true,
       customElement: true,
       dev,
-      preprocess: preprocess({
-        scss: true,
-        postcss: {
-          plugins: [
-            cssnano({
-              preset: 'default'
-            })
-          ]
-        }
-      })
+      preprocess: preprocessConfig
     }),
     !dev && analyze({ summaryOnly: true })
   ],

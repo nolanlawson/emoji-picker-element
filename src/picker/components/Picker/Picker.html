@@ -2,9 +2,8 @@
 <section
   class="picker"
   aria-label={i18n.regionLabel}
-  {style}
-  bind:this={rootElement}
->
+  style={pickerStyle}
+  bind:this={rootElement}>
   <!-- using a spacer div because this allows us to cover up the skintone picker animation -->
   <div class="pad-top"></div>
   <div class="search-row">
@@ -42,8 +41,9 @@
               aria-haspopup="listbox"
               aria-expanded={skinTonePickerExpanded}
               aria-controls="skintone-list"
-              on:click={onClickSkinToneButton}
-      >{skinToneButtonText}</button>
+              on:click={onClickSkinToneButton}>
+        {skinToneButtonText}
+      </button>
     </div>
     <span id="skintone-description" class="sr-only">{i18n.skinToneDescription}</span>
     <div id="skintone-list"
@@ -56,8 +56,7 @@
          on:keydown={onSkinToneOptionKeydown}
          on:focusout={onSkinToneOptionsBlur}
          on:click={onClickSkinToneOption}
-         bind:this={skinToneDropdown}
-    >
+         bind:this={skinToneDropdown}>
       {#each skinTones as skinTone, i (skinTone)}
         <button id="skintone-{i}"
                 class="emoji skintone-option hide-focus {i === activeSkinTone ? 'active' : ''}"
@@ -65,8 +64,9 @@
                 role="option"
                 title={i18n.skinTones[i]}
                 tabindex="-1"
-                aria-label={i18n.skinTones[i]}
-        >{skinTone}</button>
+                aria-label={i18n.skinTones[i]}>
+          {skinTone}
+        </button>
       {/each}
     </div>
 
@@ -83,22 +83,26 @@
               aria-label={i18n.categories[group.name]}
               aria-selected={currentGroup.id === group.id}
               title={i18n.categories[group.name]}
-              on:click={() => onNavClick(group)}
-      ><div class="emoji">{group.emoji}</div></button>
+              on:click={() => onNavClick(group)}>
+        <div class="emoji">
+          {group.emoji}
+        </div>
+      </button>
     {/each}
   </div>
   <div class="indicator-wrapper"
        aria-hidden="true">
     <div class="indicator"
          style={indicatorStyle}
-         use:calculateIndicatorWidth
-    ></div>
+         use:calculateIndicatorWidth>
+    </div>
   </div>
 
   <div class="message {message ? '' : 'gone'}"
        role="alert"
-       aria-live="polite"
-  >{message}</div>
+       aria-live="polite">
+    {message}
+  </div>
 
   <!-- tabindex is so people can scroll up and down with the keyboard -->
   <div class="tabpanel {(!loaded || message) ? 'gone': ''}"
@@ -126,8 +130,7 @@
            role={searchMode ? 'listbox' : 'menu'}
            aria-labelledby="menu-label-{i}"
            id={searchMode ? 'search-results' : ''}
-           use:calculateEmojiGridWith
-      >
+           use:calculateEmojiGridWith>
         {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
           <button role={searchMode ? 'option' : 'menuitem'}
                   aria-selected={searchMode ? i == activeSearchItem : ''}

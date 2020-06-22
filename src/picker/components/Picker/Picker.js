@@ -53,7 +53,7 @@ let skinToneDropdown
 let currentSkinTone = 0
 let activeSkinTone = 0
 let skinToneButtonText // eslint-disable-line no-unused-vars
-let style = '' // eslint-disable-line no-unused-vars
+let pickerStyle // eslint-disable-line no-unused-vars
 let skinToneButtonLabel = '' // eslint-disable-line no-unused-vars
 let skinTones = []
 let currentFavorites = [] // eslint-disable-line no-unused-vars
@@ -154,7 +154,7 @@ onDestroy(async () => {
 // Global styles for the entire picker
 //
 
-$: style = `
+$: pickerStyle = `
   --font-family: ${FONT_FAMILY};
   --num-groups: ${groups.length}; 
   --indicator-opacity: ${searchMode ? 0 : 1}; 
