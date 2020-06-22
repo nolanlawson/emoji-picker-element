@@ -5,9 +5,9 @@ emoji-picker-element
 <emoji-picker></emoji-picker>
 ```
 
-A lightweight emoji picker, built as a custom element.
+A lightweight emoji picker, distributed as a web component.
 
-It uses IndexedDB, so it consumes far less memory than other emoji pickers.
+It's built on IndexedDB, so it consumes far less memory than other emoji pickers.
 It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint.
 
 Features:
@@ -15,6 +15,7 @@ Features:
 - Stores emoji data in IndexedDB
 - Renders native emoji only, no spritesheets
 - Accessible
+- Drop-in as a web component
 - Supports custom emoji
 
 **Table of contents:**
@@ -74,12 +75,12 @@ Features:
 
 ## Usage
 
-```html
-<emoji-picker></emoji-picker>
-```
-
 ```js
 import 'emoji-picker-element';
+```
+
+```html
+<emoji-picker></emoji-picker>
 ```
 
 Then listen for `emoji-click` events:
@@ -93,21 +94,25 @@ This will log:
 
 ```json
 {
-  "annotation": "grinning face",
-  "group": 0,
-  "order": 1,
-  "shortcodes": [ "gleeful" ],
-  "tags": [ "face", "grin" ],
-  "tokens": [ ":d", "face", "gleeful", "grin", "grinning" ],
-  "unicode": "😀",
-  "version": 1,
-  "emoticon": ":D"
+  "emoji": {
+    "annotation": "grinning face",
+    "group": 0,
+    "order": 1,
+    "shortcodes": [ "gleeful" ],
+    "tags": [ "face", "grin" ],
+    "tokens": [ ":d", "face", "gleeful", "grin", "grinning" ],
+    "unicode": "😀",
+    "version": 1,
+    "emoticon": ":D"
+  },
+  "skinTone": 0,
+  "unicode": "😀"
 }
 ```
 
 ## Styling
 
-`emoji-picker-element` uses [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM), so its inner styling cannot be changed with arbitrary CSS. Refer to the API below for style customization.
+`emoji-picker-element` uses [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM), so its inner styling cannot be (easily) changed with arbitrary CSS. Refer to the API below for style customization.
 
 ### Size
 
@@ -163,7 +168,7 @@ Here is a full list of options:
 | `--border-size`              | `1px`      |                | Width of border used in most of the picker    |
 | `--button-active-background` | `#e6e6e6`  | `#555555`      | Background of an active button                |
 | `--button-hover-background`  | `#d9d9d9`  | `#484848`      | Background of a hovered button                |
-| `--category-font-color`      | `#111`     | `#efefef`      | Font color of custom category headings        |
+| `--category-font-color`      | `#111`     | `#efefef`      | Font color of custom emoji category headings  |
 | `--category-font-size`       | `1rem`     |                | Font size of custom emoji category headings   |
 | `--emoji-padding`            | `0.5rem`   |                |                                               |
 | `--emoji-size`               | `1.375rem` |                |                                               |
@@ -196,6 +201,16 @@ applyFocusVisiblePolyfill(picker.shadowRoot);
 ```
 
 `emoji-picker-element` already ships with the proper CSS for both the `:focus-visible` standard and the polyfill.
+
+### Custom styling
+
+If you absolutely must go beyond the styling API above, you can do something like this:
+
+```js
+const style = document.createElement('style');
+style.textContent = `/* custom shadow dom styles here */`
+picker.shadowRoot.appendChild(style);
+```
 
 ## JavaScript API
 
@@ -722,39 +737,43 @@ If `emoji-picker-element` fails to fetch the JSON data the first time it loads, 
 
 ## Design decisions
 
+Some of the reasoning behind why `emoji-picker-element` is built the way it is.
+
 ### IndexedDB
 
-Why IndexedDB? Well, the [`emojibase-data`](https://github.com/milesj/emojibase) English JSON file is [854kB](https://unpkg.com/browse/emojibase-data@5.0.1/en/), and the "compact" version is still 543kB. That's a lot of data to keep in memory just for an emoji picker. And it's not as if that number is ever going down; the Unicode Consortium keeps adding more emoji every year.
+The [`emojibase-data`](https://github.com/milesj/emojibase) English JSON file is [854kB](https://unpkg.com/browse/emojibase-data@5.0.1/en/), and the "compact" version is still 543kB. That's a lot of data to keep in memory just for an emoji picker. And it's not as if that number is ever going down; the Unicode Consortium keeps adding more emoji every year.
 
 Using IndexedDB has a few advantages:
 
-1. We don't need to keep half a megabyte of emoji data in memory at all times.
-2. The second time your visitors visit your website, we don't even need to download, parse, and index the emoji data, because it's already available on their hard drive.
-3. Heck, you can even preload the IndexedDB data in a web worker or service worker. That way, you only pay the UI thread cost of accessing IndexedDB, not of fetching the data, indexing the data, or inserting it into IndexedDB.
+1. We don't need to keep the full emoji data in memory at all times.
+2. After the first load, there is no need to download, parse, and index the JSON file again, because it's already available in IndexedDB.
+3. If you want, you can even load the IndexedDB data in a web worker, keeping the main thread free from non-UI data processing.
 
 ### Native emoji
 
-To avoid downloading a large sprite sheet that renders a particular emoji set (which may look out-of-place on different platforms, or may have IP issues), `emoji-picker-element` only renders native emoji. This means it is limited to the emoji actually installed on the user's device.
+To avoid downloading a large sprite sheet that renders a particular emoji set – which may look out-of-place on different platforms, or may have IP issues – `emoji-picker-element` only renders native emoji. This means it is limited to the emoji actually installed on the user's device.
 
-To avoid rendering ugly unsupported or half-supported emoji, `emoji-picker-element` will automatically detect emoji support and only render the supported characters. (So no empty boxes or awkward double emoji.) If no color emoji are supported by the browser/OS, then an error message is displayed.
+To avoid rendering ugly unsupported or half-supported emoji, `emoji-picker-element` will automatically detect emoji support and only render the supported characters. (So no empty boxes or awkward double emoji.) If no color emoji are supported by the browser/OS, then an error message is displayed (e.g. older browsers, some odd Linux configurations).
 
 ### JSON loading
 
-Why only allow loading via a URL rather than directly passing in a JSON object? A few reasons:
-
-First, it bloats the size of the JavaScript bundle to do so. `emoji-picker-element` is optimized for second load, where
-it doesn't even need to fetch, parse, or read the full JSON object into memory – it can just rely on IndexedDB.
-Sure, this could be optional, but if an anti-pattern is allowed, then people might do it out of convenience.
-
-Second, browsers deal with JSON more efficiently when it's loaded via `fetch()` rather than embedded in JavaScript. It's
+Browsers deal with JSON more efficiently when it's loaded via `fetch()` rather than embedded in JavaScript. It's
 [faster for the browser to parse JSON than JavaScript](https://joreteg.com/blog/improving-redux-state-transfer-performance),
-plus using the `await (await fetch()).json()` pattern gives the browser more room for optimizations, since you're
-explicitly telling it to cache and parse the data (asynchronously) as JSON. (I'm not aware of any browsers that do
-this, e.g. off-main-thread JSON parsing, but it's certainly possible!)
+becuase the data is being parsed in the more tightly-constrained JSON format than the generic JavaScript format.
+
+Plus, embedding the JSON directly would mean re-parsing the entire object on second load, which is something we want to avoid using IndexedDB.
 
 ### Browser support
 
-`emoji-picker-element` only supports the latest versions of Chrome, Firefox, and Safari, as well as equivalent browsers (Edge, Opera, etc.).
+`emoji-picker-element` only supports the latest versions of Chrome, Firefox, and Safari, as well as equivalent browsers (Edge, Opera, etc.). It was just much easier to design for the future than for the past.
+
+If you need support for older browsers, you will need polyfills for the following things (non-exhaustive list):
+
+- Custom elements
+- Shadow DOM
+- ES2019+
+
+That said, older browsers may not have a color emoji font installed at all, so `emoji-picker-element` will not work in those cases.
 
 ## Contributing
 
