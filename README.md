@@ -101,7 +101,6 @@ This will log:
     "order": 1,
     "shortcodes": [ "gleeful" ],
     "tags": [ "face", "grin" ],
-    "tokens": [ ":d", "face", "gleeful", "grin", "grinning" ],
     "unicode": "😀",
     "version": 1,
     "emoticon": ":D"
@@ -560,7 +559,6 @@ The `emoji-click` event is fired when an emoji is selected by the user. Example 
     order: 280,
     shortcodes: ['thumbsup', '+1', 'yes'],
     tags: ['+1', 'hand', 'thumb', 'up'],
-    tokens: ['+1', 'hand', 'thumb', 'thumbs', 'thumbsup', 'up', 'yes'],
     unicode: '👍️',
     version: 0.6,
     skins: [
