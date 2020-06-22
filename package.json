@@ -39,7 +39,8 @@
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",
     "test": "jest --no-cache",
     "test:adhoc": "node ./test/adhoc/server.js",
-    "cover": "jest --no-cache --coverage"
+    "cover": "jest --no-cache --coverage",
+    "docs": "run-s build:rollup benchmark:bundle && cp bundle.js node_modules/focus-visible/dist/focus-visible.js ./docs"
   },
   "repository": {
     "type": "git",
@@ -111,7 +112,8 @@
       "/picker.js",
       "/trimEmojiData.js",
       "/trimEmojiData.cjs",
-      "/svelte.js"
+      "/svelte.js",
+      "/docs"
     ],
     "global": [
       "btoa",

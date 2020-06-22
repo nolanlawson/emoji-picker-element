@@ -793,3 +793,7 @@ Benchmark bundle size:
 Run memory leak test:
 
     yarn test:leak
+
+Build the GitHub Pages docs site:
+
+    yarn docs

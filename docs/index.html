@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <meta charset="UTF-8">
+  <title>emoji-picker-element</title>
+  <meta name="viewport" content="width=device-width">
+  <style>
+    html {
+      font-family: sans-serif;
+    }
+
+    body {
+      margin: 0 auto;
+      max-width: 1000px;
+    }
+
+    h1 {
+      padding: 0 10px;
+      text-align: center;
+    }
+
+    p {
+      padding: 20px;
+    }
+
+    .github-banner {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    emoji-picker {
+      margin: 0 auto;
+    }
+
+    pre {
+      border: 1px solid #ededed;
+      padding: 10px;
+      white-space: pre-wrap;
+    }
+
+    .flex {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .flex > * {
+      flex: 1;
+    }
+
+    .flex > :first-child {
+      margin-right: 20px;
+    }
+
+    @media (max-width: 767px) {
+      html {
+        padding-top: 50px;
+      }
+      .flex {
+        flex-direction: column;
+      }
+      .flex > :first-child {
+        margin-right: 0;
+      }
+      h1 {
+        padding: 0 50px;
+      }
+    }
+
+    @media screen and (max-width: 320px) {
+      emoji-picker {
+        --num-columns: 6;
+        --emoji-padding: 0.25rem;
+      }
+
+      h1 {
+        font-size: 1.125rem;
+      }
+    }
+
+    @media screen and (max-width: 240px) {
+      emoji-picker {
+        height: 80vh;
+      }
+    }
+  </style>
+</head>
+<body>
+<a class="github-banner" href="https://github.com/nolanlawson/emoji-picker-element">
+  <img width="149" height="149"
+       src="https://github.blog/wp-content/uploads/2008/12/forkme_right_gray_6d6d6d.png?resize=149%2C149"
+       class="attachment-full size-full" alt="Fork me on GitHub"
+       data-recalc-dims="1">
+</a>
+<h1>emoji-picker-element</h1>
+<p>
+  <code>emoji-picker-element</code> is a lightweight emoji picker for the modern web.
+</p>
+<div class="flex">
+  <div>
+    <emoji-picker></emoji-picker>
+  </div>
+  <div>
+    <div style="padding: 20px;">
+      <div style="margin-bottom:10px;">Dark mode:</div>
+      <label>
+        <input type="radio" value="auto" name="darkmode" checked>
+        Auto
+      </label>
+      <label>
+        <input type="radio" value="dark" name="darkmode">
+        Dark
+      </label>
+      <label>
+        <input type="radio" value="light" name="darkmode">
+        Light
+      </label>
+    </div>
+    <div style="padding: 20px;">
+      <pre style="display:none;"></pre>
+    </div>
+  </div>
+</div>
+<script defer src="./focus-visible.js"></script>
+<script defer src="./bundle.js"></script>
+<script>
+  const $ = document.querySelector.bind(document)
+  const $$ = _ => Array.from(document.querySelectorAll(_))
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const picker = $('emoji-picker')
+    const pre = $('pre')
+    const onEvent = e => {
+      console.log(e)
+      pre.style.display = 'block'
+      pre.innerHTML = `Event: ${e.type}\n\nData:\n\n${JSON.stringify(e.detail, null, 2)}`
+    }
+    picker.addEventListener('emoji-click', onEvent)
+    picker.addEventListener('skin-tone-change', onEvent)
+    applyFocusVisiblePolyfill(picker.shadowRoot)
+
+    $$('input[name=darkmode]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        picker.classList.toggle('dark', e.target.value ==='dark')
+        picker.classList.toggle('light', e.target.value ==='light')
+      })
+    })
+  })
+</script>
+</body>
+</html>
