@@ -286,14 +286,14 @@ $: {
   async function updateEmojis () {
     log('updateEmojis')
     if (!database) {
-      searchMode = false
       currentEmojis = []
-    } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
-      searchMode = true
-      currentEmojis = await getEmojisBySearchQuery(searchText)
-    } else if (currentGroup) {
       searchMode = false
+    } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
+      currentEmojis = await getEmojisBySearchQuery(searchText)
+      searchMode = true
+    } else if (currentGroup) {
       currentEmojis = await getEmojisByGroup(currentGroup.id)
+      searchMode = false
     }
   }
   /* no await */ updateEmojis()
@@ -369,6 +369,14 @@ $: {
 
 $: {
   function calculateCurrentEmojisWithCategories () {
+    if (searchMode) {
+      return [
+        {
+          category: '',
+          emojis: currentEmojis
+        }
+      ]
+    }
     const categoriesToEmoji = new Map()
     for (const emoji of currentEmojis) {
       const category = emoji.category || ''
