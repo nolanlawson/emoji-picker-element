@@ -322,14 +322,6 @@ function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
   checkZwjSupport(zwjEmojisToCheck, baselineEmoji, emojiToDomNode)
   // force update
   currentEmojis = currentEmojis // eslint-disable-line no-self-assign
-  if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
-    if (initialLoad) {
-      initialLoad = false
-      // Measure after style/layout are complete
-      // see https://github.com/andrewiggins/afterframe
-      requestPostAnimationFrame(() => stop('initialLoad'))
-    }
-  }
 }
 
 function isZwjSupported (emoji) {
@@ -358,6 +350,16 @@ async function getEmojisByGroup (group) {
 
 async function getEmojisBySearchQuery (query) {
   return summarizeEmojis(await filterEmojisByVersion(await database.getEmojiBySearchQuery(query)))
+}
+
+$: {
+  // consider initialLoad to be complete when the first tabpanel and favorites are rendered
+  if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
+    if (currentEmojis.length && currentFavorites.length && initialLoad) {
+      initialLoad = false
+      requestPostAnimationFrame(() => stop('initialLoad'))
+    }
+  }
 }
 
 //
