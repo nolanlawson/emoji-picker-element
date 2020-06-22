@@ -33,7 +33,7 @@ async function main () {
       customEmojis.push({
         name,
         shortcodes: [name],
-        url: `/custom/${basename}`,
+        url: `./custom/${basename}`,
         category: categoryName
       })
       await copyFile(file, `./docs/custom/${basename}`)
