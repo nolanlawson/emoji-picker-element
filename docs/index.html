@@ -39,6 +39,8 @@
       border: 1px solid #ededed;
       padding: 10px;
       white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
     }
 
     footer {
@@ -93,6 +95,19 @@
     @media screen and (max-width: 240px) {
       emoji-picker {
         height: 80vh;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html {
+        background: #222;
+        color: #efefef;
+      }
+      footer {
+        background: #444;
+      }
+      a, a:visited {
+        color: #7294f5;
       }
     }
   </style>
@@ -157,7 +172,7 @@
     const onEvent = e => {
       console.log(e)
       pre.style.display = 'block'
-      pre.innerHTML = `Event: ${e.type}\n\nData:\n\n${JSON.stringify(e.detail, null, 2)}`
+      pre.innerHTML = `Event: ${JSON.stringify(e.type)}\n\nData:\n\n${JSON.stringify(e.detail, null, 2)}`
     }
     picker.addEventListener('emoji-click', onEvent)
     picker.addEventListener('skin-tone-change', onEvent)
