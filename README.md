@@ -30,6 +30,7 @@ Features:
     + [Dark mode](#dark-mode)
     + [CSS variables](#css-variables)
     + [Focus outline](#focus-outline)
+    + [Custom styling](#custom-styling)
   * [JavaScript API](#javascript-api)
     + [Picker](#picker)
       - [i18n structure](#i18n-structure)
