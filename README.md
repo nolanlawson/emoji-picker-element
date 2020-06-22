@@ -163,6 +163,7 @@ Here is a full list of options:
 | `--border-size`              | `1px`      |                | Width of border used in most of the picker    |
 | `--button-active-background` | `#e6e6e6`  | `#555555`      | Background of an active button                |
 | `--button-hover-background`  | `#d9d9d9`  | `#484848`      | Background of a hovered button                |
+| `--category-font-color`      | `#111`     | `#efefef`      | Font color of custom category headings        |
 | `--category-font-size`       | `1rem`     |                | Font size of custom emoji category headings   |
 | `--emoji-padding`            | `0.5rem`   |                |                                               |
 | `--emoji-size`               | `1.375rem` |                |                                               |

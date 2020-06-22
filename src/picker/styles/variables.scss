@@ -22,7 +22,7 @@
   $input-color: #111;
   $input-placeholder: #999;
   $outline: #999;
-
+  $categoryFontColor: #111;
 
   @if $dark {
     $bg: #222;
@@ -32,6 +32,7 @@
     $input-color: #efefef;
     $input-placeholder: #ccc;
     $outline: #fff;
+    $categoryFontColor: #efefef;
   }
 
   --background: #{$bg}; /* Background of the entire `<emoji-picker>` */
@@ -41,6 +42,7 @@
   --input-font-color: #{$input-color};
   --input-placeholder-color: #{$input-placeholder};
   --outline-color: #{$outline}; /* Focus outline color */
+  --category-font-color: #{$categoryFontColor}; /* Font color of custom emoji category headings */
 
   @if $dark {
     --button-active-background: #{lighten($bg, 20%)};
