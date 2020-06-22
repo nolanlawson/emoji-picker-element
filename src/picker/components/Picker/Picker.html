@@ -130,7 +130,7 @@
            role={searchMode ? 'listbox' : 'menu'}
            aria-labelledby="menu-label-{i}"
            id={searchMode ? 'search-results' : ''}
-           use:calculateEmojiGridWith>
+           use:calculateEmojiGridWidth>
         {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
           <button role={searchMode ? 'option' : 'menuitem'}
                   aria-selected={searchMode ? i == activeSearchItem : ''}

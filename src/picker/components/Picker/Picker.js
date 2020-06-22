@@ -235,7 +235,7 @@ $: {
 //
 
 // eslint-disable-next-line no-unused-vars
-function calculateEmojiGridWith (node) {
+function calculateEmojiGridWidth (node) {
   return calculateWidth(node, width => {
     const newNumColumns = process.env.NODE_ENV === 'test'
       ? DEFAULT_NUM_COLUMNS
