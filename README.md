@@ -13,10 +13,9 @@ It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint
 Features:
 
 - Stores emoji data in IndexedDB
-- Renders native emoji only
+- Renders native emoji only, no spritesheets
 - Accessible
-- Drop-in as a vanilla web component
-- Support custom emoji
+- Supports custom emoji
 
 **Table of contents:**
 
