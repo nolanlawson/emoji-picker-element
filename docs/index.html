@@ -41,6 +41,16 @@
       white-space: pre-wrap;
     }
 
+    footer {
+      font-size: 0.9rem;
+      background: #fafafa;
+      margin: 20px;
+    }
+
+    a, a:visited {
+      color: royalblue;
+    }
+
     .flex {
       display: flex;
       flex-direction: row;
@@ -118,11 +128,23 @@
         Light
       </label>
     </div>
+    <div style="padding: 20px">
+      <label>
+        <input type="checkbox" id="custom"> Custom emoji
+      </label>
+    </div>
     <div style="padding: 20px;">
       <pre style="display:none;"></pre>
     </div>
   </div>
 </div>
+<footer>
+  <p>
+    This page uses <a href='https://mutant.tech'>Mutant Standard emoji</a>, which are licensed under a <a
+    href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+    International License</a>.
+  </p>
+</footer>
 <script defer src="./focus-visible.js"></script>
 <script defer src="./bundle.js"></script>
 <script>
@@ -142,10 +164,17 @@
     applyFocusVisiblePolyfill(picker.shadowRoot)
 
     $$('input[name=darkmode]').forEach(input => {
-      input.addEventListener('change', (e) => {
+      input.addEventListener('change', e => {
         picker.classList.toggle('dark', e.target.value ==='dark')
         picker.classList.toggle('light', e.target.value ==='light')
       })
+    })
+    $('#custom').addEventListener('change', async e => {
+      if (e.target.checked) {
+        picker.customEmoji = await (await fetch('/custom.json')).json()
+      } else {
+        picker.customEmoji = []
+      }
     })
   })
 </script>
