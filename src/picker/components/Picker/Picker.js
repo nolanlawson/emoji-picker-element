@@ -426,6 +426,8 @@ function onSearchKeydown (event) {
       if (activeSearchItem !== -1) {
         halt(event)
         return clickEmoji(currentEmojis[activeSearchItem].unicode)
+      } else if (currentEmojis.length) {
+        activeSearchItem = 0
       }
   }
 }

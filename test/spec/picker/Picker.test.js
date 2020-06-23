@@ -259,6 +259,17 @@ describe('Picker tests', () => {
     }))
   })
 
+  test('press enter to make first search item active', async () => {
+    type(getByRole('combobox'), 'monkey face')
+    await waitFor(() => expect(getAllByRole('option')).toHaveLength(1))
+    expect(getByRole('combobox').getAttribute('aria-activedescendant')).toBeFalsy()
+    fireEvent.keyDown(getByRole('combobox'), { key: 'Enter', code: 'Enter' })
+    await waitFor(() => {
+      return expect(getByRole('combobox').getAttribute('aria-activedescendant'))
+        .toBe(getByRole('option', { name: /🐵/ }).getAttribute('id'))
+    })
+  })
+
   test('Closes skintone picker when blurred', async () => {
     fireEvent.click(getByRole('button', { name: /Choose a skin tone/ }))
     await waitFor(() => expect(getByRole('listbox', { name: 'Skin tones' })).toBeVisible())
