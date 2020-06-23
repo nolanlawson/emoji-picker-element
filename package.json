@@ -49,7 +49,11 @@
   "keywords": [
     "emoji",
     "picker",
-    "IndexedDB"
+    "IndexedDB",
+    "custom",
+    "element",
+    "web",
+    "component"
   ],
   "author": "Nolan Lawson <nolan@nolanlawson.com>",
   "license": "Apache-2.0",
