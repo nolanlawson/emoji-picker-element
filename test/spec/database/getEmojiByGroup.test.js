@@ -10,6 +10,7 @@ describe('getEmojiByGroup', () => {
     expect((await db.getEmojiByGroup(1)).length).toBe(20)
     expect((await db.getEmojiByGroup(2)).length).toBe(9)
     expect((await db.getEmojiByGroup(3)).length).toBe(20)
+    expect((await db.getEmojiByGroup(1))[0].tokens).toBeFalsy()
 
     await db.delete()
   })

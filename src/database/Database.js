@@ -17,6 +17,7 @@ import {
 import { log } from '../shared/log'
 import { getETag, getETagAndData } from './utils/ajax'
 import { customEmojiIndex } from './customEmojiIndex'
+import { cleanEmoji } from './utils/cleanEmoji'
 
 async function checkForUpdates (db, dataSource) {
   // just do a simple HEAD request first to see if the eTags match
@@ -87,15 +88,14 @@ export default class Database {
   async getEmojiByGroup (group) {
     assertNumber(group)
     await this.ready()
-    const emojis = await getEmojiByGroup(this._db, group)
-    return uniqEmoji(emojis)
+    return uniqEmoji(await getEmojiByGroup(this._db, group)).map(cleanEmoji)
   }
 
   async getEmojiBySearchQuery (query) {
     assertNonEmptyString(query)
     await this.ready()
     const customs = this._custom.search(query)
-    const natives = uniqEmoji(await getEmojiBySearchQuery(this._db, query))
+    const natives = uniqEmoji(await getEmojiBySearchQuery(this._db, query)).map(cleanEmoji)
     return [
       ...customs,
       ...natives
@@ -109,7 +109,7 @@ export default class Database {
     if (custom) {
       return custom
     }
-    return getEmojiByShortcode(this._db, shortcode)
+    return cleanEmoji(await getEmojiByShortcode(this._db, shortcode))
   }
 
   async getEmojiByUnicodeOrName (unicodeOrName) {
@@ -119,7 +119,7 @@ export default class Database {
     if (custom) {
       return custom
     }
-    return getEmojiByUnicode(this._db, unicodeOrName)
+    return cleanEmoji(await getEmojiByUnicode(this._db, unicodeOrName))
   }
 
   async getPreferredSkinTone () {

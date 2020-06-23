@@ -8,6 +8,7 @@ describe('getEmojiByShortcode', () => {
   test('basic test', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
     expect((await db.getEmojiByShortcode('monkey')).annotation).toEqual('monkey')
+    expect((await db.getEmojiByShortcode('monkey')).tokens).toBeFalsy()
     expect((await db.getEmojiByShortcode('monkey_face')).annotation).toEqual('monkey face')
     expect((await db.getEmojiByShortcode('MONKEY')).annotation).toEqual('monkey')
     expect((await db.getEmojiByShortcode('MONKEY_FACE')).annotation).toEqual('monkey face')

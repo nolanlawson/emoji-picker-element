@@ -22,6 +22,7 @@ describe('getEmojiByUnicode', () => {
     const db = new Database({ dataSource: EMOJI_WITH_PIRATES })
 
     expect((await db.getEmojiByUnicodeOrName('😀')).annotation).toBe('grinning face')
+    expect((await db.getEmojiByUnicodeOrName('😀')).tokens).toBeFalsy()
     expect((await db.getEmojiByUnicodeOrName(pirate.emoji)).annotation).toBe('pirate flag')
     expect((await db.getEmojiByUnicodeOrName(pirate.emoji.substring(0, 1)))).toBe(null)
     expect((await db.getEmojiByUnicodeOrName('smile'))).toBe(null)

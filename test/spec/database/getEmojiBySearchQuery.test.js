@@ -62,6 +62,7 @@ describe('getEmojiBySearchQuery', () => {
     expect(await search('face monk')).toStrictEqual([
       { annotation: 'monkey face', order: 2657 }
     ])
+    expect((await search('face monk'))[0].tokens).toBeFalsy()
     expect(await search('monkey facee')).toStrictEqual([])
     expect(await search('monk face')).toStrictEqual([])
     await db.delete()

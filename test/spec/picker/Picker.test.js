@@ -162,7 +162,6 @@ describe('Picker tests', () => {
         order: 1,
         shortcodes: ['gleeful'],
         tags: ['face', 'grin'],
-        tokens: [':d', 'face', 'gleeful', 'grin', 'grinning'],
         unicode: '😀',
         version: 1,
         emoticon: ':D'
@@ -188,7 +187,6 @@ describe('Picker tests', () => {
         order: 280,
         shortcodes: ['thumbsup', '+1', 'yes'],
         tags: ['+1', 'hand', 'thumb', 'up'],
-        tokens: ['+1', 'hand', 'thumb', 'thumbs', 'thumbsup', 'up', 'yes'],
         unicode: '👍️',
         version: 0.6,
         skins: [
@@ -214,7 +212,6 @@ describe('Picker tests', () => {
         order: 1,
         shortcodes: ['gleeful'],
         tags: ['face', 'grin'],
-        tokens: [':d', 'face', 'gleeful', 'grin', 'grinning'],
         unicode: '😀',
         version: 1,
         emoticon: ':D'
@@ -254,7 +251,6 @@ describe('Picker tests', () => {
         order: 2658,
         shortcodes: ['monkey'],
         tags: ['monkey'],
-        tokens: ['monkey'],
         unicode: '🐒',
         version: 0.6
       },
