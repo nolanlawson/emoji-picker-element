@@ -11,7 +11,7 @@ export default class Picker extends HTMLElement {
    * @param dataSource - URL to fetch the emojibase data from
    * @param locale - Locale string
    * @param i18n - i18n object (see below for details)
-   * @param skinToneEmoji - the emoji to use for the skin tone picker
+   * @param skinToneEmoji - The emoji to use for the skin tone picker
    */
   constructor({
                 dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json',
