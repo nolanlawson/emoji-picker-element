@@ -17,7 +17,7 @@ const { type, clear } = userEvent
 
 const frI18n = JSON.parse(JSON.stringify(enI18n))
 
-frI18n.search = 'Recherche'
+frI18n.searchLabel = 'Recherche'
 frI18n.skinTones[0] = 'Défaut'
 frI18n.categories['smileys-emotion'] = 'Sourires et emoticons'
 

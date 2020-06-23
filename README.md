@@ -276,13 +276,13 @@ Here is the default English `i81n` object (`"en"` locale):
     "flags": "Flags"
   },
   "categoriesLabel": "Categories",
-  "emojiUnsupported": "Your browser does not support color emoji.",
+  "emojiUnsupportedMessage": "Your browser does not support color emoji.",
   "favoritesLabel": "Favorites",
-  "loading": "Loading…",
-  "networkError": "Could not load emoji. Try refreshing.",
+  "loadingMessage": "Loading…",
+  "networkErrorMessage": "Could not load emoji. Try refreshing.",
   "regionLabel": "Emoji picker",
-  "search": "Search",
   "searchDescription": "When search results are available, press up or down to select and enter to choose.",
+  "searchLabel": "Search",
   "searchResultsLabel": "Search results",
   "skinToneDescription": "When expanded, press up or down to select and enter to choose.",
   "skinToneLabel": "Choose a skin tone (currently {skinTone})",
@@ -294,7 +294,7 @@ Here is the default English `i81n` object (`"en"` locale):
     "Medium-Dark",
     "Dark"
   ],
-  "skinTonesTitle": "Skin tones"
+  "skinTonesLabel": "Skin tones"
 }
 ```
 

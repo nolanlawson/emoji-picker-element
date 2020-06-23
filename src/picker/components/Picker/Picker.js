@@ -93,7 +93,7 @@ function unicodeWithSkin (emoji, currentSkinTone) {
 
 emojiSupportLevelPromise.then(level => {
   if (!level) {
-    message = i18n.emojiUnsupported
+    message = i18n.emojiUnsupportedMessage
   }
 })
 
@@ -105,17 +105,17 @@ $: {
   // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
   async function handleDatabaseLoading () {
     const timeoutHandle = setTimeout(() => {
-      message = i18n.loading
+      message = i18n.loadingMessage
     }, TIMEOUT_BEFORE_LOADING_MESSAGE)
     try {
       await database.ready()
       loaded = true
     } catch (err) {
       console.error(err)
-      message = i18n.networkError
+      message = i18n.networkErrorMessage
     } finally {
       clearTimeout(timeoutHandle)
-      if (message === i18n.loading) {
+      if (message === i18n.loadingMessage) {
         message = ''
       }
     }

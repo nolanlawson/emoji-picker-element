@@ -1,5 +1,5 @@
 import Picker from '../../../src/picker/PickerElement'
-import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick } from '../shared'
+import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Database from '../../../src/database/Database'
 import { getByRole, waitFor } from '@testing-library/dom'
 
@@ -20,22 +20,42 @@ describe('errors', () => {
 
   // can't seem to get jest to ignore these expected errors
   test.skip('offline shows an error', async () => {
-    const ERROR = 'error.json'
+    const dataSource = 'error.json'
 
-    fetch.get(ERROR, { body: null, status: 500 })
-    fetch.head(ERROR, { body: null, status: 500 })
+    fetch.get(dataSource, { body: null, status: 500 })
+    fetch.head(dataSource, { body: null, status: 500 })
 
-    const picker = new Picker({ dataSource: ERROR })
-    await tick(20)
-
-    await (expect(() => picker.database.ready())).rejects.toThrow()
-
+    const picker = new Picker({ dataSource })
     const container = picker.shadowRoot.querySelector('.picker')
     document.body.appendChild(picker)
 
-    await waitFor(() => expect(getByRole(container, 'alert', { name: /Could not load emoji/ })).toBeVisible())
+    await tick(20)
+
+    await expect(picker.database.ready()).rejects.toThrow()
+
+    await waitFor(() => expect(getByRole(container, 'alert').innerHTML).toContain('Could not load'))
 
     await new Database({ dataSource: ALL_EMOJI }).delete()
     document.body.removeChild(picker)
   })
+
+  test('slow networks show "Loading"', async () => {
+    const dataSource = 'slow.json'
+
+    fetch.get(dataSource, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/slow' } }),
+      { delay: 1500 })
+    fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/slow' } }),
+      { delay: 1500 })
+
+    const picker = new Picker({ dataSource })
+    const container = picker.shadowRoot.querySelector('.picker')
+    document.body.appendChild(picker)
+    await tick(20)
+
+    await waitFor(() => expect(getByRole(container, 'alert').innerHTML).toContain('Loading'), { timeout: 2000 })
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible(), { timeout: 2000 })
+
+    await new Database({ dataSource }).delete()
+    document.body.removeChild(picker)
+  }, 5000)
 })

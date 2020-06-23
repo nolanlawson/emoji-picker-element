@@ -40,16 +40,16 @@ export interface PickerConstructorOptions {
 }
 
 export interface I18n {
-  emojiUnsupported: string
-  loading: string
-  networkError: string
+  emojiUnsupportedMessage: string
+  loadingMessage: string
+  networkErrorMessage: string
   regionLabel: string
-  search: string
+  searchLabel: string
   skinToneLabel: string
   searchResultsLabel: string
   categoriesLabel: string
   categories: I18nCategories
-  skinTonesTitle: string
+  skinTonesLabel: string
   skinTones: string[]
   searchDescription: string
   skinToneDescription: string

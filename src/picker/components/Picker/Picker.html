@@ -17,7 +17,7 @@
         type="search"
         role="combobox"
         enterkeyhint="search"
-        placeholder={i18n.search}
+        placeholder={i18n.searchLabel}
         autocapitalize="none"
         autocomplete="off"
         spellcheck="true"
@@ -29,7 +29,7 @@
         bind:value={rawSearchText}
         on:keydown={onSearchKeydown}
       >
-      <label class="sr-only" for="search">{i18n.search}</label>
+      <label class="sr-only" for="search">{i18n.searchLabel}</label>
       <span id="search-description" class="sr-only">{i18n.searchDescription}</span>
     </div>
     <div class="skintone-button-wrapper {skinTonePickerExpandedAfterAnimation ? 'expanded' : ''}">
@@ -50,7 +50,7 @@
          class="skintone-list {skinTonePickerExpanded ? '' : 'hidden no-animate'}"
          style="{skinTonePickerExpanded ? 'transform: translateY(0);' : 'transform: translateY(calc(-1 * var(--num-skintones) * var(--total-emoji-size)))'}"
          role="listbox"
-         aria-label={i18n.skinTonesTitle}
+         aria-label={i18n.skinTonesLabel}
          aria-activedescendant="skintone-{activeSkinTone}"
          aria-hidden={!skinTonePickerExpanded}
          on:keydown={onSkinToneOptionKeydown}
