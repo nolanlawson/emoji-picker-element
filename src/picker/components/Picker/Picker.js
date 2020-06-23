@@ -401,7 +401,7 @@ $: {
 
 $: {
   requestIdleCallback(() => {
-    searchText = rawSearchText // defer to avoid input delays
+    searchText = (rawSearchText || '').trim() // defer to avoid input delays, plus we can trim here
     activeSearchItem = -1
   })
 }
