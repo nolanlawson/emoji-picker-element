@@ -1,6 +1,8 @@
 emoji-picker-element
 ====
 
+![Screenshot of emoji-picker-element in light and dark modes](https://nolanwlawson.files.wordpress.com/2020/06/out.png)
+
 ```html
 <emoji-picker></emoji-picker>
 ```
