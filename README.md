@@ -1,4 +1,4 @@
-emoji-picker-element
+emoji-picker-element [![Build Status](https://travis-ci.com/nolanlawson/emoji-picker-element.svg?branch=master)](https://travis-ci.com/nolanlawson/emoji-picker-element)
 ====
 
 ![Screenshot of emoji-picker-element in light and dark modes](https://nolanwlawson.files.wordpress.com/2020/06/out.png)
