@@ -25,6 +25,7 @@ import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 import { stop } from '../../../shared/marks'
 import { onMount, onDestroy, tick } from 'svelte'
+import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 
 // public
 let locale = null
@@ -42,6 +43,7 @@ let rawSearchText = ''
 let searchText = ''
 let rootElement
 let baselineEmoji
+let tabpanelElement
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
 let message // eslint-disable-line no-unused-vars
@@ -311,6 +313,11 @@ $: {
     requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
   } else {
     currentEmojis = currentEmojis.filter(isZwjSupported)
+    requestAnimationFrame(() => { // reset scroll top to 0 when emojis change
+      if (process.env.NODE_ENV !== 'test') {
+        tabpanelElement.scrollTop = 0
+      }
+    })
   }
 }
 

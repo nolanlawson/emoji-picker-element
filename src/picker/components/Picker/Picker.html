@@ -111,6 +111,7 @@
        id={searchMode ? '' : `tab-${currentGroup.id}`}
        tabindex="0"
        on:click={onEmojiClick}
+       bind:this={tabpanelElement}
   >
     {#each currentEmojisWithCategories as emojiWithCategory, i (emojiWithCategory.category)}
       <div
