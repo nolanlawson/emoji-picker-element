@@ -26,7 +26,13 @@ const origMarkup = preprocessConfig.markup
 // TODO: this is fragile, but it also results in a lot of bundlesize savings. let's find a better solution
 preprocessConfig.markup = async function () {
   const res = await origMarkup.apply(this, arguments)
+
+  // remove whitespace
   res.code = res.code.replace(/([>}])\s+([<{])/sg, '$1$2')
+
+  // remove data-testid (only used for testing-library)
+  res.code = res.code.replace(/data-testid=".*?"/g, '')
+
   return res
 }
 
