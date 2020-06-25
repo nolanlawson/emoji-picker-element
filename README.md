@@ -24,7 +24,7 @@ Features:
 
 <!-- toc start -->
 
-- [emoji-picker-element](#emoji-picker-element)
+- [emoji-picker-element](#emoji-picker-element-)
   * [Install](#install)
   * [Usage](#usage)
   * [Styling](#styling)

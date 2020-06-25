@@ -11,6 +11,7 @@ async function main () {
   const content = (await readFile('./README.md', 'utf8'))
     .replace(TRAVIS_BADGE, '') // remove travis badge, it confuses markdown-toc
   const toc = markdownToc(content).content
+    .replace('#emoji-picker-element', '#emoji-picker-element-') // it confuses GitHub's anchor links too
   await replaceInReadme(TOC_START_MARKER, TOC_END_MARKER, toc)
 }
 
