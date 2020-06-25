@@ -9,9 +9,6 @@ export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode
   mark('checkZwjSupport')
   for (const emoji of zwjEmojisToCheck) {
     const domNode = emojiToDomNode(emoji)
-    if (!domNode) { // happens rarely, mostly in jest tests
-      continue
-    }
     const emojiWidth = calculateTextWidth(domNode)
     if (typeof baselineEmojiWidth === 'undefined') { // calculate the baseline emoji width only once
       baselineEmojiWidth = calculateTextWidth(baselineEmoji)
