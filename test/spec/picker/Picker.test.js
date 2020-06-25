@@ -267,8 +267,8 @@ describe('Picker tests', () => {
     await waitFor(() => {
       return expect(getByRole('combobox').getAttribute('aria-activedescendant'))
         .toBe(getByRole('option', { name: /🐵/ }).getAttribute('id'))
-    })
-  })
+    }, { timeout: 2000 })
+  }, 5000)
 
   test('Closes skintone picker when blurred', async () => {
     fireEvent.click(getByRole('button', { name: /Choose a skin tone/ }))
