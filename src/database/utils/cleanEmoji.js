@@ -3,11 +3,11 @@ export function cleanEmoji (emoji) {
   if (!emoji) {
     return emoji
   }
-  const res = {}
-  for (const [key, value] of Object.entries(emoji)) {
-    if (key !== 'tokens') {
-      res[key] = value
-    }
-  }
-  return res
+  // Usually I would avoid delete for perf reasons (no polymorphism), and for code
+  // cleanliness (pure function, don't mutate the input), but in this case
+  // it's way less code than copying the object, and seems to cause fewer GCs.
+  // Benchmarking in Chrome suggests it's faster to just delete (6x CPU slowdown, ~10ms
+  // versus ~55ms for getEmojiByGroup() when clicking on "People and body").
+  delete emoji.tokens
+  return emoji
 }
