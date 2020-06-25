@@ -66,6 +66,7 @@ let currentGroupIndex = 0
 let groups = defaultGroups
 let currentGroup
 let loaded = false // eslint-disable-line no-unused-vars
+let activeSearchItemId // eslint-disable-line no-unused-vars
 
 //
 // Utils/helpers
@@ -323,9 +324,7 @@ $: {
 
 function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
   const rootNode = rootElement.getRootNode()
-  const emojiToDomNode = emoji => (
-    rootNode.querySelector(`[data-emoji=${JSON.stringify(emoji.unicode)}]`)
-  )
+  const emojiToDomNode = emoji => rootNode.getElementById(`emo-${emoji.id}`)
   checkZwjSupport(zwjEmojisToCheck, baselineEmoji, emojiToDomNode)
   // force update
   currentEmojis = currentEmojis // eslint-disable-line no-self-assign
@@ -401,6 +400,12 @@ $: {
 
   currentEmojisWithCategories = calculateCurrentEmojisWithCategories()
 }
+
+//
+// Handle active search item (i.e. pressing up or down while searching)
+//
+
+$: activeSearchItemId = activeSearchItem !== -1 && currentEmojis[activeSearchItem].id
 
 //
 // Handle user input on the search input
@@ -497,7 +502,7 @@ async function onEmojiClick (event) {
     return
   }
   halt(event)
-  const id = target.dataset.emoji
+  const id = target.id.substring(4) // replace 'emo-' or 'fav-' prefix
 
   /* no await */ clickEmoji(id)
 }

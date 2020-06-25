@@ -47,13 +47,13 @@ describe('Favorites UI', () => {
     const favoritesBar = getByTestId(container, 'favorites')
     expect(favoritesBar).toBeVisible()
     await waitFor(() => expect(getAllByRole(favoritesBar, 'menuitem')).toHaveLength(8))
-    expect(getAllByRole(favoritesBar, 'menuitem').map(_ => _.getAttribute('data-emoji'))).toStrictEqual(
+    expect(getAllByRole(favoritesBar, 'menuitem').map(_ => _.getAttribute('id').substring(4))).toStrictEqual(
       MOST_COMMONLY_USED_EMOJI.slice(0, 8)
     )
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /🤣/ })).toBeVisible())
     fireEvent.click(getByRole(container, 'menuitem', { name: /🤣/ }))
     await waitFor(() => expect(getAllByRole(favoritesBar, 'menuitem')
-      .map(_ => _.getAttribute('data-emoji'))).toStrictEqual([
+      .map(_ => _.getAttribute('id').substring(4))).toStrictEqual([
       '🤣',
       ...MOST_COMMONLY_USED_EMOJI.slice(0, 7)
     ]
