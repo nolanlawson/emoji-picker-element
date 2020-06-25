@@ -1,7 +1,7 @@
 {
   "name": "emoji-picker-element",
   "version": "1.0.0",
-  "description": "A lightweight emoji picker, distributed as a custom element",
+  "description": "Lightweight emoji picker distributed as a web component",
   "main": "index.js",
   "module": "index.js",
   "types": "index.d.ts",
@@ -53,7 +53,8 @@
     "custom",
     "element",
     "web",
-    "component"
+    "component",
+    "svelte"
   ],
   "author": "Nolan Lawson <nolan@nolanlawson.com>",
   "license": "Apache-2.0",
