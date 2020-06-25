@@ -748,7 +748,7 @@ Using IndexedDB has a few advantages:
 
 1. We don't need to keep the full emoji data in memory at all times.
 2. After the first load, there is no need to download, parse, and index the JSON file again, because it's already available in IndexedDB.
-3. If you want, you can even load the IndexedDB data in a web worker, keeping the main thread free from non-UI data processing.
+3. If you want, you can even [load the IndexedDB data in a web worker](https://github.com/nolanlawson/emoji-picker-element/blob/ff86a42/test/adhoc/worker.js), keeping the main thread free from non-UI data processing.
 
 ### Native emoji
 
