@@ -3709,6 +3709,11 @@ flat-cache@^2.0.1:
     rimraf "2.6.3"
     write "1.0.3"
 
+flat-color-icons@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/flat-color-icons/-/flat-color-icons-1.1.0.tgz#a52820a73ccbe3df007ac22e5d539be67b4b2710"
+  integrity sha1-pSggpzzL498AesIuXVOb5ntLJxA=
+
 flatted@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-2.0.2.tgz#4575b21e2bcee7434aa9be662f4b7b5f9c2b5138"
