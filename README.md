@@ -694,9 +694,15 @@ import Picker from 'emoji-picker-element/svelte'
 
 ### Data source and JSON format
 
-`emoji-picker-element` requires the _full_ [emojibase-data](https://github.com/milesj/emojibase) JSON file, not the "compact" one (e.g. `emojibase-data/en/data.json`, not `emojibase-data/en/compact.json`).
+If you'd like to host the emoji JSON yourself, you can do:
 
-You can fetch the emoji JSON file from wherever you want. However, it's recommended that your server expose an `ETag` header – if so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will fire off a `HEAD` request and just check the `ETag`.
+    npm install emojibase-data
+
+Then host `node_modules/emojibase-data/en/data.json` (or other locales) on your web server.
+
+`emoji-picker-element` requires the _full_ [emojibase-data](https://github.com/milesj/emojibase) JSON file, not the "compact" one (i.e. `data.json`, not `compact.json`).
+
+It's recommended that your server expose an `ETag` header – if so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will do a `HEAD` request and just check the `ETag`.
 
 If the server hosting the JSON file is not the same as the one containing the emoji picker, then the cross-origin server will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: *`. (Note that `jsdelivr` already does this, which is partly why it is the default.)
 
@@ -726,9 +732,9 @@ const trimEmojiData = require('emoji-picker-element/trimEmojiData.cjs');
 If you would like to manage the database yourself (e.g. to ensure that it's correctly populated before displaying the `Picker`), then create a new `Database` instance and wait for its `ready()` promise to resolve:
 
 ```js
-const database = new Database()
+const database = new Database();
 try {
-  await database.ready()
+  await database.ready();
 } catch (err) {
   // Deal with any errors (e.g. offline)
 }
@@ -762,13 +768,11 @@ Browsers deal with JSON more efficiently when it's loaded via `fetch()` rather t
 [faster for the browser to parse JSON than JavaScript](https://joreteg.com/blog/improving-redux-state-transfer-performance),
 becuase the data is being parsed in the more tightly-constrained JSON format than the generic JavaScript format.
 
-Plus, embedding the JSON directly would mean re-parsing the entire object on second load, which is something we want to avoid using IndexedDB.
+Plus, embedding the JSON directly would mean re-parsing the entire object on second load, which is something we want to avoid since the data is already in IndexedDB.
 
 ### Browser support
 
-`emoji-picker-element` only supports the latest versions of Chrome, Firefox, and Safari, as well as equivalent browsers (Edge, Opera, etc.). It was just much easier to design for the future than for the past.
-
-If you need support for older browsers, you will need polyfills for the following things (non-exhaustive list):
+`emoji-picker-element` only supports the latest versions of Chrome, Firefox, and Safari, as well as equivalent browsers (Edge, Opera, etc.). If you need support for older browsers, you will need polyfills for the following things (non-exhaustive list):
 
 - Custom elements
 - Shadow DOM
