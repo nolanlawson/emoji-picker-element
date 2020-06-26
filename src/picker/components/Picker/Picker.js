@@ -243,7 +243,9 @@ function calculateEmojiGridWidth (node) {
     const newNumColumns = process.env.NODE_ENV === 'test'
       ? DEFAULT_NUM_COLUMNS
       : parseInt(getComputedStyle(rootElement).getPropertyValue('--num-columns'), 10)
-    const parentWidth = node.parentElement.getBoundingClientRect().width
+    const parentWidth = process.env.NODE_ENV === 'test' // jsdom throws an error here occasionally
+      ? 1
+      : node.parentElement.getBoundingClientRect().width
     const newScrollbarWidth = parentWidth - width
     numColumns = newNumColumns
     scrollbarWidth = newScrollbarWidth
@@ -440,7 +442,7 @@ function onSearchKeydown (event) {
     case 'Enter':
       if (activeSearchItem !== -1) {
         halt(event)
-        return clickEmoji(currentEmojis[activeSearchItem].unicode)
+        return clickEmoji(currentEmojis[activeSearchItem].id)
       } else if (currentEmojis.length) {
         activeSearchItem = 0
       }
@@ -485,7 +487,7 @@ function onNavKeydown (event) {
 async function clickEmoji (unicodeOrName) {
   const emoji = await database.getEmojiByUnicodeOrName(unicodeOrName)
   const emojiSummary = [...currentEmojis, ...currentFavorites]
-    .find(_ => (_.unicode === unicodeOrName || _.name === unicodeOrName))
+    .find(_ => (_.id === unicodeOrName))
   const skinTonedUnicode = emojiSummary.unicode && unicodeWithSkin(emojiSummary, currentSkinTone)
   await database.incrementFavoriteEmojiCount(unicodeOrName)
   // eslint-disable-next-line no-self-assign
