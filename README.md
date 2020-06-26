@@ -758,7 +758,7 @@ Using IndexedDB has a few advantages:
 
 ### Native emoji
 
-To avoid downloading a large sprite sheet that renders a particular emoji set – which may look out-of-place on different platforms, or may have IP issues – `emoji-picker-element` only renders native emoji. This means it is limited to the emoji actually installed on the user's device.
+To avoid downloading a large sprite sheet that renders a particular emoji set – which may look out-of-place on different platforms, or may have [IP issues](https://blog.emojipedia.org/apples-emoji-crackdown/) – `emoji-picker-element` only renders native emoji. This means it is limited to the emoji actually installed on the user's device.
 
 To avoid rendering ugly unsupported or half-supported emoji, `emoji-picker-element` will automatically detect emoji support and only render the supported characters. (So no empty boxes or awkward double emoji.) If no color emoji are supported by the browser/OS, then an error message is displayed (e.g. older browsers, some odd Linux configurations).
 
