@@ -778,42 +778,4 @@ That said, older browsers may not have a color emoji font installed at all, so `
 
 ## Contributing
 
-Install
-
-    yarn
-
-Lint:
-
-    yarn lint
-
-Fix most lint issues:
-
-    yarn lint:fix
-
-Run the tests:
-
-    yarn test
-
-Check code coverage:
-
-    yarn cover
-
-Run a local dev server on `localhost:3000`:
-
-    yarn dev
-
-Benchmark memory usage:
-
-    yarn benchmark:memory
-
-Benchmark bundle size:
-
-    yarn benchmark:bundlesize
-
-Run memory leak test:
-
-    yarn test:leak
-
-Build the GitHub Pages docs site:
-
-    yarn docs
+See [CONTRIBUTING.md](https://github.com/nolanlawson/emoji-picker-element/blob/master/README.md).
