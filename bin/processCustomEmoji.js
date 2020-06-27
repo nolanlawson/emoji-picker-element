@@ -7,98 +7,47 @@ const categories = [
   {
     name: 'People and activities',
     set: new Set([
-      'assistant',
-      'businessman',
-      'businesswoman',
-      'butting_in',
-      'customer_support',
-      'debt',
-      'night_portrait',
-      'online_support',
-      'portrait_mode',
-      'reading',
-      'reading_ebook',
-      'selfie',
-      'sports_mode',
-      'voice_presentation',
-      'podium_with_speaker',
-      'manager',
-      'reuse'
+      'assistant', 'businessman', 'businesswoman', 'butting_in', 'customer_support', 'debt',
+      'night_portrait', 'online_support', 'portrait_mode', 'reading', 'reading_ebook', 'selfie',
+      'sports_mode', 'voice_presentation', 'podium_with_speaker', 'manager', 'reuse'
     ])
   },
   {
     name: 'Technical and software',
     set: new Set([
-      'add_column',
-      'add_database',
-      'add_image',
-      'address_book',
-      'add_row',
-      'audio_file',
-      'bookmark',
-      'broken_link',
-      'capacitor',
-      'cell_phone',
-      'charge_battery',
-      'electrical_sensor',
-      'electrical_threshold',
-      'electro_devices',
-      'electronics',
-      'empty_battery',
-      'empty_filter',
-      'engineering',
-      'export',
-      'file',
-      'flash_auto',
-      'flash_off',
-      'flash_on',
-      'folder',
-      'full_battery',
-      'high_battery',
-      'image_file',
-      'opened_folder',
-      'parallel_tasks',
-      'portrait_mode',
-      'print',
-      'remove_image',
-      'rotate_camera',
-      'rotate_to_landscape',
-      'rotate_to_portrait',
-      'search',
-      'circuit',
-      'command_line',
-      'crystal_oscillator',
-      'data_backup',
-      'database',
-      'data_configuration',
-      'data_encryption',
-      'data_protection',
-      'data_recovery',
-      'data_sheet',
-      'delete_column',
-      'delete_database',
-      'delete_row',
-      'download',
-      'integrated_webcam',
-      'landscape',
-      'lock_landscape',
-      'lock_portrait',
-      'multiple_cameras',
-      'multiple_devices',
-      'multiple_smartphones',
-      'no_video',
-      'serial_tasks',
-      'share',
-      'sim_card_chip',
-      'sim_card"',
-      'smartphone_tablet',
-      'sms',
-      'touchscreen_smartphone',
-      'two_smartphones',
-      'upload',
-      'video_call',
-      'video_file',
-      'webcam'
+      'add_column', 'add_database', 'address_book', 'add_row', 'audio_file',
+      'bookmark', 'broken_link', 'capacitor', 'cell_phone', 'charge_battery', 'electrical_sensor',
+      'electrical_threshold', 'electro_devices', 'electronics', 'empty_battery', 'empty_filter', 'engineering',
+      'export', 'file', 'folder', 'full_battery',
+      'high_battery', 'opened_folder', 'parallel_tasks', 'print',
+      'search', 'circuit',
+      'command_line', 'crystal_oscillator', 'data_backup', 'database', 'data_configuration', 'data_encryption',
+      'data_protection', 'data_recovery', 'data_sheet', 'delete_column', 'delete_database', 'delete_row',
+      'download', 'integrated_webcam', 'landscape', 'lock_landscape', 'lock_portrait',
+      'multiple_devices', 'multiple_smartphones', 'serial_tasks', 'share', 'sim_card_chip',
+      'sim_card"', 'smartphone_tablet', 'sms', 'touchscreen_smartphone', 'two_smartphones', 'upload',
+      'video_call', 'accept_database', 'alphabetical_sorting_az', 'alphabetical_sorting_za',
+      'clear_filters', 'cursor', 'edit_image', 'filter', 'full_trash', 'empty_trash',
+      'generic_sorting_asc', 'generic_sorting_desc', 'low_battery',
+      'mms', 'multiple_inputs', 'numerical_sorting_12', 'numerical_sorting_21', 'settings', 'tree_structure',
+      'undo', 'redo', 'refresh', 'headset', 'filled_filter', 'genealogy', 'voicemail', 'speaker', 'link',
+      'feed_in', 'missed_call', 'menu', 'middle_battery', 'phone', 'sim_card',
+      'lock', 'unlock', 'privacy', 'comments'
+    ])
+  },
+  {
+    name: 'Film and Photography',
+    set: new Set([
+      'clapperboard', 'photo_reel', 'old_time_camera', 'film', 'film_reel',
+      'video_projector', 'switch_camera',
+      'camcorder', 'camcorder_pro', 'camera', 'camera_addon', 'camera_identification', 'compact_camera',
+      'webcam', 'video_file', 'no_video',
+      'multiple_cameras', 'rotate_camera', 'rotate_to_landscape', 'rotate_to_portrait',
+      'portrait_mode', 'landscape_mode', 'flash_auto', 'flash_off', 'flash_on',
+      'image_file', 'remove_image', 'add_image',
+      'panorama', 'picture', 'slr_back_side',
+      'stack_of_photos', 'gallery',
+      'close_up_mode', 'frame'
     ])
   },
   {
@@ -107,6 +56,67 @@ const categories = [
       'left', 'left_down', 'left_down2', 'left_up',
       'left_up2', 'right', 'right_down', 'right_down2',
       'right_up', 'right_up2', 'up', 'up_left', 'up_right'
+
+    ])
+  },
+  {
+    name: 'Business',
+    set: new Set([
+      'area_chart', 'bad_decision', 'bar_chart', 'bearish', 'bullish', 'briefcase',
+      'business', 'business_contact', 'calculator', 'call_transfer', 'callback', 'collaboration',
+      'combo_chart', 'conference_call', 'decision', 'department', 'deployment', 'disapprove',
+      'disclaimer', 'document', 'doughnut_chart', 'end_call', 'external', 'factory',
+      'factory_breakdown', 'faq', 'filing_cabinet', 'fine_print', 'flow_chart', 'good_decision',
+      'grid', 'idea', 'import', 'in_transit', 'inspection', 'internal',
+      'answers', 'line_chart', 'low_priority', 'make_decision', 'medium_priority', 'mind_map', 'negative_dynamic',
+      'neutral_decision', 'neutral_trading', 'org_unit', 'organization', 'overtime', 'paid', 'pie_chart',
+      'positive_dynamic', 'process', 'radar_plot', 'sales_performance', 'scatter_plot', 'self_service_kiosk',
+      'services', 'support', 'statistics', 'survey', 'template', 'timeline', 'vip', 'workflow',
+      'todo_list', 'expired', 'heat_map', 'donate', 'no_idea', 'feedback', 'safe',
+      'shipped', 'contacts', 'list', 'package',
+      'invite', 'money_transfer', 'view_details', 'questions', 'ratings'
+    ])
+  },
+  {
+    name: 'Symbols',
+    set: new Set([
+      'approval', 'approve', 'automatic', 'biohazard', 'cancel', 'checkmark',
+      'collapse', 'expand', 'collect', 'copyleft', 'copyright', 'currency_exchange',
+      'high_priority',
+      'info', 'ok', 'plus',
+      'registered_trademark', 'service_mark',
+      'trademark', 'sound_recording_copyright',
+      'rating', 'start', 'synchronize',
+      'about', 'like', 'like_placeholder',
+      'previous', 'next', 'dislike',
+      'minus'
+
+    ])
+  },
+  {
+    name: 'Time',
+    set: new Set([
+      'alarm_clock',
+      'clock',
+      'calendar',
+      'leave',
+      'planner'
+
+    ])
+  },
+  {
+    name: 'Academic',
+    set: new Set([
+      'diploma_1',
+      'diploma_2',
+      'graduation_cap',
+      'podium_with_audience',
+      'podium_without_speaker',
+      'ruler',
+      'library',
+      'biotech',
+      'biomass',
+      'rules'
     ])
   }
 ]
@@ -127,7 +137,8 @@ function remove (name) {
     'dribbble', 'google', 'linux', 'stumbleupon',
     'android_os', 'entering_heaven_alive',
     'phone_android', 'debian', 'ipad', 'iphone',
-    'kindle', 'nfc_sign', 'nook'
+    'kindle', 'nfc_sign', 'nook', 'advertising',
+    'tablet_android', 'icons8_cup', 'cable_release'
   ].includes(name)
 }
 
