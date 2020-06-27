@@ -460,6 +460,9 @@ ___
 Return a single native emoji matching the unicode string, or
 a custom emoji matching the name, or null if not found.
 
+In the case of native emoji, the unicode string can be either the
+main unicode string, or the unicode of one of the skin tone variants.
+
 Empty/null strings throw an error.
 
 **Parameters:**
