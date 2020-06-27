@@ -261,14 +261,16 @@ describe('Picker tests', () => {
   })
 
   test('press enter to make first search item active', async () => {
+    await tick(20)
     type(getByRole('combobox'), 'monkey face')
     await waitFor(() => expect(getAllByRole('option')).toHaveLength(1))
     expect(getByRole('combobox').getAttribute('aria-activedescendant')).toBeFalsy()
+    await tick(20)
     fireEvent.keyDown(getByRole('combobox'), { key: 'Enter', code: 'Enter' })
-    await waitFor(() => {
-      return expect(getByRole('combobox').getAttribute('aria-activedescendant'))
+    await waitFor(() => (
+      expect(getByRole('combobox').getAttribute('aria-activedescendant'))
         .toBe(getByRole('option', { name: /🐵/ }).getAttribute('id'))
-    }, { timeout: 2000 })
+    ), { timeout: 2000 })
   }, 5000)
 
   test('press enter to make first search item active - custom emoji', async () => {

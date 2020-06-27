@@ -16,6 +16,7 @@ describe('errors', () => {
     }).toThrow()
     await tick(20)
     await new Database({ dataSource: ALL_EMOJI, locale: 'en' }).delete()
+    await tick(20)
   })
 
   // can't seem to get jest to ignore these expected errors
@@ -37,6 +38,7 @@ describe('errors', () => {
 
     await new Database({ dataSource: ALL_EMOJI }).delete()
     document.body.removeChild(picker)
+    await tick(20)
   })
 
   test('slow networks show "Loading"', async () => {
@@ -57,5 +59,6 @@ describe('errors', () => {
 
     await new Database({ dataSource }).delete()
     document.body.removeChild(picker)
+    await tick(20)
   }, 5000)
 })
