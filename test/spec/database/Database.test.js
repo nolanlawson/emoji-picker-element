@@ -200,4 +200,42 @@ describe('database tests', () => {
     expect(gleeful[0].emoticon).toEqual(':D')
     await db.delete()
   })
+
+  test('close a second database, first database should still work', async () => {
+    const dataSource = ALL_EMOJI
+    const db1 = new Database({ dataSource })
+    await db1.ready()
+
+    const db2 = new Database({ dataSource })
+    await db2.ready()
+    await db2._lazyUpdate
+
+    await db1.close()
+
+    expect((await db2.getEmojiByUnicodeOrName('🐵')).unicode).toBe('🐵')
+
+    await db1.delete()
+    await db2.delete()
+
+    await tick(20)
+  })
+
+  test('delete a second database, first database should still work', async () => {
+    const dataSource = ALL_EMOJI
+    const db1 = new Database({ dataSource })
+    await db1.ready()
+
+    const db2 = new Database({ dataSource })
+    await db2.ready()
+    await db2._lazyUpdate
+
+    await db1.delete()
+
+    expect((await db2.getEmojiByUnicodeOrName('🐵')).unicode).toBe('🐵')
+
+    await db1.delete()
+    await db2.delete()
+
+    await tick(20)
+  })
 })

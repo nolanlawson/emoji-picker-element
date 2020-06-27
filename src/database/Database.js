@@ -8,7 +8,13 @@ import {
 } from './constants'
 import { uniqEmoji } from './utils/uniqEmoji'
 import { jsonChecksum } from './utils/jsonChecksum'
-import { closeDatabase, deleteDatabase, openDatabase } from './databaseLifecycle'
+import {
+  closeDatabase,
+  deleteDatabase,
+  addOnCloseListener,
+  openDatabase,
+  removeOnCloseListener
+} from './databaseLifecycle'
 import {
   isEmpty, hasData, loadData, getEmojiByGroup,
   getEmojiBySearchQuery, getEmojiByShortcode, getEmojiByUnicode,
@@ -63,11 +69,18 @@ export default class Database {
     this._lazyUpdate = undefined
     this._custom = customEmojiIndex(customEmoji)
 
+    this._clear = this._clear.bind(this)
     this._ready = this._init()
   }
 
   async _init () {
     const db = this._db = await openDatabase(this._dbName)
+
+    // The "close" event occurs during an abnormal shutdown, e.g. a user clearing their browser data.
+    // However, it doesn't occur with the normal "close" event, so we handle that separately,
+    // https://www.w3.org/TR/IndexedDB/#close-a-database-connection
+    db.addEventListener('close', this._clear)
+    addOnCloseListener(this._dbName, this._clear)
     const dataSource = this.dataSource
     const empty = await isEmpty(db)
 
@@ -159,9 +172,21 @@ export default class Database {
       await this._lazyUpdate // allow any lazy updates to process before closing/deleting
     } catch (err) { /* ignore network errors (offline-first) */ }
     if (this._db) {
-      this._db = this._ready = this._lazyUpdate = undefined
+      this._clear()
       return true // we need to actually run the close/delete logic, so we return true
     }
+  }
+
+  _clear () { // clear references to IDB, e.g. during a close event
+    log('_clear database', this._dbName)
+    // Technically we don't need to call these functions because the memory leak tests
+    // prove we don't have leaks even with this code commented out. It's because
+    // 1) IDBDatabases that can no longer fire "close" automatically have listeners GCed
+    // 2) we clear the manual close listeners in databaseLifecycle.js.
+    // But I am paranoid about memory leaks, so I keep this code here.
+    this._db.removeEventListener('close', this._clear)
+    removeOnCloseListener(this._dbName, this._clear)
+    this._db = this._ready = this._lazyUpdate = undefined
   }
 
   async close () {

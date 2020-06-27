@@ -4,6 +4,7 @@ import { mark, stop } from '../shared/marks'
 
 const openReqs = {}
 const databaseCache = {}
+const onCloseListeners = {}
 
 function handleOpenOrDeleteReq (resolve, reject, req) {
   req.onerror = () => reject(req.error)
@@ -66,9 +67,18 @@ export function closeDatabase (dbName) {
   const result = req && req.result
   if (result) {
     result.close()
+    const listeners = onCloseListeners[dbName]
+    if (listeners) {
+      for (const listener of listeners) {
+        try {
+          listener()
+        } catch (err) { /* ignore */ }
+      }
+    }
   }
   delete openReqs[dbName]
   delete databaseCache[dbName]
+  delete onCloseListeners[dbName]
 }
 
 export function deleteDatabase (dbName) {
@@ -78,4 +88,23 @@ export function deleteDatabase (dbName) {
     const req = indexedDB.deleteDatabase(dbName)
     handleOpenOrDeleteReq(resolve, reject, req)
   })
+}
+
+// custom event to handle normal shutdown, since we can't rely on the "close" event
+export function addOnCloseListener (dbName, listener) {
+  let listeners = onCloseListeners[dbName]
+  if (!listeners) {
+    listeners = onCloseListeners[dbName] = []
+  }
+  listeners.push(listener)
+}
+
+export function removeOnCloseListener (dbName, listener) {
+  const listeners = onCloseListeners[dbName]
+  if (listeners) {
+    const idx = listeners.indexOf(listener)
+    if (idx !== -1) {
+      listeners.splice(idx, 1)
+    }
+  }
 }
