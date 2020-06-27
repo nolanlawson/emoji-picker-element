@@ -70,9 +70,7 @@ export function closeDatabase (dbName) {
     const listeners = onCloseListeners[dbName]
     if (listeners) {
       for (const listener of listeners) {
-        try {
-          listener()
-        } catch (err) { /* ignore */ }
+        listener()
       }
     }
   }
@@ -97,14 +95,4 @@ export function addOnCloseListener (dbName, listener) {
     listeners = onCloseListeners[dbName] = []
   }
   listeners.push(listener)
-}
-
-export function removeOnCloseListener (dbName, listener) {
-  const listeners = onCloseListeners[dbName]
-  if (listeners) {
-    const idx = listeners.indexOf(listener)
-    if (idx !== -1) {
-      listeners.splice(idx, 1)
-    }
-  }
 }
