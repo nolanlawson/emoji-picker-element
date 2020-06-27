@@ -1,4 +1,1 @@
-<svg version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" enable-background="new 0 0 48 48">
-    <polygon fill="#FFC107" points="33,22 23.6,22 30,5 19,5 13,26 21.6,26 17,45"/>
-    <rect x="22" y="-2.9" transform="matrix(.707 -.707 .707 .707 -9.941 24)" fill="#37474F" width="4" height="53.7"/>
-</svg>
+<svg version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M33 22h-9.4L30 5H19l-6 21h8.6L17 45z"/><path fill="#37474F" d="M3.563 6.396L6.39 3.568l37.966 37.966-2.828 2.828z"/></svg>
