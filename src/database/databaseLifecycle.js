@@ -34,6 +34,10 @@ async function createDatabase (dbName) {
     }
     handleOpenOrDeleteReq(resolve, reject, req)
   })
+  // Handle abnormal closes, e.g. "delete database" in chrome dev tools.
+  // No need for removeEventListener, because once the DB can no longer
+  // fire "close" events, it will auto-GC.
+  db.onclose = () => closeDatabase(dbName)
   stop('createDatabase')
   return db
 }
@@ -64,9 +68,9 @@ export function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
 export function closeDatabase (dbName) {
   // close any open requests
   const req = openReqs[dbName]
-  const result = req && req.result
-  if (result) {
-    result.close()
+  const db = req && req.result
+  if (db) {
+    db.close()
     const listeners = onCloseListeners[dbName]
     if (listeners) {
       for (const listener of listeners) {
@@ -88,7 +92,9 @@ export function deleteDatabase (dbName) {
   })
 }
 
-// custom event to handle normal shutdown, since we can't rely on the "close" event
+// The "close" event occurs during an abnormal shutdown, e.g. a user clearing their browser data.
+// However, it doesn't occur with the normal "close" event, so we handle that separately.
+// https://www.w3.org/TR/IndexedDB/#close-a-database-connection
 export function addOnCloseListener (dbName, listener) {
   let listeners = onCloseListeners[dbName]
   if (!listeners) {

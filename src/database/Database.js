@@ -39,10 +39,6 @@ export default class Database {
   async _init () {
     const db = this._db = await openDatabase(this._dbName)
 
-    // The "close" event occurs during an abnormal shutdown, e.g. a user clearing their browser data.
-    // However, it doesn't occur with the normal "close" event, so we handle that separately,
-    // https://www.w3.org/TR/IndexedDB/#close-a-database-connection
-    db.addEventListener('close', this._clear)
     addOnCloseListener(this._dbName, this._clear)
     const dataSource = this.dataSource
     const empty = await isEmpty(db)
@@ -135,7 +131,6 @@ export default class Database {
       await this._lazyUpdate // allow any lazy updates to process before closing/deleting
     } catch (err) { /* ignore network errors (offline-first) */ }
     if (this._db) {
-      this._clear()
       return true // we need to actually run the close/delete logic, so we return true
     }
   }
