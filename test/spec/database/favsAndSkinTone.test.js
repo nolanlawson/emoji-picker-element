@@ -1,9 +1,5 @@
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach } from '../shared'
 import Database from '../../../src/database/Database'
-import allEmoji from 'emojibase-data/en/data.json'
-import { transformEmojiBaseData } from '../../../src/database/utils/transformEmojiBaseData'
-
-const transformedEmoji = transformEmojiBaseData(allEmoji)
 
 describe('database tests', () => {
   let db
@@ -27,8 +23,8 @@ describe('database tests', () => {
   test('get and set favorite emoji', async () => {
     expect(await db.getTopFavoriteEmoji(10)).toStrictEqual([])
     await db.incrementFavoriteEmojiCount('🐵')
-    expect(await db.getTopFavoriteEmoji(10)).toStrictEqual([
-      transformedEmoji.find(_ => _.unicode === '🐵')
+    expect((await db.getTopFavoriteEmoji(10)).map(_ => _.unicode)).toStrictEqual([
+      '🐵'
     ])
 
     for (let i = 0; i < 3; i++) {
@@ -37,11 +33,13 @@ describe('database tests', () => {
     for (let i = 0; i < 2; i++) {
       await db.incrementFavoriteEmojiCount('😀')
     }
-    expect(await db.getTopFavoriteEmoji(10)).toStrictEqual([
-      transformedEmoji.find(_ => _.unicode === '🐒'),
-      transformedEmoji.find(_ => _.unicode === '😀'),
-      transformedEmoji.find(_ => _.unicode === '🐵')
+    expect((await db.getTopFavoriteEmoji(10)).map(_ => _.unicode)).toStrictEqual([
+      '🐒',
+      '😀',
+      '🐵'
     ])
+
+    expect((await db.getTopFavoriteEmoji(1))[0].tokens).toBeFalsy()
   })
 
   test('emoji favorite counts', async () => {

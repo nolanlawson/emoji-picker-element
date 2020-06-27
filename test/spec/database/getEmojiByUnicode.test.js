@@ -31,6 +31,21 @@ describe('getEmojiByUnicode', () => {
     await db.delete()
   })
 
+  test('all unicode values', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+
+    for (const emoji of truncatedEmoji) {
+      expect((await db.getEmojiByUnicodeOrName(emoji.emoji)).unicode).toEqual(emoji.emoji)
+      if (emoji.skins) {
+        for (const skin of emoji.skins) {
+          expect((await db.getEmojiByUnicodeOrName(skin.emoji)).unicode).toEqual(emoji.emoji)
+        }
+      }
+    }
+
+    await db.delete()
+  })
+
   test('errors', async () => {
     const db = new Database({ dataSource: ALL_EMOJI })
 

@@ -142,7 +142,7 @@ export default class Database {
   async getTopFavoriteEmoji (limit) {
     assertNumber(limit)
     await this.ready()
-    return getTopFavoriteEmoji(this._db, this._custom, limit)
+    return (await getTopFavoriteEmoji(this._db, this._custom, limit)).map(cleanEmoji)
   }
 
   set customEmoji (customEmojis) {

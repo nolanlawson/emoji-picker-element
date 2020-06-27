@@ -2,6 +2,7 @@ import { MIN_SEARCH_TEXT_LENGTH } from '../../shared/constants'
 import { mark, stop } from '../../shared/marks'
 import { extractTokens } from './extractTokens'
 
+// Transform emojibase data for storage in IDB
 export function transformEmojiBaseData (emojiBaseData) {
   mark('transformEmojiBaseData')
   const res = emojiBaseData.map(({ annotation, emoticon, group, order, shortcodes, skins, tags, emoji, version }) => {
@@ -30,7 +31,14 @@ export function transformEmojiBaseData (emojiBaseData) {
       res.emoticon = emoticon
     }
     if (skins) {
-      res.skins = skins.map(({ tone, emoji, version }) => ({ tone, unicode: emoji, version }))
+      res.skinTones = []
+      res.skinUnicodes = []
+      res.skinVersions = []
+      for (const { tone, emoji, version } of skins) {
+        res.skinTones.push(tone)
+        res.skinUnicodes.push(emoji)
+        res.skinVersions.push(version)
+      }
     }
     return res
   })

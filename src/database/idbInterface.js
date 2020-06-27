@@ -1,7 +1,7 @@
 import { dbPromise } from './databaseLifecycle'
 import {
   INDEX_COUNT,
-  INDEX_GROUP_AND_ORDER, INDEX_TOKENS, KEY_ETAG, KEY_URL,
+  INDEX_GROUP_AND_ORDER, INDEX_SKIN_UNICODE, INDEX_TOKENS, KEY_ETAG, KEY_URL,
   MODE_READONLY, MODE_READWRITE,
   STORE_EMOJI, STORE_FAVORITES,
   STORE_KEYVALUE
@@ -122,7 +122,12 @@ export async function getEmojiByShortcode (db, shortcode) {
 
 export async function getEmojiByUnicode (db, unicode) {
   return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => (
-    getIDB(emojiStore, unicode, result => cb(result || null))
+    getIDB(emojiStore, unicode, result => {
+      if (result) {
+        return cb(result)
+      }
+      getIDB(emojiStore.index(INDEX_SKIN_UNICODE), unicode, result => cb(result || null))
+    })
   ))
 }
 
