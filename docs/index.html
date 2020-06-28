@@ -157,6 +157,13 @@
     <div style="padding: 20px;" role="alert" aria-live="polite">
       <pre style="display:none;"></pre>
     </div>
+    <div class="private-browsing-warning"
+         style="padding: 20px; display: none; border: 2px dashed crimson;"
+         role="alert">
+      Note that <code>emoji-picker-element</code> currently does not support Firefox private browsing mode,
+      or any other setting that disables IndexedDB. See
+      <a href="https://github.com/nolanlawson/emoji-picker-element/issues/9">issue #9</a>.
+    </div>
   </div>
 </div>
 <script defer src="./focus-visible.js"></script>
@@ -191,6 +198,34 @@
       }
       picker.classList.toggle('has-custom', !!e.target.checked)
     })
+
+    // check for private browsing mode to show the warning
+    async function hasIDB() {
+      if (typeof indexedDB === 'undefined') {
+        return false
+      }
+
+      try {
+        const idbFailed = await new Promise(resolve => {
+          const db = indexedDB.open('test-idb')
+          db.onerror = () => resolve(true)
+          db.onsuccess = () => {
+            indexedDB.deleteDatabase('test-idb')
+            resolve(false)
+          }
+        })
+        if (idbFailed) {
+          return false
+        }
+      } catch (e) {
+        return false
+      }
+      return true
+    }
+
+    if (!(await hasIDB())) {
+      $('.private-browsing-warning').style.display = 'block';
+    }
   })
 </script>
 </body>

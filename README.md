@@ -759,6 +759,9 @@ Using IndexedDB has a few advantages:
 2. After the first load, there is no need to download, parse, and index the JSON file again, because it's already available in IndexedDB.
 3. If you want, you can even [load the IndexedDB data in a web worker](https://github.com/nolanlawson/emoji-picker-element/blob/ff86a42/test/adhoc/worker.js), keeping the main thread free from non-UI data processing.
 
+Note that because `emoji-picker-element` has a requirement on IndexedDB, it will not work
+in enviroments where IDB is unavailable, such as [Firefox private browsing](https://bugzilla.mozilla.org/show_bug.cgi?id=1639542). See [issue #9](https://github.com/nolanlawson/emoji-picker-element/issues/9) for more details.
+
 ### Native emoji
 
 To avoid downloading a large sprite sheet that renders a particular emoji set – which may look out-of-place on different platforms, or may have [IP issues](https://blog.emojipedia.org/apples-emoji-crackdown/) – `emoji-picker-element` only renders native emoji. This means it is limited to the emoji actually installed on the user's device.
