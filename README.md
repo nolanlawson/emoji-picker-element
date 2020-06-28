@@ -259,7 +259,7 @@ picker.dataSource = '/my-emoji.json';
 
 #### i18n structure
 
-Here is the default English `i81n` object (`"en"` locale):
+Here is the default English `i18n` object (`"en"` locale):
 
 <!-- i18n options start -->
 
