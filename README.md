@@ -9,8 +9,8 @@ emoji-picker-element [![Build Status](https://travis-ci.com/nolanlawson/emoji-pi
 
 A lightweight emoji picker, distributed as a web component.
 
-It's built on IndexedDB, so it consumes far less memory than other emoji pickers.
-It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint.
+It's built on IndexedDB, so it consumes [far less memory](https://nolanlawson.com/2020/06/28/introducing-emoji-picker-element-a-memory-efficient-emoji-picker-for-the-web/)
+than other emoji pickers. It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint.
 
 Features:
 
