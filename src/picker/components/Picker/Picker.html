@@ -135,7 +135,7 @@
         {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
           <button role={searchMode ? 'option' : 'menuitem'}
                   aria-selected={searchMode ? i == activeSearchItem : ''}
-                  aria-label={emoji.label}
+                  aria-label={labelWithSkin(emoji, currentSkinTone)}
                   title={emoji.title}
                   class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                   id="emo-{emoji.id}">
@@ -163,7 +163,7 @@
          custom element wrapper around the outer component -->
     {#each currentFavorites as emoji, i (emoji.id)}
       <button role="menuitem"
-              aria-label={emoji.label}
+              aria-label={labelWithSkin(emoji, currentSkinTone)}
               title={emoji.title}
               class="emoji"
               id="fav-{emoji.id}">

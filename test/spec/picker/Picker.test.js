@@ -105,6 +105,17 @@ describe('Picker tests', () => {
     await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
     expect(getByRole('button', { name: 'Choose a skin tone (currently Dark)' })).toBeVisible()
 
+    // favorites has the skin tone
+    await waitFor(() => (
+      expect(queryAllByRole('menuitem').map(_ => _.getAttribute('aria-label')).some(_ => _.includes('👍🏿'))))
+    )
+    getByRole('tab', { name: 'People and body' }).click()
+
+    // tabpanel emoji has the skin tone
+    await waitFor(() => (
+      expect(queryAllByRole('menuitem').map(_ => _.getAttribute('aria-label')).some(_ => _.includes('🖐🏿'))))
+    )
+
     getByRole('button', { name: 'Choose a skin tone (currently Dark)' }).click()
     await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(1))
     getByRole('option', { name: 'Default' }).click()

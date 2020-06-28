@@ -26,6 +26,7 @@ import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame
 import { stop } from '../../../shared/marks'
 import { onMount, onDestroy, tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
+import { uniq } from '../../../shared/uniq'
 
 // public
 let locale = null
@@ -88,6 +89,11 @@ function fireEvent (name, detail) {
 // eslint-disable-next-line no-unused-vars
 function unicodeWithSkin (emoji, currentSkinTone) {
   return (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
+}
+
+// eslint-disable-next-line no-unused-vars
+function labelWithSkin (emoji, currentSkinTone) {
+  return uniq([(emoji.name || unicodeWithSkin(emoji, currentSkinTone)), ...emoji.shortcodes]).join(', ')
 }
 
 //
