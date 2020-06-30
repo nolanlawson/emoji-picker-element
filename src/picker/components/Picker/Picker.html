@@ -54,7 +54,6 @@
          aria-activedescendant="skintone-{activeSkinTone}"
          aria-hidden={!skinTonePickerExpanded}
          on:keydown={onSkinToneOptionKeydown}
-         on:focusout={onSkinToneOptionsBlur}
          on:click={onClickSkinToneOption}
          bind:this={skinToneDropdown}>
       {#each skinTones as skinTone, i (skinTone)}

@@ -313,7 +313,8 @@ describe('Picker tests', () => {
     await waitFor(() => expect(emoji && emoji.name === 'donkey'))
   }, 5000)
 
-  test('Closes skintone picker when blurred', async () => {
+  // TODO: re-enable this behavior. See https://github.com/nolanlawson/emoji-picker-element/issues/14
+  test.skip('Closes skintone picker when blurred', async () => {
     fireEvent.click(getByRole('button', { name: /Choose a skin tone/ }))
     await waitFor(() => expect(getByRole('listbox', { name: 'Skin tones' })).toBeVisible())
     // Simulating a focusout event is hard, have to both focus and blur
