@@ -1,5 +1,5 @@
-import { migrations } from './migrations'
-import { DB_VERSION_CURRENT } from './constants'
+import { initialMigration } from './migrations'
+import { DB_VERSION_INITIAL, DB_VERSION_CURRENT } from './constants'
 import { mark, stop } from '../shared/marks'
 
 const openReqs = {}
@@ -19,18 +19,10 @@ async function createDatabase (dbName) {
     openReqs[dbName] = req
     req.onupgradeneeded = e => {
       const db = req.result
-      const tx = e.currentTarget.transaction
 
-      const migrationsToDo = migrations.filter(({ version }) => e.oldVersion < version)
-
-      function doNextMigration () {
-        if (!migrationsToDo.length) {
-          return
-        }
-        const { migration } = migrationsToDo.shift()
-        migration(db, tx, doNextMigration)
+      if (e.oldVersion < DB_VERSION_INITIAL) {
+        initialMigration(db)
       }
-      doNextMigration()
     }
     handleOpenOrDeleteReq(resolve, reject, req)
   })
