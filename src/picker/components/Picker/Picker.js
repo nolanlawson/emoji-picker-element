@@ -523,9 +523,9 @@ async function onEmojiClick (event) {
 //
 
 // eslint-disable-next-line no-unused-vars
-function onClickSkinToneOption (event) {
+async function onSkinToneOptionsClick (event) {
   const { target } = event
-  if (!target.classList.contains('emoji')) {
+  if (!target.classList.contains('skintone-option')) {
     return
   }
   halt(event)
@@ -561,9 +561,7 @@ $: {
 }
 
 // eslint-disable-next-line no-unused-vars
-function onSkinToneOptionKeydown (event) {
-  const { key } = event
-
+function onSkinToneOptionsKeydown (event) {
   if (!skinTonePickerExpanded) {
     return
   }
@@ -575,11 +573,38 @@ function onSkinToneOptionKeydown (event) {
     focus(`skintone-${activeSkinTone}`)
   }
 
-  switch (key) {
+  switch (event.key) {
     case 'ArrowUp':
       return goToNextOrPrevious(true)
     case 'ArrowDown':
       return goToNextOrPrevious(false)
+    case 'Enter':
+      // enter on keydown, space on keyup. this is just how browsers work for buttons
+      // https://lists.w3.org/Archives/Public/w3c-wai-ig/2019JanMar/0086.html
+      return onSkinToneOptionsClick(event)
+  }
+}
+
+// eslint-disable-next-line no-unused-vars
+function onSkinToneOptionsKeyup (event) {
+  if (!skinTonePickerExpanded) {
+    return
+  }
+  switch (event.key) {
+    case ' ':
+      // enter on keydown, space on keyup. this is just how browsers work for buttons
+      // https://lists.w3.org/Archives/Public/w3c-wai-ig/2019JanMar/0086.html
+      return onSkinToneOptionsClick(event)
+  }
+}
+
+// eslint-disable-next-line no-unused-vars
+async function onSkinToneOptionsFocusOut (event) {
+  // On blur outside of the skintone options, collapse the skintone picker.
+  // Except if focus is just moving to another skintone option, e.g. pressing up/down to change focus
+  const { relatedTarget } = event
+  if (!relatedTarget || !relatedTarget.classList.contains('skintone-option')) {
+    skinTonePickerExpanded = false
   }
 }
 

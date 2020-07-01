@@ -53,19 +53,24 @@
          aria-label={i18n.skinTonesLabel}
          aria-activedescendant="skintone-{activeSkinTone}"
          aria-hidden={!skinTonePickerExpanded}
-         on:keydown={onSkinToneOptionKeydown}
-         on:click={onClickSkinToneOption}
+         on:focusout={onSkinToneOptionsFocusOut}
+         on:click={onSkinToneOptionsClick}
+         on:keydown={onSkinToneOptionsKeydown}
+         on:keyup={onSkinToneOptionsKeyup}
          bind:this={skinToneDropdown}>
       {#each skinTones as skinTone, i (skinTone)}
-        <button id="skintone-{i}"
-                class="emoji skintone-option hide-focus {i === activeSkinTone ? 'active' : ''}"
+        <!-- would use a button here, but iOS Safari misreports relatedTarget in that case, see issue #14 -->
+        <!-- see https://stackoverflow.com/a/42764495/680742 -->
+        <!-- see also https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#Clicking_and_focus -->
+        <div    id="skintone-{i}"
+                class="emoji skintone-option cursor-pointer hide-focus {i === activeSkinTone ? 'active' : ''}"
                 aria-selected={i === activeSkinTone}
                 role="option"
                 title={i18n.skinTones[i]}
                 tabindex="-1"
                 aria-label={i18n.skinTones[i]}>
           {skinTone}
-        </button>
+        </div>
       {/each}
     </div>
 
