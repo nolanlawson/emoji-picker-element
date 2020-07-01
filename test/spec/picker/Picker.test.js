@@ -65,12 +65,14 @@ describe('Picker tests', () => {
   })
 
   test('basic search test', async () => {
+    expect(queryAllByRole('tab', { selected: true })).toHaveLength(1) // one tab selected at first
     await type(getByRole('combobox'), 'monk')
 
     await waitFor(() => expect(getAllByRole('option')).toHaveLength(2))
 
     expect(getByRole('option', { name: /🐵/ })).toBeVisible()
     expect(getByRole('option', { name: /🐒/ })).toBeVisible()
+    expect(queryAllByRole('tab', { selected: true })).toHaveLength(0) // no tabs selected when searching
   })
 
   test('basic skintone test', async () => {

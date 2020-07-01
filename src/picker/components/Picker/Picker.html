@@ -80,7 +80,7 @@
               class="nav-button"
               aria-controls="tab-{group.id}"
               aria-label={i18n.categories[group.name]}
-              aria-selected={currentGroup.id === group.id}
+              aria-selected={!searchMode && currentGroup.id === group.id}
               title={i18n.categories[group.name]}
               on:click={() => onNavClick(group)}>
         <div class="emoji">
