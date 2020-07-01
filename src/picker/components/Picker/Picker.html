@@ -23,6 +23,7 @@
         spellcheck="true"
         aria-expanded={!!(searchMode && currentEmojis.length)}
         aria-controls="search-results"
+        aria-owns="search-results"
         aria-describedby="search-description"
         aria-autocomplete="list"
         aria-activedescendant={activeSearchItemId ? `emo-${activeSearchItemId}` : ''}
@@ -137,8 +138,8 @@
            id={searchMode ? 'search-results' : ''}
            use:calculateEmojiGridWidth>
         {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
-          <button role={searchMode ? 'option' : 'menuitem'}
-                  aria-selected={searchMode ? i == activeSearchItem : ''}
+          <button {...(searchMode && {'aria-selected': i == activeSearchItem})}
+                  role={searchMode ? 'option' : 'menuitem'}
                   aria-label={labelWithSkin(emoji, currentSkinTone)}
                   title={emoji.title}
                   class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
