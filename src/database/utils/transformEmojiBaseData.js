@@ -6,7 +6,7 @@ import { extractTokens } from './extractTokens'
 export function transformEmojiBaseData (emojiBaseData) {
   mark('transformEmojiBaseData')
   const res = emojiBaseData.map(({ annotation, emoticon, group, order, shortcodes, skins, tags, emoji, version }) => {
-    const tokens = [...new Set(
+    const tokens = [...Set(
       [
         ...shortcodes.map(extractTokens).flat(),
         ...tags.map(extractTokens).flat(),

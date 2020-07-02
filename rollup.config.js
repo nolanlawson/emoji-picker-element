@@ -6,7 +6,10 @@ import hotSvelte from 'rollup-plugin-svelte-hot'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
 import cssnano from 'cssnano'
+import inject from '@rollup/plugin-inject'
+import path from 'path'
 
+const globals = path.resolve('./src/shared/globals.js')
 const dev = process.env.NODE_ENV !== 'production'
 const svelte = dev ? hotSvelte : mainSvelte
 
@@ -55,6 +58,14 @@ const baseConfig = {
       customElement: true,
       dev,
       preprocess: preprocessConfig
+    }),
+    // reduce the bundle size by using one import for certain globals
+    inject({
+      document: [globals, 'document'],
+      requestAnimationFrame: [globals, 'requestAnimationFrame'],
+      Map: [globals, 'Map'],
+      Promise: [globals, 'Promise'],
+      IDBKeyRange: [globals, 'IDBKeyRange']
     }),
     !dev && analyze({ summaryOnly: true })
   ],

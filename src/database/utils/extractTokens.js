@@ -1,7 +1,7 @@
 // list of emoticons that don't match a simple \W+ regex
 // extracted using:
 // require('emojibase-data/en/data.json').map(_ => _.emoticon).filter(Boolean).filter(_ => !/^\W+$/.test(_))
-const irregularEmoticons = new Set([
+const irregularEmoticons = Set([
   ':D', 'xD', ":'D", 'o:)',
   ':x', ':p', ';p', 'xp',
   ':l', ':z', ':j', '8D',

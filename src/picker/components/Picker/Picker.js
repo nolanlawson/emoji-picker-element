@@ -25,7 +25,6 @@ import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 import { stop } from '../../../shared/marks'
 import { onMount, onDestroy, tick } from 'svelte'
-import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 
 // public
@@ -394,7 +393,7 @@ $: {
         }
       ]
     }
-    const categoriesToEmoji = new Map()
+    const categoriesToEmoji = Map()
     for (const emoji of currentEmojis) {
       const category = emoji.category || ''
       let emojis = categoriesToEmoji.get(category)

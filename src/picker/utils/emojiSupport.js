@@ -9,7 +9,7 @@ export const emojiSupportLevelPromise = new Promise(resolve => (
 ))
 // determine which emojis containing ZWJ (zero width joiner) characters
 // are supported (rendered as one glyph) rather than unsupported (rendered as two or more glyphs)
-export const supportedZwjEmojis = new Map()
+export const supportedZwjEmojis = Map()
 
 if (process.env.NODE_ENV !== 'production') {
   emojiSupportLevelPromise.then(emojiSupportLevel => {

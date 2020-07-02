@@ -4,7 +4,7 @@
 const CODA_MARKER = '' // marks the end of the string
 
 export function trie (arr, itemToTokens) {
-  const map = new Map()
+  const map = Map()
   for (const item of arr) {
     const tokens = itemToTokens(item)
     for (const token of tokens) {
@@ -13,7 +13,7 @@ export function trie (arr, itemToTokens) {
         const char = token.charAt(i)
         let nextMap = currentMap.get(char)
         if (!nextMap) {
-          nextMap = new Map()
+          nextMap = Map()
           currentMap.set(char, nextMap)
         }
         currentMap = nextMap
