@@ -2,8 +2,6 @@
 // using ResizeObserver. If ResizeObserver is unsupported, we just use rAF once
 // and don't bother to update.
 
-import { requestAnimationFrame } from './requestAnimationFrame'
-
 export const resizeObserverSupported = typeof ResizeObserver === 'function'
 
 export function calculateWidth (node, onUpdate) {
