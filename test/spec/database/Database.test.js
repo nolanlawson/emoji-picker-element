@@ -4,6 +4,7 @@ import {
   ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI, truncatedEmoji
 } from '../shared'
 import trimEmojiData from '../../../src/trimEmojiData'
+import allEmoji from 'emojibase-data/en/data.json'
 
 describe('database tests', () => {
   beforeEach(basicBeforeEach)
@@ -237,5 +238,15 @@ describe('database tests', () => {
     await db2.delete()
 
     await tick(20)
+  })
+
+  test('full db', async () => {
+    const dataSource = 'full.json'
+    fetch.get(dataSource, () => new Response(JSON.stringify(allEmoji), { headers: { ETag: 'w/foo' } }))
+    fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'w/foo' } }))
+
+    const db = new Database({ dataSource })
+
+    await db.ready()
   })
 })
