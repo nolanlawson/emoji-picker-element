@@ -30,7 +30,8 @@ describe('Picker tests', () => {
     container = picker.shadowRoot.querySelector('.picker')
     await tick(20)
     await waitFor(() => expect(
-      testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup1)
+      testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup1),
+    { timeout: 2000 }
     )
     await tick(20)
   })

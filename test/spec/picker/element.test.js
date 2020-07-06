@@ -47,7 +47,9 @@ describe('element tests', () => {
       expect(fetch).toHaveBeenCalledTimes(1)
       expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI, undefined)
       await type(getByRole(container, 'combobox'), 'monkey face')
-      await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1))
+      await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1), {
+        timeout: 2000
+      })
       expect(getByRole(container, 'option', { name: /🐵/ })).toBeVisible()
       picker.locale = 'fr'
       picker.dataSource = FR_EMOJI
