@@ -110,9 +110,9 @@ emojiSupportLevelPromise.then(level => {
 // Set or update the database object
 //
 
-$: {
-  // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
-  async function handleDatabaseLoading () {
+// show a Loading message if it takes a long time, or show an error if there's a network/IDB error
+$: (async () => {
+  if (database) {
     const timeoutHandle = setTimeout(() => {
       message = i18n.loadingMessage
     }, TIMEOUT_BEFORE_LOADING_MESSAGE)
@@ -129,10 +129,7 @@ $: {
       }
     }
   }
-  if (database) {
-    /* no await */ handleDatabaseLoading()
-  }
-}
+})()
 
 // TODO: this is a bizarre way to set these default properties, but currently Svelte
 // renders custom elements in an odd way - props are not set when calling the constructor,
@@ -145,6 +142,7 @@ onMount(async () => {
   locale = locale || DEFAULT_LOCALE
   dataSource = dataSource || DEFAULT_DATA_SOURCE
 })
+
 $: {
   if (locale && dataSource && (!database || (database.locale !== locale && database.dataSource !== dataSource))) {
     log('creating database', { locale, dataSource })
@@ -192,14 +190,11 @@ $: {
 // Set or update the preferred skin tone
 //
 
-$: {
-  async function updatePreferredSkinTone () {
-    if (database) {
-      currentSkinTone = await database.getPreferredSkinTone()
-    }
+$: (async () => {
+  if (database) {
+    currentSkinTone = await database.getPreferredSkinTone()
   }
-  /* no await */ updatePreferredSkinTone()
-}
+})()
 
 $: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => applySkinTone(skinToneEmoji, i))
 $: skinToneButtonText = skinTones[currentSkinTone]
@@ -209,19 +204,16 @@ $: skinToneButtonLabel = i18n.skinToneLabel.replace('{skinTone}', i18n.skinTones
 // Set or update the favorites emojis
 //
 
-$: {
-  async function updateDefaultFavoriteEmojis () {
+$: (async () => {
+  if (database) {
     defaultFavoriteEmojis = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
       database.getEmojiByUnicodeOrName(unicode)
     )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
   }
-  if (database) {
-    /* no await */ updateDefaultFavoriteEmojis()
-  }
-}
+})()
 
-$: {
-  async function updateFavorites () {
+$: (async () => {
+  if (database && defaultFavoriteEmojis) {
     log('updateFavorites')
     const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
     const favorites = await summarizeEmojis(uniqBy([
@@ -230,11 +222,7 @@ $: {
     ], _ => (_.unicode || _.name)).slice(0, numColumns))
     currentFavorites = favorites
   }
-
-  if (database && defaultFavoriteEmojis) {
-    /* no await */ updateFavorites()
-  }
-}
+})()
 
 //
 // Calculate the width of the emoji grid. This serves two purposes:
