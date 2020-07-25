@@ -281,22 +281,19 @@ $: {
 // (i.e. double emoji).
 //
 
-$: {
-  async function updateEmojis () {
-    log('updateEmojis')
-    if (!database) {
-      currentEmojis = []
-      searchMode = false
-    } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
-      currentEmojis = await getEmojisBySearchQuery(searchText)
-      searchMode = true
-    } else if (currentGroup) {
-      currentEmojis = await getEmojisByGroup(currentGroup.id)
-      searchMode = false
-    }
+$: (async () => {
+  log('updateEmojis')
+  if (!database) {
+    currentEmojis = []
+    searchMode = false
+  } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
+    currentEmojis = await getEmojisBySearchQuery(searchText)
+    searchMode = true
+  } else if (currentGroup) {
+    currentEmojis = await getEmojisByGroup(currentGroup.id)
+    searchMode = false
   }
-  /* no await */ updateEmojis()
-}
+})()
 
 // Some emojis have their ligatures rendered as two or more consecutive emojis
 // We want to treat these the same as unsupported emojis, so we compare their
@@ -373,15 +370,14 @@ $: {
 //
 
 $: {
-  function calculateCurrentEmojisWithCategories () {
-    if (searchMode) {
-      return [
-        {
-          category: '',
-          emojis: currentEmojis
-        }
-      ]
-    }
+  if (searchMode) {
+    currentEmojisWithCategories = [
+      {
+        category: '',
+        emojis: currentEmojis
+      }
+    ]
+  } else {
     const categoriesToEmoji = new Map()
     for (const emoji of currentEmojis) {
       const category = emoji.category || ''
@@ -392,12 +388,10 @@ $: {
       }
       emojis.push(emoji)
     }
-    return [...categoriesToEmoji.entries()]
+    currentEmojisWithCategories = [...categoriesToEmoji.entries()]
       .map(([category, emojis]) => ({ category, emojis }))
       .sort((a, b) => a.category < b.category ? -1 : 1)
   }
-
-  currentEmojisWithCategories = calculateCurrentEmojisWithCategories()
 }
 
 //
