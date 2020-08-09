@@ -233,10 +233,10 @@ The `new Picker(options)` constructor supports several options:
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `customEmoji` | CustomEmoji[] | - | Array of custom emoji  |
-`dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from |
+`dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from (`data-source` when used as an attribute) |
 `i18n` | I18n | - | i18n object (see below for details) |
 `locale` | string | "en" | Locale string |
-`skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker |
+`skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute) |
 
 
 
@@ -251,12 +251,25 @@ const picker = new Picker({
 })
 ```
 
-These values can also be set at runtime, e.g.:
+These values can also be set at runtime:
 
 ```js
 const picker = new Picker();
 picker.dataSource = '/my-emoji.json';
 ```
+
+Some values can also be set as declarative attributes:
+
+```html
+<emoji-picker
+  locale="fr"
+  data-source="/fr-emoji.json"
+  skin-tone-emoji="✌"
+></emoji-picker>
+```
+
+Note that complex properties like `i18n` or `customEmoji` are not supported as attributes, because the DOM only
+supports string attributes, not complex objects.
 
 #### i18n structure
 
