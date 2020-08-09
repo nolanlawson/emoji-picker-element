@@ -37,6 +37,7 @@ export interface PickerConstructorOptions {
   locale?: string
   i18n?: I18n
   skinToneEmoji?: string
+  customEmoji?: CustomEmoji[]
 }
 
 export interface I18n {

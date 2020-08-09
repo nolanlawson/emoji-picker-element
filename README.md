@@ -232,10 +232,11 @@ The `new Picker(options)` constructor supports several options:
 
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
+`customEmoji` | CustomEmoji] | [] | Array of custom emoji  |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from |
-`i18n` | I18n | - | i18n object (see below for details) |
+`i18n` | [I18n | - | i18n object (see below for details) |
 `locale` | string | "en" | Locale string |
-`skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker  |
+`skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker |
 
 
 
