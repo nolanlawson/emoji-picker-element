@@ -20,7 +20,7 @@ export default class Picker extends HTMLElement {
                 locale = 'en',
                 i18n,
                 skinToneEmoji = '🖐️',
-                customEmoji = []
+                customEmoji
               }: PickerConstructorOptions = {}) {
     super()
   }
