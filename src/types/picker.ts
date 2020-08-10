@@ -1,10 +1,11 @@
-import {I18n, PickerConstructorOptions, EmojiPickerEventMap, EmojiClickEvent, SkinToneChangeEvent} from "./shared";
+import {I18n, PickerConstructorOptions, EmojiPickerEventMap, CustomEmoji} from "./shared";
 
 export default class Picker extends HTMLElement {
   dataSource: string
   locale: string
   i18n: I18n
   skinToneEmoji: string
+  customEmoji?: CustomEmoji[]
 
   /**
    *
@@ -12,12 +13,14 @@ export default class Picker extends HTMLElement {
    * @param locale - Locale string
    * @param i18n - i18n object (see below for details)
    * @param skinToneEmoji - The emoji to use for the skin tone picker
+   * @param customEmoji - Array of custom emoji
    */
   constructor({
                 dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json',
                 locale = 'en',
                 i18n,
-                skinToneEmoji = '🖐️'
+                skinToneEmoji = '🖐️',
+                customEmoji
               }: PickerConstructorOptions = {}) {
     super()
   }

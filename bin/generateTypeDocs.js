@@ -11,7 +11,7 @@ const PICKER_END_MARKER = '<!-- picker API end -->'
 
 // Given the typedoc output and generated into docs-tmp, inject these into the README
 function removeLinks (str) {
-  return str.replaceAll(/\[(.*?)\]\(.*?\)/sg, (_, p1) => p1)
+  return str.replaceAll(/\[([^\]]+?)]\([^)]+?\)/sg, (_, p1) => p1)
 }
 
 function incrementHeadings (str) {

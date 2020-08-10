@@ -232,10 +232,11 @@ The `new Picker(options)` constructor supports several options:
 
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
+`customEmoji` | CustomEmoji[] | - | Array of custom emoji  |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from |
 `i18n` | I18n | - | i18n object (see below for details) |
 `locale` | string | "en" | Locale string |
-`skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker  |
+`skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker |
 
 
 
@@ -340,23 +341,23 @@ same underlying IndexedDB connection and database.
 
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
-`customEmoji` | CustomEmoji] | [] | Array of custom emoji  |
+`customEmoji` | CustomEmoji[] | [] | Array of custom emoji  |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from |
 `locale` | string | "en" | Locale string |
 
-**Returns:** *[Database*
+**Returns:** *Database*
 
 #### Accessors
 
 #####  customEmoji
 
-• **get customEmoji**(): *CustomEmoji]*
+• **get customEmoji**(): *CustomEmoji[]*
 
 Return the custom emoji associated with this Database, or the empty array if none.
 
-**Returns:** *[CustomEmoji]*
+**Returns:** *CustomEmoji[]*
 
-• **set customEmoji**(`customEmoji`: [CustomEmoji]): *void*
+• **set customEmoji**(`customEmoji`: CustomEmoji[]): *void*
 
 Set the custom emoji for this database. Throws an error if custom emoji are not in the correct format.
 
@@ -364,7 +365,7 @@ Set the custom emoji for this database. Throws an error if custom emoji are not 
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`customEmoji` | [CustomEmoji] |   |
+`customEmoji` | CustomEmoji[] |   |
 
 **Returns:** *void*
 
@@ -398,7 +399,7 @@ ___
 
 #####  getEmojiByGroup
 
-▸ **getEmojiByGroup**(`group`: number): *Promise‹[NativeEmoji]›*
+▸ **getEmojiByGroup**(`group`: number): *Promise‹NativeEmoji[]›*
 
 Returns all emoji belonging to a group, ordered by `order`. Only returns native emoji;
 custom emoji don't belong to a group.
@@ -411,13 +412,13 @@ Name | Type | Description |
 ------ | ------ | ------ |
 `group` | number | the group number  |
 
-**Returns:** *Promise‹[NativeEmoji]›*
+**Returns:** *Promise‹NativeEmoji[]›*
 
 ___
 
 #####  getEmojiBySearchQuery
 
-▸ **getEmojiBySearchQuery**(`query`: string): *Promise‹[Emoji]›*
+▸ **getEmojiBySearchQuery**(`query`: string): *Promise‹Emoji[]›*
 
 Returns all emoji matching the given search query, ordered by `order`.
 
@@ -429,13 +430,13 @@ Name | Type | Description |
 ------ | ------ | ------ |
 `query` | string | search query string  |
 
-**Returns:** *Promise‹[Emoji]›*
+**Returns:** *Promise‹Emoji[]›*
 
 ___
 
 #####  getEmojiByShortcode
 
-▸ **getEmojiByShortcode**(`shortcode`: string): *Promise‹[Emoji | null›*
+▸ **getEmojiByShortcode**(`shortcode`: string): *Promise‹Emoji | null›*
 
 Return a single emoji matching the shortcode, or null if not found.
 
@@ -487,7 +488,7 @@ ___
 
 #####  getTopFavoriteEmoji
 
-▸ **getTopFavoriteEmoji**(`limit`: number): *Promise‹Emoji]›*
+▸ **getTopFavoriteEmoji**(`limit`: number): *Promise‹Emoji[]›*
 
 Get the top favorite emoji in descending order. If there are no favorite emoji yet, returns an empty array.
 
@@ -497,7 +498,7 @@ Name | Type | Description |
 ------ | ------ | ------ |
 `limit` | number | maximum number of results to return  |
 
-**Returns:** *Promise‹[Emoji]›*
+**Returns:** *Promise‹Emoji[]›*
 
 ___
 
@@ -535,7 +536,7 @@ ___
 
 #####  setPreferredSkinTone
 
-▸ **setPreferredSkinTone**(`skinTone`: [SkinTone): *Promise‹void›*
+▸ **setPreferredSkinTone**(`skinTone`: SkinTone): *Promise‹void›*
 
 Set the user's preferred skin tone. Non-numbers throw an error.
 
