@@ -1,5 +1,4 @@
 import {
-  DB_VERSION_INITIAL,
   FIELD_GROUP, FIELD_ORDER, FIELD_UNICODE,
   FIELD_TOKENS,
   INDEX_GROUP_AND_ORDER,
@@ -9,7 +8,7 @@ import {
   INDEX_TOKENS, INDEX_COUNT, INDEX_SKIN_UNICODE, FIELD_SKIN_UNICODE
 } from './constants'
 
-function initialMigration (db, tx, done) {
+function initialMigration (db) {
   function createObjectStore (name, keyPath, indexes) {
     const store = keyPath
       ? db.createObjectStore(name, { keyPath })
@@ -31,12 +30,6 @@ function initialMigration (db, tx, done) {
   createObjectStore(STORE_FAVORITES, undefined, {
     [INDEX_COUNT]: ['']
   })
-  done()
 }
 
-export const migrations = [
-  {
-    version: DB_VERSION_INITIAL,
-    migration: initialMigration
-  }
-]
+export { initialMigration }
