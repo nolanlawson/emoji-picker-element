@@ -80,13 +80,16 @@ describe('Favorites UI', () => {
     await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length))
 
     // when setting custom emoji, they can appear in the favorites
-
+    await tick(20)
     picker.customEmoji = customEmoji
+    await tick(20)
 
     await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length + 1))
 
     expect(getByRole(container, 'tab', { name: 'Custom', selected: true })).toBeVisible()
-    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /transparent/i })).toBeVisible())
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /transparent/i })).toBeVisible(), {
+      timeout: 2000
+    })
 
     fireEvent.click(getByRole(container, 'menuitem', { name: /transparent/i }))
     fireEvent.click(getByRole(container, 'menuitem', { name: /black/i }))
