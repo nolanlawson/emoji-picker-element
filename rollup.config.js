@@ -96,7 +96,8 @@ export default entryPoints.map(({ input, output, format = 'es', external = [] })
     output: {
       format,
       file: output,
-      sourcemap: dev
+      sourcemap: dev,
+      exports: 'auto'
     }
   }
   res.external = [...res.external, ...external]
