@@ -8381,20 +8381,20 @@ svelte-jester@nolanlawson/svelte-jester#auto-preprocess:
   dependencies:
     cosmiconfig "^6.0.0"
 
-svelte-preprocess@^3.7.4:
-  version "3.7.4"
-  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-3.7.4.tgz#d10cf9b7c96c2b123da90438a3e9814737347e8d"
-  integrity sha512-0nW7TIjbav2nmw1Y7EAFRRkhNVwJ3zKN85/eITLQMkPuhqHO2i2IK0O3y4YXsSXlc0VGI5jQDVXkcXpga6zzew==
+svelte-preprocess@^4.0.12:
+  version "4.0.12"
+  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.0.12.tgz#39d1d179258288f496ac06e3db7afcd94d17b4d2"
+  integrity sha512-nAzVj5M98YzxdoDh9F9NuIaGMn8kjf8SnjRB2IduZIRYjrS5qkrGeHR2ba+CnOUOlMTZ/rQ2jpGeCwnyjgqr5Q==
   dependencies:
     "@types/pug" "^2.0.4"
     "@types/sass" "^1.16.0"
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte@^3.22.2:
-  version "3.22.2"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.22.2.tgz#06585244191bf7a112af2a0025610f33d77c3715"
-  integrity sha512-DxumO0+vvHA6NSc2jtVty08I8lFI43q8P2zX6JxZL8J1kqK5NVjad6TRM/twhnWXC+QScnwkZ15O6X1aTsEKTA==
+svelte@^3.24.1:
+  version "3.24.1"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.24.1.tgz#aca364937dd1df27fe131e2a4c234acb6061db4b"
+  integrity sha512-OX/IBVUJSFo1rnznXdwf9rv6LReJ3qQ0PwRjj76vfUWyTfbHbR9OXqJBnUrpjyis2dwYcbT2Zm1DFjOOF1ZbbQ==
 
 svg-tags@^1.0.0:
   version "1.0.0"
