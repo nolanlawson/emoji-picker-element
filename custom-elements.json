@@ -1,0 +1,57 @@
+{
+  "version": "experimental",
+  "tags": [
+    {
+      "name": "emoji-picker",
+      "path": "./picker.js",
+      "description": "Lightweight emoji picker distributed as a web component",
+      "attributes": [
+        {
+          "name": "data-source",
+          "description": "URL to fetch the emojibase data from",
+          "type": "string",
+          "default": "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json"
+        },
+        {
+          "name": "locale",
+          "description": "Locale string",
+          "type": "string",
+          "default": "en"
+        }
+      ],
+      "properties": [
+        {
+          "name": "dataSource",
+          "attribute": "data-source",
+          "description": "URL to fetch the emojibase data from",
+          "type": "string",
+          "default": "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json"
+        },
+        {
+          "name": "locale",
+          "attribute": "locale",
+          "description": "Locale string",
+          "type": "string",
+          "default": "en"
+        },
+        {
+          "name": "skinToneEmoji",
+          "attribute": "skin-tone-emoji",
+          "description": "The emoji to use for the skin tone picker",
+          "type": "string",
+          "default": "🖐️"
+        },
+        {
+          "name": "i18n",
+          "description": "i18n object",
+          "type": "object"
+        },
+        {
+          "name": "customEmoji",
+          "description": "Array of custom emoji",
+          "type": "array"
+        }
+      ]
+    }
+  ]
+}
