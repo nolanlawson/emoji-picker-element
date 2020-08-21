@@ -9,10 +9,10 @@ export default class Picker extends HTMLElement {
 
   /**
    *
-   * @param dataSource - URL to fetch the emojibase data from
+   * @param dataSource - URL to fetch the emojibase data from (`data-source` when used as an attribute)
    * @param locale - Locale string
    * @param i18n - i18n object (see below for details)
-   * @param skinToneEmoji - The emoji to use for the skin tone picker
+   * @param skinToneEmoji - The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute)
    * @param customEmoji - Array of custom emoji
    */
   constructor({
