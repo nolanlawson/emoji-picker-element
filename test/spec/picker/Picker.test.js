@@ -4,6 +4,7 @@ import Picker from '../../../src/picker/PickerElement.js'
 import userEvent from '@testing-library/user-event'
 import { groups } from '../../../src/picker/groups'
 import Database from '../../../src/database/Database'
+import { getAccessibleName } from '../utils'
 
 const { waitFor, fireEvent } = testingLibrary
 const { type } = userEvent
@@ -358,11 +359,80 @@ describe('Picker tests', () => {
     await waitFor(() => expect(getByRole('menuitem', { name: 'donkey' })).toBeVisible())
     await waitFor(() => expect(getByRole('menuitem', { name: 'monkey' })).toBeVisible())
     await waitFor(() => expect(getByRole('menuitem', { name: 'horse' })).toBeVisible())
-    // TODO: can't actually test the category names because they're only exposed as menus, and
-    // testing-library doesn't seem to understand that menus can have aria-labels
+
+    // confirm alphabetical order for categories
+    expect(
+      await Promise.all(getAllByRole('menu').map(node => getAccessibleName(container, node)))
+    ).toStrictEqual(
+      ['Custom', 'Primates', 'Ungulates', 'Favorites']
+    )
 
     // try searching
     await type(getByRole('combobox'), 'donkey')
     await waitFor(() => expect(getByRole('option', { name: 'donkey' })).toBeVisible())
+  })
+
+  test('Custom emoji with sorted categories', async () => {
+    picker.customEmoji = [
+      {
+        name: 'monkey',
+        shortcodes: ['monkey'],
+        url: 'monkey.png',
+        category: 'Primates'
+      },
+      {
+        name: 'donkey',
+        shortcodes: ['donkey'],
+        url: 'donkey.png',
+        category: 'Ungulates'
+      },
+      {
+        name: 'horse',
+        shortcodes: ['horse'],
+        url: 'horse.png',
+        category: 'Ungulates'
+      },
+      {
+        name: 'bird',
+        shortcodes: ['bird'],
+        url: 'bird.png',
+        category: 'Avians'
+      },
+      {
+        name: 'human',
+        shortcodes: ['human'],
+        url: 'human.png'
+      }
+    ]
+    await waitFor(() => expect(getAllByRole('tab')).toHaveLength(groups.length + 1))
+    await waitFor(() => expect(getAllByRole('menu')).toHaveLength(5)) // favorites + four custom categories
+
+    // confirm alphabetical order for categories
+    expect(
+      await Promise.all(getAllByRole('menu').map(node => getAccessibleName(container, node)))
+    ).toStrictEqual([
+      'Custom',
+      'Avians',
+      'Primates',
+      'Ungulates',
+      'Favorites'
+    ])
+
+    const order = ['Ungulates', 'Primates', 'Avians']
+    picker.customCategorySort = (a, b) => {
+      const aIdx = order.indexOf(a)
+      const bIdx = order.indexOf(b)
+      return aIdx < bIdx ? -1 : 1
+    }
+
+    await waitFor(async () => (
+      expect(
+        await Promise.all(getAllByRole('menu').map(node => getAccessibleName(container, node)))
+      ).toStrictEqual([
+        'Custom',
+        ...order,
+        'Favorites'
+      ])
+    ))
   })
 })

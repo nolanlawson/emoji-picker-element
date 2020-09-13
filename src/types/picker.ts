@@ -6,6 +6,7 @@ export default class Picker extends HTMLElement {
   i18n: I18n
   skinToneEmoji: string
   customEmoji?: CustomEmoji[]
+  customCategorySort?: (a: string, b: string) => number
 
   /**
    *
@@ -14,13 +15,15 @@ export default class Picker extends HTMLElement {
    * @param i18n - i18n object (see below for details)
    * @param skinToneEmoji - The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute)
    * @param customEmoji - Array of custom emoji
+   * @param customCategorySort - Function to sort custom category strings (sorted alphabetically by default)
    */
   constructor({
                 dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json',
                 locale = 'en',
                 i18n,
                 skinToneEmoji = '🖐️',
-                customEmoji
+                customEmoji,
+                customCategorySort
               }: PickerConstructorOptions = {}) {
     super()
   }
