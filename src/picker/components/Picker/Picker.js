@@ -484,6 +484,10 @@ function onNavKeydown (event) {
       return doFocus(target.previousSibling)
     case 'ArrowRight':
       return doFocus(target.nextSibling)
+    case 'Home':
+      return doFocus(target.parentElement.firstChild)
+    case 'End':
+      return doFocus(target.parentElement.lastChild)
   }
 }
 
@@ -567,22 +571,29 @@ function onSkinToneOptionsKeydown (event) {
     return
   }
 
-  const goToNextOrPrevious = async previous => {
+  const changeActiveSkinTone = async nextSkinTone => {
     halt(event)
-    activeSkinTone = incrementOrDecrement(previous, activeSkinTone, skinTones)
+    activeSkinTone = nextSkinTone
     await tick()
     focus(`skintone-${activeSkinTone}`)
   }
 
   switch (event.key) {
     case 'ArrowUp':
-      return goToNextOrPrevious(true)
+      return changeActiveSkinTone(incrementOrDecrement(true, activeSkinTone, skinTones))
     case 'ArrowDown':
-      return goToNextOrPrevious(false)
+      return changeActiveSkinTone(incrementOrDecrement(false, activeSkinTone, skinTones))
+    case 'Home':
+      return changeActiveSkinTone(0)
+    case 'End':
+      return changeActiveSkinTone(skinTones.length - 1)
     case 'Enter':
       // enter on keydown, space on keyup. this is just how browsers work for buttons
       // https://lists.w3.org/Archives/Public/w3c-wai-ig/2019JanMar/0086.html
       return onSkinToneOptionsClick(event)
+    case 'Escape':
+      halt(event)
+      return focus('skintone-button')
   }
 }
 
