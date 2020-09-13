@@ -1,3 +1,18 @@
+# [1.2.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.1.0...v1.2.0) (2020-09-13)
+
+
+### Bug Fixes
+
+* rename customCategorySort to customCategorySorting ([#45](https://github.com/nolanlawson/emoji-picker-element/issues/45)) ([117b201](https://github.com/nolanlawson/emoji-picker-element/commit/117b201ac00836091f5df9176640fb175354a9c8))
+
+
+### Features
+
+* add customCategorySort function ([#43](https://github.com/nolanlawson/emoji-picker-element/issues/43)) ([6be51f1](https://github.com/nolanlawson/emoji-picker-element/commit/6be51f18063198676fc3091405a9c9d62f85f910)), closes [#41](https://github.com/nolanlawson/emoji-picker-element/issues/41)
+* add Home/End keyboard shortcuts ([#44](https://github.com/nolanlawson/emoji-picker-element/issues/44)) ([c2d4b95](https://github.com/nolanlawson/emoji-picker-element/commit/c2d4b950dbe6d1061ed75d06da66a79b92dbe601)), closes [#2](https://github.com/nolanlawson/emoji-picker-element/issues/2)
+
+
+
 # [1.1.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.0.3...v1.1.0) (2020-08-21)
 
 
