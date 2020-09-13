@@ -43,7 +43,8 @@
     "docs": "run-s build:rollup benchmark:bundle docs:js docs:emoji",
     "docs:js": "cp bundle.js node_modules/focus-visible/dist/focus-visible.js ./docs",
     "docs:emoji": "node bin/processCustomEmoji.js",
-    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "version": "run-s changelog docs && git add CHANGELOG.md docs"
   },
   "repository": {
     "type": "git",
