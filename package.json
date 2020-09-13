@@ -42,7 +42,8 @@
     "cover": "jest --no-cache --coverage",
     "docs": "run-s build:rollup benchmark:bundle docs:js docs:emoji",
     "docs:js": "cp bundle.js node_modules/focus-visible/dist/focus-visible.js ./docs",
-    "docs:emoji": "node bin/processCustomEmoji.js"
+    "docs:emoji": "node bin/processCustomEmoji.js",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
   },
   "repository": {
     "type": "git",
@@ -77,6 +78,7 @@
     "blob-util": "^2.0.2",
     "bundlesize": "^0.18.0",
     "compression": "^1.7.4",
+    "conventional-changelog-cli": "^2.1.0",
     "cssnano": "^4.1.10",
     "emojibase-data": "^5.1.1",
     "express": "^4.17.1",
