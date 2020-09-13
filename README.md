@@ -728,11 +728,11 @@ import Picker from 'emoji-picker-element/svelte'
 
 If you'd like to host the emoji JSON yourself, you can do:
 
-    npm install emojibase-data
+    npm install emojibase-data@5
 
 Then host `node_modules/emojibase-data/en/data.json` (or other locales) on your web server.
 
-`emoji-picker-element` requires the _full_ [emojibase-data](https://github.com/milesj/emojibase) JSON file, not the "compact" one (i.e. `data.json`, not `compact.json`).
+`emoji-picker-element` requires the _full_ [`emojibase-data`](https://github.com/milesj/emojibase) JSON file, not the "compact" one (i.e. `data.json`, not `compact.json`). Also note that `emojibase-data` v6 is not yet supported (see [#47](https://github.com/nolanlawson/emoji-picker-element/issues/47)).
 
 It's recommended that your server expose an `ETag` header – if so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will do a `HEAD` request and just check the `ETag`.
 
