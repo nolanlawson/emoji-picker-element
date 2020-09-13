@@ -35,6 +35,7 @@
     </div>
     <div class="skintone-button-wrapper {skinTonePickerExpandedAfterAnimation ? 'expanded' : ''}">
       <button id="skintone-button"
+              part="emoji"
               class="emoji {skinTonePickerExpanded ? 'hide-focus' : ''}"
               aria-label={skinToneButtonLabel}
               title={skinToneButtonLabel}
@@ -64,6 +65,7 @@
         <!-- see https://stackoverflow.com/a/42764495/680742 -->
         <!-- see also https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#Clicking_and_focus -->
         <div    id="skintone-{i}"
+                part="emoji"
                 class="emoji skintone-option cursor-pointer hide-focus {i === activeSkinTone ? 'active' : ''}"
                 aria-selected={i === activeSkinTone}
                 role="option"
@@ -89,7 +91,7 @@
               aria-selected={!searchMode && currentGroup.id === group.id}
               title={i18n.categories[group.name]}
               on:click={() => onNavClick(group)}>
-        <div class="emoji">
+        <div class="emoji" part="emoji">
           {group.emoji}
         </div>
       </button>
@@ -143,7 +145,8 @@
                   aria-label={labelWithSkin(emoji, currentSkinTone)}
                   title={emoji.title}
                   class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
-                  id="emo-{emoji.id}">
+                  id="emo-{emoji.id}"
+                  part="emoji">
             {#if emoji.unicode}
               {unicodeWithSkin(emoji, currentSkinTone)}
             {:else}
@@ -171,6 +174,7 @@
               aria-label={labelWithSkin(emoji, currentSkinTone)}
               title={emoji.title}
               class="emoji"
+              part="emoji"
               id="fav-{emoji.id}">
         {#if emoji.unicode}
           {unicodeWithSkin(emoji, currentSkinTone)}
@@ -185,6 +189,6 @@
     {/each}
   </div>
   <div aria-hidden="true" class="hidden abs-pos">
-    <button tabindex="-1" class="emoji baseline-emoji" bind:this={baselineEmoji}>😀</button>
+    <button tabindex="-1" class="emoji baseline-emoji" part="emoji" bind:this={baselineEmoji}>😀</button>
   </div>
 </section>
