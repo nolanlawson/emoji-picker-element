@@ -38,6 +38,7 @@ export interface PickerConstructorOptions {
   i18n?: I18n
   skinToneEmoji?: string
   customEmoji?: CustomEmoji[]
+  customCategorySort?: (a: string, b: string) => number
 }
 
 export interface I18n {

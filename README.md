@@ -36,6 +36,7 @@ Features:
   * [JavaScript API](#javascript-api)
     + [Picker](#picker)
       - [i18n structure](#i18n-structure)
+      - [Custom category order](#custom-category-order)
     + [Database](#database)
       - [Constructors](#constructors)
         * [constructor](#constructor)
@@ -232,7 +233,8 @@ The `new Picker(options)` constructor supports several options:
 
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
-`customEmoji` | CustomEmoji[] | - | Array of custom emoji  |
+`customCategorySort` | function | - | Function to sort custom category strings (sorted alphabetically by default)  |
+`customEmoji` | CustomEmoji[] | - | Array of custom emoji |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from (`data-source` when used as an attribute) |
 `i18n` | I18n | - | i18n object (see below for details) |
 `locale` | string | "en" | Locale string |
@@ -318,6 +320,19 @@ Here is the default English `i18n` object (`"en"` locale):
 
 Note that some of these strings are only visible to users of screen readers.
 But you should still support them if you internationalize your app!
+
+#### Custom category order
+
+By default, custom categories are sorted alphabetically. To change this, pass in your own `customCategorySort`:
+
+```js
+picker.customCategorySort = (category1, category2) => { /* your sorting code */ };
+```
+
+This function should accept two strings and return a number.
+
+Custom emoji with no category will pass in `undefined`. By default, these are shown first, with the label `"Custom"`
+(determined by `i18n.categories.custom`).
 
 ### Database
 
