@@ -419,7 +419,7 @@ describe('Picker tests', () => {
     ])
 
     const order = ['Ungulates', 'Primates', 'Avians']
-    picker.customCategorySort = (a, b) => {
+    picker.customCategorySorting = (a, b) => {
       const aIdx = order.indexOf(a)
       const bIdx = order.indexOf(b)
       return aIdx < bIdx ? -1 : 1

@@ -233,7 +233,7 @@ The `new Picker(options)` constructor supports several options:
 
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
-`customCategorySort` | function | - | Function to sort custom category strings (sorted alphabetically by default)  |
+`customCategorySorting` | function | - | Function to sort custom category strings (sorted alphabetically by default)  |
 `customEmoji` | CustomEmoji[] | - | Array of custom emoji |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from (`data-source` when used as an attribute) |
 `i18n` | I18n | - | i18n object (see below for details) |
@@ -323,10 +323,10 @@ But you should still support them if you internationalize your app!
 
 #### Custom category order
 
-By default, custom categories are sorted alphabetically. To change this, pass in your own `customCategorySort`:
+By default, custom categories are sorted alphabetically. To change this, pass in your own `customCategorySorting`:
 
 ```js
-picker.customCategorySort = (category1, category2) => { /* your sorting code */ };
+picker.customCategorySorting = (category1, category2) => { /* your sorting code */ };
 ```
 
 This function should accept two strings and return a number.

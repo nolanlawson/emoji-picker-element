@@ -35,7 +35,7 @@ let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
 let i18n = enI18n
 let database = null
 let customEmoji = null
-let customCategorySort = (a, b) => a < b ? -1 : a > b ? 1 : 0
+let customCategorySorting = (a, b) => a < b ? -1 : a > b ? 1 : 0
 
 // private
 let initialLoad = true
@@ -407,7 +407,7 @@ $: {
     }
     return [...categoriesToEmoji.entries()]
       .map(([category, emojis]) => ({ category, emojis }))
-      .sort((a, b) => customCategorySort(a.category, b.category))
+      .sort((a, b) => customCategorySorting(a.category, b.category))
   }
 
   currentEmojisWithCategories = calculateCurrentEmojisWithCategories()
@@ -616,5 +616,5 @@ export {
   i18n,
   skinToneEmoji,
   customEmoji,
-  customCategorySort
+  customCategorySorting
 }
