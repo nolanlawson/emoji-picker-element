@@ -77,11 +77,7 @@ describe('Picker tests', () => {
     expect(queryAllByRole('tab', { selected: true })).toHaveLength(0) // no tabs selected when searching
   })
 
-  test('basic skintone test', async () => {
-    let event
-    picker.addEventListener('skin-tone-change', newEvent => {
-      event = newEvent
-    })
+  const openSkintoneListbox = async () => {
     await waitFor(() => expect(getByRole('button', { name: 'Choose a skin tone (currently Default)' })).toBeVisible())
     expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0)
     await fireEvent.click(getByRole('button', { name: 'Choose a skin tone (currently Default)' }))
@@ -89,19 +85,32 @@ describe('Picker tests', () => {
     expect(getAllByRole('option')).toHaveLength(6)
     getByRole('option', { name: 'Default', selected: true }).focus()
     await waitFor(() => expect(getByRole('option', { name: 'Default', selected: true })).toBe(activeElement()))
+  }
+
+  test('basic skintone test', async () => {
+    let event
+    picker.addEventListener('skin-tone-change', newEvent => {
+      event = newEvent
+    })
+
+    await openSkintoneListbox()
 
     const pressKeyAndExpectActiveOption = async (key, name) => {
       await fireEvent.keyDown(activeElement(), { key, code: key })
       await waitFor(() => expect(getByRole('option', { name, selected: true })).toBe(activeElement()))
     }
 
-    await pressKeyAndExpectActiveOption('ArrowDown', 'Light', 1)
-    await pressKeyAndExpectActiveOption('ArrowDown', 'Medium-Light', 2)
-    await pressKeyAndExpectActiveOption('ArrowUp', 'Light', 1)
-    await pressKeyAndExpectActiveOption('ArrowUp', 'Default', 0)
-    await pressKeyAndExpectActiveOption('ArrowUp', 'Dark', 5)
-    await pressKeyAndExpectActiveOption('ArrowDown', 'Default', 5)
-    await pressKeyAndExpectActiveOption('ArrowUp', 'Dark', 5)
+    await pressKeyAndExpectActiveOption('ArrowDown', 'Light')
+    await pressKeyAndExpectActiveOption('ArrowDown', 'Medium-Light')
+    await pressKeyAndExpectActiveOption('ArrowUp', 'Light')
+    await pressKeyAndExpectActiveOption('ArrowUp', 'Default')
+    await pressKeyAndExpectActiveOption('ArrowUp', 'Dark')
+    await pressKeyAndExpectActiveOption('ArrowDown', 'Default')
+    await pressKeyAndExpectActiveOption('ArrowUp', 'Dark')
+    await pressKeyAndExpectActiveOption('Home', 'Default')
+    await pressKeyAndExpectActiveOption('Home', 'Default')
+    await pressKeyAndExpectActiveOption('End', 'Dark')
+    await pressKeyAndExpectActiveOption('End', 'Dark')
 
     await fireEvent.click(activeElement(), { key: 'Enter', code: 'Enter' })
 
@@ -125,6 +134,17 @@ describe('Picker tests', () => {
     getByRole('option', { name: 'Default' }).click()
     await waitFor(() => expect(event && event.detail).toStrictEqual({ skinTone: 0 }))
     expect(getByRole('button', { name: 'Choose a skin tone (currently Default)' })).toBeVisible()
+  })
+
+  test('Escape key dismisses skintone listbox', async () => {
+    await openSkintoneListbox()
+
+    await fireEvent.keyDown(activeElement(), { key: 'Escape', code: 'Escape' })
+
+    // listbox closes, which we observe by seeing what's focused
+    await waitFor(async () => (
+      expect(await getAccessibleName(container, activeElement())).toEqual('Choose a skin tone (currently Default)'))
+    )
   })
 
   test('nav keyboard test', async () => {
@@ -155,6 +175,10 @@ describe('Picker tests', () => {
     await pressKeyAndExpectActiveTab('ArrowRight', 'Symbols', 8)
     await pressKeyAndExpectActiveTab('ArrowRight', 'Flags', 9)
     await pressKeyAndExpectActiveTab('ArrowRight', 'Flags', 9)
+    await pressKeyAndExpectActiveTab('Home', 'Smileys and emoticons', 0)
+    await pressKeyAndExpectActiveTab('Home', 'Smileys and emoticons', 0)
+    await pressKeyAndExpectActiveTab('End', 'Flags', 9)
+    await pressKeyAndExpectActiveTab('End', 'Flags', 9)
   })
 
   test('measures zwj emoji', async () => {
