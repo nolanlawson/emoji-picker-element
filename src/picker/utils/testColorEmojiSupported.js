@@ -26,7 +26,10 @@ const getTextFeature = (text, color) => {
 const compareFeatures = (feature1, feature2) => {
   const feature1Str = [...feature1].join(',')
   const feature2Str = [...feature2].join(',')
-  return feature1Str === feature2Str && feature1Str !== '0,0,0,0'
+  // This is RGBA, so for 0,0,0, we are checking that the first RGB is not all zeroes.
+  // Most of the time when unsupported this is 0,0,0,0, but on Chrome on Mac it is
+  // 0,0,0,61 - there is a transparency here.
+  return feature1Str === feature2Str && !feature1Str.startsWith('0,0,0,')
 }
 
 export function testColorEmojiSupported (text) {
