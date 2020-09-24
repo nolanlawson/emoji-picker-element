@@ -13,12 +13,17 @@ export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode
     if (typeof baselineEmojiWidth === 'undefined') { // calculate the baseline emoji width only once
       baselineEmojiWidth = calculateTextWidth(baselineEmoji)
     }
-    // compare sizes rounded to 1/10 of a pixel to avoid issues with slightly different measurements (e.g. GNOME Web)
-    const supported = emojiWidth.toFixed(1) === baselineEmojiWidth.toFixed(1)
+    // On Windows, some supported emoji are ~50% bigger than the baseline emoji, but what we really want to guard
+    // against are the ones that are 2x the size, because those are truly broken (person with red hair = person with
+    // floating red wig, black cat = cat with black square, polar bear = bear with snowflake, etc.)
+    // So here we set the threshold at 1.8 times the size of the baseline emoji.
+    const supported = emojiWidth / 1.8 < baselineEmojiWidth
     supportedZwjEmojis.set(emoji.unicode, supported)
-    /* istanbul ignore if */
+    /* istanbul ignore next */
     if (!supported) {
-      log('Filtered unsupported emoji', emoji.unicode)
+      log('Filtered unsupported emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
+    } else if (emojiWidth !== baselineEmojiWidth) {
+      log('Allowed borderline emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
     }
   }
   stop('checkZwjSupport')
