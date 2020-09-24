@@ -1,3 +1,13 @@
+## [1.2.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.2.0...v1.2.1) (2020-09-24)
+
+
+### Bug Fixes
+
+* fix emoji support detection on Chrome on Mac ([#49](https://github.com/nolanlawson/emoji-picker-element/issues/49)) ([0a9e3bb](https://github.com/nolanlawson/emoji-picker-element/commit/0a9e3bb0734fbb868324dfaaf0e591b84ce6bccf))
+* fix ZWJ detection on windows ([#50](https://github.com/nolanlawson/emoji-picker-element/issues/50)) ([a467685](https://github.com/nolanlawson/emoji-picker-element/commit/a4676858801f51057c5831e5fed07b5fadf4748b))
+
+
+
 # [1.2.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.1.0...v1.2.0) (2020-09-13)
 
 
