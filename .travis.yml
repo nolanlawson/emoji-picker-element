@@ -1,23 +1,26 @@
+# TravisCI configuration for nolanlawson/emoji-picker-element
 language: node_js
-node_js:
-  - "14"
+os:
+  - linux
 dist: xenial
-sudo: false
+branches:
+  only:
+    - master
 addons:
   chrome: stable
-before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s
-  - export PATH="$HOME/.yarn/bin:$PATH"
-before_script:
-  - yarn run lint
-script: yarn run $COMMAND
+node_js:
+  - "14"
 matrix:
   include:
     - env: COMMAND=test
     - env: COMMAND=test:leak
     - env: COMMAND=benchmark:bundlesize
-branches:
-  only:
-    - master
 cache:
   yarn: true
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s
+  - export PATH="$HOME/.yarn/bin:$PATH"
+before_script:
+  - yarn run lint
+script:
+  - yarn run "$COMMAND"
