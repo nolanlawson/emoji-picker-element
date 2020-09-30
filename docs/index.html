@@ -173,10 +173,9 @@
 <script defer src="./focus-visible.js"></script>
 <script defer src="./bundle.js"></script>
 <script>
-  const $ = document.querySelector.bind(document)
-  const $$ = _ => Array.from(document.querySelectorAll(_))
-
   document.addEventListener('DOMContentLoaded', async () => {
+    const $ = document.querySelector.bind(document)
+    const $$ = _ => Array.from(document.querySelectorAll(_))
     const picker = $('emoji-picker')
     const pre = $('pre')
     const onEvent = e => {
@@ -186,7 +185,23 @@
     }
     picker.addEventListener('emoji-click', onEvent)
     picker.addEventListener('skin-tone-change', onEvent)
-    applyFocusVisiblePolyfill(picker.shadowRoot)
+
+    // See https://stackoverflow.com/a/8533927
+    function supportsSelector (selector) {
+      const style = document.createElement('style')
+      document.head.appendChild(style)
+      try {
+        style.sheet.insertRule(selector + '{}', 0)
+      } catch (e) {
+        return false
+      } finally {
+        document.head.removeChild(style)
+      }
+      return true
+    }
+    if (!supportsSelector(':focus-visible')) {
+      applyFocusVisiblePolyfill(picker.shadowRoot)
+    }
 
     $$('input[name=darkmode]').forEach(input => {
       input.addEventListener('change', e => {
