@@ -25,7 +25,6 @@ Features:
 <!-- toc start -->
 
 - [emoji-picker-element](#emoji-picker-element-)
-  * [Install](#install)
   * [Usage](#usage)
   * [Styling](#styling)
     + [Size](#size)
@@ -73,21 +72,29 @@ Features:
 
 <!-- toc end -->
 
-## Install
+## Usage
+
+Via npm:
 
     npm install emoji-picker-element
-
-## Usage
 
 ```js
 import 'emoji-picker-element';
 ```
 
+Or as a `<script>` tag:
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js"></script>
+```
+
+Then use the HTML:
+
 ```html
 <emoji-picker></emoji-picker>
 ```
 
-Then listen for `emoji-click` events:
+And listen for `emoji-click` events:
 
 ```js
 document.querySelector('emoji-picker')
@@ -680,23 +687,23 @@ To pass custom emoji into the `Picker`:
 
 ```js
 const picker = new Picker({
-  customEmoji: [/* ... */]
-})
+  customEmoji: [ /* ... */ ]
+});
 ```
 
 Or the `Database`:
 
 ```js
 const database = new Database({
-  customEmoji: [/* ... */]
-})
+  customEmoji: [ /* ... */ ]
+});
 ```
 
 Custom emoji can also be set at runtime:
 
 ```js
-picker.customEmoji = [/* ... */ ]
-database.customEmoji = [/* ... */ ]
+picker.customEmoji = [ /* ... */ ];
+database.customEmoji = [ /* ... */ ];
 ```
 
 ### Tree-shaking
@@ -717,7 +724,7 @@ as a direct Svelte component. However, if you're already using Svelte 3, then yo
 can avoid importing Svelte twice by using:
 
 ```js
-import Picker from 'emoji-picker-element/svelte'
+import Picker from 'emoji-picker-element/svelte';
 ```
 
 `svelte.js` is the same as `picker.js`, except it `import`s Svelte rather than bundling it.
