@@ -6,6 +6,7 @@ import hotSvelte from 'rollup-plugin-svelte-hot'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
 import cssnano from 'cssnano'
+import css from './config/css-rollup-plugin.js'
 
 const dev = process.env.NODE_ENV !== 'production'
 const svelte = dev ? hotSvelte : mainSvelte
@@ -51,11 +52,12 @@ const baseConfig = {
       delimiters: ['', '']
     }),
     svelte({
-      css: true,
-      customElement: true,
+      emitCss: true,
+      accessors: true,
       dev,
       preprocess: preprocessConfig
     }),
+    css(),
     !dev && analyze({ summaryOnly: true })
   ],
   external: [
