@@ -32,8 +32,10 @@ export default class Picker extends HTMLElement {
     // Have to explicitly destroy the component to avoid memory leaks.
     // See https://github.com/sveltejs/svelte/issues/1152
     log('disconnectedCallback')
-    this.__picker.destroy()
-    this.__picker = null
+    if (this.__picker) {
+      this.__picker.destroy()
+      this.__picker = null
+    }
   }
 
   static get observedAttributes () {
