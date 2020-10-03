@@ -14,7 +14,10 @@ export default () => {
       const sourceMapIndex = css.indexOf('\n/*# sourceMappingURL')
       css = css.substring(0, sourceMapIndex)
       const outputCode = `import { setCss } from '../../cssLoader'; setCss(${JSON.stringify(css)});`
-      return outputCode
+      return {
+        code: outputCode,
+        map: { mappings: '' }
+      }
     }
   }
 }
