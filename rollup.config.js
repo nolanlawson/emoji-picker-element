@@ -7,6 +7,7 @@ import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
 import cssnano from 'cssnano'
 import css from './config/css-rollup-plugin.js'
+import removeEncapsulatedStyle from './config/remove-encapsulated-styles-rollup-plugin.js'
 
 const dev = process.env.NODE_ENV !== 'production'
 const svelte = dev ? hotSvelte : mainSvelte
@@ -58,6 +59,7 @@ const baseConfig = {
       preprocess: preprocessConfig
     }),
     css(),
+    removeEncapsulatedStyle(),
     !dev && analyze({ summaryOnly: true })
   ],
   external: [
