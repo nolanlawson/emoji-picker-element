@@ -138,6 +138,7 @@
       "fetch",
       "getComputedStyle",
       "indexedDB",
+      "HTMLElement",
       "IDBKeyRange",
       "matchMedia",
       "performance",

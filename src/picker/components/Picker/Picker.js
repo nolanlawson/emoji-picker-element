@@ -24,13 +24,13 @@ import { calculateWidth, resizeObserverSupported } from '../../utils/calculateWi
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 import { stop } from '../../../shared/marks'
-import { onMount, onDestroy, tick } from 'svelte'
+import { onDestroy, tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 
 // public
-let locale = null
-let dataSource = null
+let locale = DEFAULT_LOCALE
+let dataSource = DEFAULT_DATA_SOURCE
 let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
 let i18n = enI18n
 let database = null
@@ -135,17 +135,6 @@ $: {
   }
 }
 
-// TODO: this is a bizarre way to set these default properties, but currently Svelte
-// renders custom elements in an odd way - props are not set when calling the constructor,
-// but are only set later. This would cause a double render or a double-fetch of
-// the dataSource, which is bad. Delaying with a microtask avoids this.
-// See https://github.com/sveltejs/svelte/pull/4527
-onMount(async () => {
-  await tick()
-  log('props ready: setting locale and dataSource to default')
-  locale = locale || DEFAULT_LOCALE
-  dataSource = dataSource || DEFAULT_DATA_SOURCE
-})
 $: {
   if (locale && dataSource && (!database || (database.locale !== locale && database.dataSource !== dataSource))) {
     log('creating database', { locale, dataSource })
