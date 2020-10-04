@@ -1,7 +1,7 @@
 import SveltePicker from './components/Picker/Picker.svelte'
 import { mark } from '../shared/marks'
 import { log } from '../shared/log'
-import { getCss } from './cssLoader'
+import { css } from './cssLoader'
 import enI18n from './i18n/en'
 import { DEFAULT_SKIN_TONE_EMOJI, DEFAULT_SORTING } from './constants'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
@@ -26,7 +26,7 @@ export default class Picker extends HTMLElement {
     }, props)
     this.attachShadow({ mode: 'open' })
     const style = document.createElement('style')
-    style.innerHTML = getCss()
+    style.innerHTML = css
     this.shadowRoot.appendChild(style)
   }
 
