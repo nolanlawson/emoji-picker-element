@@ -78,8 +78,8 @@ $skintoneZIndex3: 3;
 // emoji
 //
 
-button.emoji,
-.emoji {
+:global(button.emoji,
+.emoji) {
   font-size: var(--emoji-size);
   display: flex;
   align-items: center;
@@ -104,7 +104,7 @@ button.emoji,
   }
 }
 
-.custom-emoji {
+:global(.custom-emoji) {
   height: var(--total-emoji-size);
   width: var(--total-emoji-size);
   padding: var(--emoji-padding);
