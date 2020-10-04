@@ -1,9 +1,9 @@
 import { basicBeforeEach, basicAfterEach, ALL_EMOJI, truncatedEmoji, tick } from '../shared'
 import * as testingLibrary from '@testing-library/dom'
-import Picker from '../../../src/picker/PickerElement.js'
+import Picker from '../../../picker.js'
 import userEvent from '@testing-library/user-event'
 import { groups } from '../../../src/picker/groups'
-import Database from '../../../src/database/Database'
+import Database from '../../../database.js'
 import { getAccessibleName } from '../utils'
 
 const { waitFor, fireEvent } = testingLibrary

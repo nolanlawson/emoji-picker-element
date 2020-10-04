@@ -1,4 +1,4 @@
-import Database from '../../../src/database/Database'
+import Database from '../../../database.js'
 import {
   basicAfterEach, basicBeforeEach, ALL_EMOJI, ALL_EMOJI_MISCONFIGURED_ETAG,
   ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI, truncatedEmoji

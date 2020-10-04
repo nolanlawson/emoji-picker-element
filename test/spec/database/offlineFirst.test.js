@@ -1,5 +1,5 @@
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach } from '../shared'
-import Database from '../../../src/database/Database'
+import Database from '../../../database.js'
 
 describe('offline first', () => {
   beforeEach(() => {

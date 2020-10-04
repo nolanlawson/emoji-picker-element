@@ -1,5 +1,5 @@
 import { basicAfterEach, basicBeforeEach, FR_EMOJI, ALL_EMOJI, mockFrenchDataSource, tick } from '../shared'
-import Picker from '../../../src/picker/PickerElement.js'
+import Picker from '../../../picker.js'
 import { getByRole } from '@testing-library/dom'
 
 describe('attributes tests', () => {

@@ -3,12 +3,12 @@ import {
   getByRole, fireEvent, queryAllByRole
 } from '@testing-library/dom'
 import { basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
-import Picker from '../../../src/picker/PickerElement'
+import Picker from '../../../picker.js'
 import allData from 'emojibase-data/en/data.json'
 import { MOST_COMMONLY_USED_EMOJI } from '../../../src/picker/constants'
 import { uniqBy } from '../../../src/shared/uniqBy'
 import { groups } from '../../../src/picker/groups'
-import Database from '../../../src/database/Database'
+import Database from '../../../database.js'
 
 const dataSource = 'with-favs.json'
 

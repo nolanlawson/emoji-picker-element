@@ -1,6 +1,6 @@
-import Picker from '../../../src/picker/PickerElement'
+import Picker from '../../../picker.js'
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
-import Database from '../../../src/database/Database'
+import Database from '../../../database.js'
 import { getByRole, waitFor } from '@testing-library/dom'
 
 describe('errors', () => {

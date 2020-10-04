@@ -6,11 +6,11 @@ import {
   mockFrenchDataSource,
   tick, truncatedEmoji
 } from '../shared'
-import Picker from '../../../src/picker/PickerElement'
+import Picker from '../../../picker.js'
 import { getAllByRole, getByRole, waitFor } from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
 import enI18n from '../../../src/picker/i18n/en'
-import Database from '../../../src/database/Database'
+import Database from '../../../database.js'
 import { DEFAULT_SKIN_TONE_EMOJI } from '../../../src/picker/constants'
 import { DEFAULT_DATA_SOURCE } from '../../../src/database/constants'
 const { type, clear } = userEvent
