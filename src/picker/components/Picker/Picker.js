@@ -14,7 +14,7 @@ import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
   DEFAULT_NUM_COLUMNS,
-  DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY,
+  DEFAULT_SKIN_TONE_EMOJI, DEFAULT_SORTING, FONT_FAMILY,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
@@ -35,7 +35,7 @@ let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
 let i18n = enI18n
 let database = null
 let customEmoji = null
-let customCategorySorting = (a, b) => a < b ? -1 : a > b ? 1 : 0
+let customCategorySorting = DEFAULT_SORTING
 
 // private
 let initialLoad = true

@@ -50,8 +50,8 @@ describe('errors', () => {
       { delay: 1500 })
 
     const picker = new Picker({ dataSource })
-    const container = picker.shadowRoot.querySelector('.picker')
     document.body.appendChild(picker)
+    const container = picker.shadowRoot.querySelector('.picker')
     await tick(20)
 
     await waitFor(() => expect(getByRole(container, 'alert').innerHTML).toContain('Loading'), { timeout: 2000 })

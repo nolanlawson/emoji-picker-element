@@ -2,6 +2,9 @@ import SveltePicker from './components/Picker/Picker.svelte'
 import { mark } from '../shared/marks'
 import { log } from '../shared/log'
 import { getCss } from './cssLoader'
+import enI18n from './i18n/en'
+import { DEFAULT_SKIN_TONE_EMOJI, DEFAULT_SORTING } from './constants'
+import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
 
 // We create our own custom element here because of several things I dislike about Svelte's built-in
 // custom elements support:
@@ -14,7 +17,13 @@ export default class Picker extends HTMLElement {
   constructor (props) {
     mark('initialLoad')
     super()
-    this.__props = props
+    this.__props = Object.assign({
+      dataSource: DEFAULT_DATA_SOURCE,
+      locale: DEFAULT_LOCALE,
+      i18n: enI18n,
+      skinToneEmoji: DEFAULT_SKIN_TONE_EMOJI,
+      customCategorySorting: DEFAULT_SORTING
+    }, props)
     this.attachShadow({ mode: 'open' })
     const style = document.createElement('style')
     style.innerHTML = getCss()
@@ -33,7 +42,7 @@ export default class Picker extends HTMLElement {
     // See https://github.com/sveltejs/svelte/issues/1152
     log('disconnectedCallback')
     if (this.__picker) {
-      this.__picker.destroy()
+      this.__picker.$destroy()
       this.__picker = null
     }
   }
@@ -60,7 +69,10 @@ for (const prop of ['locale', 'dataSource', 'skinToneEmoji', 'i18n', 'customEmoj
       return this.__props[prop]
     },
     set (value) {
-      this.__props[prop] = this.__picker[prop] = value
+      this.__props[prop] = value
+      if (this.__picker) {
+        this.__picker[prop] = value
+      }
     }
   })
 }

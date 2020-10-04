@@ -30,8 +30,8 @@ describe('element tests', () => {
       basicBeforeEach()
       mockFrenchDataSource()
       picker = new Picker({ dataSource: ALL_EMOJI, locale: 'en' })
-      container = picker.shadowRoot.querySelector('.picker')
       document.body.appendChild(picker)
+      container = picker.shadowRoot.querySelector('.picker')
       await tick(20)
     })
     afterEach(async () => {
@@ -96,6 +96,7 @@ describe('element tests', () => {
 
     test('has a default locale/dataSource', async () => {
       const picker = new Picker()
+      document.body.appendChild(picker)
       const container = picker.shadowRoot.querySelector('.picker')
       await tick(20)
 

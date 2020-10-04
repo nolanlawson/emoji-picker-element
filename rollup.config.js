@@ -9,7 +9,8 @@ import cssnano from 'cssnano'
 import css from './config/css-rollup-plugin.js'
 import removeEncapsulatedStyle from './config/remove-encapsulated-styles-rollup-plugin.js'
 
-const dev = process.env.NODE_ENV !== 'production'
+const env = process.env.NODE_ENV || 'production'
+const dev = env === 'production' && env !== 'test'
 const svelte = dev ? hotSvelte : mainSvelte
 
 const preprocessConfig = preprocess({
@@ -32,8 +33,10 @@ preprocessConfig.markup = async function () {
   // remove whitespace
   res.code = res.code.replace(/([>}])\s+([<{])/sg, '$1$2')
 
-  // remove data-testid (only used for testing-library)
-  res.code = res.code.replace(/data-testid=".*?"/g, '')
+  if (env !== 'test') {
+    // remove data-testid (only used for testing-library)
+    res.code = res.code.replace(/data-testid=".*?"/g, '')
+  }
 
   return res
 }
@@ -45,7 +48,7 @@ const baseConfig = {
     resolve(),
     cjs(),
     replace({
-      'process.env.NODE_ENV': dev ? '"development"' : '"production"',
+      'process.env.NODE_ENV': JSON.stringify(env),
       'process.env.PERF': !!process.env.PERF
     }),
     replace({
