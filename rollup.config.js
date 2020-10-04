@@ -10,7 +10,7 @@ import css from './config/css-rollup-plugin.js'
 import removeEncapsulatedStyle from './config/remove-encapsulated-styles-rollup-plugin.js'
 
 const env = process.env.NODE_ENV || 'production'
-const dev = env === 'production' && env !== 'test'
+const dev = env !== 'production' && env !== 'test'
 const svelte = dev ? hotSvelte : mainSvelte
 
 const preprocessConfig = preprocess({
