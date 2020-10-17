@@ -96,6 +96,7 @@ describe('Picker tests', () => {
     await openSkintoneListbox()
 
     const pressKeyAndExpectActiveOption = async (key, name) => {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))) // delay
       await fireEvent.keyDown(activeElement(), { key, code: key })
       await waitFor(() => expect(getByRole('option', { name, selected: true })).toBe(activeElement()))
     }
@@ -156,6 +157,7 @@ describe('Picker tests', () => {
     }
 
     const pressKeyAndExpectActiveTab = async (key, name, group) => {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))) // delay
       await fireEvent.keyDown(activeElement(), { key, code: key })
       await fireEvent.click(activeElement())
       await waitFor(() => expect(getByRole('tab', { name, selected: true })).toBe(activeElement()))
@@ -266,6 +268,7 @@ describe('Picker tests', () => {
     await waitFor(() => expect(getAllByRole('option')).toHaveLength(2))
 
     const pressKeyAndExpectAriaDescendant = async (key, emoji) => {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))) // delay
       fireEvent.keyDown(getByRole('combobox'), { key, code: key })
       await waitFor(() => {
         return expect(getByRole('combobox').getAttribute('aria-activedescendant'))

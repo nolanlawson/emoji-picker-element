@@ -7,7 +7,10 @@ const databaseCache = {}
 const onCloseListeners = {}
 
 function handleOpenOrDeleteReq (resolve, reject, req) {
+  // These things are almost impossible to test with fakeIndexedDB sadly
+  /* istanbul ignore next */
   req.onerror = () => reject(req.error)
+  /* istanbul ignore next */
   req.onblocked = () => reject(new Error('IDB blocked'))
   req.onsuccess = () => resolve(req.result)
 }
@@ -18,10 +21,13 @@ async function createDatabase (dbName) {
     const req = indexedDB.open(dbName, DB_VERSION_CURRENT)
     openReqs[dbName] = req
     req.onupgradeneeded = e => {
-      const db = req.result
-
+      // Technically there is only one version, so we don't need this `if` check
+      // But if an old version of the JS is in another browser tab
+      // and it gets upgraded in the future and we have a new DB version, well...
+      // better safe than sorry.
+      /* istanbul ignore else */
       if (e.oldVersion < DB_VERSION_INITIAL) {
-        initialMigration(db)
+        initialMigration(req.result)
       }
     }
     handleOpenOrDeleteReq(resolve, reject, req)
@@ -29,6 +35,8 @@ async function createDatabase (dbName) {
   // Handle abnormal closes, e.g. "delete database" in chrome dev tools.
   // No need for removeEventListener, because once the DB can no longer
   // fire "close" events, it will auto-GC.
+  // Unfortunately cannot test in fakeIndexedDB: https://github.com/dumbmatter/fakeIndexedDB/issues/50
+  /* istanbul ignore next */
   db.onclose = () => closeDatabase(dbName)
   stop('createDatabase')
   return db
@@ -53,6 +61,7 @@ export function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
     })
 
     tx.oncomplete = () => resolve(res)
+    /* istanbul ignore next */
     tx.onerror = () => reject(tx.error)
   })
 }
@@ -64,6 +73,7 @@ export function closeDatabase (dbName) {
   if (db) {
     db.close()
     const listeners = onCloseListeners[dbName]
+    /* istanbul ignore else */
     if (listeners) {
       for (const listener of listeners) {
         listener()
