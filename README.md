@@ -9,16 +9,14 @@ emoji-picker-element [![Build Status](https://travis-ci.com/nolanlawson/emoji-pi
 
 A lightweight emoji picker, distributed as a web component.
 
-It's built on IndexedDB, so it consumes [far less memory](https://nolanlawson.com/2020/06/28/introducing-emoji-picker-element-a-memory-efficient-emoji-picker-for-the-web/)
-than other emoji pickers. It also uses [Svelte](https://svelte.dev), so it has a minimal runtime footprint.
+**Features:**
 
-Features:
-
-- Stores emoji data in IndexedDB
+- Supports [Emoji v13](https://emojipedia.org/emoji-13.0/) (depending on OS) and custom emoji
+- Uses IndexedDB, so it consumes [far less memory](https://nolanlawson.com/2020/06/28/introducing-emoji-picker-element-a-memory-efficient-emoji-picker-for-the-web/) than other emoji pickers
+- [Small bundle size](https://bundlephobia.com/result?p=emoji-picker-element) (41kB minified, ~14.4kB gzipped)
 - Renders native emoji only, no spritesheets
-- Accessible
-- Drop-in as a web component
-- Supports custom emoji
+- Accessible by default
+- Framework and bundler not required, just add a `<script>` tag and use it
 
 **Table of contents:**
 
