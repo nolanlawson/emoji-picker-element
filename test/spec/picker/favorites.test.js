@@ -31,14 +31,14 @@ describe('Favorites UI', () => {
     document.body.appendChild(picker)
     container = picker.shadowRoot.querySelector('.picker')
 
-    await tick(20)
+    await tick(40)
   })
   afterEach(async () => {
-    await tick(20)
+    await tick(40)
     document.body.removeChild(picker)
-    await tick(20)
+    await tick(40)
     await new Database({ dataSource, locale: 'en' }).delete()
-    await tick(20)
+    await tick(40)
     basicAfterEach()
   })
 
@@ -80,15 +80,19 @@ describe('Favorites UI', () => {
     await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length))
 
     // when setting custom emoji, they can appear in the favorites
-    await tick(20)
+    await tick(40)
     picker.customEmoji = customEmoji
-    await tick(20)
+    await tick(40)
 
     await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length + 1))
 
     expect(getByRole(container, 'tab', { name: 'Custom', selected: true })).toBeVisible()
+    await tick(40)
+    await waitFor(() => expect(queryAllByRole(container, 'menuitem', { name: /transparent/i })).toHaveLength(1), {
+      timeout: 5000
+    })
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /transparent/i })).toBeVisible(), {
-      timeout: 2000
+      timeout: 3000
     })
 
     fireEvent.click(getByRole(container, 'menuitem', { name: /transparent/i }))
