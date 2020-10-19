@@ -24,6 +24,7 @@ A lightweight emoji picker, distributed as a web component.
 
 - [emoji-picker-element](#emoji-picker-element-)
   * [Usage](#usage)
+    + [Examples](#examples)
   * [Styling](#styling)
     + [Size](#size)
     + [Dark mode](#dark-mode)
@@ -117,6 +118,11 @@ This will log:
   "unicode": "😀"
 }
 ```
+
+### Examples
+
+- [Demo](https://nolanlawson.github.io/emoji-picker-element)
+- [Button with tooltip/popover](https://bl.ocks.org/nolanlawson/781e7084e4c17acb921357489d51a5b0)
 
 ## Styling
 
