@@ -62,6 +62,7 @@ A lightweight emoji picker, distributed as a web component.
     + [Data source and JSON format](#data-source-and-json-format)
     + [Trimming the emojibase data](#trimming-the-emojibase-data)
     + [Offline-first](#offline-first)
+    + [Environments without IndexedDB](#environments-without-indexeddb)
   * [Design decisions](#design-decisions)
     + [IndexedDB](#indexeddb)
     + [Native emoji](#native-emoji)
@@ -785,6 +786,14 @@ try {
 
 If `emoji-picker-element` fails to fetch the JSON data the first time it loads, then it will display an error message.
 
+### Environments without IndexedDB
+
+`emoji-picker-element` has a hard requirement on [IndexedDB](https://developer.mozilla.org/en-US/docs/Glossary/IndexedDB), and will not work without it.
+
+For browsers that don't support IndexedDB, such as [Firefox in private browsing mode](https://bugzilla.mozilla.org/show_bug.cgi?id=1639542), you can polyfill it using [fake-indexeddb](https://github.com/dumbmatter/fakeIndexedDB). Here is [a working example](https://bl.ocks.org/nolanlawson/651e6fbe4356ff098f505e6cc5fb8cd8) and [more details](https://github.com/nolanlawson/emoji-picker-element/issues/9).
+
+For Node.js environments such as [Jest](https://jestjs.io/) or [JSDom](https://github.com/jsdom/jsdom), you can also use fake-indexeddb. A [working example](https://github.com/nolanlawson/emoji-picker-element/blob/d45b61b559b8cef6840b7036e3d1749a213c490e/config/jest.setup.js#L15-L18) can be found in the tests for this very project.
+
 ## Design decisions
 
 Some of the reasoning behind why `emoji-picker-element` is built the way it is.
@@ -798,9 +807,6 @@ Using IndexedDB has a few advantages:
 1. We don't need to keep the full emoji data in memory at all times.
 2. After the first load, there is no need to download, parse, and index the JSON file again, because it's already available in IndexedDB.
 3. If you want, you can even [load the IndexedDB data in a web worker](https://github.com/nolanlawson/emoji-picker-element/blob/ff86a42/test/adhoc/worker.js), keeping the main thread free from non-UI data processing.
-
-Note that because `emoji-picker-element` has a requirement on IndexedDB, it will not work
-in enviroments where IDB is unavailable, such as [Firefox private browsing](https://bugzilla.mozilla.org/show_bug.cgi?id=1639542). See [issue #9](https://github.com/nolanlawson/emoji-picker-element/issues/9) for more details.
 
 ### Native emoji
 
