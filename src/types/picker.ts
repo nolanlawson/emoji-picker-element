@@ -33,6 +33,10 @@ export default class Picker extends HTMLElement {
   addEventListener<K extends keyof EmojiPickerEventMap>(type: K, listener: (this: TextTrackCue, ev: EmojiPickerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void
   // @ts-ignore
   addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void
+
+  removeEventListener<K extends keyof EmojiPickerEventMap>(type: K, listener: (this: TextTrackCue, ev: EmojiPickerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void
+  // @ts-ignore
+  removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void
 }
 
 // see https://justinfagnani.com/2019/11/01/how-to-publish-web-components-to-npm/
