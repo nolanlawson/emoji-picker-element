@@ -156,7 +156,7 @@ async function main () {
       const res = {
         name: name,
         shortcodes: [name],
-        url: `./custom/${filename}`
+        url: `#${name}`
       }
       if (category) {
         res.category = category
@@ -166,11 +166,16 @@ async function main () {
     .filter(({ name }) => !remove(name))
 
   await writeFile('./docs/custom.json', JSON.stringify(customEmojis), 'utf8')
-  await Promise.all(customEmojis.map(async ({ name }) => {
+  const symbols = await Promise.all(customEmojis.map(async ({ name }) => {
     const svg = await readFile(`./node_modules/flat-color-icons/svg/${name}.svg`, 'utf8')
-    const optimized = await svgo.optimize(svg)
-    await writeFile(`./docs/custom/${name}.svg`, optimized.data, 'utf8')
+    const optimized = (await svgo.optimize(svg)).data
+    return optimized
+      .replace(/<svg(.*?)>/, `<symbol id=${JSON.stringify(name)}$1>`)
+      .replace('</svg>', '</symbol>')
+      .replace('version="1" xmlns="http://www.w3.org/2000/svg" ', '')
   }))
+  const concatenatedSvgs = `<svg xmlns="http://www.w3.org/2000/svg">${symbols.join('')}</svg>`
+  await writeFile('./docs/custom.svg', concatenatedSvgs, 'utf8')
 }
 
 main().catch(err => {

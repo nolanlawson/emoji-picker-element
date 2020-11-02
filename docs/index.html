@@ -205,6 +205,21 @@
       applyFocusVisiblePolyfill(picker.shadowRoot)
     }
 
+    // nasty hack to make <symbol>s work
+    // see https://github.com/nolanlawson/emoji-picker-element/issues/55#issuecomment-720179883
+    function prepareSvgsForCustomEmoji(customEmoji) {
+      let svgs = document.getElementById('custom-emoji-svg')
+      if (svgs) {
+        return
+      }
+      svgs = document.createElement('div')
+      svgs.style.display = 'none'
+      svgs.innerHTML = customEmoji.map(({ name }) => (
+        `<svg id="${name}" xmlns="http://www.w3.org/2000/svg"><use xlink:href="./custom.svg#${name}"></use></svg>`
+      )).join('')
+      document.body.appendChild(svgs)
+    }
+
     $$('input[name=darkmode]').forEach(input => {
       input.addEventListener('change', e => {
         picker.classList.toggle('dark', e.target.value ==='dark')
@@ -213,7 +228,9 @@
     })
     $('#custom').addEventListener('change', async e => {
       if (e.target.checked) {
-        picker.customEmoji = await (await fetch('./custom.json')).json()
+        const customEmoji = await (await fetch('./custom.json')).json()
+        prepareSvgsForCustomEmoji(customEmoji)
+        picker.customEmoji = customEmoji
       } else {
         picker.customEmoji = []
       }
