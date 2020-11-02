@@ -1,3 +1,19 @@
+## [1.2.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.2.1...v1.2.2) (2020-11-02)
+
+
+### Bug Fixes
+
+* remove unnecessary aria-hidden ([#66](https://github.com/nolanlawson/emoji-picker-element/issues/66)) ([5038363](https://github.com/nolanlawson/emoji-picker-element/commit/50383632ce9dd3434812e6db2fa16d7774a9f6f3))
+* remove unused CSS rule ([#56](https://github.com/nolanlawson/emoji-picker-element/issues/56)) ([251d29b](https://github.com/nolanlawson/emoji-picker-element/commit/251d29b3097461252f1b36de49037451501f7de2))
+* use consistent HTML for custom emoji ([#64](https://github.com/nolanlawson/emoji-picker-element/issues/64)) ([60f8c04](https://github.com/nolanlawson/emoji-picker-element/commit/60f8c04e4c8dd82a1bebc997eb972651ac5a101a))
+
+
+### Performance Improvements
+
+* use lazy image loading ([#65](https://github.com/nolanlawson/emoji-picker-element/issues/65)) ([73d7639](https://github.com/nolanlawson/emoji-picker-element/commit/73d76399f77c86bb9f43e67925c0fde8d5935861))
+
+
+
 ## [1.2.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.2.0...v1.2.1) (2020-09-24)
 
 
