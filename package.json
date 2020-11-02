@@ -40,9 +40,7 @@
     "test": "jest",
     "test:adhoc": "node ./test/adhoc/server.js",
     "cover": "jest --coverage",
-    "docs": "run-s build:rollup benchmark:bundle docs:js docs:emoji",
-    "docs:js": "cp bundle.js node_modules/focus-visible/dist/focus-visible.js ./docs",
-    "docs:emoji": "node bin/processCustomEmoji.js",
+    "docs": "node bin/processCustomEmoji.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "version": "run-s changelog docs && git add CHANGELOG.md docs"
   },
@@ -86,7 +84,6 @@
     "fake-indexeddb": "^3.1.2",
     "fetch-mock-jest": "^1.3.0",
     "flat-color-icons": "^1.1.0",
-    "focus-visible": "^5.2.0",
     "husky": "^4.3.0",
     "jest": "^26.5.3",
     "lint-staged": "^10.4.2",
