@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/picker.js">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/database.js">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.8em%22 font-size=%2280%22>😀</text></svg>">
   <meta charset="UTF-8">
   <title>emoji-picker-element</title>
   <meta name="viewport" content="width=device-width">
@@ -172,12 +174,55 @@
   </div>
 </div>
 </main>
-<script defer src="./focus-visible.js"></script>
-<script defer src="./bundle.js"></script>
-<script>
+<script type="module">
+  import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@1/picker.js'
+  import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@1/database.js' // avoid extra round-trip
+
+  const $ = document.querySelector.bind(document)
+  const $$ = _ => Array.from(document.querySelectorAll(_))
+
+  // See https://stackoverflow.com/a/8533927
+  function supportsSelector (selector) {
+    const style = document.createElement('style')
+    document.head.appendChild(style)
+    try {
+      style.sheet.insertRule(selector + '{}', 0)
+    } catch (e) {
+      return false
+    } finally {
+      document.head.removeChild(style)
+    }
+    return true
+  }
+
+  // check for private browsing mode to show the warning
+  async function hasIDB() {
+    if (typeof indexedDB === 'undefined') {
+      return false
+    }
+
+    try {
+      const idbFailed = await new Promise(resolve => {
+        const db = indexedDB.open('test-idb')
+        db.onerror = () => resolve(true)
+        db.onsuccess = () => {
+          indexedDB.deleteDatabase('test-idb')
+          resolve(false)
+        }
+      })
+      if (idbFailed) {
+        return false
+      }
+    } catch (e) {
+      return false
+    }
+    return true
+  }
+
+  const focusVisiblePolyfillPromise = !supportsSelector(':focus-visible') &&
+    import('https://cdn.jsdelivr.net/npm/focus-visible@5/dist/focus-visible.js')
+
   document.addEventListener('DOMContentLoaded', async () => {
-    const $ = document.querySelector.bind(document)
-    const $$ = _ => Array.from(document.querySelectorAll(_))
     const picker = $('emoji-picker')
     const pre = $('pre')
     const onEvent = e => {
@@ -187,23 +232,6 @@
     }
     picker.addEventListener('emoji-click', onEvent)
     picker.addEventListener('skin-tone-change', onEvent)
-
-    // See https://stackoverflow.com/a/8533927
-    function supportsSelector (selector) {
-      const style = document.createElement('style')
-      document.head.appendChild(style)
-      try {
-        style.sheet.insertRule(selector + '{}', 0)
-      } catch (e) {
-        return false
-      } finally {
-        document.head.removeChild(style)
-      }
-      return true
-    }
-    if (!supportsSelector(':focus-visible')) {
-      applyFocusVisiblePolyfill(picker.shadowRoot)
-    }
 
     $$('input[name=darkmode]').forEach(input => {
       input.addEventListener('change', e => {
@@ -220,32 +248,13 @@
       picker.classList.toggle('has-custom', !!e.target.checked)
     })
 
-    // check for private browsing mode to show the warning
-    async function hasIDB() {
-      if (typeof indexedDB === 'undefined') {
-        return false
-      }
-
-      try {
-        const idbFailed = await new Promise(resolve => {
-          const db = indexedDB.open('test-idb')
-          db.onerror = () => resolve(true)
-          db.onsuccess = () => {
-            indexedDB.deleteDatabase('test-idb')
-            resolve(false)
-          }
-        })
-        if (idbFailed) {
-          return false
-        }
-      } catch (e) {
-        return false
-      }
-      return true
-    }
-
     if (!(await hasIDB())) {
       $('.private-browsing-warning').style.display = 'block';
+    }
+
+    if (focusVisiblePolyfillPromise) {
+      await focusVisiblePolyfillPromise
+      applyFocusVisiblePolyfill(picker.shadowRoot)
     }
   })
 </script>
