@@ -146,6 +146,8 @@
                   id="emo-{emoji.id}">
             {#if emoji.unicode}
               {unicodeWithSkin(emoji, currentSkinTone)}
+            {:else if emoji.html}
+              <div class="custom-emoji">{@html emoji.html}</div>
             {:else}
               <div class="custom-emoji"
                    style="background-image: url({emoji.url});"
@@ -174,11 +176,11 @@
               id="fav-{emoji.id}">
         {#if emoji.unicode}
           {unicodeWithSkin(emoji, currentSkinTone)}
+        {:else if emoji.html}
+          <div class="custom-emoji">{@html emoji.html}</div>
         {:else}
-          <img class="custom-emoji"
-               src={emoji.url}
-               loading="lazy"
-               alt=""
+          <div class="custom-emoji"
+             style="background-image: url({emoji.url});"
           />
         {/if}
       </button>

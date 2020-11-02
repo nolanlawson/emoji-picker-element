@@ -156,7 +156,7 @@ async function main () {
       const res = {
         name: name,
         shortcodes: [name],
-        url: `#${name}`
+        html: `<svg style="width: 100%; height: 100%" id="${name}" xmlns="http://www.w3.org/2000/svg"><use xlink:href="./custom.svg#${name}"></use></svg>`
       }
       if (category) {
         res.category = category

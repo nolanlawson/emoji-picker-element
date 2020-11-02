@@ -1,7 +1,6 @@
 const requiredKeys = [
   'name',
-  'shortcodes',
-  'url'
+  'shortcodes'
 ]
 
 export function assertCustomEmojis (customEmojis) {
