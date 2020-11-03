@@ -109,7 +109,7 @@ This will log:
     "annotation": "grinning face",
     "group": 0,
     "order": 1,
-    "shortcodes": [ "gleeful" ],
+    "shortcodes": [ "grinning_face", "grinning" ],
     "tags": [ "face", "grin" ],
     "unicode": "😀",
     "version": 1,

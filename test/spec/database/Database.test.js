@@ -196,8 +196,8 @@ describe('database tests', () => {
     expect(thumbsUp[0].skins[0].tone).toBeTruthy()
     expect(thumbsUp[0].skins[0].unicode).toBeTruthy()
     expect(thumbsUp[0].skins[0].version).toBeTruthy()
-    const gleeful = await db.getEmojiBySearchQuery('gleeful')
-    expect(gleeful[0].emoticon).toEqual(':D')
+    const grinningFace = await db.getEmojiBySearchQuery('grinning_face')
+    expect(grinningFace[0].emoticon).toEqual(':D')
     await db.delete()
   })
 
