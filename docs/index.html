@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/picker.js">
-  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/database.js">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/picker.js">
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/database.js">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.8em%22 font-size=%2280%22>😀</text></svg>">
   <meta charset="UTF-8">
   <title>emoji-picker-element</title>
@@ -175,11 +175,12 @@
 </div>
 </main>
 <script type="module">
-  import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@1/picker.js'
-  import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@1/database.js' // avoid extra round-trip
+  import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/picker.js'
+  import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/database.js' // avoid extra round-trip
 
   const $ = document.querySelector.bind(document)
   const $$ = _ => Array.from(document.querySelectorAll(_))
+  let customEmoji
 
   // See https://stackoverflow.com/a/8533927
   function supportsSelector (selector) {
@@ -219,8 +220,26 @@
     return true
   }
 
+  async function loadCustomEmoji () {
+    if (customEmoji) {
+      return
+    }
+    const categoriesToCustomEmoji = (await (await fetch('./custom.json')).json())
+    customEmoji = []
+    for (const [ category, names ] of Object.entries(categoriesToCustomEmoji)) {
+      for (const name of names) {
+        customEmoji.push({
+          category: category || undefined,
+          name,
+          shortcodes: [name],
+          url: `./custom/${name}.svg`
+        })
+      }
+    }
+  }
+
   const focusVisiblePolyfillPromise = !supportsSelector(':focus-visible') &&
-    import('https://cdn.jsdelivr.net/npm/focus-visible@5/dist/focus-visible.js')
+    import('https://cdn.jsdelivr.net/npm/focus-visible@^5/dist/focus-visible.js')
 
   document.addEventListener('DOMContentLoaded', async () => {
     const picker = $('emoji-picker')
@@ -241,7 +260,8 @@
     })
     $('#custom').addEventListener('change', async e => {
       if (e.target.checked) {
-        picker.customEmoji = await (await fetch('./custom.json')).json()
+        await loadCustomEmoji()
+        picker.customEmoji = customEmoji
       } else {
         picker.customEmoji = []
       }

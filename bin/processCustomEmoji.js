@@ -154,9 +154,7 @@ async function main () {
       const name = filename.replace('.svg', '')
       const category = getCategory(name)
       const res = {
-        name: name,
-        shortcodes: [name],
-        url: `./custom/${filename}`
+        name
       }
       if (category) {
         res.category = category
@@ -165,7 +163,14 @@ async function main () {
     })
     .filter(({ name }) => !remove(name))
 
-  await writeFile('./docs/custom.json', JSON.stringify(customEmojis), 'utf8')
+  // use a smaller JSON format to transfer over the wire
+  const categoriesToCustomEmoji = {}
+  for (const { name, category = '' } of customEmojis) {
+    categoriesToCustomEmoji[category] = categoriesToCustomEmoji[category] || []
+    categoriesToCustomEmoji[category].push(name)
+  }
+
+  await writeFile('./docs/custom.json', JSON.stringify(categoriesToCustomEmoji), 'utf8')
   await Promise.all(customEmojis.map(async ({ name }) => {
     const svg = await readFile(`./node_modules/flat-color-icons/svg/${name}.svg`, 'utf8')
     const optimized = await svgo.optimize(svg)
