@@ -1,4 +1,4 @@
-import allEmojis from 'emojibase-data/en/data.json'
+import allEmojis from 'emoji-picker-element-data/en/emojibase/data.json'
 import { applySkinTone } from '../../../src/picker/utils/applySkinTone'
 
 describe('skin tones tests', () => {

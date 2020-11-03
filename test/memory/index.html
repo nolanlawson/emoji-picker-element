@@ -12,16 +12,16 @@
       const script = document.createElement('script')
       script.onload = () => {
         const picker = new emojiPickerElement.Picker({
-          dataSource: '/node_modules/emojibase-data/en/data.json'
+          dataSource: '/node_modules/emoji-picker-element-data/en/emojibase/data.json'
         })
         document.body.appendChild(picker)
       }
       script.src = '/bundle.js'
       document.body.appendChild(script)
     } else if (params.has('compact')) {
-      window.json = await (await fetch('/node_modules/emojibase-data/en/compact.json')).json()
+      window.json = await (await fetch('https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/compact.json')).json()
     } else if (params.has('full')) {
-      window.json = await (await fetch('/node_modules/emojibase-data/en/data.json')).json()
+      window.json = await (await fetch('https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/data.json')).json()
     }
   })()
 </script>

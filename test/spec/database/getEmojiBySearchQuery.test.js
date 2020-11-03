@@ -1,4 +1,4 @@
-import allEmoji from 'emojibase-data/en/data.json'
+import allEmoji from 'emoji-picker-element-data/en/emojibase/data.json'
 import Database from '../../../src/database/Database'
 import { pick } from 'lodash-es'
 import { basicAfterEach, basicBeforeEach, ALL_EMOJI, truncatedEmoji } from '../shared'

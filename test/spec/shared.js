@@ -1,5 +1,5 @@
-import allEmoji from 'emojibase-data/en/data.json'
-import frEmoji from 'emojibase-data/fr/data.json'
+import allEmoji from 'emoji-picker-element-data/en/emojibase/data.json'
+import frEmoji from 'emoji-picker-element-data/fr/cldr/data.json'
 
 export function truncateEmoji (allEmoji) {
   // just take the first few emoji from each category, or else it takes forever to insert

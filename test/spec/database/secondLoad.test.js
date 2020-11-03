@@ -1,6 +1,6 @@
 import { ALL_EMOJI, ALL_EMOJI_NO_ETAG, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Database from '../../../src/database/Database'
-import allEmoji from 'emojibase-data/en/data.json'
+import allEmoji from 'emoji-picker-element-data/en/emojibase/data.json'
 
 function mockEmoji (dataSource, data, etag) {
   fetch.mockClear()
