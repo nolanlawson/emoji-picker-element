@@ -1,4 +1,4 @@
-import { assertEmojiBaseData } from './database/utils/assertEmojiBaseData'
+import { assertEmojiData } from './database/utils/assertEmojiData'
 import { requiredKeys } from './database/utils/requiredKeys'
 
 const optionalKeys = ['skins', 'emoticon']
@@ -6,9 +6,9 @@ const allKeys = [...requiredKeys, ...optionalKeys]
 
 const allSkinsKeys = ['tone', 'emoji', 'version']
 
-export default function trimEmojiData (emojiBaseData) {
-  assertEmojiBaseData(emojiBaseData)
-  return emojiBaseData.map(emoji => {
+export default function trimEmojiData (emojiData) {
+  assertEmojiData(emojiData)
+  return emojiData.map(emoji => {
     const res = {}
     for (const key of allKeys) {
       if (key in emoji) {

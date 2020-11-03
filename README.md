@@ -60,7 +60,9 @@ A lightweight emoji picker, distributed as a web component.
     + [Within a Svelte project](#within-a-svelte-project)
   * [Data and offline](#data-and-offline)
     + [Data source and JSON format](#data-source-and-json-format)
-    + [Trimming the emojibase data](#trimming-the-emojibase-data)
+    + [Shortcodes](#shortcodes)
+    + [emojibase-data compatibility (deprecated)](#emojibase-data-compatibility-deprecated)
+    + [Trimming the emoji data (deprecated)](#trimming-the-emoji-data-deprecated)
     + [Offline-first](#offline-first)
     + [Environments without IndexedDB](#environments-without-indexeddb)
   * [Design decisions](#design-decisions)
@@ -247,7 +249,7 @@ Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `customCategorySorting` | function | - | Function to sort custom category strings (sorted alphabetically by default)  |
 `customEmoji` | CustomEmoji[] | - | Array of custom emoji |
-`dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/data.json" | URL to fetch the emojibase data from (`data-source` when used as an attribute) |
+`dataSource` | string | "https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json" | URL to fetch the emoji data from (`data-source` when used as an attribute) |
 `i18n` | I18n | - | i18n object (see below for details) |
 `locale` | string | "en" | Locale string |
 `skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute) |
@@ -382,7 +384,7 @@ same underlying IndexedDB connection and database.
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `customEmoji` | CustomEmoji[] | [] | Array of custom emoji  |
-`dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/data.json" | URL to fetch the emojibase data from |
+`dataSource` | string | "https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json" | URL to fetch the emoji data from |
 `locale` | string | "en" | Locale string |
 
 **Returns:** *Database*
@@ -740,11 +742,9 @@ import Picker from 'emoji-picker-element/svelte';
 
 If you'd like to host the emoji JSON yourself, you can do:
 
-    npm install emojibase-data@^5
+    npm install emoji-picker-element-data@^1
 
-Then host `node_modules/emojibase-data/en/data.json` (or other locales) on your web server.
-
-`emoji-picker-element` requires the _full_ [`emojibase-data`](https://github.com/milesj/emojibase) JSON file, not the "compact" one (i.e. `data.json`, not `compact.json`). Also note that `emojibase-data` v6 is not yet supported (see [#47](https://github.com/nolanlawson/emoji-picker-element/issues/47)).
+Then host `node_modules/emoji-picker-element-data/en/emojibase/data.json` (or other locales) on your web server.
 
 It's recommended that your server expose an `ETag` header – if so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will do a `HEAD` request and just check the `ETag`.
 
@@ -752,9 +752,27 @@ If the server hosting the JSON file is not the same as the one containing the em
 
 Unfortunately [Safari does not currently support `Access-Control-Allow-Headers`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#Browser_compatibility), meaning that the `ETag` header will not be available cross-origin. In that case, `emoji-picker-element` will fall back to the less performant option. If you want to avoid this, host the JSON file on the same server as your web app.
 
-### Trimming the emojibase data
+### Shortcodes
 
-If you are hosting the JSON file yourself and would like it to be as small as possible, then you can use the utility `trimEmojiData` function:
+There is no standard for shortcodes, so unlike other emoji data, there is some disagreement as to what a "shortcode" actually is.
+
+`emoji-picker-element-data` is based on `emojibase-data`, which exposes several shortcode packs per language. For instance,
+you may choose the GitHub-flavored shortcodes, the Slack-flavored shortcodes, or the Emojibase-flavored shortcodes (the default). You
+can browse the available data files [on jsdelivr](https://www.jsdelivr.com/package/npm/emoji-picker-element-data).
+
+### emojibase-data compatibility (deprecated)
+
+_**Deprecated:** in v1.3.0, `emoji-picker-element` switched from [`emojibase-data`](https://github.com/milesj/emojibase) to
+[`emoji-picker-element-data`](https://npmjs.com/package/emoji-picker-element-data) as its data source. You can still use `emojibase-data`, but only v5 is supported, not v6. Support may be removed in a later release._
+
+When using `emojibase-data`, you must use the _full_ [`emojibase-data`](https://github.com/milesj/emojibase) JSON file, not the "compact" one (i.e. `data.json`, not `compact.json`).
+
+### Trimming the emoji data (deprecated)
+
+_**Deprecated:** in v1.3.0, `emoji-picker-element` switched from [`emojibase-data`](https://github.com/milesj/emojibase) to
+[`emoji-picker-element-data`](https://npmjs.com/package/emoji-picker-element-data) as its data source. With the new `emoji-picker-element-data`, there is no need to trim the emoji down to size. This function is deprecated and may be removed eventually._
+
+If you are hosting the `emojibase-data` JSON file yourself and would like it to be as small as possible, then you can use the utility `trimEmojiData` function:
 
 ```js
 import trimEmojiData from 'emoji-picker-element/trimEmojiData.js';

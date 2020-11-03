@@ -8,7 +8,7 @@ export default class Database {
    * Note that multiple Databases pointing to the same locale will share the
    * same underlying IndexedDB connection and database.
    *
-   * @param dataSource - URL to fetch the emojibase data from
+   * @param dataSource - URL to fetch the emoji data from
    * @param locale - Locale string
    * @param customEmoji - Array of custom emoji
    */

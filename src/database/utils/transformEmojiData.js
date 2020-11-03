@@ -2,10 +2,10 @@ import { MIN_SEARCH_TEXT_LENGTH } from '../../shared/constants'
 import { mark, stop } from '../../shared/marks'
 import { extractTokens } from './extractTokens'
 
-// Transform emojibase data for storage in IDB
-export function transformEmojiBaseData (emojiBaseData) {
-  mark('transformEmojiBaseData')
-  const res = emojiBaseData.map(({ annotation, emoticon, group, order, shortcodes, skins, tags, emoji, version }) => {
+// Transform emoji data for storage in IDB
+export function transformEmojiData (emojiData) {
+  mark('transformEmojiData')
+  const res = emojiData.map(({ annotation, emoticon, group, order, shortcodes, skins, tags, emoji, version }) => {
     const tokens = [...new Set(
       [
         ...shortcodes.map(extractTokens).flat(),
@@ -42,6 +42,6 @@ export function transformEmojiBaseData (emojiBaseData) {
     }
     return res
   })
-  stop('transformEmojiBaseData')
+  stop('transformEmojiData')
   return res
 }
