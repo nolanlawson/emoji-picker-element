@@ -28,15 +28,13 @@ export default class Picker extends HTMLElement {
     super()
   }
 
-  // Adding types for addEventListener is hard... I basically just copy-pasted this from lib.dom.d.ts. Not sure
-  // Why I need the @ts-ignore
-  addEventListener<K extends keyof EmojiPickerEventMap>(type: K, listener: (this: TextTrackCue, ev: EmojiPickerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void
-  // @ts-ignore
-  addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void
+  addEventListener<K extends keyof EmojiPickerEventMap>(type: K, listener: (this: Picker, ev: EmojiPickerEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
+    super.addEventListener(type, listener, options);
+  }
 
-  removeEventListener<K extends keyof EmojiPickerEventMap>(type: K, listener: (this: TextTrackCue, ev: EmojiPickerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void
-  // @ts-ignore
-  removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void
+  removeEventListener<K extends keyof EmojiPickerEventMap>(type: K, listener: (this: Picker, ev: EmojiPickerEventMap[K]) => any, options?: boolean | EventListenerOptions) {
+    super.removeEventListener(type, listener, options);
+  }
 }
 
 // see https://justinfagnani.com/2019/11/01/how-to-publish-web-components-to-npm/
