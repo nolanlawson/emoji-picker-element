@@ -1,4 +1,4 @@
-// via https://unpkg.com/browse/emojibase-data@5.0.1/meta/groups.json
+// via https://unpkg.com/browse/emojibase-data@6.0.0/meta/groups.json
 const allGroups = [
   [-1, '✨', 'custom'],
   [0, '😀', 'smileys-emotion'],
