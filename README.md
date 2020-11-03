@@ -85,7 +85,7 @@ import 'emoji-picker-element';
 Or as a `<script>` tag:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element^@1/index.js"></script>
 ```
 
 Then use the HTML:
@@ -247,7 +247,7 @@ Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `customCategorySorting` | function | - | Function to sort custom category strings (sorted alphabetically by default)  |
 `customEmoji` | CustomEmoji[] | - | Array of custom emoji |
-`dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from (`data-source` when used as an attribute) |
+`dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/data.json" | URL to fetch the emojibase data from (`data-source` when used as an attribute) |
 `i18n` | I18n | - | i18n object (see below for details) |
 `locale` | string | "en" | Locale string |
 `skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute) |
@@ -382,7 +382,7 @@ same underlying IndexedDB connection and database.
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `customEmoji` | CustomEmoji[] | [] | Array of custom emoji  |
-`dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json" | URL to fetch the emojibase data from |
+`dataSource` | string | "https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/data.json" | URL to fetch the emojibase data from |
 `locale` | string | "en" | Locale string |
 
 **Returns:** *Database*
@@ -740,7 +740,7 @@ import Picker from 'emoji-picker-element/svelte';
 
 If you'd like to host the emoji JSON yourself, you can do:
 
-    npm install emojibase-data@5
+    npm install emojibase-data@^5
 
 Then host `node_modules/emojibase-data/en/data.json` (or other locales) on your web server.
 

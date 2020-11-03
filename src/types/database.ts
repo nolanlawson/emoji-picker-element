@@ -13,7 +13,7 @@ export default class Database {
    * @param customEmoji - Array of custom emoji
    */
   constructor({
-                dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json',
+                dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/data.json',
                 locale = 'en',
                 customEmoji = []
               }: DatabaseConstructorOptions = {}) {

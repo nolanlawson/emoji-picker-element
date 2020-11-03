@@ -18,7 +18,7 @@ export default class Picker extends HTMLElement {
    * @param customCategorySorting - Function to sort custom category strings (sorted alphabetically by default)
    */
   constructor({
-                dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json',
+                dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/data.json',
                 locale = 'en',
                 i18n,
                 skinToneEmoji = '🖐️',
