@@ -85,7 +85,7 @@ import 'emoji-picker-element';
 Or as a `<script>` tag:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element^@1/index.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
 ```
 
 Then use the HTML:
