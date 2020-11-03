@@ -18,5 +18,5 @@ export const MODE_READWRITE = 'readwrite'
 export const INDEX_SKIN_UNICODE = 'skinUnicodes'
 export const FIELD_SKIN_UNICODE = 'skinUnicodes'
 
-export const DEFAULT_DATA_SOURCE = 'https://cdn.jsdelivr.net/npm/emojibase-data@5/en/data.json'
+export const DEFAULT_DATA_SOURCE = 'https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/data.json'
 export const DEFAULT_LOCALE = 'en'
