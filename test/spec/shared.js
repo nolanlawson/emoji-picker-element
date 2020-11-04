@@ -25,6 +25,7 @@ export const ALL_EMOJI = 'http://localhost/emoji.json'
 export const ALL_EMOJI_NO_ETAG = 'http://localhost/emoji-no-etag.json'
 export const ALL_EMOJI_MISCONFIGURED_ETAG = 'http://localhost/emoji-misconfigured-etag.json'
 export const FR_EMOJI = 'http://localhost/fr.json'
+export const NO_SHORTCODES = 'http://localhost/no-shortcodes'
 
 export function basicBeforeEach () {
   fetch
@@ -56,4 +57,14 @@ export async function tick (times = 1) {
 export function mockFrenchDataSource () {
   fetch.get(FR_EMOJI, () => new Response(JSON.stringify(truncatedFrEmoji), { headers: { ETag: 'W/zzz' } }))
   fetch.head(FR_EMOJI, () => new Response(null, { headers: { ETag: 'W/zzz' } }))
+}
+
+export function mockDataSourceWithNoShortcodes () {
+  const noShortcodeEmoji = truncatedEmoji.map(emoji => {
+    const res = JSON.parse(JSON.stringify(emoji))
+    delete res.shortcodes
+    return res
+  })
+  fetch.get(NO_SHORTCODES, () => new Response(JSON.stringify(noShortcodeEmoji), { headers: { ETag: 'W/noshort' } }))
+  fetch.head(NO_SHORTCODES, () => new Response(null, { headers: { ETag: 'W/noshort' } }))
 }

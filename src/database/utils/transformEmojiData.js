@@ -5,7 +5,7 @@ import { extractTokens } from './extractTokens'
 // Transform emoji data for storage in IDB
 export function transformEmojiData (emojiData) {
   mark('transformEmojiData')
-  const res = emojiData.map(({ annotation, emoticon, group, order, shortcodes, skins, tags, emoji, version }) => {
+  const res = emojiData.map(({ annotation, emoticon, group, order, shortcodes = [], skins, tags, emoji, version }) => {
     const tokens = [...new Set(
       [
         ...shortcodes.map(extractTokens).flat(),

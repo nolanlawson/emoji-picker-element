@@ -1,7 +1,7 @@
 import Database from '../../../src/database/Database'
 import {
   basicAfterEach, basicBeforeEach, ALL_EMOJI, ALL_EMOJI_MISCONFIGURED_ETAG,
-  ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI, truncatedEmoji
+  ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI, truncatedEmoji, NO_SHORTCODES, mockDataSourceWithNoShortcodes
 } from '../shared'
 import trimEmojiData from '../../../src/trimEmojiData'
 
@@ -253,5 +253,17 @@ describe('database tests', () => {
     const db2 = new Database({ dataSource })
     await Promise.all([db.delete(), db2.delete()])
     await tick(40)
+  })
+
+  test('emoji with no shortcodes still work', async () => {
+    const dataSource = NO_SHORTCODES
+    mockDataSourceWithNoShortcodes()
+
+    const db = new Database({ dataSource })
+    await db.ready()
+
+    expect((await db.getEmojiBySearchQuery('monkey'))[0].unicode).toBe('🐵')
+
+    await db.delete()
   })
 })

@@ -3,7 +3,6 @@ export const requiredKeys = [
   'emoji',
   'group',
   'order',
-  'shortcodes',
   'tags',
   'version'
 ]
