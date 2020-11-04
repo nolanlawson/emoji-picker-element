@@ -1,5 +1,6 @@
 import allEmoji from 'emoji-picker-element-data/en/emojibase/data.json'
 import frEmoji from 'emoji-picker-element-data/fr/cldr/data.json'
+import allEmojibaseV5Emoji from 'emojibase-data/en/data.json'
 
 export function truncateEmoji (allEmoji) {
   // just take the first few emoji from each category, or else it takes forever to insert
@@ -20,12 +21,14 @@ export function truncateEmoji (allEmoji) {
 
 export const truncatedEmoji = truncateEmoji(allEmoji)
 const truncatedFrEmoji = truncateEmoji(frEmoji)
+const emojibaseV5Emoji = truncateEmoji(allEmojibaseV5Emoji)
 
 export const ALL_EMOJI = 'http://localhost/emoji.json'
 export const ALL_EMOJI_NO_ETAG = 'http://localhost/emoji-no-etag.json'
 export const ALL_EMOJI_MISCONFIGURED_ETAG = 'http://localhost/emoji-misconfigured-etag.json'
 export const FR_EMOJI = 'http://localhost/fr.json'
 export const NO_SHORTCODES = 'http://localhost/no-shortcodes'
+export const EMOJIBASE_V5 = 'http://localhost/emojibase'
 
 export function basicBeforeEach () {
   fetch
@@ -67,4 +70,9 @@ export function mockDataSourceWithNoShortcodes () {
   })
   fetch.get(NO_SHORTCODES, () => new Response(JSON.stringify(noShortcodeEmoji), { headers: { ETag: 'W/noshort' } }))
   fetch.head(NO_SHORTCODES, () => new Response(null, { headers: { ETag: 'W/noshort' } }))
+}
+
+export function mockEmojibaseV5DataSource () {
+  fetch.get(EMOJIBASE_V5, () => new Response(JSON.stringify(emojibaseV5Emoji), { headers: { ETag: 'W/emojibase' } }))
+  fetch.head(EMOJIBASE_V5, () => new Response(null, { headers: { ETag: 'W/emojibase' } }))
 }
