@@ -10,7 +10,7 @@ export default class Picker extends HTMLElement {
 
   /**
    *
-   * @param dataSource - URL to fetch the emojibase data from (`data-source` when used as an attribute)
+   * @param dataSource - URL to fetch the emoji data from (`data-source` when used as an attribute)
    * @param locale - Locale string
    * @param i18n - i18n object (see below for details)
    * @param skinToneEmoji - The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute)
@@ -18,7 +18,7 @@ export default class Picker extends HTMLElement {
    * @param customCategorySorting - Function to sort custom category strings (sorted alphabetically by default)
    */
   constructor({
-                dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/data.json',
+                dataSource = 'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json',
                 locale = 'en',
                 i18n,
                 skinToneEmoji = '🖐️',

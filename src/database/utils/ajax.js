@@ -1,5 +1,5 @@
 import { warnETag } from './warnETag'
-import { assertEmojiBaseData } from './assertEmojiBaseData'
+import { assertEmojiData } from './assertEmojiData'
 import { mark, stop } from '../../shared/marks'
 
 function assertStatus (response, dataSource) {
@@ -24,8 +24,8 @@ export async function getETagAndData (dataSource) {
   assertStatus(response, dataSource)
   const eTag = response.headers.get('etag')
   warnETag(eTag)
-  const emojiBaseData = await response.json()
-  assertEmojiBaseData(emojiBaseData)
+  const emojiData = await response.json()
+  assertEmojiData(emojiData)
   stop('getETagAndData')
-  return [eTag, emojiBaseData]
+  return [eTag, emojiData]
 }

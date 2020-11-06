@@ -1,7 +1,7 @@
 import Database from '../../../src/database/Database'
 import {
   basicAfterEach, basicBeforeEach, ALL_EMOJI, ALL_EMOJI_MISCONFIGURED_ETAG,
-  ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI, truncatedEmoji
+  ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI, truncatedEmoji, NO_SHORTCODES, mockDataSourceWithNoShortcodes
 } from '../shared'
 import trimEmojiData from '../../../src/trimEmojiData'
 
@@ -91,7 +91,7 @@ describe('database tests', () => {
     }
 
     for (const dataSource of [NULL, NOT_ARRAY, EMPTY, NULL_ARRAY, BAD_OBJECT]) {
-      await expect(makeDB(dataSource)).rejects.toThrow(/data is in wrong format/)
+      await expect(makeDB(dataSource)).rejects.toThrow('Emoji data is in the wrong format')
     }
   })
 
@@ -196,8 +196,9 @@ describe('database tests', () => {
     expect(thumbsUp[0].skins[0].tone).toBeTruthy()
     expect(thumbsUp[0].skins[0].unicode).toBeTruthy()
     expect(thumbsUp[0].skins[0].version).toBeTruthy()
-    const gleeful = await db.getEmojiBySearchQuery('gleeful')
-    expect(gleeful[0].emoticon).toEqual(':D')
+    expect(thumbsUp[0].shortcodes[0]).toEqual('thumbsup')
+    const grinningFace = await db.getEmojiBySearchQuery('grinning_face')
+    expect(grinningFace[0].emoticon).toEqual(':D')
     await db.delete()
   })
 
@@ -253,5 +254,17 @@ describe('database tests', () => {
     const db2 = new Database({ dataSource })
     await Promise.all([db.delete(), db2.delete()])
     await tick(40)
+  })
+
+  test('emoji with no shortcodes still work', async () => {
+    const dataSource = NO_SHORTCODES
+    mockDataSourceWithNoShortcodes()
+
+    const db = new Database({ dataSource })
+    await db.ready()
+
+    expect((await db.getEmojiBySearchQuery('monkey'))[0].unicode).toBe('🐵')
+
+    await db.delete()
   })
 })

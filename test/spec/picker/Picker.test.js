@@ -202,7 +202,7 @@ describe('Picker tests', () => {
         annotation: 'grinning face',
         group: 0,
         order: 1,
-        shortcodes: ['gleeful'],
+        shortcodes: ['grinning_face', 'grinning'],
         tags: ['face', 'grin'],
         unicode: '😀',
         version: 1,
@@ -227,7 +227,7 @@ describe('Picker tests', () => {
         annotation: 'thumbs up',
         group: 1,
         order: 280,
-        shortcodes: ['thumbsup', '+1', 'yes'],
+        shortcodes: ['thumbsup', 'yes', '+1'],
         tags: ['+1', 'hand', 'thumb', 'up'],
         unicode: '👍️',
         version: 0.6,
@@ -252,7 +252,7 @@ describe('Picker tests', () => {
         annotation: 'grinning face',
         group: 0,
         order: 1,
-        shortcodes: ['gleeful'],
+        shortcodes: ['grinning_face', 'grinning'],
         tags: ['face', 'grin'],
         unicode: '😀',
         version: 1,
@@ -399,35 +399,30 @@ describe('Picker tests', () => {
     await waitFor(() => expect(getByRole('option', { name: 'donkey' })).toBeVisible())
   })
 
-  test('Custom emoji with sorted categories', async () => {
+  test('Custom emoji with sorted categories and no shortcodes', async () => {
     picker.customEmoji = [
       {
         name: 'monkey',
-        shortcodes: ['monkey'],
         url: 'monkey.png',
         category: 'Primates'
       },
       {
         name: 'donkey',
-        shortcodes: ['donkey'],
         url: 'donkey.png',
         category: 'Ungulates'
       },
       {
         name: 'horse',
-        shortcodes: ['horse'],
         url: 'horse.png',
         category: 'Ungulates'
       },
       {
         name: 'bird',
-        shortcodes: ['bird'],
         url: 'bird.png',
         category: 'Avians'
       },
       {
         name: 'human',
-        shortcodes: ['human'],
         url: 'human.png'
       }
     ]

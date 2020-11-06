@@ -17,7 +17,7 @@ export function customEmojiIndex (customEmojis) {
   // search()
   //
   const emojiToTokens = emoji => (
-    [...new Set(emoji.shortcodes.map(shortcode => extractTokens(shortcode)).flat())]
+    [...new Set((emoji.shortcodes || []).map(shortcode => extractTokens(shortcode)).flat())]
   )
   const searchTrie = trie(customEmojis, emojiToTokens)
   const searchByExactMatch = _ => searchTrie(_, true)
@@ -41,7 +41,7 @@ export function customEmojiIndex (customEmojis) {
   const nameToEmoji = new Map()
   for (const customEmoji of customEmojis) {
     nameToEmoji.set(customEmoji.name.toLowerCase(), customEmoji)
-    for (const shortcode of customEmoji.shortcodes) {
+    for (const shortcode of (customEmoji.shortcodes || [])) {
       shortcodeToEmoji.set(shortcode.toLowerCase(), customEmoji)
     }
   }

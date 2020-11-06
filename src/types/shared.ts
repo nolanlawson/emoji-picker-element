@@ -13,7 +13,7 @@ export interface NativeEmoji {
   group: number
   name: string
   order: number
-  shortcodes: string[]
+  shortcodes?: string[]
   tags?: string[]
   version: number
   unicode: string
@@ -100,7 +100,7 @@ export interface EmojiPickerEventMap {
 
 export interface CustomEmoji {
   name: string
-  shortcodes: string[]
+  shortcodes?: string[]
   url: string
   category?: string
 }

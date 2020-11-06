@@ -4,7 +4,7 @@ import {
 } from '@testing-library/dom'
 import { basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Picker from '../../../src/picker/PickerElement'
-import allData from 'emojibase-data/en/data.json'
+import allData from 'emoji-picker-element-data/en/emojibase/data.json'
 import { MOST_COMMONLY_USED_EMOJI } from '../../../src/picker/constants'
 import { uniqBy } from '../../../src/shared/uniqBy'
 import { groups } from '../../../src/picker/groups'

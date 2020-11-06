@@ -8,12 +8,12 @@ export default class Database {
    * Note that multiple Databases pointing to the same locale will share the
    * same underlying IndexedDB connection and database.
    *
-   * @param dataSource - URL to fetch the emojibase data from
+   * @param dataSource - URL to fetch the emoji data from
    * @param locale - Locale string
    * @param customEmoji - Array of custom emoji
    */
   constructor({
-                dataSource = 'https://cdn.jsdelivr.net/npm/emojibase-data@^5/en/data.json',
+                dataSource = 'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json',
                 locale = 'en',
                 customEmoji = []
               }: DatabaseConstructorOptions = {}) {

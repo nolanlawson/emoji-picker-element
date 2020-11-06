@@ -6,7 +6,7 @@ import {
   STORE_EMOJI, STORE_FAVORITES,
   STORE_KEYVALUE
 } from './constants'
-import { transformEmojiBaseData } from './utils/transformEmojiBaseData'
+import { transformEmojiData } from './utils/transformEmojiData'
 import { mark, stop } from '../shared/marks'
 import { extractTokens } from './utils/extractTokens'
 import { getAllIDB, getAllKeysIDB, getIDB } from './idbUtil'
@@ -22,10 +22,10 @@ export async function hasData (db, url, eTag) {
   return (oldETag === eTag && oldUrl === url)
 }
 
-export async function loadData (db, emojiBaseData, url, eTag) {
+export async function loadData (db, emojiData, url, eTag) {
   mark('loadData')
   try {
-    const transformedData = transformEmojiBaseData(emojiBaseData)
+    const transformedData = transformEmojiData(emojiData)
     await dbPromise(db, [STORE_EMOJI, STORE_KEYVALUE], MODE_READWRITE, ([emojiStore, metaStore]) => {
       let oldETag
       let oldUrl
