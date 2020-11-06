@@ -91,7 +91,7 @@ describe('database tests', () => {
     }
 
     for (const dataSource of [NULL, NOT_ARRAY, EMPTY, NULL_ARRAY, BAD_OBJECT]) {
-      await expect(makeDB(dataSource)).rejects.toThrow(/data is in wrong format/)
+      await expect(makeDB(dataSource)).rejects.toThrow('Emoji data is in the wrong format')
     }
   })
 

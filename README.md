@@ -769,14 +769,14 @@ If `emoji-picker-element` cannot use the `ETag` for any reason, it will fall bac
 ### emojibase-data compatibility (deprecated)
 
 _**Deprecated:** in v1.3.0, `emoji-picker-element` switched from [`emojibase-data`](https://github.com/milesj/emojibase) to
-[`emoji-picker-element-data`](https://npmjs.com/package/emoji-picker-element-data) as its data source. You can still use `emojibase-data`, but only v5 is supported, not v6. Support may be removed in a later release._
+[`emoji-picker-element-data`](https://npmjs.com/package/emoji-picker-element-data) as its default data source. You can still use `emojibase-data`, but only v5 is supported, not v6. Support may be removed in a later release._
 
 When using `emojibase-data`, you must use the _full_ [`emojibase-data`](https://github.com/milesj/emojibase) JSON file, not the "compact" one (i.e. `data.json`, not `compact.json`).
 
 ### Trimming the emoji data (deprecated)
 
 _**Deprecated:** in v1.3.0, `emoji-picker-element` switched from [`emojibase-data`](https://github.com/milesj/emojibase) to
-[`emoji-picker-element-data`](https://npmjs.com/package/emoji-picker-element-data) as its data source. With the new `emoji-picker-element-data`, there is no need to trim the emoji down to size. This function is deprecated and may be removed eventually._
+[`emoji-picker-element-data`](https://npmjs.com/package/emoji-picker-element-data) as its default data source. With the new `emoji-picker-element-data`, there is no need to trim the emoji down to size. This function is deprecated and may be removed eventually._
 
 If you are hosting the `emojibase-data` JSON file yourself and would like it to be as small as possible, then you can use the utility `trimEmojiData` function:
 

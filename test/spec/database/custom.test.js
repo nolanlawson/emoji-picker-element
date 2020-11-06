@@ -78,10 +78,10 @@ describe('custom emoji', () => {
 
   test('errors', () => {
     db.customEmoji = [] // empty arrays are fine
-    expect(() => { db.customEmoji = null }).toThrow(/Expected custom emojis/)
-    expect(() => { db.customEmoji = 'foo' }).toThrow(/Expected custom emojis/)
-    expect(() => { db.customEmoji = [{}] }).toThrow(/Expected custom emojis/)
-    expect(() => { db.customEmoji = [null] }).toThrow(/Expected custom emojis/)
+    expect(() => { db.customEmoji = null }).toThrow('Custom emojis are in the wrong format')
+    expect(() => { db.customEmoji = 'foo' }).toThrow('Custom emojis are in the wrong format')
+    expect(() => { db.customEmoji = [{}] }).toThrow('Custom emojis are in the wrong format')
+    expect(() => { db.customEmoji = [null] }).toThrow('Custom emojis are in the wrong format')
   })
 
   test('getEmojiByShortcode', async () => {
