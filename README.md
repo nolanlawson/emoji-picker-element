@@ -757,7 +757,7 @@ Unfortunately [Safari does not currently support `Access-Control-Allow-Headers`]
 There is no standard for shortcodes, so unlike other emoji data, there is some disagreement as to what a "shortcode" actually is.
 
 `emoji-picker-element-data` is based on `emojibase-data`, which exposes several shortcode packs per language. For instance,
-you may choose the GitHub-flavored shortcodes, the Slack-flavored shortcodes, or the Emojibase-flavored shortcodes (the default). You
+you may choose the GitHub-flavored shortcodes, the JoyPixels-flavored shortcodes, or the Emojibase-flavored shortcodes (the default). You
 can browse the available data files [on jsdelivr](https://www.jsdelivr.com/package/npm/emoji-picker-element-data).
 
 ### emojibase-data compatibility (deprecated)
