@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.2.3...v1.3.0) (2020-11-06)
+
+
+### Features
+
+* use emoji-picker-element-data, make shortcodes optional ([#75](https://github.com/nolanlawson/emoji-picker-element/issues/75)) ([f40beed](https://github.com/nolanlawson/emoji-picker-element/commit/f40beeddd10c70392041ec9b045c299488beaa9a))
+
+
+
 ## [1.2.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.2.2...v1.2.3) (2020-11-06)
 
 
