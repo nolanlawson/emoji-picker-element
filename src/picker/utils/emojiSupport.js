@@ -11,6 +11,7 @@ export const emojiSupportLevelPromise = new Promise(resolve => (
 // are supported (rendered as one glyph) rather than unsupported (rendered as two or more glyphs)
 export const supportedZwjEmojis = new Map()
 
+/* istanbul ignore else */
 if (process.env.NODE_ENV !== 'production') {
   emojiSupportLevelPromise.then(emojiSupportLevel => {
     log('emoji support level', emojiSupportLevel)

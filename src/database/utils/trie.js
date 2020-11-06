@@ -46,7 +46,7 @@ export function trie (arr, itemToTokens) {
 
     const results = []
     // traverse
-    const queue = currentMap ? [currentMap] : []
+    const queue = [currentMap]
     while (queue.length) {
       const currentMap = queue.shift()
       const entriesSortedByKey = [...currentMap.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1)

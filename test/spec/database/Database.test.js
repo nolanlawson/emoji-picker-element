@@ -238,4 +238,20 @@ describe('database tests', () => {
 
     await tick(20)
   })
+
+  test('close in db2 after deletion in db1', async () => {
+    const dataSource = ALL_EMOJI
+    const db = new Database({ dataSource })
+    const db2 = new Database({ dataSource })
+    await Promise.all([db.delete(), db2.close()])
+    await tick(40)
+  })
+
+  test('delete in db2 after deletion in db1', async () => {
+    const dataSource = ALL_EMOJI
+    const db = new Database({ dataSource })
+    const db2 = new Database({ dataSource })
+    await Promise.all([db.delete(), db2.delete()])
+    await tick(40)
+  })
 })
