@@ -744,21 +744,26 @@ If you'd like to host the emoji JSON yourself, you can do:
 
     npm install emoji-picker-element-data@^1
 
-Then host `node_modules/emoji-picker-element-data/en/emojibase/data.json` (or other locales) on your web server.
-
-It's recommended that your server expose an `ETag` header – if so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will do a `HEAD` request and just check the `ETag`.
-
-If the server hosting the JSON file is not the same as the one containing the emoji picker, then the cross-origin server will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: *`. (Note that `jsdelivr` already does this, which is partly why it is the default.)
-
-Unfortunately [Safari does not currently support `Access-Control-Allow-Headers`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#Browser_compatibility), meaning that the `ETag` header will not be available cross-origin. In that case, `emoji-picker-element` will fall back to the less performant option. If you want to avoid this, host the JSON file on the same server as your web app.
+Then host `node_modules/emoji-picker-element-data/en/emojibase/data.json` (or other JSON files) on your web server.
 
 ### Shortcodes
 
 There is no standard for shortcodes, so unlike other emoji data, there is some disagreement as to what a "shortcode" actually is.
 
-`emoji-picker-element-data` is based on `emojibase-data`, which exposes several shortcode packs per language. For instance,
-you may choose the GitHub-flavored shortcodes, the JoyPixels-flavored shortcodes, or the Emojibase-flavored shortcodes (the default). You
-can browse the available data files [on jsdelivr](https://www.jsdelivr.com/package/npm/emoji-picker-element-data).
+`emoji-picker-element-data` is based on `emojibase-data`, which offers several shortcode packs per language. For instance,
+you may choose shortcodes from GitHub, Slack, Discord, or Emojibase (the default). You
+can browse the available data files [on jsdelivr](https://www.jsdelivr.com/package/npm/emoji-picker-element-data) and see
+more details on shortcodes [in the Emojibase docs](https://emojibase.dev/docs/shortcodes).
+
+### Cache performance
+
+For optimal cache performance, it's recommended that your server expose an `ETag` header. If so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will do a `HEAD` request and just check the `ETag`.
+
+If the server hosting the JSON file is not the same as the one containing the emoji picker, then the cross-origin server will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: ETag` (or `Access-Control-Allow-Headers: *` ). `jsdelivr` already does this, which is partly why it is the default.
+
+Note that [Safari does not currently support `Access-Control-Allow-Headers: *`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers#Browser_compatibility), but it does support `Access-Control-Allow-Headers: ETag`.
+
+If `emoji-picker-element` cannot use the `ETag` for any reason, it will fall back to the less performant option, doing a full `GET` request on every page load.
 
 ### emojibase-data compatibility (deprecated)
 
