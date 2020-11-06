@@ -399,35 +399,30 @@ describe('Picker tests', () => {
     await waitFor(() => expect(getByRole('option', { name: 'donkey' })).toBeVisible())
   })
 
-  test('Custom emoji with sorted categories', async () => {
+  test('Custom emoji with sorted categories and no shortcodes', async () => {
     picker.customEmoji = [
       {
         name: 'monkey',
-        shortcodes: ['monkey'],
         url: 'monkey.png',
         category: 'Primates'
       },
       {
         name: 'donkey',
-        shortcodes: ['donkey'],
         url: 'donkey.png',
         category: 'Ungulates'
       },
       {
         name: 'horse',
-        shortcodes: ['horse'],
         url: 'horse.png',
         category: 'Ungulates'
       },
       {
         name: 'bird',
-        shortcodes: ['bird'],
         url: 'bird.png',
         category: 'Avians'
       },
       {
         name: 'human',
-        shortcodes: ['human'],
         url: 'human.png'
       }
     ]

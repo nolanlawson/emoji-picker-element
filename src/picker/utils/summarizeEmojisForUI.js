@@ -23,6 +23,6 @@ export function summarizeEmojisForUI (emojis, emojiSupportLevel) {
     category,
     id: unicode || name,
     skins: skins && toSimpleSkinsMap(skins),
-    title: shortcodes.join(', ')
+    title: (shortcodes || []).join(', ')
   }))
 }

@@ -94,7 +94,7 @@ function unicodeWithSkin (emoji, currentSkinTone) {
 
 // eslint-disable-next-line no-unused-vars
 function labelWithSkin (emoji, currentSkinTone) {
-  return uniq([(emoji.name || unicodeWithSkin(emoji, currentSkinTone)), ...emoji.shortcodes]).join(', ')
+  return uniq([(emoji.name || unicodeWithSkin(emoji, currentSkinTone)), ...(emoji.shortcodes || [])]).join(', ')
 }
 
 //
