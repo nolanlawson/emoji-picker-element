@@ -130,9 +130,7 @@ export default class Database {
     try {
       await this._lazyUpdate // allow any lazy updates to process before closing/deleting
     } catch (err) { /* ignore network errors (offline-first) */ }
-    if (this._db) {
-      return true // we need to actually run the close/delete logic, so we return true
-    }
+    return !!this._db // return true if we need to actually run the close/delete logic
   }
 
   // clear references to IDB, e.g. during a close event

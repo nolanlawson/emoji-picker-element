@@ -47,5 +47,6 @@ describe('skin tones tests', () => {
     expect(applySkinTone('🧘‍♀️', 3)).toBe('🧘🏽‍♀️')
     expect(applySkinTone('🤌', 2)).toBe('🤌🏼')
     expect(applySkinTone('🖐️', 5)).toBe('🖐🏿')
+    expect(applySkinTone('👨‍🦰', 4)).toBe('👨🏾‍🦰')
   })
 })
