@@ -1,7 +1,7 @@
 import { assertEmojiData } from './database/utils/assertEmojiData'
 import { requiredKeys } from './database/utils/requiredKeys'
 
-const optionalKeys = ['skins', 'emoticon']
+const optionalKeys = ['skins', 'emoticon', 'shortcodes']
 const allKeys = [...requiredKeys, ...optionalKeys]
 
 const allSkinsKeys = ['tone', 'emoji', 'version']
