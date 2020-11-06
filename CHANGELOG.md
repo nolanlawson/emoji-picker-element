@@ -1,3 +1,14 @@
+## [1.2.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.2.2...v1.2.3) (2020-11-06)
+
+
+### Bug Fixes
+
+* emoticon is not a required field ([#73](https://github.com/nolanlawson/emoji-picker-element/issues/73)) ([c72bb44](https://github.com/nolanlawson/emoji-picker-element/commit/c72bb44a28ef7844a886beb8900caa5cc198af66))
+* fix types for addEventListener and removeEventListener ([#61](https://github.com/nolanlawson/emoji-picker-element/issues/61)) ([f6b3d83](https://github.com/nolanlawson/emoji-picker-element/commit/f6b3d834b89a0be7d86258b3a762469ca82431f3))
+* use @^ for versions ([#72](https://github.com/nolanlawson/emoji-picker-element/issues/72)) ([8261856](https://github.com/nolanlawson/emoji-picker-element/commit/82618562f1cc283a86e7939fce331705519ca9f6)), closes [#71](https://github.com/nolanlawson/emoji-picker-element/issues/71)
+
+
+
 ## [1.2.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.2.1...v1.2.2) (2020-11-02)
 
 
