@@ -61,6 +61,7 @@ A lightweight emoji picker, distributed as a web component.
   * [Data and offline](#data-and-offline)
     + [Data source and JSON format](#data-source-and-json-format)
     + [Shortcodes](#shortcodes)
+    + [Cache performance](#cache-performance)
     + [emojibase-data compatibility (deprecated)](#emojibase-data-compatibility-deprecated)
     + [Trimming the emoji data (deprecated)](#trimming-the-emoji-data-deprecated)
     + [Offline-first](#offline-first)
