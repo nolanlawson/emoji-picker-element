@@ -1,0 +1,44 @@
+version: 2.1
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build_and_test
+jobs:
+  build_and_test:
+    docker:
+      - image: circleci/node:14-browsers
+    steps:
+      - checkout
+      - run:
+          name: Install system dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y fonts-noto-color-emoji
+      - run:
+          name: Check node version
+          command: node -v
+      - restore_cache:
+          name: Restore yarn cache
+          key: yarn-v1-{{ checksum "yarn.lock" }}
+      - run:
+          name: Yarn install
+          command: yarn install --immutable
+      - run:
+          name: Lint
+          command: yarn lint
+      - run:
+          name: Unit tests
+          command: yarn test
+      - run:
+          name: Leak tests
+          command: yarn test:leak
+      - run:
+          name: Bundlesize tests
+          command: yarn benchmark:bundlesize
+      - save_cache:
+          name: Save yarn cache
+          key: yarn-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
