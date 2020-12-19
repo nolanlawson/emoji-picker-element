@@ -1,3 +1,13 @@
+## [1.3.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.3.0...v1.3.1) (2020-12-19)
+
+
+### Bug Fixes
+
+* fix race condition on custom emoji ([#85](https://github.com/nolanlawson/emoji-picker-element/issues/85)) ([9170e19](https://github.com/nolanlawson/emoji-picker-element/commit/9170e19734dac7d4aa90ad373dc76c493b89dcc7))
+* fix warning message having wrong URL to readme ([#76](https://github.com/nolanlawson/emoji-picker-element/issues/76)) ([93f1da8](https://github.com/nolanlawson/emoji-picker-element/commit/93f1da8058682da054c973e72896c611f6059f7a))
+
+
+
 # [1.3.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.2.3...v1.3.0) (2020-11-06)
 
 
