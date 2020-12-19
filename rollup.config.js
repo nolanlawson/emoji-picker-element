@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import mainSvelte from 'rollup-plugin-svelte'
 import hotSvelte from 'rollup-plugin-svelte-hot'
+import css from 'rollup-plugin-css-only'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
 import cssnano from 'cssnano'
@@ -51,10 +52,14 @@ const baseConfig = {
       delimiters: ['', '']
     }),
     svelte({
-      css: true,
-      customElement: true,
-      dev,
+      compilerOptions: {
+        customElement: true,
+        dev,
+      },
       preprocess: preprocessConfig
+    }),
+    css({
+      output: 'bundle.css'
     }),
     !dev && analyze({ summaryOnly: true })
   ],
