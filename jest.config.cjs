@@ -3,13 +3,13 @@ module.exports = {
     '<rootDir>/test/spec/**/*.{spec,test}.{js,jsx,ts,tsx}'
   ],
   transform: {
-    '^.+\\.js$': './config/babelJestTransform.cjs',
     '^.+\\.svelte$': ['svelte-jester', {
       preprocess: true,
       compilerOptions: {
         css: true,
         customElement: true,
-        dev: false
+        dev: false,
+        format: 'esm'
       }
     }]
   },
