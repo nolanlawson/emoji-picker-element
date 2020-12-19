@@ -301,11 +301,19 @@ $: {
       currentEmojis = []
       searchMode = false
     } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
-      currentEmojis = await getEmojisBySearchQuery(searchText)
-      searchMode = true
+      const currentSearchText = searchText
+      const newEmojis = await getEmojisBySearchQuery(currentSearchText)
+      if (currentSearchText === searchText) { // if the situation changes asynchronously, do not update
+        currentEmojis = newEmojis
+        searchMode = true
+      }
     } else if (currentGroup) {
-      currentEmojis = await getEmojisByGroup(currentGroup.id)
-      searchMode = false
+      const currentGroupId = currentGroup.id
+      const newEmojis = await getEmojisByGroup(currentGroupId)
+      if (currentGroupId === currentGroup.id) { // if the situation changes asynchronously, do not update
+        currentEmojis = newEmojis
+        searchMode = false
+      }
     }
   }
   /* no await */ updateEmojis()
