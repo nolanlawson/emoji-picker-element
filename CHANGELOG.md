@@ -1,3 +1,12 @@
+## [1.3.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.3.1...v1.3.2) (2020-12-24)
+
+
+### Bug Fixes
+
+* fix short tokens in getEmojiByShortcode ([#90](https://github.com/nolanlawson/emoji-picker-element/issues/90)) ([992ac10](https://github.com/nolanlawson/emoji-picker-element/commit/992ac10164a46b28d87c348894cdd12d8eaaa015))
+
+
+
 ## [1.3.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.3.0...v1.3.1) (2020-12-19)
 
 
