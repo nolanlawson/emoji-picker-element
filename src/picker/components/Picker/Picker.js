@@ -119,7 +119,7 @@ $: {
     }, TIMEOUT_BEFORE_LOADING_MESSAGE)
     try {
       await database.ready()
-      loaded = true
+      loaded = true // eslint-disable-line no-unused-vars
     } catch (err) {
       console.error(err)
       message = i18n.networkErrorMessage
@@ -164,11 +164,13 @@ onDestroy(async () => {
 // Global styles for the entire picker
 //
 
+/* eslint-disable no-unused-vars */
 $: pickerStyle = `
   --font-family: ${FONT_FAMILY};
   --num-groups: ${groups.length}; 
   --indicator-opacity: ${searchMode ? 0 : 1}; 
   --num-skintones: ${NUM_SKIN_TONES};`
+/* eslint-enable no-unused-vars */
 
 //
 // Set or update the customEmoji
@@ -203,8 +205,10 @@ $: {
 }
 
 $: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => applySkinTone(skinToneEmoji, i))
+/* eslint-disable no-unused-vars */
 $: skinToneButtonText = skinTones[currentSkinTone]
 $: skinToneButtonLabel = i18n.skinToneLabel.replace('{skinTone}', i18n.skinTones[currentSkinTone])
+/* eslint-enable no-unused-vars */
 
 //
 // Set or update the favorites emojis
@@ -255,7 +259,7 @@ function calculateEmojiGridWidth (node) {
       : node.parentElement.getBoundingClientRect().width
     const newScrollbarWidth = parentWidth - width
     numColumns = newNumColumns
-    scrollbarWidth = newScrollbarWidth
+    scrollbarWidth = newScrollbarWidth // eslint-disable-line no-unused-vars
   })
 }
 
@@ -283,8 +287,10 @@ function calculateIndicatorWidth (node) {
 $: {
   /* istanbul ignore if */
   if (resizeObserverSupported) {
+    // eslint-disable-next-line no-unused-vars
     indicatorStyle = `transform: translateX(${currentGroupIndex * computedIndicatorWidth}px);` // exact pixels
   } else {
+    // eslint-disable-next-line no-unused-vars
     indicatorStyle = `transform: translateX(${currentGroupIndex * 100}%);`// fallback to percent-based
   }
 }
@@ -418,6 +424,7 @@ $: {
       .sort((a, b) => customCategorySorting(a.category, b.category))
   }
 
+  // eslint-disable-next-line no-unused-vars
   currentEmojisWithCategories = calculateCurrentEmojisWithCategories()
 }
 
@@ -425,7 +432,9 @@ $: {
 // Handle active search item (i.e. pressing up or down while searching)
 //
 
+/* eslint-disable no-unused-vars */
 $: activeSearchItemId = activeSearchItem !== -1 && currentEmojis[activeSearchItem].id
+/* eslint-enable no-unused-vars */
 
 //
 // Handle user input on the search input
@@ -566,10 +575,10 @@ async function onClickSkinToneButton (event) {
 $: {
   if (skinTonePickerExpanded) {
     skinToneDropdown.addEventListener('transitionend', () => {
-      skinTonePickerExpandedAfterAnimation = true
+      skinTonePickerExpandedAfterAnimation = true // eslint-disable-line no-unused-vars
     }, { once: true })
   } else {
-    skinTonePickerExpandedAfterAnimation = false
+    skinTonePickerExpandedAfterAnimation = false // eslint-disable-line no-unused-vars
   }
 }
 
