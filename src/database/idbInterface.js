@@ -24,6 +24,7 @@ export async function hasData (db, url, eTag) {
 }
 
 async function doFullDatabaseScanForSingleResult (db, predicate) {
+  // TODO: we could do batching here using getAll(). Not sure if it's worth the extra code though.
   return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
     emojiStore.openCursor().onsuccess = e => {
       const cursor = e.target.result
