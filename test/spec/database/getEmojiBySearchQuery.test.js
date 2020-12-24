@@ -175,6 +175,7 @@ describe('getEmojiBySearchQuery', () => {
     expect((await db.getEmojiBySearchQuery(' :wink: ')).map(_ => _.annotation)).toStrictEqual(['winking face'])
     expect((await db.getEmojiBySearchQuery(':)')).map(_ => _.annotation)).toStrictEqual(['slightly smiling face'])
     expect((await db.getEmojiBySearchQuery(' :) ')).map(_ => _.annotation)).toStrictEqual(['slightly smiling face'])
+    expect((await db.getEmojiBySearchQuery(';)')).map(_ => _.annotation)).toStrictEqual(['winking face'])
 
     await db.delete()
   })
@@ -186,5 +187,12 @@ describe('getEmojiBySearchQuery', () => {
       expect((await db.getEmojiBySearchQuery(emoticon)).map(_ => _.emoticon)).toContain(emoticon)
     }
     await db.delete()
+  })
+
+  test('search queries that result in no tokens', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+
+    expect((await db.getEmojiBySearchQuery(';;;;'))).toStrictEqual([])
+    expect((await db.getEmojiBySearchQuery('B&'))).toStrictEqual([])
   })
 })
