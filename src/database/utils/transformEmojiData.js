@@ -1,21 +1,18 @@
-import { MIN_SEARCH_TEXT_LENGTH } from '../../shared/constants'
 import { mark, stop } from '../../shared/marks'
 import { extractTokens } from './extractTokens'
+import { normalizeTokens } from './normalizeTokens'
 
 // Transform emoji data for storage in IDB
 export function transformEmojiData (emojiData) {
   mark('transformEmojiData')
   const res = emojiData.map(({ annotation, emoticon, group, order, shortcodes, skins, tags, emoji, version }) => {
     const tokens = [...new Set(
-      [
+      normalizeTokens([
         ...(shortcodes || []).map(extractTokens).flat(),
         ...tags.map(extractTokens).flat(),
         ...extractTokens(annotation),
         emoticon
-      ]
-        .filter(Boolean)
-        .map(_ => _.toLowerCase())
-        .filter(_ => _.length >= MIN_SEARCH_TEXT_LENGTH)
+      ])
     )].sort()
     const res = {
       annotation,

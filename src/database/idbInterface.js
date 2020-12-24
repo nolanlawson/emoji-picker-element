@@ -11,6 +11,7 @@ import { mark, stop } from '../shared/marks'
 import { extractTokens } from './utils/extractTokens'
 import { getAllIDB, getAllKeysIDB, getIDB } from './idbUtil'
 import { findCommonMembers } from './utils/findCommonMembers'
+import { normalizeTokens } from './utils/normalizeTokens'
 
 export async function isEmpty (db) {
   return !(await get(db, STORE_KEYVALUE, KEY_URL))
@@ -20,6 +21,23 @@ export async function hasData (db, url, eTag) {
   const [oldETag, oldUrl] = await Promise.all([KEY_ETAG, KEY_URL]
     .map(key => get(db, STORE_KEYVALUE, key)))
   return (oldETag === eTag && oldUrl === url)
+}
+
+async function doFullDatabaseScanForSingleResult (db, predicate) {
+  // TODO: we could do batching here using getAll(). Not sure if it's worth the extra code though.
+  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
+    emojiStore.openCursor().onsuccess = e => {
+      const cursor = e.target.result
+
+      if (!cursor) { // no more results
+        cb()
+      } else if (predicate(cursor.value)) {
+        cb(cursor.value)
+      } else {
+        cursor.continue()
+      }
+    }
+  })
 }
 
 export async function loadData (db, emojiData, url, eTag) {
@@ -83,7 +101,12 @@ export async function getEmojiByGroup (db, group) {
 }
 
 export async function getEmojiBySearchQuery (db, query) {
-  const tokens = extractTokens(query)
+  const tokens = normalizeTokens(extractTokens(query))
+
+  if (!tokens.length) {
+    return []
+  }
+
   return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
     // get all results that contain all tokens (i.e. an AND query)
     const intermediateResults = []
@@ -112,8 +135,21 @@ export async function getEmojiBySearchQuery (db, query) {
   })
 }
 
+// This could have been implemented as an IDB index on shortcodes, but it seemed wasteful to do that
+// when we can already query by tokens and this will give us what we're looking for 99.9% of the time
 export async function getEmojiByShortcode (db, shortcode) {
   const emojis = await getEmojiBySearchQuery(db, shortcode)
+
+  // In very rare cases (e.g. the shortcode "v" as in "v for victory"), we cannot search because
+  // there are no usable tokens (too short in this case). In that case, we have to do an inefficient
+  // full-database scan, which I believe is an acceptable tradeoff for not having to have an extra
+  // index on shortcodes.
+
+  if (!emojis.length) {
+    const predicate = _ => ((_.shortcodes || []).includes(shortcode.toLowerCase()))
+    return (await doFullDatabaseScanForSingleResult(db, predicate)) || null
+  }
+
   return emojis.filter(_ => {
     const lowerShortcodes = _.shortcodes.map(_ => _.toLowerCase())
     return lowerShortcodes.includes(shortcode.toLowerCase())
