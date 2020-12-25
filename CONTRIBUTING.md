@@ -39,6 +39,10 @@ Benchmark bundle size:
 
     yarn benchmark:bundlesize
 
+Benchmark storage size:
+
+    yarn benchmark:storage
+
 Run memory leak test:
 
     yarn test:leak

@@ -54,6 +54,7 @@
         const entry = entries.getEntriesByName('initialLoad')[0]
         if (entry) {
           const pre = document.createElement('pre')
+          pre.classList.add('load-time')
           pre.innerHTML = 'initialLoad: ' + entry.duration.toFixed(2) + 'ms'
           document.body.appendChild(pre)
           observer.disconnect()
