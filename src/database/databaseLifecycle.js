@@ -1,5 +1,4 @@
-import { initialMigration } from './migrations'
-import { DB_VERSION_INITIAL, DB_VERSION_CURRENT } from './constants'
+import { migrations } from './migrations'
 import { mark, stop } from '../shared/marks'
 
 const openReqs = {}
@@ -18,16 +17,17 @@ function handleOpenOrDeleteReq (resolve, reject, req) {
 async function createDatabase (dbName) {
   mark('createDatabase')
   const db = await new Promise((resolve, reject) => {
-    const req = indexedDB.open(dbName, DB_VERSION_CURRENT)
+    const req = indexedDB.open(dbName, migrations.length)
     openReqs[dbName] = req
     req.onupgradeneeded = e => {
-      // Technically there is only one version, so we don't need this `if` check
-      // But if an old version of the JS is in another browser tab
-      // and it gets upgraded in the future and we have a new DB version, well...
-      // better safe than sorry.
-      /* istanbul ignore else */
-      if (e.oldVersion < DB_VERSION_INITIAL) {
-        initialMigration(req.result)
+      const db = req.result
+      const txn = req.transaction
+      for (let i = 0; i < migrations.length; i++) {
+        const migration = migrations[i]
+        /* istanbul ignore else */
+        if (e.oldVersion < i + 1) {
+          migration(db, txn)
+        }
       }
     }
     handleOpenOrDeleteReq(resolve, reject, req)

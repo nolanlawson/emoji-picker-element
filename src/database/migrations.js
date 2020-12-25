@@ -5,7 +5,7 @@ import {
   STORE_EMOJI,
   STORE_KEYVALUE,
   STORE_FAVORITES,
-  INDEX_TOKENS, INDEX_COUNT, INDEX_SKIN_UNICODE, FIELD_SKIN_UNICODE
+  INDEX_TOKENS, INDEX_COUNT, INDEX_SKIN_UNICODE, FIELD_SKIN_UNICODE, INDEX_SHORTCODES, FIELD_SHORTCODES
 } from './constants'
 
 function initialMigration (db) {
@@ -32,4 +32,8 @@ function initialMigration (db) {
   })
 }
 
-export { initialMigration }
+function secondMigration (db, txn) {
+  txn.objectStore(STORE_EMOJI).createIndex(INDEX_SHORTCODES, FIELD_SHORTCODES, { multiEntry: true })
+}
+
+export const migrations = [initialMigration, secondMigration]

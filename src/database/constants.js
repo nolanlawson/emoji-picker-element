@@ -1,5 +1,3 @@
-export const DB_VERSION_CURRENT = 1
-export const DB_VERSION_INITIAL = 1
 export const STORE_EMOJI = 'emoji'
 export const STORE_KEYVALUE = 'keyvalue'
 export const STORE_FAVORITES = 'favorites'
@@ -17,6 +15,8 @@ export const MODE_READONLY = 'readonly'
 export const MODE_READWRITE = 'readwrite'
 export const INDEX_SKIN_UNICODE = 'skinUnicodes'
 export const FIELD_SKIN_UNICODE = 'skinUnicodes'
+export const INDEX_SHORTCODES = 'shortcodes'
+export const FIELD_SHORTCODES = 'shortcodes'
 
 export const DEFAULT_DATA_SOURCE = 'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json'
 export const DEFAULT_LOCALE = 'en'
