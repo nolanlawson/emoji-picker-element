@@ -24,19 +24,40 @@ export async function hasData (db, url, eTag) {
 }
 
 async function doFullDatabaseScanForSingleResult (db, predicate) {
-  // TODO: we could do batching here using getAll(). Not sure if it's worth the extra code though.
+  // This batching algorithm is just a perf improvement over a basic
+  // cursor. The BATCH_SIZE is an estimate of what would give the best
+  // perf for doing a full DB scan (worst case).
+  //
+  // Mini-benchmark for determining the best batch size:
+  //
+  // PERF=1 yarn build:rollup && yarn test:adhoc
+  //
+  // (async () => {
+  //   performance.mark('start')
+  //   await $('emoji-picker').database.getEmojiByShortcode('doesnotexist')
+  //   performance.measure('total', 'start')
+  //   console.log(performance.getEntriesByName('total').slice(-1)[0].duration)
+  // })()
+  const BATCH_SIZE = 50 // Typically around 150ms for 6x slowdown in Chrome for above benchmark
   return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
-    emojiStore.openCursor().onsuccess = e => {
-      const cursor = e.target.result
+    let lastKey
 
-      if (!cursor) { // no more results
-        cb()
-      } else if (predicate(cursor.value)) {
-        cb(cursor.value)
-      } else {
-        cursor.continue()
+    const processNextBatch = () => {
+      emojiStore.getAll(lastKey && IDBKeyRange.lowerBound(lastKey, true), BATCH_SIZE).onsuccess = e => {
+        const results = e.target.result
+        for (const result of results) {
+          lastKey = result.unicode
+          if (predicate(result)) {
+            return cb(result)
+          }
+        }
+        if (results.length < BATCH_SIZE) {
+          return cb()
+        }
+        processNextBatch()
       }
     }
+    processNextBatch()
   })
 }
 
