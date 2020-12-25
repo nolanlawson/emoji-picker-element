@@ -23,23 +23,6 @@ export async function hasData (db, url, eTag) {
   return (oldETag === eTag && oldUrl === url)
 }
 
-async function doFullDatabaseScanForSingleResult (db, predicate) {
-  // TODO: we could do batching here using getAll(). Not sure if it's worth the extra code though.
-  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
-    emojiStore.openCursor().onsuccess = e => {
-      const cursor = e.target.result
-
-      if (!cursor) { // no more results
-        cb()
-      } else if (predicate(cursor.value)) {
-        cb(cursor.value)
-      } else {
-        cursor.continue()
-      }
-    }
-  })
-}
-
 export async function loadData (db, emojiData, url, eTag) {
   mark('loadData')
   try {
@@ -140,14 +123,8 @@ export async function getEmojiBySearchQuery (db, query) {
 export async function getEmojiByShortcode (db, shortcode) {
   const emojis = await getEmojiBySearchQuery(db, shortcode)
 
-  // In very rare cases (e.g. the shortcode "v" as in "v for victory"), we cannot search because
-  // there are no usable tokens (too short in this case). In that case, we have to do an inefficient
-  // full-database scan, which I believe is an acceptable tradeoff for not having to have an extra
-  // index on shortcodes.
-
   if (!emojis.length) {
-    const predicate = _ => ((_.shortcodes || []).includes(shortcode.toLowerCase()))
-    return (await doFullDatabaseScanForSingleResult(db, predicate)) || null
+    return null
   }
 
   return emojis.filter(_ => {

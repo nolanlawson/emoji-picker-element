@@ -195,4 +195,14 @@ describe('getEmojiBySearchQuery', () => {
     expect((await db.getEmojiBySearchQuery(';;;;'))).toStrictEqual([])
     expect((await db.getEmojiBySearchQuery('B&'))).toStrictEqual([])
   })
+
+  test('very short search query', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+    expect((await db.getEmojiBySearchQuery('v')).map(_ => _.annotation))
+      .toStrictEqual([
+        'vulcan salute', 'victory hand',
+        'tomato', 'volcano',
+        'moon viewing ceremony', 'safety vest']
+      )
+  })
 })
