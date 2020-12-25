@@ -1,3 +1,12 @@
+## [1.3.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.3.2...v1.3.3) (2020-12-25)
+
+
+### Performance Improvements
+
+* use batch cursor for full DB scan ([#94](https://github.com/nolanlawson/emoji-picker-element/issues/94)) ([e5b1750](https://github.com/nolanlawson/emoji-picker-element/commit/e5b17505722ea0800431b5b9b53d7d59d03142ab))
+
+
+
 ## [1.3.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.3.1...v1.3.2) (2020-12-24)
 
 
