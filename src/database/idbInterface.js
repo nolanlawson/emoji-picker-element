@@ -216,24 +216,26 @@ export function getTopFavoriteEmoji (db, customEmojiIndex, limit) {
     const results = []
     let done = false
 
-    function finish () {
+    const finish = () => {
       if (!done) {
         done = true
-        cb(results)
+        cb(results.slice(0, limit))
       }
     }
 
+    const addResult = result => {
+      results.push(result)
+      if (results.length >= limit) { // reached the limit
+        finish()
+      }
+    }
+
+    // Small optimization: run the cursor.continue() and get() logic in parallel.
+    // It could be done sequentially, but this is slightly faster.
     favoritesStore.index(INDEX_COUNT).openCursor(undefined, 'prev').onsuccess = e => {
       const cursor = e.target.result
-      if (!cursor || results.length === limit) { // no more results or reached the limit
+      if (!cursor || results.length >= limit) { // no more results or reached the limit
         return finish()
-      }
-
-      function addResult (result) {
-        results.push(result)
-        if (results.length === limit) { // reached the limit
-          finish()
-        }
       }
 
       const unicodeOrName = cursor.primaryKey
