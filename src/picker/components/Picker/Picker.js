@@ -74,12 +74,12 @@ let activeSearchItemId // eslint-disable-line no-unused-vars
 // Utils/helpers
 //
 
-function focus (id) {
+const focus = id => {
   rootElement.getRootNode().getElementById(id).focus()
 }
 
 // fire a custom event that crosses the shadow boundary
-function fireEvent (name, detail) {
+const fireEvent = (name, detail) => {
   rootElement.dispatchEvent(new CustomEvent(name, {
     detail,
     bubbles: true,
@@ -88,14 +88,17 @@ function fireEvent (name, detail) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function unicodeWithSkin (emoji, currentSkinTone) {
-  return (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
-}
+const unicodeWithSkin = (emoji, currentSkinTone) => (
+  (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
+)
 
 // eslint-disable-next-line no-unused-vars
-function labelWithSkin (emoji, currentSkinTone) {
-  return uniq([(emoji.name || unicodeWithSkin(emoji, currentSkinTone)), ...(emoji.shortcodes || [])]).join(', ')
-}
+const labelWithSkin = (emoji, currentSkinTone) => (
+  uniq([(emoji.name || unicodeWithSkin(emoji, currentSkinTone)), ...(emoji.shortcodes || [])]).join(', ')
+)
+
+// Detect a skintone option button
+const isSkinToneOption = element => /^skintone-/.test(element.id)
 
 //
 // Determine the emoji support level (in requestIdleCallback)
@@ -547,7 +550,7 @@ async function onEmojiClick (event) {
 // eslint-disable-next-line no-unused-vars
 async function onSkinToneOptionsClick (event) {
   const { target } = event
-  if (!target.classList.contains('skintone-option')) {
+  if (!isSkinToneOption(target)) {
     return
   }
   halt(event)
@@ -632,7 +635,7 @@ async function onSkinToneOptionsFocusOut (event) {
   // On blur outside of the skintone options, collapse the skintone picker.
   // Except if focus is just moving to another skintone option, e.g. pressing up/down to change focus
   const { relatedTarget } = event
-  if (!relatedTarget || !relatedTarget.classList.contains('skintone-option')) {
+  if (!relatedTarget || !isSkinToneOption(relatedTarget)) {
     skinTonePickerExpanded = false
   }
 }
