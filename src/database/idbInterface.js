@@ -233,7 +233,8 @@ export function getTopFavoriteEmoji (db, customEmojiIndex, limit) {
       if (custom) {
         return addResult(custom)
       }
-      // TODO: this could be optimized by doing the get and the cursor.continue() in parallel
+      // This could be done in parallel (i.e. make the cursor and the get()s parallelized),
+      // but my testing suggests it's not actually faster.
       getIDB(emojiStore, unicodeOrName, emoji => {
         if (emoji) {
           return addResult(emoji)
