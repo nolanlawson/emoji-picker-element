@@ -177,7 +177,6 @@
       </button>
     {/each}
   </div>
-  <div aria-hidden="true" class="hidden abs-pos">
-    <button tabindex="-1" class="emoji baseline-emoji" bind:this={baselineEmoji}>😀</button>
-  </div>
+  <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
+  <button aria-hidden="true" tabindex="-1" class="abs-pos hidden emoji" bind:this={baselineEmoji}>😀</button>
 </section>
