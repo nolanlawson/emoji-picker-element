@@ -40,6 +40,8 @@ describe('getEmojiByShortcode', () => {
         expect((await db.getEmojiByShortcode(shortcode.toUpperCase())).unicode).toEqual(emoji.emoji)
       }
     }
+
+    await db.delete()
   })
 
   test('short nonexistent shortcodes', async () => {
@@ -48,5 +50,29 @@ describe('getEmojiByShortcode', () => {
     expect(await db.getEmojiByShortcode('z')).toEqual(null)
     expect(await db.getEmojiByShortcode('1')).toEqual(null)
     expect(await db.getEmojiByShortcode(' ')).toEqual(null)
+
+    await db.delete()
+  })
+
+  test('works although shortcodes are optional', async () => {
+    const dataSource = 'http://localhost/shortcodes-optional.json'
+    const emojis = JSON.parse(JSON.stringify(truncatedEmoji))
+    for (const emoji of emojis) {
+      if (!emoji.shortcodes.includes('dog_face')) {
+        delete emoji.shortcodes
+      }
+    }
+
+    fetch
+      .get(dataSource, () => new Response(JSON.stringify(emojis), { headers: { ETag: 'W/optional' } }))
+      .head(dataSource, () => new Response(null, { headers: { ETag: 'W/optional' } }))
+
+    const db = new Database({ dataSource })
+
+    expect((await db.getEmojiByShortcode('dog_face')).unicode).toEqual('🐶')
+    expect(await db.getEmojiByShortcode('monkey_face')).toEqual(null)
+    expect(await db.getEmojiByShortcode('doesnotexist')).toEqual(null)
+
+    await db.delete()
   })
 })

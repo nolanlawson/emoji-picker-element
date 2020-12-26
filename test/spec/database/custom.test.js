@@ -228,4 +228,18 @@ describe('custom emoji', () => {
     )
     expect(await db.getEmojiByUnicodeOrName('unknown')).toBeNull()
   })
+
+  test('shortcodes are optional in custom emoji', async () => {
+    const customs = JSON.parse(JSON.stringify(customEmojis))
+    for (const custom of customs) {
+      if (!custom.shortcodes.includes('monkey')) {
+        delete custom.shortcodes
+      }
+    }
+    db.customEmoji = customs
+
+    expect((await db.getEmojiByShortcode('monkey')).name).toEqual('monkey')
+    expect(await db.getEmojiByShortcode('a')).toEqual(null)
+    expect(await db.getEmojiByShortcode('doesnotexist')).toEqual(null)
+  })
 })
