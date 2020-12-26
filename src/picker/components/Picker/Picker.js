@@ -544,10 +544,15 @@ async function onEmojiClick (event) {
 // Handle user input on the skintone picker
 //
 
+// Detect a skintone option button
+function isSkinToneOption (element) {
+  return /^skintone-/.test(element.id)
+}
+
 // eslint-disable-next-line no-unused-vars
 async function onSkinToneOptionsClick (event) {
   const { target } = event
-  if (!target.classList.contains('skintone-option')) {
+  if (!isSkinToneOption(target)) {
     return
   }
   halt(event)
@@ -632,7 +637,7 @@ async function onSkinToneOptionsFocusOut (event) {
   // On blur outside of the skintone options, collapse the skintone picker.
   // Except if focus is just moving to another skintone option, e.g. pressing up/down to change focus
   const { relatedTarget } = event
-  if (!relatedTarget || !relatedTarget.classList.contains('skintone-option')) {
+  if (!relatedTarget || !isSkinToneOption(relatedTarget)) {
     skinTonePickerExpanded = false
   }
 }

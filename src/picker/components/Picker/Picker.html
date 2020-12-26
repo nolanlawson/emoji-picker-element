@@ -49,7 +49,7 @@
     <span id="skintone-description" class="sr-only">{i18n.skinToneDescription}</span>
     <div id="skintone-list"
          class="skintone-list {skinTonePickerExpanded ? '' : 'hidden no-animate'}"
-         style="{skinTonePickerExpanded ? 'transform: translateY(0);' : 'transform: translateY(calc(-1 * var(--num-skintones) * var(--total-emoji-size)))'}"
+         style="transform:translateY({ skinTonePickerExpanded ? 0 : 'calc(-1 * var(--num-skintones) * var(--total-emoji-size))'})"
          role="listbox"
          aria-label={i18n.skinTonesLabel}
          aria-activedescendant="skintone-{activeSkinTone}"
@@ -64,7 +64,7 @@
         <!-- see https://stackoverflow.com/a/42764495/680742 -->
         <!-- see also https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#Clicking_and_focus -->
         <div    id="skintone-{i}"
-                class="emoji skintone-option cursor-pointer hide-focus {i === activeSkinTone ? 'active' : ''}"
+                class="emoji hide-focus {i === activeSkinTone ? 'active' : ''}"
                 aria-selected={i === activeSkinTone}
                 role="option"
                 title={i18n.skinTones[i]}
