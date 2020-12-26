@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event'
 import { groups } from '../../../src/picker/groups'
 import Database from '../../../src/database/Database'
 import { getAccessibleName } from '../utils'
+import { openSkintoneListbox } from './shared'
 
 const { waitFor, fireEvent } = testingLibrary
 const { type } = userEvent
@@ -77,23 +78,15 @@ describe('Picker tests', () => {
     expect(queryAllByRole('tab', { selected: true })).toHaveLength(0) // no tabs selected when searching
   })
 
-  const openSkintoneListbox = async () => {
-    await waitFor(() => expect(getByRole('button', { name: 'Choose a skin tone (currently Default)' })).toBeVisible())
-    expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0)
-    await fireEvent.click(getByRole('button', { name: 'Choose a skin tone (currently Default)' }))
-    await waitFor(() => expect(getByRole('listbox', { name: 'Skin tones' })).toBeVisible())
-    expect(getAllByRole('option')).toHaveLength(6)
-    getByRole('option', { name: 'Default', selected: true }).focus()
-    await waitFor(() => expect(getByRole('option', { name: 'Default', selected: true })).toBe(activeElement()))
-  }
-
   test('basic skintone test', async () => {
     let event
     picker.addEventListener('skin-tone-change', newEvent => {
       event = newEvent
     })
 
-    await openSkintoneListbox()
+    await openSkintoneListbox(container)
+    await waitFor(() => expect(getByRole('option', { name: 'Default', selected: true }))
+      .toBe(activeElement()))
 
     const pressKeyAndExpectActiveOption = async (key, name) => {
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))) // delay
@@ -138,7 +131,9 @@ describe('Picker tests', () => {
   })
 
   test('Escape key dismisses skintone listbox', async () => {
-    await openSkintoneListbox()
+    await openSkintoneListbox(container)
+    await waitFor(() => expect(getByRole('option', { name: 'Default', selected: true }))
+      .toBe(activeElement()))
 
     await fireEvent.keyDown(activeElement(), { key: 'Escape', code: 'Escape' })
 
