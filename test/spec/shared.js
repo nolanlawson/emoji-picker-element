@@ -29,6 +29,7 @@ export const ALL_EMOJI_MISCONFIGURED_ETAG = 'http://localhost/emoji-misconfigure
 export const FR_EMOJI = 'http://localhost/fr.json'
 export const NO_SHORTCODES = 'http://localhost/no-shortcodes'
 export const EMOJIBASE_V5 = 'http://localhost/emojibase'
+export const WITH_ARRAY_SKIN_TONES = 'http://localhost/with-array-skin-tones'
 
 export function basicBeforeEach () {
   fetch
@@ -75,4 +76,15 @@ export function mockDataSourceWithNoShortcodes () {
 export function mockEmojibaseV5DataSource () {
   fetch.get(EMOJIBASE_V5, () => new Response(JSON.stringify(emojibaseV5Emoji), { headers: { ETag: 'W/emojibase' } }))
   fetch.head(EMOJIBASE_V5, () => new Response(null, { headers: { ETag: 'W/emojibase' } }))
+}
+
+export function mockDataSourceWithArraySkinTones () {
+  const emojis = JSON.parse(JSON.stringify(truncatedEmoji))
+  emojis.push(allEmoji.find(_ => _.annotation === 'people holding hands')) // has two skin tones, one for each person
+
+  fetch
+    .get(WITH_ARRAY_SKIN_TONES, () => (
+      new Response(JSON.stringify(emojis), { headers: { ETag: 'W/noshort' } }))
+    )
+    .head(WITH_ARRAY_SKIN_TONES, () => new Response(null, { headers: { ETag: 'W/noshort' } }))
 }

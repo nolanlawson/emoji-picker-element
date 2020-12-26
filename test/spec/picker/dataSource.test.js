@@ -1,6 +1,14 @@
-import { EMOJIBASE_V5, mockDataSourceWithNoShortcodes, mockEmojibaseV5DataSource, NO_SHORTCODES, tick } from '../shared'
+import {
+  EMOJIBASE_V5, mockDataSourceWithArraySkinTones,
+  mockDataSourceWithNoShortcodes,
+  mockEmojibaseV5DataSource,
+  NO_SHORTCODES,
+  tick,
+  WITH_ARRAY_SKIN_TONES
+} from '../shared'
 import Picker from '../../../src/picker/PickerElement'
-import { getByRole, waitFor } from '@testing-library/dom'
+import { fireEvent, getByRole, waitFor } from '@testing-library/dom'
+import { openSkintoneListbox } from './shared'
 
 describe('dataSource test', () => {
   test('emoji with no shortcodes still work', async () => {
@@ -32,6 +40,29 @@ describe('dataSource test', () => {
     // no shortcodes, no title
     expect(getByRole(container, 'menuitem', { name: /😀/ }).getAttribute('title')).toStrictEqual('gleeful')
     expect(getByRole(container, 'menuitem', { name: /😀/ }).getAttribute('aria-label')).toStrictEqual('😀, gleeful')
+
+    await picker.database.delete()
+    await tick(20)
+  })
+
+  test('emoji with array skin tones work', async () => {
+    mockDataSourceWithArraySkinTones()
+
+    const dataSource = WITH_ARRAY_SKIN_TONES
+    const picker = new Picker({ dataSource, locale: 'en-arrayskintones' })
+    const container = picker.shadowRoot.querySelector('.picker')
+    await tick(20)
+
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
+    await fireEvent.click(getByRole(container, 'tab', { name: /People and body/ }))
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /🧑‍🤝‍🧑/ })).toBeVisible())
+
+    await openSkintoneListbox(container)
+
+    await fireEvent.click(getByRole(container, 'option', { name: /Medium-Dark/ }))
+
+    // both people in the emoji should have the same skin tone
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /🧑🏾‍🤝‍🧑🏾/ })).toBeVisible())
 
     await picker.database.delete()
     await tick(20)
