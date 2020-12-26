@@ -26,5 +26,19 @@ module.exports = {
   coveragePathIgnorePatterns: [
     'bin/',
     'test/'
-  ]
+  ],
+  coverageThreshold: {
+    global: {
+      statements: 100,
+      branches: 100,
+      functions: 100,
+      lines: 100
+    },
+    './src/picker/components/Picker/Picker.svelte': {
+      statements: 95,
+      branches: 93,
+      functions: 95,
+      lines: 97
+    }
+  }
 }

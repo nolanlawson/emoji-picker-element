@@ -32,6 +32,9 @@ jobs:
           name: Unit tests
           command: yarn test
       - run:
+          name: Code coverage tests
+          command: yarn cover
+      - run:
           name: Leak tests
           command: yarn test:leak
       - run:
