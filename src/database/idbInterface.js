@@ -172,7 +172,7 @@ export async function getEmojiByShortcode (db, shortcode) {
   }
 
   return emojis.filter(_ => {
-    const lowerShortcodes = _.shortcodes.map(_ => _.toLowerCase())
+    const lowerShortcodes = (_.shortcodes || []).map(_ => _.toLowerCase())
     return lowerShortcodes.includes(shortcode.toLowerCase())
   })[0] || null
 }
