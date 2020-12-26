@@ -232,25 +232,31 @@ export function getTopFavoriteEmoji (db, customEmojiIndex, limit) {
 
     // Small optimization: run the cursor.continue() and get() logic in parallel.
     // It could be done sequentially, but this is slightly faster.
+    performance.mark('cursor')
     favoritesStore.index(INDEX_COUNT).openCursor(undefined, 'prev').onsuccess = e => {
+      performance.measure('cursor', 'cursor')
       const cursor = e.target.result
       if (!cursor || results.length >= limit) { // no more results or reached the limit
         return finish()
       }
+
+      performance.mark('cursor')
+      cursor.continue()
 
       const unicodeOrName = cursor.primaryKey
       const custom = customEmojiIndex.byName(unicodeOrName)
       if (custom) {
         addResult(custom)
       } else {
+        performance.mark('get-' + unicodeOrName)
         getIDB(emojiStore, unicodeOrName, emoji => {
+          performance.measure('get-' + unicodeOrName, 'get-' + unicodeOrName)
           if (emoji) {
             addResult(emoji)
           }
           // emoji might not be found, e.g. because the custom emoji changed
         })
       }
-      cursor.continue()
     }
   })
 }
