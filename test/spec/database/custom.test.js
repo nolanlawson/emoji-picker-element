@@ -240,5 +240,6 @@ describe('custom emoji', () => {
 
     expect((await db.getEmojiByShortcode('monkey')).name).toEqual('monkey')
     expect(await db.getEmojiByShortcode('a')).toEqual(null)
+    expect(await db.getEmojiByShortcode('doesnotexist')).toEqual(null)
   })
 })

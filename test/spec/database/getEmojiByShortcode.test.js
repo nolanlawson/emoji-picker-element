@@ -71,6 +71,7 @@ describe('getEmojiByShortcode', () => {
 
     expect((await db.getEmojiByShortcode('dog_face')).unicode).toEqual('🐶')
     expect(await db.getEmojiByShortcode('monkey_face')).toEqual(null)
+    expect(await db.getEmojiByShortcode('doesnotexist')).toEqual(null)
 
     await db.delete()
   })
