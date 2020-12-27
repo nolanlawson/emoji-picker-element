@@ -7,6 +7,7 @@ import {
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Picker from '../../../src/picker/PickerElement'
 import Database from '../../../src/database/Database'
+import { resetResizeObserverSupported } from '../../../src/picker/utils/calculateWidth'
 
 // TODO: we can remove these tests when/if we stop supporting browsers without ResizeObserver
 // https://caniuse.com/resizeobserver
@@ -21,6 +22,7 @@ describe('ResizeObserver unsupported', () => {
 
     oldResizeObserver = global.ResizeObserver
     delete global.ResizeObserver
+    resetResizeObserverSupported()
 
     picker = new Picker({ dataSource: ALL_EMOJI })
     document.body.appendChild(picker)
@@ -37,6 +39,7 @@ describe('ResizeObserver unsupported', () => {
     basicAfterEach()
 
     global.ResizeObserver = oldResizeObserver
+    resetResizeObserverSupported()
   })
 
   test('basic picker test', async () => {

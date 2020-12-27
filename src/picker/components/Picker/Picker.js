@@ -292,7 +292,7 @@ function calculateIndicatorWidth (node) {
 $: {
   // eslint-disable-next-line no-unused-vars
   indicatorStyle = `transform: translateX(${
-    resizeObserverSupported()
+    resizeObserverSupported
       ? `${currentGroupIndex * computedIndicatorWidth}px` // exact pixels
       : `${currentGroupIndex * 100}%` // fallback to percent-based
   })`
