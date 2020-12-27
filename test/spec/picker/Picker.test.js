@@ -130,6 +130,26 @@ describe('Picker tests', () => {
     expect(getByRole('button', { name: 'Choose a skin tone (currently Default)' })).toBeVisible()
   })
 
+  test('skintone can be chosen with Enter key', async () => {
+    expect(getByRole('button', { name: 'Choose a skin tone (currently Default)' })).toBeVisible()
+    await openSkintoneListbox(container)
+    await fireEvent.keyDown(activeElement(), { key: 'ArrowDown', code: 'ArrowDown' })
+    await fireEvent.keyDown(activeElement(), { key: 'Enter', code: 'Enter' })
+    await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
+    expect(getByRole('button', { name: 'Choose a skin tone (currently Light)' })).toBeVisible()
+  })
+
+  test('skintone can be chosen with Spacebar key', async () => {
+    expect(getByRole('button', { name: 'Choose a skin tone (currently Default)' })).toBeVisible()
+    await openSkintoneListbox(container)
+    await fireEvent.keyDown(activeElement(), { key: 'ArrowDown', code: 'ArrowDown' })
+    await fireEvent.keyDown(activeElement(), { key: 'ArrowDown', code: 'ArrowDown' })
+    await fireEvent.keyDown(activeElement(), { key: ' ', code: ' ' })
+    await fireEvent.keyUp(activeElement(), { key: ' ', code: ' ' })
+    await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
+    expect(getByRole('button', { name: 'Choose a skin tone (currently Medium-Light)' })).toBeVisible()
+  })
+
   test('Escape key dismisses skintone listbox', async () => {
     await openSkintoneListbox(container)
     await waitFor(() => expect(getByRole('option', { name: 'Default', selected: true }))
