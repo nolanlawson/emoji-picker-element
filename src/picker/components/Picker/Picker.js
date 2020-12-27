@@ -290,14 +290,12 @@ function calculateIndicatorWidth (node) {
 // So we calculate of the indicator and use exact pixel values in the animation instead
 // (where ResizeObserver is supported).
 $: {
-  /* istanbul ignore if */
-  if (resizeObserverSupported) {
-    // eslint-disable-next-line no-unused-vars
-    indicatorStyle = `transform: translateX(${currentGroupIndex * computedIndicatorWidth}px);` // exact pixels
-  } else {
-    // eslint-disable-next-line no-unused-vars
-    indicatorStyle = `transform: translateX(${currentGroupIndex * 100}%);`// fallback to percent-based
-  }
+  // eslint-disable-next-line no-unused-vars
+  indicatorStyle = `transform: translateX(${
+    resizeObserverSupported()
+      ? `${currentGroupIndex * computedIndicatorWidth}px` // exact pixels
+      : `${currentGroupIndex * 100}%` // fallback to percent-based
+  })`
 }
 
 //
