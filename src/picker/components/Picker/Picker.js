@@ -20,7 +20,7 @@ import {
 } from '../../constants'
 import { uniqBy } from '../../../shared/uniqBy'
 import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
-import { calculateWidth, resizeObserverSupported } from '../../utils/calculateWidth'
+import * as widthCalculator from '../../utils/widthCalculator'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 import { stop } from '../../../shared/marks'
@@ -253,7 +253,7 @@ $: {
 
 // eslint-disable-next-line no-unused-vars
 function calculateEmojiGridWidth (node) {
-  return calculateWidth(node, width => {
+  return widthCalculator.calculateWidth(node, width => {
     /* istanbul ignore next */
     const newNumColumns = process.env.NODE_ENV === 'test'
       ? DEFAULT_NUM_COLUMNS
@@ -280,7 +280,7 @@ $: currentGroup = groups[currentGroupIndex]
 
 // eslint-disable-next-line no-unused-vars
 function calculateIndicatorWidth (node) {
-  return calculateWidth(node, width => {
+  return widthCalculator.calculateWidth(node, width => {
     computedIndicatorWidth = width
   })
 }
@@ -292,7 +292,7 @@ function calculateIndicatorWidth (node) {
 $: {
   // eslint-disable-next-line no-unused-vars
   indicatorStyle = `transform: translateX(${
-    resizeObserverSupported
+    widthCalculator.resizeObserverSupported
       ? `${currentGroupIndex * computedIndicatorWidth}px` // exact pixels
       : `${currentGroupIndex * 100}%` // fallback to percent-based
   })`

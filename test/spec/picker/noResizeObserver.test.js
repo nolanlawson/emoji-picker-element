@@ -7,7 +7,7 @@ import {
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Picker from '../../../src/picker/PickerElement'
 import Database from '../../../src/database/Database'
-import { resetResizeObserverSupported } from '../../../src/picker/utils/calculateWidth'
+import { resetResizeObserverSupported } from '../../../src/picker/utils/widthCalculator'
 
 // TODO: we can remove these tests when/if we stop supporting browsers without ResizeObserver
 // https://caniuse.com/resizeobserver
