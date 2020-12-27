@@ -18,13 +18,14 @@ describe('ResizeObserver unsupported', () => {
 
   beforeEach(async () => {
     basicBeforeEach()
+
+    oldResizeObserver = global.ResizeObserver
+    delete global.ResizeObserver
+
     picker = new Picker({ dataSource: ALL_EMOJI })
     document.body.appendChild(picker)
     container = picker.shadowRoot.querySelector('.picker')
     await tick(40)
-
-    oldResizeObserver = global.ResizeObserver
-    delete global.ResizeObserver
   })
 
   afterEach(async () => {
