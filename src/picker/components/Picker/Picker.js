@@ -350,10 +350,7 @@ $: {
 
 function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
   const rootNode = rootElement.getRootNode()
-  // Jest doesn't seem to understand that shadowRoot.getElementById() is a thing
-  const emojiToDomNode = process.env.NODE_ENV === 'test'
-    ? emoji => rootNode.querySelector(`[id=${JSON.stringify('emo-' + emoji.id)}]`)
-    : emoji => rootNode.getElementById(`emo-${emoji.id}`)
+  const emojiToDomNode = emoji => rootNode.getElementById(`emo-${emoji.id}`)
   checkZwjSupport(zwjEmojisToCheck, baselineEmoji, emojiToDomNode)
   // force update
   currentEmojis = currentEmojis // eslint-disable-line no-self-assign
