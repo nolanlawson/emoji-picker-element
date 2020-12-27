@@ -4,11 +4,15 @@
 
 import { requestAnimationFrame } from './requestAnimationFrame'
 
-export const resizeObserverSupported = typeof ResizeObserver === 'function'
+export let resizeObserverSupported = typeof ResizeObserver === 'function'
+
+// only used in jest tests
+export const resetResizeObserverSupported = () => {
+  resizeObserverSupported = typeof ResizeObserver === 'function'
+}
 
 export function calculateWidth (node, onUpdate) {
   let resizeObserver
-  /* istanbul ignore if */
   if (resizeObserverSupported) {
     resizeObserver = new ResizeObserver(entries => (
       onUpdate(entries[0].contentRect.width)
@@ -22,7 +26,6 @@ export function calculateWidth (node, onUpdate) {
 
   return {
     destroy () {
-      /* istanbul ignore if */
       if (resizeObserver) {
         resizeObserver.disconnect()
       }
