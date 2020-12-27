@@ -254,9 +254,11 @@ $: {
 // eslint-disable-next-line no-unused-vars
 function calculateEmojiGridWidth (node) {
   return calculateWidth(node, width => {
+    /* istanbul ignore next */
     const newNumColumns = process.env.NODE_ENV === 'test'
       ? DEFAULT_NUM_COLUMNS
       : parseInt(getComputedStyle(rootElement).getPropertyValue('--num-columns'), 10)
+    /* istanbul ignore next */
     const parentWidth = process.env.NODE_ENV === 'test' // jsdom throws an error here occasionally
       ? 1
       : node.parentElement.getBoundingClientRect().width
