@@ -341,9 +341,7 @@ $: {
   } else {
     currentEmojis = currentEmojis.filter(isZwjSupported)
     requestAnimationFrame(() => { // reset scroll top to 0 when emojis change
-      if (process.env.NODE_ENV !== 'test') {
-        tabpanelElement.scrollTop = 0
-      }
+      tabpanelElement.scrollTop = 0
     })
   }
 }
@@ -386,6 +384,7 @@ async function getEmojisBySearchQuery (query) {
 
 $: {
   // consider initialLoad to be complete when the first tabpanel and favorites are rendered
+  /* istanbul ignore next */
   if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
     if (currentEmojis.length && currentFavorites.length && initialLoad) {
       initialLoad = false
