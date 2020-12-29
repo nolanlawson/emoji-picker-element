@@ -45,3 +45,5 @@ jobs:
           key: yarn-v1-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - store_artifacts:
+          path: coverage
