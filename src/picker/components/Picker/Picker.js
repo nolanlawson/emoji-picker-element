@@ -105,6 +105,8 @@ const isSkinToneOption = element => /^skintone-/.test(element.id)
 //
 
 emojiSupportLevelPromise.then(level => {
+  // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
+  /* istanbul ignore next */
   if (!level) {
     message = i18n.emojiUnsupportedMessage
   }
