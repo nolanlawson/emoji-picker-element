@@ -35,10 +35,10 @@ module.exports = {
       lines: 100
     },
     './src/picker/components/Picker/Picker.svelte': {
-      statements: 96,
-      branches: 94,
-      functions: 95,
-      lines: 97
+      statements: 97,
+      branches: 96,
+      functions: 100,
+      lines: 98
     }
   }
 }

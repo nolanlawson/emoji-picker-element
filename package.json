@@ -139,6 +139,7 @@
       "crypto",
       "customElements",
       "CustomEvent",
+      "Event",
       "fetch",
       "getComputedStyle",
       "indexedDB",
