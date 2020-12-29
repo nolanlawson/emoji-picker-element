@@ -130,7 +130,7 @@ $: {
       message = i18n.networkErrorMessage
     } finally {
       clearTimeout(timeoutHandle)
-      if (showingLoadingMessage) {
+      if (showingLoadingMessage) { // Seems safer than checking the i18n string, which may change
         showingLoadingMessage = false
         message = '' // eslint-disable-line no-unused-vars
       }
