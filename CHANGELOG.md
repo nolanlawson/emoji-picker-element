@@ -1,3 +1,18 @@
+## [1.3.4](https://github.com/nolanlawson/emoji-picker-element/compare/v1.3.3...v1.3.4) (2020-12-29)
+
+
+### Bug Fixes
+
+* fix getEmojiByShortcode when shortcodes are optional ([#98](https://github.com/nolanlawson/emoji-picker-element/issues/98)) ([f4e7ad8](https://github.com/nolanlawson/emoji-picker-element/commit/f4e7ad8bdf063b0ca07dbbd3f9d1dcf50138de8a))
+
+
+### Performance Improvements
+
+* reduce bundle size by optimizing HTML/CSS a bit ([#97](https://github.com/nolanlawson/emoji-picker-element/issues/97)) ([3bf8225](https://github.com/nolanlawson/emoji-picker-element/commit/3bf8225b41f3cee9a8ec37cc00afd8f32a1a6499))
+* simplify baseline emoji html ([#96](https://github.com/nolanlawson/emoji-picker-element/issues/96)) ([4f03bfc](https://github.com/nolanlawson/emoji-picker-element/commit/4f03bfc961145a95ebfa2deb3d6b5c23ded60d37))
+
+
+
 ## [1.3.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.3.2...v1.3.3) (2020-12-25)
 
 
