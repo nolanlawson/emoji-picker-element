@@ -13,3 +13,10 @@ export function warn () {
     console.warn(...arguments)
   }
 }
+
+export function logError () {
+  /* istanbul ignore if */
+  if (process.env.NODE_ENV !== 'test') {
+    console.error(...arguments)
+  }
+}

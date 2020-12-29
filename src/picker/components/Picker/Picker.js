@@ -8,7 +8,7 @@ import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constant
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { hasZwj } from '../../utils/hasZwj'
 import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiSupport'
-import { log } from '../../../shared/log'
+import { logError, log } from '../../../shared/log'
 import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
@@ -67,7 +67,7 @@ let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
 let currentGroupIndex = 0
 let groups = defaultGroups
 let currentGroup
-let loaded = false // eslint-disable-line no-unused-vars
+let databaseLoaded = false // eslint-disable-line no-unused-vars
 let activeSearchItemId // eslint-disable-line no-unused-vars
 
 //
@@ -117,19 +117,22 @@ emojiSupportLevelPromise.then(level => {
 $: {
   // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
   async function handleDatabaseLoading () {
+    let showingLoadingMessage = false
     const timeoutHandle = setTimeout(() => {
+      showingLoadingMessage = true
       message = i18n.loadingMessage
     }, TIMEOUT_BEFORE_LOADING_MESSAGE)
     try {
       await database.ready()
-      loaded = true // eslint-disable-line no-unused-vars
+      databaseLoaded = true // eslint-disable-line no-unused-vars
     } catch (err) {
-      console.error(err)
+      logError(err)
       message = i18n.networkErrorMessage
     } finally {
       clearTimeout(timeoutHandle)
-      if (message === i18n.loadingMessage) {
-        message = ''
+      if (showingLoadingMessage) { // Seems safer than checking the i18n string, which may change
+        showingLoadingMessage = false
+        message = '' // eslint-disable-line no-unused-vars
       }
     }
   }
@@ -159,7 +162,11 @@ $: {
 onDestroy(async () => {
   if (database) {
     log('closing database')
-    await database.close()
+    try {
+      await database.close()
+    } catch (err) {
+      logError(err) // only happens if the database failed to load in the first place, so we don't care
+    }
   }
 })
 
@@ -200,7 +207,7 @@ $: {
 
 $: {
   async function updatePreferredSkinTone () {
-    if (database) {
+    if (databaseLoaded) {
       currentSkinTone = await database.getPreferredSkinTone()
     }
   }
@@ -223,7 +230,7 @@ $: {
       database.getEmojiByUnicodeOrName(unicode)
     )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
   }
-  if (database) {
+  if (databaseLoaded) {
     /* no await */ updateDefaultFavoriteEmojis()
   }
 }
@@ -239,7 +246,7 @@ $: {
     currentFavorites = favorites
   }
 
-  if (database && defaultFavoriteEmojis) {
+  if (databaseLoaded && defaultFavoriteEmojis) {
     /* no await */ updateFavorites()
   }
 }
@@ -306,7 +313,7 @@ $: {
 $: {
   async function updateEmojis () {
     log('updateEmojis')
-    if (!database) {
+    if (!databaseLoaded) {
       currentEmojis = []
       searchMode = false
     } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {

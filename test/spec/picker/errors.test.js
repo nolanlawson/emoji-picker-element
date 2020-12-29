@@ -20,7 +20,7 @@ describe('errors', () => {
   })
 
   // can't seem to get jest to ignore these expected errors
-  test.skip('offline shows an error', async () => {
+  test('offline shows an error', async () => {
     const dataSource = 'error.json'
 
     fetch.get(dataSource, { body: null, status: 500 })
@@ -36,7 +36,7 @@ describe('errors', () => {
 
     await waitFor(() => expect(getByRole(container, 'alert').innerHTML).toContain('Could not load'))
 
-    await new Database({ dataSource: ALL_EMOJI }).delete()
+    await new Database({ dataSource: ALL_EMOJI }).delete() // use different dataSource so it deletes properly
     document.body.removeChild(picker)
     await tick(20)
   })
