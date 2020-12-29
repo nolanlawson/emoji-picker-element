@@ -109,7 +109,7 @@
   </div>
 
   <!-- tabindex is so people can scroll up and down with the keyboard -->
-  <div class="tabpanel {(!loaded || message) ? 'gone': ''}"
+  <div class="tabpanel {(!databaseLoaded || message) ? 'gone': ''}"
        role={searchMode ? 'region' : 'tabpanel'}
        aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentGroup.name]}
        id={searchMode ? '' : `tab-${currentGroup.id}`}
