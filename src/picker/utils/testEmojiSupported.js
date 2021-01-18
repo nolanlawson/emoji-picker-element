@@ -32,7 +32,7 @@ const compareFeatures = (feature1, feature2) => {
   return feature1Str === feature2Str && !feature1Str.startsWith('0,0,0,')
 }
 
-export function testColorEmojiSupported (text) {
+export function testEmojiSupported (text) {
   if (process.env.NODE_ENV === 'test') {
     return true // avoid using canvas in jest
   }

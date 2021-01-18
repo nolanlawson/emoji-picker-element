@@ -17,6 +17,7 @@ import {
   DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
+  , BASELINE_EMOJI
 } from '../../constants'
 import { uniqBy } from '../../../shared/uniqBy'
 import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
@@ -38,6 +39,7 @@ let customEmoji = null
 let customCategorySorting = (a, b) => a < b ? -1 : a > b ? 1 : 0
 
 // private
+const baselineEmojiChar = BASELINE_EMOJI // eslint-disable-line no-unused-vars
 let initialLoad = true
 let currentEmojis = []
 let currentEmojisWithCategories = [] // eslint-disable-line no-unused-vars
