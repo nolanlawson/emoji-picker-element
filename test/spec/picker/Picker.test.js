@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event'
 import { groups } from '../../../src/picker/groups'
 import Database from '../../../src/database/Database'
 import { getAccessibleName } from '../utils'
-import { openSkintoneListbox } from './shared'
+import { checkEmojiEquals, openSkintoneListbox } from './shared'
 
 const { waitFor, fireEvent } = testingLibrary
 const { type } = userEvent
@@ -212,12 +212,11 @@ describe('Picker tests', () => {
     })
 
     getByRole('menuitem', { name: /😀/ }).click()
-    await waitFor(() => expect(emoji).toStrictEqual({
+    await waitFor(() => checkEmojiEquals(emoji, {
       emoji: {
         annotation: 'grinning face',
         group: 0,
-        order: 1,
-        shortcodes: ['grinning_face', 'grinning'],
+        shortcodes: ['grinning', 'grinning_face'],
         tags: ['face', 'grin'],
         unicode: '😀',
         version: 1,
@@ -237,12 +236,11 @@ describe('Picker tests', () => {
     getByRole('tab', { name: /People/ }).click()
     await waitFor(() => expect(getByRole('menuitem', { name: /👍/ })).toBeVisible())
     getByRole('menuitem', { name: /👍/ }).click()
-    await waitFor(() => expect(emoji).toStrictEqual({
+    await waitFor(() => checkEmojiEquals(emoji, {
       emoji: {
         annotation: 'thumbs up',
         group: 1,
-        order: 280,
-        shortcodes: ['thumbsup', 'yes', '+1'],
+        shortcodes: ['+1', 'thumbsup', 'yes'],
         tags: ['+1', 'hand', 'thumb', 'up'],
         unicode: '👍️',
         version: 0.6,
@@ -262,12 +260,11 @@ describe('Picker tests', () => {
     getByRole('tab', { name: /Smileys/ }).click()
     await waitFor(() => expect(getByRole('menuitem', { name: /😀/ })).toBeVisible())
     getByRole('menuitem', { name: /😀/ }).click()
-    await waitFor(() => expect(emoji).toStrictEqual({
+    await waitFor(() => checkEmojiEquals(emoji, {
       emoji: {
         annotation: 'grinning face',
         group: 0,
-        order: 1,
-        shortcodes: ['grinning_face', 'grinning'],
+        shortcodes: ['grinning', 'grinning_face'],
         tags: ['face', 'grin'],
         unicode: '😀',
         version: 1,
@@ -302,11 +299,10 @@ describe('Picker tests', () => {
     })
 
     fireEvent.keyDown(activeElement(), { key: 'Enter', code: 'Enter' })
-    await waitFor(() => expect(emoji).toStrictEqual({
+    await waitFor(() => checkEmojiEquals(emoji, {
       emoji: {
         annotation: 'monkey',
         group: 3,
-        order: 2658,
         shortcodes: ['monkey'],
         tags: ['monkey'],
         unicode: '🐒',

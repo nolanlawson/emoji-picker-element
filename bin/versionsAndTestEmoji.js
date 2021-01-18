@@ -11,5 +11,6 @@ export const versionsAndTestEmoji = {
   '🥰': 11, // smiling face with hearts
   '🥻': 12, // sari
   '🧑‍🦰': 12.1, // person: red hair
-  '🥲': 13 // smiling face with tear
+  '🥲': 13, // smiling face with tear
+  '😵‍💫': 13.1 // face with spiral eyes
 }
