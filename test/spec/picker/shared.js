@@ -17,3 +17,10 @@ export async function openSkintoneListbox (container) {
   // https://github.com/jsdom/jsdom/issues/1781#issuecomment-467935000
   fireEvent(getByRole(container, 'listbox', { name: 'Skin tones' }), new Event('transitionend'))
 }
+
+export function checkEmojiEquals (actual, expected) {
+  actual = JSON.parse(JSON.stringify(actual))
+  expect(actual.emoji.order).toBeGreaterThan(0)
+  delete actual.emoji.order // could change from version to version
+  expect(actual).toStrictEqual(expected)
+}

@@ -1,7 +1,13 @@
 import allEmoji from 'emoji-picker-element-data/en/emojibase/data.json'
 import Database from '../../../src/database/Database'
-import { pick } from 'lodash-es'
+import { pick, omit } from 'lodash-es'
 import { basicAfterEach, basicBeforeEach, ALL_EMOJI, truncatedEmoji } from '../shared'
+
+// order can change from version to version
+const expectToBeSorted = results => {
+  const orders = results.map(_ => _.order)
+  expect(orders.sort()).toStrictEqual(orders)
+}
 
 describe('getEmojiBySearchQuery', () => {
   beforeEach(basicBeforeEach)
@@ -10,57 +16,69 @@ describe('getEmojiBySearchQuery', () => {
     const db = new Database({ dataSource: ALL_EMOJI })
     await db.ready()
     const search = async query => (await db.getEmojiBySearchQuery(query)).map(_ => pick(_, ['annotation', 'order']))
-    expect(await search('face')).toStrictEqual([
-      { annotation: 'grinning face', order: 1 },
-      { annotation: 'grinning face with big eyes', order: 2 },
-      { annotation: 'grinning face with smiling eyes', order: 3 },
-      { annotation: 'beaming face with smiling eyes', order: 4 },
-      { annotation: 'grinning squinting face', order: 5 },
-      { annotation: 'grinning face with sweat', order: 6 },
-      { annotation: 'rolling on the floor laughing', order: 7 },
-      { annotation: 'face with tears of joy', order: 8 },
-      { annotation: 'slightly smiling face', order: 9 },
-      { annotation: 'upside-down face', order: 10 },
-      { annotation: 'winking face', order: 11 },
-      { annotation: 'smiling face with smiling eyes', order: 12 },
-      { annotation: 'smiling face with halo', order: 13 },
-      { annotation: 'smiling face with hearts', order: 14 },
-      { annotation: 'smiling face with heart-eyes', order: 15 },
-      { annotation: 'star-struck', order: 16 },
-      { annotation: 'face blowing a kiss', order: 17 },
-      { annotation: 'kissing face', order: 18 },
-      { annotation: 'smiling face', order: 20 },
-      { annotation: 'kissing face with closed eyes', order: 21 },
-      { annotation: 'monkey face', order: 2657 },
-      { annotation: 'dog face', order: 2661 },
-      { annotation: 'wolf', order: 2666 },
-      { annotation: 'fox', order: 2667 },
-      { annotation: 'cat face', order: 2669 },
-      { annotation: 'lion', order: 2672 },
-      { annotation: 'tiger face', order: 2673 },
-      { annotation: 'horse face', order: 2676 }
+    let results = await search('face')
+    expectToBeSorted(results)
+    expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
+      { annotation: 'grinning face' },
+      { annotation: 'grinning face with big eyes' },
+      { annotation: 'grinning face with smiling eyes' },
+      { annotation: 'beaming face with smiling eyes' },
+      { annotation: 'grinning squinting face' },
+      { annotation: 'grinning face with sweat' },
+      { annotation: 'rolling on the floor laughing' },
+      { annotation: 'face with tears of joy' },
+      { annotation: 'slightly smiling face' },
+      { annotation: 'upside-down face' },
+      { annotation: 'winking face' },
+      { annotation: 'smiling face with smiling eyes' },
+      { annotation: 'smiling face with halo' },
+      { annotation: 'smiling face with hearts' },
+      { annotation: 'smiling face with heart-eyes' },
+      { annotation: 'star-struck' },
+      { annotation: 'face blowing a kiss' },
+      { annotation: 'kissing face' },
+      { annotation: 'smiling face' },
+      { annotation: 'kissing face with closed eyes' },
+      { annotation: 'monkey face' },
+      { annotation: 'dog face' },
+      { annotation: 'wolf' },
+      { annotation: 'fox' },
+      { annotation: 'cat face' },
+      { annotation: 'lion' },
+      { annotation: 'tiger face' },
+      { annotation: 'horse face' }
     ])
-    expect(await search('monk')).toStrictEqual([
-      { annotation: 'monkey face', order: 2657 },
-      { annotation: 'monkey', order: 2658 }
+    results = await search('monk')
+    expectToBeSorted(results)
+    expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
+      { annotation: 'monkey face' },
+      { annotation: 'monkey' }
     ])
-    expect(await search('monkey')).toStrictEqual([
-      { annotation: 'monkey face', order: 2657 },
-      { annotation: 'monkey', order: 2658 }
+    results = await search('monkey')
+    expectToBeSorted(results)
+    expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
+      { annotation: 'monkey face' },
+      { annotation: 'monkey' }
     ])
-    expect(await search('monkey')).toStrictEqual([
-      { annotation: 'monkey face', order: 2657 },
-      { annotation: 'monkey', order: 2658 }
+    results = await search('monkey')
+    expectToBeSorted(results)
+    expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
+      { annotation: 'monkey face' },
+      { annotation: 'monkey' }
     ])
-    expect(await search('MoNkEy')).toStrictEqual([
-      { annotation: 'monkey face', order: 2657 },
-      { annotation: 'monkey', order: 2658 }
+    results = await search('MoNkEy')
+    expectToBeSorted(results)
+    expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
+      { annotation: 'monkey face' },
+      { annotation: 'monkey' }
     ])
-    expect(await search('monkey fac')).toStrictEqual([
-      { annotation: 'monkey face', order: 2657 }
+    results = await search('monkey fac')
+    expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
+      { annotation: 'monkey face' }
     ])
-    expect(await search('face monk')).toStrictEqual([
-      { annotation: 'monkey face', order: 2657 }
+    results = await search('face monk')
+    expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
+      { annotation: 'monkey face' }
     ])
     expect((await search('face monk'))[0].tokens).toBeFalsy()
     expect(await search('monkey facee')).toStrictEqual([])

@@ -196,7 +196,7 @@ describe('database tests', () => {
     expect(thumbsUp[0].skins[0].tone).toBeTruthy()
     expect(thumbsUp[0].skins[0].unicode).toBeTruthy()
     expect(thumbsUp[0].skins[0].version).toBeTruthy()
-    expect(thumbsUp[0].shortcodes[0]).toEqual('thumbsup')
+    expect(thumbsUp[0].shortcodes).toContain('thumbsup')
     const grinningFace = await db.getEmojiBySearchQuery('grinning_face')
     expect(grinningFace[0].emoticon).toEqual(':D')
     await db.delete()
