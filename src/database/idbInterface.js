@@ -92,6 +92,7 @@ export async function loadData (db, emojiData, url, eTag) {
         }
         metaStore.put(eTag, KEY_ETAG)
         metaStore.put(url, KEY_URL)
+        mark('commitAllData')
       }
 
       getIDB(metaStore, KEY_ETAG, result => {
@@ -109,6 +110,7 @@ export async function loadData (db, emojiData, url, eTag) {
         checkFetched()
       })
     })
+    stop('commitAllData')
   } finally {
     stop('loadData')
   }
