@@ -40,6 +40,7 @@ export default class Picker extends HTMLElement {
 // see https://justinfagnani.com/2019/11/01/how-to-publish-web-components-to-npm/
 declare global {
   interface HTMLElementTagNameMap {
+    // @ts-ignore
     "emoji-picker": Picker,
   }
 }
