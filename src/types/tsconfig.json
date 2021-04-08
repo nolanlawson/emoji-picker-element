@@ -1,0 +1,4 @@
+{
+    // An empty tsconfig file makes this directory a "project" that `tsc` can recognize. It'll build
+    // all files in this directory by default so we don't need to set any setting.
+}
