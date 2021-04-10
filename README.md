@@ -363,6 +363,8 @@ await database.getEmojiBySearchPrefix('elephant'); // [{unicode: "🐘", ...}]
 
 Note that under the hood, IndexedDB data is partitioned based on the `locale`. So if you create two `Database`s with two different `locale`s, it will store twice as much data.
 
+Also note that, unlike the picker, the database does not filter emoji based on whether they are supported by the current browser/OS or not. To detect emoji support, you can use a library like [is-emoji-supported](https://github.com/koala-interactive/is-emoji-supported).
+
 Full API:
 
 <!-- database API start -->
