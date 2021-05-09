@@ -115,7 +115,7 @@
     "shx": "^0.3.3",
     "standard": "^16.0.3",
     "string.prototype.replaceall": "^1.0.4",
-    "stylelint": "^13.8.0",
+    "stylelint": "^13.13.1",
     "stylelint-config-recommended-scss": "^4.2.0",
     "stylelint-scss": "^3.18.0",
     "svelte": "^3.29.4",
