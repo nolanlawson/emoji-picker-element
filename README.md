@@ -861,3 +861,4 @@ That said, older browsers may not have a color emoji font installed at all, so `
 ## Contributing
 
 See [CONTRIBUTING.md](https://github.com/nolanlawson/emoji-picker-element/blob/master/CONTRIBUTING.md).
+
