@@ -81,7 +81,7 @@
     "compression": "^1.7.4",
     "conventional-changelog-cli": "^2.1.1",
     "cross-env": "^7.0.3",
-    "cssnano": "^4.1.10",
+    "cssnano": "^5.0.5",
     "d2l-resize-aware": "BrightspaceUI/resize-aware#semver:^1.2.2",
     "emoji-picker-element-data": "^1.1.0",
     "emojibase-data": "^5.1.1",
@@ -115,16 +115,16 @@
     "shx": "^0.3.3",
     "standard": "^16.0.3",
     "string.prototype.replaceall": "^1.0.4",
-    "stylelint": "^13.8.0",
+    "stylelint": "^13.13.1",
     "stylelint-config-recommended-scss": "^4.2.0",
-    "stylelint-scss": "^3.18.0",
+    "stylelint-scss": "^3.19.0",
     "svelte": "^3.29.4",
     "svelte-jester": "nolanlawson/svelte-jester#auto-preprocess",
     "svelte-preprocess": "^4.5.2",
     "svgo": "^1.3.2",
     "typedoc": "^0.19.2",
     "typedoc-plugin-markdown": "^2.4.2",
-    "typescript": "^4.1.3"
+    "typescript": "~4.0.0"
   },
   "standard": {
     "ignore": [
