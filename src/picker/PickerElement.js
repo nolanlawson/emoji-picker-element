@@ -1,10 +1,8 @@
 import SveltePicker from './components/Picker/Picker.svelte'
-import { mark } from '../shared/marks'
-import { log } from '../shared/log'
 
 export default class Picker extends SveltePicker {
   constructor (props) {
-    mark('initialLoad')
+    performance.mark('initialLoad')
     // Make the API simpler, directly pass in the props
     super({ props })
   }
@@ -12,7 +10,7 @@ export default class Picker extends SveltePicker {
   disconnectedCallback () {
     // Have to explicitly destroy the component to avoid memory leaks.
     // See https://github.com/sveltejs/svelte/issues/1152
-    log('disconnectedCallback')
+    console.log('disconnectedCallback')
     this.$destroy()
   }
 

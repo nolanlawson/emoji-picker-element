@@ -1,7 +1,6 @@
 import { getETag, getETagAndData } from './utils/ajax'
 import { jsonChecksum } from './utils/jsonChecksum'
 import { hasData, loadData } from './idbInterface'
-import { log } from '../shared/log'
 
 export async function checkForUpdates (db, dataSource) {
   // just do a simple HEAD request first to see if the eTags match
@@ -16,9 +15,9 @@ export async function checkForUpdates (db, dataSource) {
     }
   }
   if (await hasData(db, dataSource, eTag)) {
-    log('Database already populated')
+    console.log('Database already populated')
   } else {
-    log('Database update available')
+    console.log('Database update available')
     if (!emojiData) {
       const eTagAndData = await getETagAndData(dataSource)
       emojiData = eTagAndData[1]

@@ -1,12 +1,10 @@
-import { mark, stop } from '../../shared/marks'
 import { calculateTextWidth } from './calculateTextWidth'
 import { supportedZwjEmojis } from './emojiSupport'
-import { log } from '../../shared/log'
 
 let baselineEmojiWidth
 
 export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode) {
-  mark('checkZwjSupport')
+  performance.mark('checkZwjSupport')
   for (const emoji of zwjEmojisToCheck) {
     const domNode = emojiToDomNode(emoji)
     const emojiWidth = calculateTextWidth(domNode)
@@ -21,10 +19,10 @@ export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode
     supportedZwjEmojis.set(emoji.unicode, supported)
     /* istanbul ignore next */
     if (!supported) {
-      log('Filtered unsupported emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
+      console.log('Filtered unsupported emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
     } else if (emojiWidth !== baselineEmojiWidth) {
-      log('Allowed borderline emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
+      console.log('Allowed borderline emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
     }
   }
-  stop('checkZwjSupport')
+  performance.measure('checkZwjSupport', 'checkZwjSupport')
 }

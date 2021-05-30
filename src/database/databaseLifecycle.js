@@ -1,6 +1,5 @@
 import { initialMigration } from './migrations'
 import { DB_VERSION_INITIAL, DB_VERSION_CURRENT } from './constants'
-import { mark, stop } from '../shared/marks'
 
 const openReqs = {}
 const databaseCache = {}
@@ -16,7 +15,7 @@ function handleOpenOrDeleteReq (resolve, reject, req) {
 }
 
 async function createDatabase (dbName) {
-  mark('createDatabase')
+  performance.mark('createDatabase')
   const db = await new Promise((resolve, reject) => {
     const req = indexedDB.open(dbName, DB_VERSION_CURRENT)
     openReqs[dbName] = req
@@ -38,7 +37,7 @@ async function createDatabase (dbName) {
   // Unfortunately cannot test in fakeIndexedDB: https://github.com/dumbmatter/fakeIndexedDB/issues/50
   /* istanbul ignore next */
   db.onclose = () => closeDatabase(dbName)
-  stop('createDatabase')
+  performance.measure('createDatabase', 'createDatabase')
   return db
 }
 

@@ -1,10 +1,9 @@
-import { mark, stop } from '../../shared/marks'
 import { extractTokens } from './extractTokens'
 import { normalizeTokens } from './normalizeTokens'
 
 // Transform emoji data for storage in IDB
 export function transformEmojiData (emojiData) {
-  mark('transformEmojiData')
+  performance.mark('transformEmojiData')
   const res = emojiData.map(({ annotation, emoticon, group, order, shortcodes, skins, tags, emoji, version }) => {
     const tokens = [...new Set(
       normalizeTokens([
@@ -41,6 +40,6 @@ export function transformEmojiData (emojiData) {
     }
     return res
   })
-  stop('transformEmojiData')
+  performance.measure('transformEmojiData', 'transformEmojiData')
   return res
 }

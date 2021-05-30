@@ -7,7 +7,6 @@ import {
   STORE_KEYVALUE
 } from './constants'
 import { transformEmojiData } from './utils/transformEmojiData'
-import { mark, stop } from '../shared/marks'
 import { extractTokens } from './utils/extractTokens'
 import { getAllIDB, getAllKeysIDB, getIDB } from './idbUtil'
 import { findCommonMembers } from './utils/findCommonMembers'
@@ -62,7 +61,7 @@ async function doFullDatabaseScanForSingleResult (db, predicate) {
 }
 
 export async function loadData (db, emojiData, url, eTag) {
-  mark('loadData')
+  performance.mark('loadData')
   try {
     const transformedData = transformEmojiData(emojiData)
     await dbPromise(db, [STORE_EMOJI, STORE_KEYVALUE], MODE_READWRITE, ([emojiStore, metaStore]) => {
@@ -92,7 +91,7 @@ export async function loadData (db, emojiData, url, eTag) {
         }
         metaStore.put(eTag, KEY_ETAG)
         metaStore.put(url, KEY_URL)
-        mark('commitAllData')
+        performance.mark('commitAllData')
       }
 
       getIDB(metaStore, KEY_ETAG, result => {
@@ -110,9 +109,9 @@ export async function loadData (db, emojiData, url, eTag) {
         checkFetched()
       })
     })
-    stop('commitAllData')
+    performance.measure('commitAllData', 'commitAllData')
   } finally {
-    stop('loadData')
+    performance.measure('loadData', 'loadData')
   }
 }
 
