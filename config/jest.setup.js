@@ -25,6 +25,13 @@ global.ResizeObserver = ResizeObserver
 process.env.NODE_ENV = 'test'
 
 global.IDBKeyRange = FDBKeyRange
+
+beforeAll(() => {
+  jest.spyOn(global.console, 'log').mockImplementation()
+  jest.spyOn(global.console, 'warn').mockImplementation()
+  jest.spyOn(global.console, 'error').mockImplementation()
+})
+
 beforeEach(() => {
   global.indexedDB = new FDBFactory() // fresh indexedDB for every test
 })
