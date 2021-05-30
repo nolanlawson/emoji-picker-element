@@ -44,11 +44,13 @@ const baseConfig = {
     cjs(),
     replace({
       'process.env.NODE_ENV': dev ? '"development"' : '"production"',
-      'process.env.PERF': !!process.env.PERF
+      'process.env.PERF': !!process.env.PERF,
+      preventAssignment: true
     }),
     replace({
       '\'../database/Database.js\'': '\'./database.js\'',
-      delimiters: ['', '']
+      delimiters: ['', ''],
+      preventAssignment: true
     }),
     svelte({
       css: true,
