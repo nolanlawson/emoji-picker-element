@@ -1,6 +1,6 @@
 import {I18n, PickerConstructorOptions, EmojiPickerEventMap, CustomEmoji} from "./shared";
 
-export default class Picker extends HTMLElement {
+class Picker extends HTMLElement {
   dataSource: string
   locale: string
   i18n: I18n
@@ -44,3 +44,5 @@ declare global {
     "emoji-picker": Picker,
   }
 }
+
+export default Picker
