@@ -3,17 +3,21 @@
 import { versionsAndTestEmoji } from '../../../bin/versionsAndTestEmoji'
 import { testColorEmojiSupported } from './testColorEmojiSupported'
 
+/* istanbul ignore next */
 export function determineEmojiSupportLevel () {
   performance.mark('determineEmojiSupportLevel')
-  let res
-  for (const [emoji, version] of Object.entries(versionsAndTestEmoji)) {
-    /* istanbul ignore else */
-    if (testColorEmojiSupported(emoji)) {
-      res = version
-    } else {
-      break
+  try {
+    let res
+    for (const [emoji, version] of Object.entries(versionsAndTestEmoji)) {
+      if (testColorEmojiSupported(emoji)) {
+        res = version
+      }
     }
+    return res
+  } catch (e) { // canvas error
+    console.log('Ignoring canvas error', e)
+    return Math.max(...Object.values(versionsAndTestEmoji))
+  } finally {
+    performance.measure('determineEmojiSupportLevel', 'determineEmojiSupportLevel')
   }
-  performance.measure('determineEmojiSupportLevel', 'determineEmojiSupportLevel')
-  return res
 }

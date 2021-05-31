@@ -8,19 +8,17 @@
 import { FONT_FAMILY } from '../constants'
 
 const getTextFeature = (text, color) => {
-  try {
-    const canvas = document.createElement('canvas')
-    canvas.width = canvas.height = 1
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = 1
 
-    const ctx = canvas.getContext('2d')
-    ctx.textBaseline = 'top'
-    ctx.font = `100px ${FONT_FAMILY}`
-    ctx.fillStyle = color
-    ctx.scale(0.01, 0.01)
-    ctx.fillText(text, 0, 0)
+  const ctx = canvas.getContext('2d')
+  ctx.textBaseline = 'top'
+  ctx.font = `100px ${FONT_FAMILY}`
+  ctx.fillStyle = color
+  ctx.scale(0.01, 0.01)
+  ctx.fillText(text, 0, 0)
 
-    return ctx.getImageData(0, 0, 1, 1).data
-  } catch (e) { /* ignore, return undefined */ }
+  return ctx.getImageData(0, 0, 1, 1).data
 }
 
 const compareFeatures = (feature1, feature2) => {
