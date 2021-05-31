@@ -61,8 +61,8 @@ const baseConfig = {
     strip({
       include: ['**/*.js', '**/*.svelte'],
       functions: [
-        (NODE_ENV === 'production' && !process.env.PERF) && 'performance.*',
-        NODE_ENV === 'production' && 'console.log'
+        (!dev && !process.env.PERF) && 'performance.*',
+        !dev && 'console.log'
       ].filter(Boolean)
     }),
     !dev && analyze({ summaryOnly: true })
