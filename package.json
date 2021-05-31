@@ -188,12 +188,12 @@
   "bundlesize": [
     {
       "path": "./bundle.js",
-      "maxSize": "41.1 kB",
+      "maxSize": "41.2 kB",
       "compression": "none"
     },
     {
       "path": "./bundle.js",
-      "maxSize": "15 kB",
+      "maxSize": "13 kB",
       "compression": "brotli"
     }
   ]

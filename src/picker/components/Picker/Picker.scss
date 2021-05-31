@@ -133,6 +133,12 @@ button.emoji,
   align-items: center;
 }
 
+.nav-emoji {
+  font-size: var(--category-emoji-size);
+  width: var(--total-category-emoji-size);
+  height: var(--total-category-emoji-size);
+}
+
 //
 // indicator
 //

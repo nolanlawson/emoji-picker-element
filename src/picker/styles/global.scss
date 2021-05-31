@@ -18,6 +18,7 @@
 
   // private variables
   --total-emoji-size: calc(var(--emoji-size) + (2 * var(--emoji-padding)));
+  --total-category-emoji-size: calc(var(--category-emoji-size) + (2 * var(--category-emoji-padding)));
 }
 
 // via https://stackoverflow.com/a/19758620
