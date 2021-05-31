@@ -2,7 +2,7 @@
 // Ideally it should have color in the center. For some inspiration, see:
 // https://about.gitlab.com/blog/2018/05/30/journey-in-native-unicode-emoji/
 //
-// Note that for certain versions (12.1, 13.1), there is no point in including these here, because
+// Note that for certain versions (12.1, 13.1), there is no point in testing them explicitly, because
 // all the emoji from this version are compound-emoji from previous versions. So they would pass a color
 // test, even in browsers that display them as double emoji. (E.g. "face in clouds" might render as
 // "face without mouth" plus "fog".) These emoji can only be filtered using the width test,
