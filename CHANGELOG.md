@@ -1,3 +1,18 @@
+# [1.5.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.4.0...v1.5.0) (2021-05-31)
+
+
+### Bug Fixes
+
+* guess latest emoji version on canvas error ([#138](https://github.com/nolanlawson/emoji-picker-element/issues/138)) ([599a8dd](https://github.com/nolanlawson/emoji-picker-element/commit/599a8ddaaf0d64f0d1964319199509ad324dc970)), closes [#132](https://github.com/nolanlawson/emoji-picker-element/issues/132)
+* simplify emoji color check algorithm ([#139](https://github.com/nolanlawson/emoji-picker-element/issues/139)) ([ff6865c](https://github.com/nolanlawson/emoji-picker-element/commit/ff6865ce859669e1a1510daf377f9be67d140b8c))
+
+
+### Features
+
+* allow styling category emoji separately ([#137](https://github.com/nolanlawson/emoji-picker-element/issues/137)) ([1b5ab86](https://github.com/nolanlawson/emoji-picker-element/commit/1b5ab86baf6d854fe3b5a52fa570b7688b9763be)), closes [#133](https://github.com/nolanlawson/emoji-picker-element/issues/133)
+
+
+
 # [1.4.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.3.4...v1.4.0) (2021-01-18)
 
 
