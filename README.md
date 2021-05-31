@@ -205,7 +205,7 @@ Here is a full list of options:
 | `--num-columns`              | `8`                    |                | How many columns to display in the emoji grid                                                        |
 | `--outline-color`            | `#999`                 | `#fff`         | Focus outline color                                                                                  |
 | `--outline-size`             | `2px`                  |                | Focus outline width                                                                                  |
-| `--skintone-border-radius`   | `1rem`                 |                | border radius of the skintone dropdown                                                               |
+| `--skintone-border-radius`   | `1rem`                 |                | Border radius of the skintone dropdown                                                               |
 
 <!-- CSS variable options end -->
 
