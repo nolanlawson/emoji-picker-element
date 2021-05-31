@@ -1,6 +1,8 @@
 @mixin sizes() {
-  --emoji-padding: 0.5rem;
-  --emoji-size: 1.375rem;
+  --emoji-size: 1.375rem; /* Width and height of all emoji */
+  --emoji-padding: 0.5rem; /* Vertical and horizontal padding on emoji */
+  --category-emoji-size: var(--emoji-size); /* Width/height of category emoji, if you want it to be different from `--emoji-size` */
+  --category-emoji-padding: var(--emoji-padding); /* Vertical/horizontal padding on category emoji, if you want it to be different from `--category-emoji-padding` */
   --indicator-height: 3px; /* Height of the nav indicator */
   --input-border-radius: 0.5rem;
   --input-border-size: 1px;
