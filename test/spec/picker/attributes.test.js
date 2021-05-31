@@ -24,6 +24,9 @@ describe('attributes tests', () => {
     expect(picker.dataSource).toEqual(FR_EMOJI)
     expect(picker.getAttribute('locale')).toEqual('fr')
     expect(picker.getAttribute('data-source')).toEqual(FR_EMOJI)
+
+    document.body.removeChild(picker)
+    await tick(20)
   })
 
   test('can set skintone emoji using an attribute', async () => {
@@ -43,5 +46,8 @@ describe('attributes tests', () => {
     expect(getByRole(picker.shadowRoot, 'button', { name: /Choose a skin tone/ }).innerHTML)
       .toContain('🏃')
     expect(picker.skinToneEmoji).toEqual('🏃')
+
+    document.body.removeChild(picker)
+    await tick(20)
   })
 })

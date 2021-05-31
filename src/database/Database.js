@@ -18,7 +18,6 @@ import {
   getEmojiBySearchQuery, getEmojiByShortcode, getEmojiByUnicode,
   get, set, getTopFavoriteEmoji, incrementFavoriteEmojiCount
 } from './idbInterface'
-import { log } from '../shared/log'
 import { customEmojiIndex } from './customEmojiIndex'
 import { cleanEmoji } from './utils/cleanEmoji'
 import { loadDataForFirstTime, checkForUpdates } from './dataLoading'
@@ -135,7 +134,7 @@ export default class Database {
 
   // clear references to IDB, e.g. during a close event
   _clear () {
-    log('_clear database', this._dbName)
+    console.log('_clear database', this._dbName)
     // We don't need to call removeEventListener or remove the manual "close" listeners.
     // The memory leak tests prove this is unnecessary. It's because:
     // 1) IDBDatabases that can no longer fire "close" automatically have listeners GCed

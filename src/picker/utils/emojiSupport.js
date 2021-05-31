@@ -1,5 +1,4 @@
 import { determineEmojiSupportLevel } from './determineEmojiSupportLevel'
-import { log } from '../../shared/log'
 import { requestIdleCallback } from './requestIdleCallback'
 // Check which emojis we know for sure aren't supported, based on Unicode version level
 export const emojiSupportLevelPromise = new Promise(resolve => (
@@ -14,6 +13,6 @@ export const supportedZwjEmojis = new Map()
 /* istanbul ignore else */
 if (process.env.NODE_ENV !== 'production') {
   emojiSupportLevelPromise.then(emojiSupportLevel => {
-    log('emoji support level', emojiSupportLevel)
+    console.log('emoji support level', emojiSupportLevel)
   })
 }

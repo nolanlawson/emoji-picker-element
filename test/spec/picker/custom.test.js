@@ -30,5 +30,8 @@ describe('Custom emojis tests', () => {
     await tick(50)
 
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: 'monkey' })).toBeVisible())
+
+    document.body.removeChild(picker)
+    await tick(20)
   })
 })

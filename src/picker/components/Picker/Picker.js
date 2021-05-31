@@ -8,7 +8,6 @@ import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constant
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { hasZwj } from '../../utils/hasZwj'
 import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiSupport'
-import { logError, log } from '../../../shared/log'
 import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
@@ -23,7 +22,6 @@ import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 import * as widthCalculator from '../../utils/widthCalculator'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
-import { stop } from '../../../shared/marks'
 import { onMount, onDestroy, tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
@@ -128,7 +126,7 @@ $: {
       await database.ready()
       databaseLoaded = true // eslint-disable-line no-unused-vars
     } catch (err) {
-      logError(err)
+      console.error(err)
       message = i18n.networkErrorMessage
     } finally {
       clearTimeout(timeoutHandle)
@@ -150,24 +148,24 @@ $: {
 // See https://github.com/sveltejs/svelte/pull/4527
 onMount(async () => {
   await tick()
-  log('props ready: setting locale and dataSource to default')
+  console.log('props ready: setting locale and dataSource to default')
   locale = locale || DEFAULT_LOCALE
   dataSource = dataSource || DEFAULT_DATA_SOURCE
 })
 $: {
   if (locale && dataSource && (!database || (database.locale !== locale && database.dataSource !== dataSource))) {
-    log('creating database', { locale, dataSource })
+    console.log('creating database', { locale, dataSource })
     database = new Database({ dataSource, locale })
   }
 }
 
 onDestroy(async () => {
   if (database) {
-    log('closing database')
+    console.log('closing database')
     try {
       await database.close()
     } catch (err) {
-      logError(err) // only happens if the database failed to load in the first place, so we don't care
+      console.error(err) // only happens if the database failed to load in the first place, so we don't care
     }
   }
 })
@@ -190,7 +188,7 @@ $: pickerStyle = `
 
 $: {
   if (customEmoji && database) {
-    log('updating custom emoji')
+    console.log('updating custom emoji')
     database.customEmoji = customEmoji
   }
 }
@@ -239,7 +237,7 @@ $: {
 
 $: {
   async function updateFavorites () {
-    log('updateFavorites')
+    console.log('updateFavorites')
     const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
     const favorites = await summarizeEmojis(uniqBy([
       ...dbFavorites,
@@ -314,7 +312,7 @@ $: {
 
 $: {
   async function updateEmojis () {
-    log('updateEmojis')
+    console.log('updateEmojis')
     if (!databaseLoaded) {
       currentEmojis = []
       searchMode = false
@@ -378,7 +376,7 @@ async function summarizeEmojis (emojis) {
 }
 
 async function getEmojisByGroup (group) {
-  log('getEmojiByGroup', group)
+  console.log('getEmojiByGroup', group)
   if (typeof group === 'undefined') {
     return []
   }
@@ -397,7 +395,7 @@ $: {
   if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
     if (currentEmojis.length && currentFavorites.length && initialLoad) {
       initialLoad = false
-      requestPostAnimationFrame(() => stop('initialLoad'))
+      requestPostAnimationFrame(() => performance.measure('initialLoad', 'initialLoad'))
     }
   }
 }

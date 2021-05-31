@@ -1,11 +1,10 @@
 // rather than check every emoji ever, which would be expensive, just check some representatives from the
 // different emoji releases to determine what the font supports
-import { mark, stop } from '../../shared/marks'
 import { versionsAndTestEmoji } from '../../../bin/versionsAndTestEmoji'
 import { testColorEmojiSupported } from './testColorEmojiSupported'
 
 export function determineEmojiSupportLevel () {
-  mark('determineEmojiSupportLevel')
+  performance.mark('determineEmojiSupportLevel')
   let res
   for (const [emoji, version] of Object.entries(versionsAndTestEmoji)) {
     /* istanbul ignore else */
@@ -15,6 +14,6 @@ export function determineEmojiSupportLevel () {
       break
     }
   }
-  stop('determineEmojiSupportLevel')
+  performance.measure('determineEmojiSupportLevel', 'determineEmojiSupportLevel')
   return res
 }

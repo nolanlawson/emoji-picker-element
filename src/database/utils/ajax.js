@@ -1,6 +1,5 @@
 import { warnETag } from './warnETag'
 import { assertEmojiData } from './assertEmojiData'
-import { mark, stop } from '../../shared/marks'
 
 function assertStatus (response, dataSource) {
   if (Math.floor(response.status / 100) !== 2) {
@@ -9,23 +8,23 @@ function assertStatus (response, dataSource) {
 }
 
 export async function getETag (dataSource) {
-  mark('getETag')
+  performance.mark('getETag')
   const response = await fetch(dataSource, { method: 'HEAD' })
   assertStatus(response, dataSource)
   const eTag = response.headers.get('etag')
   warnETag(eTag)
-  stop('getETag')
+  performance.measure('getETag', 'getETag')
   return eTag
 }
 
 export async function getETagAndData (dataSource) {
-  mark('getETagAndData')
+  performance.mark('getETagAndData')
   const response = await fetch(dataSource)
   assertStatus(response, dataSource)
   const eTag = response.headers.get('etag')
   warnETag(eTag)
   const emojiData = await response.json()
   assertEmojiData(emojiData)
-  stop('getETagAndData')
+  performance.measure('getETagAndData', 'getETagAndData')
   return [eTag, emojiData]
 }
