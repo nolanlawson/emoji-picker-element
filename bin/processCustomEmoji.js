@@ -2,9 +2,8 @@ import { readdir, writeFile, readFile } from './fs.js'
 import rimraf from 'rimraf'
 import { promisify } from 'util'
 import mkdirp from 'mkdirp'
-import SVGO from 'svgo'
+import { optimize } from 'svgo'
 
-const svgo = new SVGO()
 const categories = [
   {
     name: 'People and activities',
@@ -173,7 +172,7 @@ async function main () {
   await writeFile('./docs/custom.json', JSON.stringify(categoriesToCustomEmoji), 'utf8')
   await Promise.all(customEmojis.map(async ({ name }) => {
     const svg = await readFile(`./node_modules/flat-color-icons/svg/${name}.svg`, 'utf8')
-    const optimized = await svgo.optimize(svg)
+    const optimized = await optimize(svg, { multipass: true })
     await writeFile(`./docs/custom/${name}.svg`, optimized.data, 'utf8')
   }))
 }

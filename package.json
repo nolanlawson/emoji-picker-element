@@ -122,7 +122,7 @@
     "svelte": "^3.29.4",
     "svelte-jester": "nolanlawson/svelte-jester#auto-preprocess",
     "svelte-preprocess": "^4.5.2",
-    "svgo": "^1.3.2",
+    "svgo": "^2.3.0",
     "typedoc": "^0.19.2",
     "typedoc-plugin-markdown": "^2.4.2",
     "typescript": "~4.0.0"
