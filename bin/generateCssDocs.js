@@ -1,8 +1,7 @@
-import fs from 'fs'
 import path from 'path'
-import { promisify } from 'util'
 import sass from 'sass'
 import table from 'markdown-table'
+import { readFile, writeFile } from './fs.js'
 import { replaceInReadme } from './replaceInReadme.js'
 import postcss from 'postcss'
 
@@ -62,7 +61,7 @@ function generateMarkdownTable (cssData) {
 
 async function replaceInCustomElementsJson (cssData) {
   const jsonFilename = path.join(__dirname, '../custom-elements.json')
-  const json = JSON.parse(await promisify(fs.readFile)(jsonFilename, 'utf8'))
+  const json = JSON.parse(await readFile(jsonFilename, 'utf8'))
 
   const unwrap = _ => _.substring(1, _.length - 1) // remove backticks
 
@@ -73,7 +72,7 @@ async function replaceInCustomElementsJson (cssData) {
       default: JSON.stringify(unwrap(value))
     }
   })
-  await promisify(fs.writeFile)(jsonFilename, JSON.stringify(json, null, 2), 'utf8')
+  await writeFile(jsonFilename, JSON.stringify(json, null, 2), 'utf8')
 }
 
 async function main () {
