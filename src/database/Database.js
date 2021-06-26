@@ -129,7 +129,6 @@ export default class Database {
     try {
       await this._lazyUpdate // allow any lazy updates to process before closing/deleting
     } catch (err) { /* ignore network errors (offline-first) */ }
-    return !!this._db // return true if we need to actually run the close/delete logic
   }
 
   // clear references to IDB, e.g. during a close event
@@ -143,18 +142,12 @@ export default class Database {
   }
 
   async close () {
-    // TODO: this else never gets hit in tests
-    /* istanbul ignore else */
-    if (await this._shutdown()) {
-      await closeDatabase(this._dbName)
-    }
+    await this._shutdown()
+    await closeDatabase(this._dbName)
   }
 
   async delete () {
-    // TODO: this else never gets hit in tests
-    /* istanbul ignore else */
-    if (await this._shutdown()) {
-      await deleteDatabase(this._dbName)
-    }
+    await this._shutdown()
+    await deleteDatabase(this._dbName)
   }
 }
