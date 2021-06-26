@@ -1,0 +1,232 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "picker.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Lightweight emoji picker distributed as a web component",
+          "name": "Picker",
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "emoji-picker",
+          "customElement": true,
+          "attributes": [
+            {
+              "name": "locale",
+              "description": "Locale string",
+              "type": "string",
+              "default": "\"en\""
+            },
+            {
+              "name": "data-source",
+              "description": "URL to fetch the emoji data from",
+              "type": "string",
+              "default": "\"https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json\""
+            },
+            {
+              "name": "skin-tone-emoji",
+              "description": "The emoji to use for the skin tone picker",
+              "type": "string",
+              "default": "\"🖐\""
+            }
+          ],
+          "members": [
+            {
+              "name": "locale",
+              "description": "Locale string",
+              "kind": "field",
+              "default": "\"en\""
+            },
+            {
+              "name": "dataSource",
+              "description": "URL to fetch the emoji data from",
+              "kind": "field",
+              "default": "\"https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json\""
+            },
+            {
+              "name": "skinToneEmoji",
+              "description": "The emoji to use for the skin tone picker",
+              "kind": "field",
+              "default": "\"🖐\""
+            },
+            {
+              "name": "i18n",
+              "description": "i18n object",
+              "kind": "field"
+            },
+            {
+              "name": "customEmoji",
+              "description": "Array of custom emoji",
+              "kind": "field"
+            },
+            {
+              "name": "customCategorySorting",
+              "description": "Function to sort custom category strings (sorted alphabetically by default)",
+              "kind": "field"
+            }
+          ],
+          "events": [
+            {
+              "name": "skin-tone-change",
+              "description": "This event is fired whenever the user selects a new skin tone."
+            },
+            {
+              "name": "emoji-click",
+              "description": "The `emoji-click` event is fired when an emoji is selected by the user."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--background",
+              "description": "Background of the entire `<emoji-picker>` (default: `#fff`, dark default: `#222`)",
+              "default": "\"#fff\""
+            },
+            {
+              "name": "--border-color",
+              "description": "(default: `#e0e0e0`, dark default: `#444`)",
+              "default": "\"#e0e0e0\""
+            },
+            {
+              "name": "--border-size",
+              "description": "Width of border used in most of the picker (default: `1px`)",
+              "default": "\"1px\""
+            },
+            {
+              "name": "--button-active-background",
+              "description": "Background of an active button (default: `#e6e6e6`, dark default: `#555555`)",
+              "default": "\"#e6e6e6\""
+            },
+            {
+              "name": "--button-hover-background",
+              "description": "Background of a hovered button (default: `#d9d9d9`, dark default: `#484848`)",
+              "default": "\"#d9d9d9\""
+            },
+            {
+              "name": "--category-emoji-padding",
+              "description": "Vertical/horizontal padding on category emoji, if you want it to be different from `--emoji-padding` (default: `var(--emoji-padding)`)",
+              "default": "\"var(--emoji-padding)\""
+            },
+            {
+              "name": "--category-emoji-size",
+              "description": "Width/height of category emoji, if you want it to be different from `--emoji-size` (default: `var(--emoji-size)`)",
+              "default": "\"var(--emoji-size)\""
+            },
+            {
+              "name": "--category-font-color",
+              "description": "Font color of custom emoji category headings (default: `#111`, dark default: `#efefef`)",
+              "default": "\"#111\""
+            },
+            {
+              "name": "--category-font-size",
+              "description": "Font size of custom emoji category headings (default: `1rem`)",
+              "default": "\"1rem\""
+            },
+            {
+              "name": "--emoji-padding",
+              "description": "Vertical and horizontal padding on emoji (default: `0.5rem`)",
+              "default": "\"0.5rem\""
+            },
+            {
+              "name": "--emoji-size",
+              "description": "Width and height of all emoji (default: `1.375rem`)",
+              "default": "\"1.375rem\""
+            },
+            {
+              "name": "--indicator-color",
+              "description": "Color of the nav indicator (default: `#385ac1`, dark default: `#5373ec`)",
+              "default": "\"#385ac1\""
+            },
+            {
+              "name": "--indicator-height",
+              "description": "Height of the nav indicator (default: `3px`)",
+              "default": "\"3px\""
+            },
+            {
+              "name": "--input-border-color",
+              "description": "(default: `#999`, dark default: `#ccc`)",
+              "default": "\"#999\""
+            },
+            {
+              "name": "--input-border-radius",
+              "description": "(default: `0.5rem`)",
+              "default": "\"0.5rem\""
+            },
+            {
+              "name": "--input-border-size",
+              "description": "(default: `1px`)",
+              "default": "\"1px\""
+            },
+            {
+              "name": "--input-font-color",
+              "description": "(default: `#111`, dark default: `#efefef`)",
+              "default": "\"#111\""
+            },
+            {
+              "name": "--input-font-size",
+              "description": "(default: `1rem`)",
+              "default": "\"1rem\""
+            },
+            {
+              "name": "--input-line-height",
+              "description": "(default: `1.5`)",
+              "default": "\"1.5\""
+            },
+            {
+              "name": "--input-padding",
+              "description": "(default: `0.25rem`)",
+              "default": "\"0.25rem\""
+            },
+            {
+              "name": "--input-placeholder-color",
+              "description": "(default: `#999`, dark default: `#ccc`)",
+              "default": "\"#999\""
+            },
+            {
+              "name": "--num-columns",
+              "description": "How many columns to display in the emoji grid (default: `8`)",
+              "default": "\"8\""
+            },
+            {
+              "name": "--outline-color",
+              "description": "Focus outline color (default: `#999`, dark default: `#fff`)",
+              "default": "\"#999\""
+            },
+            {
+              "name": "--outline-size",
+              "description": "Focus outline width (default: `2px`)",
+              "default": "\"2px\""
+            },
+            {
+              "name": "--skintone-border-radius",
+              "description": "Border radius of the skintone dropdown (default: `1rem`)",
+              "default": "\"1rem\""
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "emoji-picker",
+          "declaration": {
+            "name": "Picker",
+            "module": "picker.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "Picker",
+            "module": "picker.js"
+          }
+        }
+      ]
+    }
+  ]
+}
