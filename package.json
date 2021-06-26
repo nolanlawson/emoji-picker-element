@@ -6,13 +6,15 @@
   "module": "index.js",
   "types": "index.d.ts",
   "type": "module",
+  "customElements": "custom-elements.json",
   "files": [
     "database.js*",
     "index.js*",
     "picker.js*",
     "trimEmojiData.*",
     "svelte.js*",
-    "*.d.ts"
+    "*.d.ts",
+    "custom-elements.json"
   ],
   "scripts": {
     "prepare": "run-s build",
