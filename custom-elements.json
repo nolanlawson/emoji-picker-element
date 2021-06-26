@@ -40,40 +40,34 @@
               "name": "locale",
               "description": "Locale string",
               "kind": "field",
-              "type": "string",
               "default": "\"en\""
             },
             {
               "name": "dataSource",
               "description": "URL to fetch the emoji data from",
               "kind": "field",
-              "type": "string",
               "default": "\"https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json\""
             },
             {
               "name": "skinToneEmoji",
               "description": "The emoji to use for the skin tone picker",
               "kind": "field",
-              "type": "string",
               "default": "\"🖐\""
             },
             {
               "name": "i18n",
               "description": "i18n object",
-              "kind": "field",
-              "type": "I18n"
+              "kind": "field"
             },
             {
               "name": "customEmoji",
               "description": "Array of custom emoji",
-              "kind": "field",
-              "type": "Array<CustomEmoji>"
+              "kind": "field"
             },
             {
               "name": "customCategorySorting",
               "description": "Function to sort custom category strings (sorted alphabetically by default)",
-              "kind": "field",
-              "type": "function"
+              "kind": "field"
             }
           ],
           "events": [
