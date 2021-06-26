@@ -82,7 +82,7 @@
     "compression": "^1.7.4",
     "conventional-changelog-cli": "^2.1.1",
     "cross-env": "^7.0.3",
-    "cssnano": "^5.0.5",
+    "cssnano": "^5.0.6",
     "d2l-resize-aware": "BrightspaceUI/resize-aware#semver:^1.2.2",
     "emoji-picker-element-data": "^1.1.0",
     "emojibase-data": "^5.1.1",
