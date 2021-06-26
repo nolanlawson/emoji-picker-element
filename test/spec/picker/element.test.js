@@ -96,12 +96,15 @@ describe('element tests', () => {
 
     test('has a default locale/dataSource', async () => {
       const picker = new Picker()
+      document.body.appendChild(picker)
       const container = picker.shadowRoot.querySelector('.picker')
       await tick(20)
 
       await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
       await new Database().delete()
+      await tick(20)
+      await document.body.removeChild(picker)
       await tick(20)
     })
   })
