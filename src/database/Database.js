@@ -143,12 +143,16 @@ export default class Database {
   }
 
   async close () {
+    // TODO: this else never gets hit in tests
+    /* istanbul ignore else */
     if (await this._shutdown()) {
       await closeDatabase(this._dbName)
     }
   }
 
   async delete () {
+    // TODO: this else never gets hit in tests
+    /* istanbul ignore else */
     if (await this._shutdown()) {
       await deleteDatabase(this._dbName)
     }

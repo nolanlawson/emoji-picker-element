@@ -15,6 +15,7 @@ describe('dataSource test', () => {
     mockDataSourceWithNoShortcodes()
     const dataSource = NO_SHORTCODES
     const picker = new Picker({ dataSource, locale: 'en-no-shortcodes' })
+    document.body.appendChild(picker)
     const container = picker.shadowRoot.querySelector('.picker')
     await tick(20)
 
@@ -26,12 +27,15 @@ describe('dataSource test', () => {
 
     await picker.database.delete()
     await tick(20)
+    document.body.removeChild(picker)
+    await tick(20)
   })
 
   test('emoji with emojibase v5 data source still work', async () => {
     mockEmojibaseV5DataSource()
     const dataSource = EMOJIBASE_V5
     const picker = new Picker({ dataSource, locale: 'en-emojibase' })
+    document.body.appendChild(picker)
     const container = picker.shadowRoot.querySelector('.picker')
     await tick(20)
 
@@ -43,6 +47,8 @@ describe('dataSource test', () => {
 
     await picker.database.delete()
     await tick(20)
+    document.body.removeChild(picker)
+    await tick(20)
   })
 
   test('emoji with array skin tones work', async () => {
@@ -50,6 +56,7 @@ describe('dataSource test', () => {
 
     const dataSource = WITH_ARRAY_SKIN_TONES
     const picker = new Picker({ dataSource, locale: 'en-arrayskintones' })
+    document.body.appendChild(picker)
     const container = picker.shadowRoot.querySelector('.picker')
     await tick(20)
 
@@ -65,6 +72,8 @@ describe('dataSource test', () => {
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /🧑🏾‍🤝‍🧑🏾/ })).toBeVisible())
 
     await picker.database.delete()
+    await tick(20)
+    document.body.removeChild(picker)
     await tick(20)
   })
 })

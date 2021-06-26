@@ -1,4 +1,5 @@
 module.exports = {
+  testEnvironment: 'jsdom',
   testMatch: [
     '<rootDir>/test/spec/**/*.{spec,test}.{js,jsx,ts,tsx}'
   ],
@@ -36,7 +37,7 @@ module.exports = {
     },
     './src/picker/components/Picker/Picker.svelte': {
       statements: 98,
-      branches: 96,
+      branches: 95,
       functions: 100,
       lines: 100
     }
