@@ -10,27 +10,22 @@ describe('lifecycle', () => {
   test('can remove and re-append custom element', async () => {
     mockDefaultDataSource()
     const picker = new Picker()
-    document.body.appendChild(picker)
     const container = picker.shadowRoot.querySelector('.picker')
+
+    document.body.appendChild(picker)
 
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
 
-    const spy = jest.spyOn(picker.database, 'close')
-
     document.body.removeChild(picker)
     await tick(20)
-
-    expect(spy).toHaveBeenCalled()
-    expect(spy).toHaveBeenCalledTimes(1)
-
-    spy.mockRestore()
 
     document.body.appendChild(picker)
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
+    // fetches are unchanged, no new fetches after re-insertion
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
 
