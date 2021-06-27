@@ -2,15 +2,13 @@ import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import strip from '@rollup/plugin-strip'
-import mainSvelte from 'rollup-plugin-svelte'
-import hotSvelte from 'rollup-plugin-svelte-hot'
+import svelte from 'rollup-plugin-svelte'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
 import cssnano from 'cssnano'
 
 const { NODE_ENV } = process.env
 const dev = NODE_ENV !== 'production'
-const svelte = dev ? hotSvelte : mainSvelte
 
 const preprocessConfig = preprocess({
   scss: true,
@@ -55,9 +53,11 @@ const baseConfig = {
       preventAssignment: true
     }),
     svelte({
-      css: true,
-      customElement: true,
-      dev,
+      compilerOptions: {
+        css: true,
+        customElement: true,
+        dev
+      },
       preprocess: preprocessConfig
     }),
     strip({
