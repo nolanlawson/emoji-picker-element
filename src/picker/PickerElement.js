@@ -1,17 +1,14 @@
 import SveltePicker from './components/Picker/Picker.svelte'
+import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
 
 export default class Picker extends SveltePicker {
-  constructor (props) {
+  constructor (props = {}) {
     performance.mark('initialLoad')
+    // Set defaults
+    props.locale = props.locale || DEFAULT_LOCALE
+    props.dataSource = props.dataSource || DEFAULT_DATA_SOURCE
     // Make the API simpler, directly pass in the props
     super({ props })
-  }
-
-  disconnectedCallback () {
-    // Have to explicitly destroy the component to avoid memory leaks.
-    // See https://github.com/sveltejs/svelte/issues/1152
-    console.log('disconnectedCallback')
-    this.$destroy()
   }
 
   static get observedAttributes () {

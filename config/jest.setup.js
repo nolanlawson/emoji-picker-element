@@ -3,6 +3,7 @@ import FDBFactory from 'fake-indexeddb/build/FDBFactory'
 import FDBKeyRange from 'fake-indexeddb/build/FDBKeyRange'
 import { Crypto } from '@peculiar/webcrypto'
 import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js'
+import { deleteDatabase } from '../src/database/databaseLifecycle'
 
 if (!global.performance) {
   global.performance = {}
@@ -25,6 +26,7 @@ global.ResizeObserver = ResizeObserver
 process.env.NODE_ENV = 'test'
 
 global.IDBKeyRange = FDBKeyRange
+global.indexedDB = new FDBFactory()
 
 beforeAll(() => {
   jest.spyOn(global.console, 'log').mockImplementation()
@@ -32,6 +34,8 @@ beforeAll(() => {
   jest.spyOn(global.console, 'error').mockImplementation()
 })
 
-beforeEach(() => {
-  global.indexedDB = new FDBFactory() // fresh indexedDB for every test
+afterEach(async () => {
+  // fresh indexedDB for every test
+  const dbs = await global.indexedDB.databases()
+  await Promise.all(dbs.map(({ name }) => deleteDatabase(name)))
 })
