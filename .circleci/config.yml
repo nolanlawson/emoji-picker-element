@@ -1,21 +1,12 @@
 version: 2.1
 
-supported-svelte-versions: &supported-svelte-versions ["local", "3.29.4"]
-
 workflows:
-  build_and_test:
+  version: 2
+  build:
     jobs:
-      - build_and_test:
-          matrix:
-            parameters:
-              svelte-version: *supported-svelte-versions
+      - build_and_test
 jobs:
   build_and_test:
-    parameters:
-      svelte-version:
-        type: string
-        description: Overrides the Svelte version. `local` refers to the locally-installed version.
-        default: "local"
     docker:
       - image: circleci/node:14-buster-browsers
     steps:
@@ -31,14 +22,6 @@ jobs:
       - restore_cache:
           name: Restore yarn cache
           key: yarn-v1-{{ checksum "yarn.lock" }}
-      - when:
-          condition:
-            not:
-              equal: [ <<parameters.svelte-version>>, "local" ]
-          steps:
-            - run:
-                name: Override version of svelte@<<parameters.svelte-version>>
-                command: yarn add svelte@<<parameters.svelte-version>> --dev
       - run:
           name: Yarn install
           command: yarn install --immutable
