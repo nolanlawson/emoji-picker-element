@@ -43,6 +43,7 @@ let searchText = ''
 let rootElement
 let baselineEmoji
 let tabpanelElement
+let indicatorElement
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
 let message // eslint-disable-line no-unused-vars
@@ -141,9 +142,19 @@ $: {
 }
 
 onMount(() => {
-  // Close the database when the component is disconnected. It will automatically reconnect anyway
-  // if the component is ever reconnected.
+  const destroys = [
+    calculateIndicatorWidth(indicatorElement),
+    calculateEmojiGridWidth(tabpanelElement)
+  ]
+
   return async () => {
+    // TODO: using a workaround for Svelte actions never calling destroy() when used in
+    // custom elements. Instead of waiting for a destroy event, we use the mount/unmount
+    // lifecycle to clean up.
+    // https://github.com/sveltejs/svelte/issues/5989#issuecomment-796366910
+    destroys.forEach(({ destroy }) => destroy())
+    // Close the database when the component is disconnected. It will automatically reconnect anyway
+    // if the component is ever reconnected.
     if (database) {
       console.log('closing database')
       try {

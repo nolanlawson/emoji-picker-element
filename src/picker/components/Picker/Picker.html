@@ -98,7 +98,7 @@
   <div class="indicator-wrapper">
     <div class="indicator"
          style={indicatorStyle}
-         use:calculateIndicatorWidth>
+         bind:this={indicatorElement}>
     </div>
   </div>
 
@@ -134,8 +134,7 @@
       <div class="emoji-menu"
            role={searchMode ? 'listbox' : 'menu'}
            aria-labelledby="menu-label-{i}"
-           id={searchMode ? 'search-results' : ''}
-           use:calculateEmojiGridWidth>
+           id={searchMode ? 'search-results' : ''}>
         {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
           <button role={searchMode ? 'option' : 'menuitem'}
                   aria-selected={searchMode ? i == activeSearchItem : ''}
