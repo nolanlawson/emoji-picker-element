@@ -1,6 +1,6 @@
 version: 2.1
 
-supported-svelte-versions: &supported-svelte-versions ["local", "3.29.4"]
+supported-svelte-versions: &supported-svelte-versions ["local", "3.33.0", "3.38.3"]
 
 workflows:
   build_and_test:
