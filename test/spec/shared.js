@@ -1,6 +1,7 @@
 import allEmoji from 'emoji-picker-element-data/en/emojibase/data.json'
 import frEmoji from 'emoji-picker-element-data/fr/cldr/data.json'
 import allEmojibaseV5Emoji from 'emojibase-data/en/data.json'
+import { DEFAULT_DATA_SOURCE } from '../../src/database/constants'
 
 export function truncateEmoji (allEmoji) {
   // just take the first few emoji from each category, or else it takes forever to insert
@@ -56,6 +57,11 @@ export async function tick (times = 1) {
   for (let i = 0; i < times; i++) {
     await new Promise(resolve => setTimeout(resolve))
   }
+}
+
+export function mockDefaultDataSource () {
+  fetch.get(DEFAULT_DATA_SOURCE, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/def' } }))
+  fetch.head(DEFAULT_DATA_SOURCE, () => new Response(null, { headers: { ETag: 'W/def' } }))
 }
 
 export function mockFrenchDataSource () {

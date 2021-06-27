@@ -1,4 +1,6 @@
 import {
+  basicAfterEach,
+  basicBeforeEach,
   EMOJIBASE_V5, mockDataSourceWithArraySkinTones,
   mockDataSourceWithNoShortcodes,
   mockEmojibaseV5DataSource,
@@ -11,6 +13,9 @@ import { fireEvent, getByRole, waitFor } from '@testing-library/dom'
 import { openSkintoneListbox } from './shared'
 
 describe('dataSource test', () => {
+  beforeEach(basicBeforeEach)
+  afterEach(basicAfterEach)
+
   test('emoji with no shortcodes still work', async () => {
     mockDataSourceWithNoShortcodes()
     const dataSource = NO_SHORTCODES
