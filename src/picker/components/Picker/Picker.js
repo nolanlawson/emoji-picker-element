@@ -43,6 +43,7 @@ let searchText = ''
 let rootElement
 let baselineEmoji
 let tabpanelElement
+let tabpanelInnerElement
 let indicatorElement
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
@@ -144,7 +145,9 @@ $: {
 onMount(() => {
   const destroys = [
     calculateIndicatorWidth(indicatorElement),
-    calculateEmojiGridWidth(tabpanelElement)
+    // The reason for the tabpanelInnerElement is that, if we measure the width on the tabpanelElement,
+    // then we don't always exclude the scrollbar. In Chrome/WebKit it does, in Firefox it does not.
+    calculateEmojiGridWidth(tabpanelInnerElement)
   ]
 
   return async () => {
