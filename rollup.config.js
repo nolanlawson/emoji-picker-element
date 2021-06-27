@@ -55,9 +55,11 @@ const baseConfig = {
       preventAssignment: true
     }),
     svelte({
-      css: true,
-      customElement: true,
-      dev,
+      compilerOptions: {
+        css: true,
+        customElement: true,
+        dev
+      },
       preprocess: preprocessConfig
     }),
     strip({
