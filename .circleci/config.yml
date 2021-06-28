@@ -42,6 +42,9 @@ jobs:
       - run:
           name: Lint
           command: yarn lint
+      - run:
+          name: Bundlesize tests
+          command: yarn benchmark:bundlesize
       - when:
           condition:
             not:
@@ -61,8 +64,5 @@ jobs:
       - run:
           name: Leak tests
           command: yarn test:leak
-      - run:
-          name: Bundlesize tests
-          command: yarn benchmark:bundlesize
       - store_artifacts:
           path: coverage

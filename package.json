@@ -33,7 +33,7 @@
     "benchmark:run-bundlesize": "bundlesize",
     "benchmark:storage": "cross-env PERF=1 run-s build:rollup && run-p --race test:adhoc benchmark:storage:test",
     "benchmark:storage:test": "node ./test/storage/test.js",
-    "test:leak": "run-s build:rollup && run-p --race test:leak:server test:leak:test",
+    "test:leak": "run-p --race test:leak:server test:leak:test",
     "test:leak:server": "node ./test/leak/server.js",
     "test:leak:test": "node ./test/leak/test.js",
     "dev": "run-p --race dev:rollup dev:server",
