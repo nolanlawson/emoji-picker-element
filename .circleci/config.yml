@@ -31,6 +31,17 @@ jobs:
       - restore_cache:
           name: Restore yarn cache
           key: yarn-v1-{{ checksum "yarn.lock" }}
+      - run:
+          name: Yarn install
+          command: yarn install --immutable
+      - save_cache:
+          name: Save yarn cache
+          key: yarn-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - run:
+          name: Lint
+          command: yarn lint
       - when:
           condition:
             not:
@@ -41,12 +52,6 @@ jobs:
                 # Do --ignore-scripts because we don't actually want the old version of Svelte to compile
                 # the picker; just get injected at runtime. This is how `emoji-picker-element/svelte` is used.
                 command: yarn add svelte@<<parameters.svelte-version>> --dev --ignore-scripts
-      - run:
-          name: Yarn install
-          command: yarn install --immutable
-      - run:
-          name: Lint
-          command: yarn lint
       - run:
           name: Unit tests
           command: yarn test
@@ -59,10 +64,5 @@ jobs:
       - run:
           name: Bundlesize tests
           command: yarn benchmark:bundlesize
-      - save_cache:
-          name: Save yarn cache
-          key: yarn-v1-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
       - store_artifacts:
           path: coverage
