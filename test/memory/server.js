@@ -6,7 +6,7 @@ const port = 3000
 app.use(express.static('./'))
 
 app.get('/', (req, res) => {
-  // these headers are required for performance.measureMemory()
+  // these headers are required for performance.measureUserAgentSpecificMemory()
   // https://web.dev/why-coop-coep/
   res.set('Cross-Origin-Embedder-Policy', 'require-corp')
     .set('Cross-Origin-Opener-Policy', 'same-origin')

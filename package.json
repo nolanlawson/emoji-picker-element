@@ -106,7 +106,7 @@
     "playwright": "^1.7.1",
     "postcss": "^8.2.1",
     "pretty-bytes": "^5.4.1",
-    "puppeteer": "^5.5.0",
+    "puppeteer": "^10.0.0",
     "recursive-readdir": "^2.2.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.32.0",
