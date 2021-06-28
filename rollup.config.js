@@ -54,7 +54,6 @@ const baseConfig = {
     }),
     svelte({
       compilerOptions: {
-        css: true,
         customElement: true,
         dev
       },
