@@ -1,6 +1,6 @@
 version: 2.1
 
-supported-svelte-versions: &supported-svelte-versions ["local", "3.29.4", "3.33.0", "3.38.3"]
+supported-svelte-versions: &supported-svelte-versions ["local", "3.29.4", "3.33.0"]
 
 workflows:
   build_and_test:
@@ -38,7 +38,9 @@ jobs:
           steps:
             - run:
                 name: Override version of svelte@<<parameters.svelte-version>>
-                command: yarn add svelte@<<parameters.svelte-version>> --dev
+                # Do --ignore-scripts because we don't actually want the old version of Svelte to compile
+                # the picker; just get injected at runtime. This is how `emoji-picker-element/svelte` is used.
+                command: yarn add svelte@<<parameters.svelte-version>> --dev --ignore-scripts
       - run:
           name: Yarn install
           command: yarn install --immutable
