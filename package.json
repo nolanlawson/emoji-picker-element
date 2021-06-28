@@ -189,7 +189,7 @@
   "bundlesize": [
     {
       "path": "./bundle.js",
-      "maxSize": "41.3 kB",
+      "maxSize": "41.4 kB",
       "compression": "none"
     },
     {
