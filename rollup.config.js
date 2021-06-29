@@ -59,6 +59,13 @@ const baseConfig = {
       },
       preprocess: preprocessConfig
     }),
+    replace({
+      preventAssignment: true,
+      delimiters: ['', ''],
+      // Reduce bundle size by removing this bit
+      // https://github.com/sveltejs/svelte/blob/5d82496/src/runtime/internal/Component.ts#L64-L78
+      '(!customElement)': '(false)'
+    }),
     strip({
       include: ['**/*.js', '**/*.svelte'],
       functions: [
