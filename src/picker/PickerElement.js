@@ -1,14 +1,18 @@
 import SveltePicker from './components/Picker/Picker.svelte'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
 
-export default class Picker extends SveltePicker {
-  constructor (props = {}) {
+export default class PickerElement extends SveltePicker {
+  constructor (props) {
     performance.mark('initialLoad')
-    // Set defaults
-    props.locale = props.locale || DEFAULT_LOCALE
-    props.dataSource = props.dataSource || DEFAULT_DATA_SOURCE
     // Make the API simpler, directly pass in the props
-    super({ props })
+    super({
+      props: {
+        // Set defaults
+        locale: DEFAULT_LOCALE,
+        dataSource: DEFAULT_DATA_SOURCE,
+        ...props
+      }
+    })
   }
 
   disconnectedCallback () {
@@ -36,4 +40,4 @@ export default class Picker extends SveltePicker {
   }
 }
 
-customElements.define('emoji-picker', Picker)
+customElements.define('emoji-picker', PickerElement)
