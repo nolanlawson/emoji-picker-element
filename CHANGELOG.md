@@ -1,3 +1,24 @@
+# [1.6.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.5.0...v1.6.0) (2021-06-29)
+
+
+### Bug Fixes
+
+* update svelte to 3.37.0 ([#152](https://github.com/nolanlawson/emoji-picker-element/pull/152)) ([50ac48d](https://github.com/nolanlawson/emoji-picker-element/commit/50ac48d4c8133c71ba94ed2c0f2daa964b34092c)), closes [#149](https://github.com/nolanlawson/emoji-picker-element/issues/149) and [#116](https://github.com/nolanlawson/emoji-picker-element/issues/116)
+* fix rollup compiler warning ([#154](https://github.com/nolanlawson/emoji-picker-element/issues/154)) ([f5e9dcb](https://github.com/nolanlawson/emoji-picker-element/commit/f5e9dcbfe3c5a17250f190ba987954eb12e2d57c))
+* remove unused code ([#148](https://github.com/nolanlawson/emoji-picker-element/issues/148)) ([304a18d](https://github.com/nolanlawson/emoji-picker-element/commit/304a18d2f769c1aeadb1792432a3ae1c5502f808))
+
+
+### Features
+
+* add custom-elements.json ([#142](https://github.com/nolanlawson/emoji-picker-element/issues/142)) ([fd3e0f3](https://github.com/nolanlawson/emoji-picker-element/commit/fd3e0f3dfbef7a2f48decf7716ed151b5194354a)), closes [#31](https://github.com/nolanlawson/emoji-picker-element/issues/31)
+
+
+### Performance Improvements
+
+* reduce bundle size ([#155](https://github.com/nolanlawson/emoji-picker-element/issues/155)) ([2f05ce7](https://github.com/nolanlawson/emoji-picker-element/commit/2f05ce790dbe5873c33559616421efb181fec4c8))
+
+
+
 # [1.5.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.4.0...v1.5.0) (2021-05-31)
 
 
