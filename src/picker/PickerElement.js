@@ -1,5 +1,6 @@
 import SveltePicker from './components/Picker/Picker.svelte'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
+import { runAll } from './utils/runAll'
 
 export default class PickerElement extends SveltePicker {
   constructor (props) {
@@ -16,7 +17,6 @@ export default class PickerElement extends SveltePicker {
   }
 
   disconnectedCallback () {
-    const runAll = funcs => (funcs && funcs.forEach(func => func()))
     // For Svelte v <3.33.0, we have to run the destroy logic ourselves because it doesn't have this fix:
     // https://github.com/sveltejs/svelte/commit/d4f98f
     // We can safely just run on_disconnect and on_destroy to cover all versions of Svelte. In older versions

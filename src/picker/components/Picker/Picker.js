@@ -24,6 +24,7 @@ import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame
 import { onMount, tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
+import { runAll } from '../../utils/runAll'
 
 // public
 let locale = null
@@ -155,7 +156,7 @@ onMount(() => {
     // custom elements. Instead of waiting for a destroy event, we use the mount/unmount
     // lifecycle to clean up.
     // https://github.com/sveltejs/svelte/issues/5989#issuecomment-796366910
-    destroys.forEach(({ destroy }) => destroy())
+    runAll(destroys)
     // Close the database when the component is disconnected. It will automatically reconnect anyway
     // if the component is ever reconnected.
     if (database) {
