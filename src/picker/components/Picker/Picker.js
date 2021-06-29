@@ -3,7 +3,6 @@
 import Database from '../../ImportedDatabase'
 import enI18n from '../../i18n/en'
 import { groups as defaultGroups, customGroup } from '../../groups'
-import { DEFAULT_LOCALE, DEFAULT_DATA_SOURCE } from '../../../database/constants'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { hasZwj } from '../../utils/hasZwj'
@@ -22,9 +21,10 @@ import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 import * as widthCalculator from '../../utils/widthCalculator'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
-import { onMount, onDestroy, tick } from 'svelte'
+import { onMount, tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
+import { runAll } from '../../utils/runAll'
 
 // public
 let locale = null
@@ -44,6 +44,8 @@ let searchText = ''
 let rootElement
 let baselineEmoji
 let tabpanelElement
+let tabpanelInnerElement
+let indicatorElement
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
 let message // eslint-disable-line no-unused-vars
@@ -141,34 +143,41 @@ $: {
   }
 }
 
-// TODO: this is a bizarre way to set these default properties, but currently Svelte
-// renders custom elements in an odd way - props are not set when calling the constructor,
-// but are only set later. This would cause a double render or a double-fetch of
-// the dataSource, which is bad. Delaying with a microtask avoids this.
-// See https://github.com/sveltejs/svelte/pull/4527
-onMount(async () => {
-  await tick()
-  console.log('props ready: setting locale and dataSource to default')
-  locale = locale || DEFAULT_LOCALE
-  dataSource = dataSource || DEFAULT_DATA_SOURCE
+onMount(() => {
+  const destroys = [
+    calculateIndicatorWidth(indicatorElement),
+    // The reason for the tabpanelInnerElement is that, if we measure the width on the tabpanelElement,
+    // then we don't always exclude the scrollbar. In Chrome/WebKit it does, in Firefox it does not.
+    calculateEmojiGridWidth(tabpanelInnerElement)
+  ]
+
+  return async () => {
+    // TODO: using a workaround for Svelte actions never calling destroy() when used in
+    // custom elements. Instead of waiting for a destroy event, we use the mount/unmount
+    // lifecycle to clean up.
+    // https://github.com/sveltejs/svelte/issues/5989#issuecomment-796366910
+    runAll(destroys)
+    // Close the database when the component is disconnected. It will automatically reconnect anyway
+    // if the component is ever reconnected.
+    if (database) {
+      console.log('closing database')
+      try {
+        await database.close()
+      } catch (err) {
+        console.error(err) // only happens if the database failed to load in the first place, so we don't care
+      }
+    }
+  }
 })
+
 $: {
+  // API props like locale and dataSource are not actually set until the onMount phase
+  // https://github.com/sveltejs/svelte/pull/4522
   if (locale && dataSource && (!database || (database.locale !== locale && database.dataSource !== dataSource))) {
     console.log('creating database', { locale, dataSource })
     database = new Database({ dataSource, locale })
   }
 }
-
-onDestroy(async () => {
-  if (database) {
-    console.log('closing database')
-    try {
-      await database.close()
-    } catch (err) {
-      console.error(err) // only happens if the database failed to load in the first place, so we don't care
-    }
-  }
-})
 
 //
 // Global styles for the entire picker

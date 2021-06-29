@@ -1,17 +1,29 @@
 import SveltePicker from './components/Picker/Picker.svelte'
+import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
+import { runAll } from './utils/runAll'
 
-export default class Picker extends SveltePicker {
+export default class PickerElement extends SveltePicker {
   constructor (props) {
     performance.mark('initialLoad')
     // Make the API simpler, directly pass in the props
-    super({ props })
+    super({
+      props: {
+        // Set defaults
+        locale: DEFAULT_LOCALE,
+        dataSource: DEFAULT_DATA_SOURCE,
+        ...props
+      }
+    })
   }
 
   disconnectedCallback () {
-    // Have to explicitly destroy the component to avoid memory leaks.
-    // See https://github.com/sveltejs/svelte/issues/1152
-    console.log('disconnectedCallback')
-    this.$destroy()
+    // For Svelte v <3.33.0, we have to run the destroy logic ourselves because it doesn't have this fix:
+    // https://github.com/sveltejs/svelte/commit/d4f98f
+    // We can safely just run on_disconnect and on_destroy to cover all versions of Svelte. In older versions
+    // the on_destroy array will have length 1, whereas in more recent versions it'll be on_disconnect instead.
+    // TODO: remove this when we drop support for Svelte < 3.33.0
+    runAll(this.$$.on_destroy)
+    runAll(this.$$.on_disconnect)
   }
 
   static get observedAttributes () {
@@ -28,4 +40,4 @@ export default class Picker extends SveltePicker {
   }
 }
 
-customElements.define('emoji-picker', Picker)
+customElements.define('emoji-picker', PickerElement)

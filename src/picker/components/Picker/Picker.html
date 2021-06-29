@@ -98,7 +98,7 @@
   <div class="indicator-wrapper">
     <div class="indicator"
          style={indicatorStyle}
-         use:calculateIndicatorWidth>
+         bind:this={indicatorElement}>
     </div>
   </div>
 
@@ -117,41 +117,42 @@
        on:click={onEmojiClick}
        bind:this={tabpanelElement}
   >
-    {#each currentEmojisWithCategories as emojiWithCategory, i (emojiWithCategory.category)}
-      <div
-        id="menu-label-{i}"
-        class="category {currentEmojisWithCategories.length > 1 ? '' : 'gone'}"
-        aria-hidden="true">
-        <!-- This logic is a bit complicated in order to avoid a flash of the word "Custom" while switching
-             from a tabpanel with custom emoji to a regular group. I.e. we don't want it to suddenly flash
-             from "Custom" to "Smileys and emoticons" when you click the second nav button. -->
-        {searchMode ? i18n.searchResultsLabel : (
-          emojiWithCategory.category ? emojiWithCategory.category : (
-            currentEmojisWithCategories.length > 1 ? i18n.categories.custom : i18n.categories[currentGroup.name]
-          )
-        )}
-      </div>
-      <div class="emoji-menu"
-           role={searchMode ? 'listbox' : 'menu'}
-           aria-labelledby="menu-label-{i}"
-           id={searchMode ? 'search-results' : ''}
-           use:calculateEmojiGridWidth>
-        {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
-          <button role={searchMode ? 'option' : 'menuitem'}
-                  aria-selected={searchMode ? i == activeSearchItem : ''}
-                  aria-label={labelWithSkin(emoji, currentSkinTone)}
-                  title={emoji.title}
-                  class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
-                  id="emo-{emoji.id}">
-            {#if emoji.unicode}
-              {unicodeWithSkin(emoji, currentSkinTone)}
-            {:else}
-              <img class="custom-emoji" src={emoji.url} alt="" loading="lazy" />
-            {/if}
-          </button>
-        {/each}
-      </div>
-    {/each}
+    <div bind:this={tabpanelInnerElement}>
+      {#each currentEmojisWithCategories as emojiWithCategory, i (emojiWithCategory.category)}
+        <div
+          id="menu-label-{i}"
+          class="category {currentEmojisWithCategories.length > 1 ? '' : 'gone'}"
+          aria-hidden="true">
+          <!-- This logic is a bit complicated in order to avoid a flash of the word "Custom" while switching
+               from a tabpanel with custom emoji to a regular group. I.e. we don't want it to suddenly flash
+               from "Custom" to "Smileys and emoticons" when you click the second nav button. -->
+          {searchMode ? i18n.searchResultsLabel : (
+            emojiWithCategory.category ? emojiWithCategory.category : (
+              currentEmojisWithCategories.length > 1 ? i18n.categories.custom : i18n.categories[currentGroup.name]
+            )
+          )}
+        </div>
+        <div class="emoji-menu"
+             role={searchMode ? 'listbox' : 'menu'}
+             aria-labelledby="menu-label-{i}"
+             id={searchMode ? 'search-results' : ''}>
+          {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
+            <button role={searchMode ? 'option' : 'menuitem'}
+                    aria-selected={searchMode ? i == activeSearchItem : ''}
+                    aria-label={labelWithSkin(emoji, currentSkinTone)}
+                    title={emoji.title}
+                    class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
+                    id="emo-{emoji.id}">
+              {#if emoji.unicode}
+                {unicodeWithSkin(emoji, currentSkinTone)}
+              {:else}
+                <img class="custom-emoji" src={emoji.url} alt="" loading="lazy" />
+              {/if}
+            </button>
+          {/each}
+        </div>
+      {/each}
+    </div>
   </div>
   <div class="favorites emoji-menu {message ? 'gone': ''}"
        role="menu"

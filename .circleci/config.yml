@@ -1,12 +1,21 @@
 version: 2.1
 
+supported-svelte-versions: &supported-svelte-versions ["local", "3.29.4"]
+
 workflows:
-  version: 2
-  build:
+  build_and_test:
     jobs:
-      - build_and_test
+      - build_and_test:
+          matrix:
+            parameters:
+              svelte-version: *supported-svelte-versions
 jobs:
   build_and_test:
+    parameters:
+      svelte-version:
+        type: string
+        description: Overrides the Svelte version. `local` refers to the locally-installed version.
+        default: "local"
     docker:
       - image: circleci/node:14-buster-browsers
     steps:
@@ -25,9 +34,27 @@ jobs:
       - run:
           name: Yarn install
           command: yarn install --immutable
+      - save_cache:
+          name: Save yarn cache
+          key: yarn-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
       - run:
           name: Lint
           command: yarn lint
+      - run:
+          name: Bundlesize tests
+          command: yarn benchmark:bundlesize
+      - when:
+          condition:
+            not:
+              equal: [ <<parameters.svelte-version>>, "local" ]
+          steps:
+            - run:
+                name: Override version of svelte@<<parameters.svelte-version>>
+                # Do --ignore-scripts because we don't actually want the old version of Svelte to compile
+                # the picker; just get injected at runtime. This is how `emoji-picker-element/svelte` is used.
+                command: yarn add svelte@<<parameters.svelte-version>> --dev --ignore-scripts
       - run:
           name: Unit tests
           command: yarn test
@@ -37,13 +64,5 @@ jobs:
       - run:
           name: Leak tests
           command: yarn test:leak
-      - run:
-          name: Bundlesize tests
-          command: yarn benchmark:bundlesize
-      - save_cache:
-          name: Save yarn cache
-          key: yarn-v1-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
       - store_artifacts:
           path: coverage
