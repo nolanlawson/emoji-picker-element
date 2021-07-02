@@ -11,8 +11,7 @@ performance.measure = function (name, start) {
   if (name === 'initialLoad' && start === 'initialLoad') {
     // test to make sure the picker loaded with no errors
     const hasErrors = !!document.querySelector('emoji-picker')
-      .shadowRoot.querySelector('.message')
-      .getBoundingClientRect().width
+      .shadowRoot.querySelector('.message:not(.gone)')
     if (hasErrors) {
       console.error('picker is showing an error message')
     } else {
