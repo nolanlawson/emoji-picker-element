@@ -30,7 +30,8 @@
                 "repo": "https://github.com/nolanlawson/emoji-picker-element.git",
                 "ref": "master",
                 "setupCommands": [
-                  "PERF=1 yarn --immutable"
+                  "yarn --immutable --ignore-scripts",
+                  "PERF=1 yarn build:rollup"
                 ]
               }
             }
