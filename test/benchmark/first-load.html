@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <script type="module" src="./benchmark.js"></script>
+  <script type="module">
+    import { Picker } from 'emoji-picker-element'
+
+    const dataSource = '/data.json'
+
+    document.body.appendChild(new Picker({ dataSource }))
+  </script>
+</body>
+</html>

@@ -31,6 +31,10 @@ Check code coverage:
 
 ## Other
 
+Benchmark runtime performance:
+
+    yarn benchmark:runtime
+
 Benchmark memory usage:
 
     yarn benchmark:memory

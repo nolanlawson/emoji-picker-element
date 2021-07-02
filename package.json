@@ -25,6 +25,7 @@
     "build:typedoc": "typedoc --target ES5 --out docs-tmp --theme markdown --excludePrivate --excludeNotExported --hideSources --hideBreadcrumbs ./src/types && node ./bin/generateTypeDocs && shx rm -fr docs-tmp",
     "build:types": "tsc --target ES5 -d --outDir ./ts-tmp --project ./src/types && shx mv ./ts-tmp/*.d.ts ./ && shx rm -fr ts-tmp",
     "build:toc": "node ./bin/generateTOC",
+    "benchmark:runtime": "cross-env PERF=1 run-s build:rollup && ./bin/run-benchmark.sh",
     "benchmark:bundlesize": "run-s build:rollup benchmark:bundle benchmark:run-bundlesize",
     "benchmark:bundle": "rollup -c ./test/bundlesize/rollup.config.js",
     "benchmark:memory": "run-s build:rollup benchmark:bundle && run-p --race benchmark:memory:server benchmark:memory:test",
@@ -124,6 +125,7 @@
     "svelte-jester": "nolanlawson/svelte-jester#auto-preprocess",
     "svelte-preprocess": "^4.7.3",
     "svgo": "^2.3.1",
+    "tachometer": "^0.5.9",
     "typedoc": "^0.19.2",
     "typedoc-plugin-markdown": "^2.4.2",
     "typescript": "~4.0.0"
@@ -152,6 +154,7 @@
       "getComputedStyle",
       "indexedDB",
       "IDBKeyRange",
+      "Headers",
       "matchMedia",
       "performance",
       "ResizeObserver",
