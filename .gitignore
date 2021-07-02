@@ -133,3 +133,5 @@ dist
 /docs-tmp
 /ts-tmp
 /bundle.js
+/test/benchmark/node_modules
+/test/benchmark/data.json

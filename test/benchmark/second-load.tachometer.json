@@ -1,0 +1,42 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Polymer/tachometer/master/config.schema.json",
+  "sampleSize": 50,
+  "timeout": 5,
+  "horizons": ["10%"],
+  "benchmarks": [
+    {
+      "url": "./second-load.html",
+      "browser": {
+        "name": "chrome",
+        "headless": true
+      },
+      "measurement": [
+        {
+          "mode": "performance",
+          "entryName": "benchmark-total"
+        }
+      ],
+      "expand": [
+        {
+          "name": "second-load-this-change"
+        },
+        {
+          "name": "second-load-tip-of-tree",
+          "packageVersions": {
+            "label": "tip-of-tree",
+            "dependencies": {
+              "emoji-picker-element": {
+                "kind": "git",
+                "repo": "https://github.com/nolanlawson/emoji-picker-element.git",
+                "ref": "master",
+                "setupCommands": [
+                  "PERF=1 yarn --immutable"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
