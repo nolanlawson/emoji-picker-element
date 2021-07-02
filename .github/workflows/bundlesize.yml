@@ -36,8 +36,6 @@ jobs:
       - uses: preactjs/compressed-size-action@v2
         with:
           build-script: |
-            yarn --immutable --ignore-scripts
-            yarn build:rollup
-            yarn benchmark:bundle
+            npm run benchmark:bundle
           pattern: "./bundle.js"
           compression: "none"
