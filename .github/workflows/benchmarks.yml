@@ -38,13 +38,14 @@ jobs:
 
       - name: yarn install
         if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn --immutable --ignore-scripts
+        run: |
+          yarn --immutable --ignore-scripts
+          PERF=1 yarn build:rollup
+          ./bin/setup-benchmark.sh
 
       # first-load
       - name: Benchmark first-load
         run: |
-          PERF=1 yarn build:rollup
-          ./bin/setup-benchmark.sh
           cd test/benchmark
           ../../node_modules/.bin/tach \
             --config ./first-load.tachometer.json \
@@ -61,8 +62,6 @@ jobs:
       # second-load
       - name: Benchmark second-load
         run: |
-          PERF=1 yarn build:rollup
-          ./bin/setup-benchmark.sh
           cd test/benchmark
           ../../node_modules/.bin/tach \
             --config ./second-load.tachometer.json \
