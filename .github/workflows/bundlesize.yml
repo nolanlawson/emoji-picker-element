@@ -1,0 +1,43 @@
+name: Compressed Size
+
+on: [pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      # via https://github.com/actions/cache/blob/0638051/examples.md#node---yarn
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: yarn install
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          yarn --immutable --ignore-scripts
+          PERF=1 yarn build:rollup
+          ./bin/setup-benchmark.sh
+
+      - uses: preactjs/compressed-size-action@v2
+        with:
+          build-script: |
+            yarn --immutable --ignore-scripts
+            yarn build:rollup
+            yarn benchmark:bundle
+          pattern: "./bundle.js"
+          compression: "none"
