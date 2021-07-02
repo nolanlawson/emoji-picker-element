@@ -6,18 +6,20 @@ import { testColorEmojiSupported } from './testColorEmojiSupported'
 /* istanbul ignore next */
 export function determineEmojiSupportLevel () {
   performance.mark('determineEmojiSupportLevel')
+  const entries = Object.entries(versionsAndTestEmoji)
   try {
-    let res
-    for (const [emoji, version] of Object.entries(versionsAndTestEmoji)) {
+    // start with latest emoji and work backwards
+    for (const [emoji, version] of entries) {
       if (testColorEmojiSupported(emoji)) {
-        res = version
+        return version
       }
     }
-    return res
   } catch (e) { // canvas error
     console.log('Ignoring canvas error', e)
-    return Math.max(...Object.values(versionsAndTestEmoji))
   } finally {
     performance.measure('determineEmojiSupportLevel', 'determineEmojiSupportLevel')
   }
+  // In case of an error, be generous and just assume all emoji are supported (e.g. for canvas errors
+  // due to anti-fingerprinting add-ons). Better to show some gray boxes than nothing at all.
+  return entries[0][1] // first one in the list is the most recent version
 }

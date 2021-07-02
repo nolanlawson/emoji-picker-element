@@ -8,14 +8,14 @@
 // "face without mouth" plus "fog".) These emoji can only be filtered using the width test,
 // which happens in checkZwjSupport.js.
 export const versionsAndTestEmoji = {
-  '😃': 0.6,
-  '😐️': 0.7,
-  '😀': 1,
-  '👁️‍🗨️': 2,
-  '🤣': 3,
-  '👱‍♀️': 4,
-  '🤩': 5,
-  '🥰': 11, // smiling face with hearts
+  '🥲': 13.1, // smiling face with tear, technically from v13 but see note above
   '🥻': 12.1, // sari, technically from v12 but see note above
-  '🥲': 13.1 // smiling face with tear, technically from v13 but see note above
+  '🥰': 11,
+  '🤩': 5,
+  '👱‍♀️': 4,
+  '🤣': 3,
+  '👁️‍🗨️': 2,
+  '😀': 1,
+  '😐️': 0.7,
+  '😃': 0.6
 }
