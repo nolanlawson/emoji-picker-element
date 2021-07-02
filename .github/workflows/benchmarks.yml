@@ -38,7 +38,7 @@ jobs:
 
       - name: yarn install
         if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn --immutable
+        run: yarn --immutable --ignore-scripts
 
       # first-load
       - name: Benchmark first-load
