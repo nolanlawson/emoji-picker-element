@@ -18,10 +18,10 @@
       ],
       "expand": [
         {
-          "name": "first-load-this-change"
+          "name": "this-change"
         },
         {
-          "name": "first-load-tip-of-tree",
+          "name": "tip-of-tree",
           "packageVersions": {
             "label": "tip-of-tree",
             "dependencies": {
