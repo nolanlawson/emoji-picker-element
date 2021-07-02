@@ -26,13 +26,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: yarn install
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          yarn --immutable --ignore-scripts
-          PERF=1 yarn build:rollup
-          ./bin/setup-benchmark.sh
-
       - uses: preactjs/compressed-size-action@v2
         with:
           build-script: benchmark:bundle
