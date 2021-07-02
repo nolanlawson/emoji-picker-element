@@ -9,7 +9,15 @@ performance.mark = function (name) {
 
 performance.measure = function (name, start) {
   if (name === 'initialLoad' && start === 'initialLoad') {
-    measure.call(performance, 'benchmark-total', 'benchmark-start')
+    // test to make sure the picker loaded with no errors
+    const hasErrors = !!document.querySelector('emoji-picker')
+      .shadowRoot.querySelector('.message')
+      .getBoundingClientRect().width
+    if (hasErrors) {
+      console.error('picker is showing an error message')
+    } else {
+      measure.call(performance, 'benchmark-total', 'benchmark-start')
+    }
   }
 }
 

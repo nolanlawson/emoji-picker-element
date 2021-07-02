@@ -16,6 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install system dependencies
+        run: sudo apt-get install -y fonts-noto-color-emoji
+
       - uses: actions/setup-node@v1
         with:
           node-version: 14
