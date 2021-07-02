@@ -25,17 +25,17 @@ async function waitForServerReady () {
 
 async function measureMemory (scenario) {
   const browser = await puppeteer.launch({
-    headless: false, // required for performance.measureUserAgentSpecificMemory()
-    args: [
-      '-enable-experimental-web-platform-features' // required for performance.measureUserAgentSpecificMemory()
-    ]
+    headless: false // required for performance.measureUserAgentSpecificMemory()
   })
   const page = await browser.newPage()
   await page.goto(`http://localhost:3000?${scenario}=1`, {
     waitUntil: 'networkidle0'
   })
-  await new Promise(resolve => setTimeout(resolve, 2000))
-  const bytes = await page.evaluate(async () => (await performance.measureUserAgentSpecificMemory()).bytes)
+  const bytes = await page.evaluate(async () => {
+    // Taking two measurements and returning the second seems more accurate for some reason
+    await performance.measureUserAgentSpecificMemory()
+    return (await performance.measureUserAgentSpecificMemory()).bytes
+  })
   await browser.close()
   return bytes
 }
