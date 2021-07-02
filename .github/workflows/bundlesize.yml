@@ -35,7 +35,6 @@ jobs:
 
       - uses: preactjs/compressed-size-action@v2
         with:
-          build-script: |
-            npm run benchmark:bundle
+          build-script: benchmark:bundle
           pattern: "./bundle.js"
           compression: "none"
