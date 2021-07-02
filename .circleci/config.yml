@@ -33,9 +33,7 @@ jobs:
           key: yarn-v1-{{ checksum "yarn.lock" }}
       - run:
           name: Yarn install
-          command: |
-            yarn install --immutable --ignore-scripts
-            yarn build:rollup
+          command: yarn install --immutable
       - save_cache:
           name: Save yarn cache
           key: yarn-v1-{{ checksum "yarn.lock" }}
