@@ -10,7 +10,7 @@
 export const versionsAndTestEmoji = {
   '🥲': 13.1, // smiling face with tear, technically from v13 but see note above
   '🥻': 12.1, // sari, technically from v12 but see note above
-  '🥰': 11, // smiling face with hearts
+  '🥰': 11,
   '🤩': 5,
   '👱‍♀️': 4,
   '🤣': 3,
