@@ -33,18 +33,25 @@ jobs:
           key: yarn-v1-{{ checksum "yarn.lock" }}
       - run:
           name: Yarn install
-          command: yarn install --immutable
+          command: |
+            yarn install --immutable --ignore-scripts
+            yarn build:rollup
       - save_cache:
           name: Save yarn cache
           key: yarn-v1-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
-      - run:
-          name: Lint
-          command: yarn lint
-      - run:
-          name: Bundlesize tests
-          command: yarn benchmark:bundlesize
+      - when:
+          condition:
+            equal: [ <<parameters.svelte-version>>, "local" ]
+          steps:
+            # there is no point in running the lint/bundlesize test for multiple versions of Svelte
+            - run:
+                name: Lint
+                command: yarn lint
+            - run:
+                name: Bundlesize tests
+                command: yarn benchmark:bundlesize
       - when:
           condition:
             not:
@@ -56,10 +63,7 @@ jobs:
                 # the picker; just get injected at runtime. This is how `emoji-picker-element/svelte` is used.
                 command: yarn add svelte@<<parameters.svelte-version>> --dev --ignore-scripts
       - run:
-          name: Unit tests
-          command: yarn test
-      - run:
-          name: Code coverage tests
+          name: Unit tests with code coverage
           command: yarn cover
       - run:
           name: Leak tests
