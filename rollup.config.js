@@ -7,7 +7,7 @@ import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
 import cssnano from 'cssnano'
 
-const { NODE_ENV } = process.env
+const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
 
 const preprocessConfig = preprocess({
@@ -73,7 +73,7 @@ const baseConfig = {
         !dev && 'console.log'
       ].filter(Boolean)
     }),
-    !dev && analyze({ summaryOnly: true })
+    DEBUG && analyze({ summaryOnly: true })
   ],
   external: [
     './database.js',
