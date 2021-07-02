@@ -6,6 +6,17 @@
 /* istanbul ignore file */
 
 import { FONT_FAMILY } from '../constants'
+import { versionsAndTestEmoji } from '../../../bin/versionsAndTestEmoji'
+
+// only used in jest tests
+let simulateCanvasError = false
+export function setSimulateCanvasError (value) {
+  simulateCanvasError = value
+}
+let simulateOldBrowser = false
+export function setSimulateOldBrowser (value) {
+  simulateOldBrowser = value
+}
 
 const getTextFeature = (text, color) => {
   const canvas = document.createElement('canvas')
@@ -32,6 +43,14 @@ const compareFeatures = (feature1, feature2) => {
 
 export function testColorEmojiSupported (text) {
   if (process.env.NODE_ENV === 'test') {
+    if (simulateCanvasError) {
+      throw new Error('canvas error')
+    } else if (simulateOldBrowser) {
+      return Object.entries(versionsAndTestEmoji)
+        .filter(([emoji, version]) => version < 12)
+        .map(([emoji]) => emoji)
+        .includes(text)
+    }
     return true // avoid using canvas in jest
   }
   // Render white and black and then compare them to each other and ensure they're the same

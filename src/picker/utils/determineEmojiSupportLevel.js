@@ -3,7 +3,6 @@
 import { versionsAndTestEmoji } from '../../../bin/versionsAndTestEmoji'
 import { testColorEmojiSupported } from './testColorEmojiSupported'
 
-/* istanbul ignore next */
 export function determineEmojiSupportLevel () {
   performance.mark('determineEmojiSupportLevel')
   const entries = Object.entries(versionsAndTestEmoji)
