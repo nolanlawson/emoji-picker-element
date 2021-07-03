@@ -91,6 +91,7 @@ export async function loadData (db, emojiData, url, eTag) {
         }
         metaStore.put(eTag, KEY_ETAG)
         metaStore.put(url, KEY_URL)
+        /* istanbul ignore else */
         if (txn.commit) {
           txn.commit()
         }
@@ -208,6 +209,7 @@ export function incrementFavoriteEmojiCount (db, unicode) {
   return dbPromise(db, STORE_FAVORITES, MODE_READWRITE, (store, txn) => {
     getIDB(store, unicode, result => {
       store.put((result || 0) + 1, unicode)
+      /* istanbul ignore else */
       if (txn.commit) {
         txn.commit()
       }
