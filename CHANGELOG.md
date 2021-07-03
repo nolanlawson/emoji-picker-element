@@ -1,3 +1,12 @@
+## [1.6.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.0...v1.6.1) (2021-07-03)
+
+
+### Performance Improvements
+
+* determine emoji support in reverse order ([#160](https://github.com/nolanlawson/emoji-picker-element/issues/160)) ([2603055](https://github.com/nolanlawson/emoji-picker-element/commit/2603055d1a9983fdaf3217ea753c3e77485e7638))
+
+
+
 # [1.6.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.5.0...v1.6.0) (2021-06-29)
 
 
