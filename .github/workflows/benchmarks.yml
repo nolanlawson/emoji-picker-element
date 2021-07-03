@@ -73,3 +73,19 @@ jobs:
           path: test/benchmark/second-load.results.json
           pr-bench-name: this-change
           base-bench-name: tip-of-tree
+
+      # database-interactions
+      - name: Benchmark database-interactions
+        run: |
+          cd test/benchmark
+          ../../node_modules/.bin/tach \
+            --config ./database-interactions.tachometer.json \
+            --json-file ./database-interactions.results.json
+
+      - name: Report database-interactions
+        uses: andrewiggins/tachometer-reporter-action@v2
+        with:
+          report-id: emoji-picker-element-database-interactions
+          path: test/benchmark/database-interactions.results.json
+          pr-bench-name: this-change
+          base-bench-name: tip-of-tree

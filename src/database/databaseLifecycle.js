@@ -50,18 +50,20 @@ export function openDatabase (dbName) {
 
 export function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(storeName, readOnlyOrReadWrite)
+    // Use relaxed durability because neither the emoji data nor the favorites/preferred skin tone
+    // are really irreplaceable data. IndexedDB is just a cache in this case.
+    const txn = db.transaction(storeName, readOnlyOrReadWrite, { durability: 'relaxed' })
     const store = typeof storeName === 'string'
-      ? tx.objectStore(storeName)
-      : storeName.map(name => tx.objectStore(name))
+      ? txn.objectStore(storeName)
+      : storeName.map(name => txn.objectStore(name))
     let res
-    cb(store, (result) => {
+    cb(store, txn, (result) => {
       res = result
     })
 
-    tx.oncomplete = () => resolve(res)
+    txn.oncomplete = () => resolve(res)
     /* istanbul ignore next */
-    tx.onerror = () => reject(tx.error)
+    txn.onerror = () => reject(txn.error)
   })
 }
 

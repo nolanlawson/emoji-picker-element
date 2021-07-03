@@ -38,7 +38,7 @@ async function doFullDatabaseScanForSingleResult (db, predicate) {
   //   console.log(performance.getEntriesByName('total').slice(-1)[0].duration)
   // })()
   const BATCH_SIZE = 50 // Typically around 150ms for 6x slowdown in Chrome for above benchmark
-  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
+  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, txn, cb) => {
     let lastKey
 
     const processNextBatch = () => {
@@ -64,7 +64,7 @@ export async function loadData (db, emojiData, url, eTag) {
   performance.mark('loadData')
   try {
     const transformedData = transformEmojiData(emojiData)
-    await dbPromise(db, [STORE_EMOJI, STORE_KEYVALUE], MODE_READWRITE, ([emojiStore, metaStore]) => {
+    await dbPromise(db, [STORE_EMOJI, STORE_KEYVALUE], MODE_READWRITE, ([emojiStore, metaStore], txn) => {
       let oldETag
       let oldUrl
       let todo = 0
@@ -88,6 +88,10 @@ export async function loadData (db, emojiData, url, eTag) {
         }
         metaStore.put(eTag, KEY_ETAG)
         metaStore.put(url, KEY_URL)
+        /* istanbul ignore else */
+        if (txn.commit) {
+          txn.commit()
+        }
         performance.mark('commitAllData')
       }
 
@@ -108,7 +112,7 @@ export async function loadData (db, emojiData, url, eTag) {
 }
 
 export async function getEmojiByGroup (db, group) {
-  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
+  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, txn, cb) => {
     const range = IDBKeyRange.bound([group, 0], [group + 1, 0], false, true)
     getAllIDB(emojiStore.index(INDEX_GROUP_AND_ORDER), range, cb)
   })
@@ -121,7 +125,7 @@ export async function getEmojiBySearchQuery (db, query) {
     return []
   }
 
-  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => {
+  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, txn, cb) => {
     // get all results that contain all tokens (i.e. an AND query)
     const intermediateResults = []
 
@@ -171,7 +175,7 @@ export async function getEmojiByShortcode (db, shortcode) {
 }
 
 export async function getEmojiByUnicode (db, unicode) {
-  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, cb) => (
+  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, txn, cb) => (
     getIDB(emojiStore, unicode, result => {
       if (result) {
         return cb(result)
@@ -182,7 +186,7 @@ export async function getEmojiByUnicode (db, unicode) {
 }
 
 export function get (db, storeName, key) {
-  return dbPromise(db, storeName, MODE_READONLY, (store, cb) => (
+  return dbPromise(db, storeName, MODE_READONLY, (store, txn, cb) => (
     getIDB(store, key, cb)
   ))
 }
@@ -194,10 +198,14 @@ export function set (db, storeName, key, value) {
 }
 
 export function incrementFavoriteEmojiCount (db, unicode) {
-  return dbPromise(db, STORE_FAVORITES, MODE_READWRITE, (store) => {
-    getIDB(store, unicode, result => (
+  return dbPromise(db, STORE_FAVORITES, MODE_READWRITE, (store, txn) => {
+    getIDB(store, unicode, result => {
       store.put((result || 0) + 1, unicode)
-    ))
+      /* istanbul ignore else */
+      if (txn.commit) {
+        txn.commit()
+      }
+    })
   })
 }
 
@@ -205,7 +213,7 @@ export function getTopFavoriteEmoji (db, customEmojiIndex, limit) {
   if (limit === 0) {
     return []
   }
-  return dbPromise(db, [STORE_FAVORITES, STORE_EMOJI], MODE_READONLY, ([favoritesStore, emojiStore], cb) => {
+  return dbPromise(db, [STORE_FAVORITES, STORE_EMOJI], MODE_READONLY, ([favoritesStore, emojiStore], txn, cb) => {
     const results = []
     favoritesStore.index(INDEX_COUNT).openCursor(undefined, 'prev').onsuccess = e => {
       const cursor = e.target.result
