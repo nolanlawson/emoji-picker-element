@@ -6,6 +6,7 @@ import svelte from 'rollup-plugin-svelte'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
 import cssnano from 'cssnano'
+import trimSvelte from './config/trimSveltePlugin.js'
 
 const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
@@ -66,6 +67,7 @@ const baseConfig = {
       // https://github.com/sveltejs/svelte/blob/5d82496/src/runtime/internal/Component.ts#L64-L78
       '(!customElement)': '(false)'
     }),
+    trimSvelte(),
     strip({
       include: ['**/*.js', '**/*.svelte'],
       functions: [
