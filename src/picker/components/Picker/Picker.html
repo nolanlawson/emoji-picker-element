@@ -143,11 +143,7 @@
                     title={emoji.title}
                     class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
                     id="emo-{emoji.id}">
-              {#if emoji.unicode}
-                {unicodeWithSkin(emoji, currentSkinTone)}
-              {:else}
-                <img class="custom-emoji" src={emoji.url} alt="" loading="lazy" />
-              {/if}
+              <Emoji {emoji} {currentSkinTone} />
             </button>
           {/each}
         </div>
@@ -160,21 +156,13 @@
        style="padding-right: {scrollbarWidth}px;"
        on:click={onEmojiClick}
        data-testid="favorites">
-    <!-- TODO: the reason so much of this emoji logic is duplicated is because it would be wasteful
-         or incorrect to extract this logic into a custom Svelte component, because in customElements
-         mode, Svelte will render _all_ components as custom elements. Ideally we just want one
-         custom element wrapper around the outer component -->
     {#each currentFavorites as emoji, i (emoji.id)}
       <button role="menuitem"
               aria-label={labelWithSkin(emoji, currentSkinTone)}
               title={emoji.title}
               class="emoji"
               id="fav-{emoji.id}">
-        {#if emoji.unicode}
-          {unicodeWithSkin(emoji, currentSkinTone)}
-        {:else}
-          <img class="custom-emoji" src={emoji.url} alt="" loading="lazy" />
-        {/if}
+        <Emoji {emoji} {currentSkinTone} />
       </button>
     {/each}
   </div>

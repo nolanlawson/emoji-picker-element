@@ -23,6 +23,8 @@ import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame
 import { onMount, tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
+import { unicodeWithSkin } from '../../utils/unicodeWithSkin'
+import Emoji from '../Emoji/Emoji.svelte'
 
 // public
 let locale
@@ -82,11 +84,6 @@ const fireEvent = (name, detail) => {
     composed: true
   }))
 }
-
-// eslint-disable-next-line no-unused-vars
-const unicodeWithSkin = (emoji, currentSkinTone) => (
-  (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
-)
 
 // eslint-disable-next-line no-unused-vars
 const labelWithSkin = (emoji, currentSkinTone) => (
