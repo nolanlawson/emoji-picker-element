@@ -30,7 +30,7 @@ describe('element tests', () => {
       basicBeforeEach()
       mockFrenchDataSource()
       picker = new Picker({ dataSource: ALL_EMOJI, locale: 'en' })
-      container = picker.shadowRoot.querySelector('.picker')
+      container = picker.shadowRoot
       document.body.appendChild(picker)
       await tick(20)
     })
@@ -75,8 +75,10 @@ describe('element tests', () => {
       expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML)
         .toContain(DEFAULT_SKIN_TONE_EMOJI)
       picker.skinToneEmoji = '👇'
+      await tick(1)
       expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('👇')
       picker.skinToneEmoji = '👋'
+      await tick(1)
       expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('👋')
     })
 
@@ -97,7 +99,7 @@ describe('element tests', () => {
     test('has a default locale/dataSource', async () => {
       const picker = new Picker()
       document.body.appendChild(picker)
-      const container = picker.shadowRoot.querySelector('.picker')
+      const container = picker.shadowRoot
       await tick(20)
 
       await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())

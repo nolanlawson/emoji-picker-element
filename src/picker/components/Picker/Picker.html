@@ -98,7 +98,7 @@
   <div class="indicator-wrapper">
     <div class="indicator"
          style={indicatorStyle}
-         bind:this={indicatorElement}>
+         use:calculateIndicatorWidth>
     </div>
   </div>
 
@@ -117,7 +117,7 @@
        on:click={onEmojiClick}
        bind:this={tabpanelElement}
   >
-    <div bind:this={tabpanelInnerElement}>
+    <div use:calculateEmojiGridWidth>
       {#each currentEmojisWithCategories as emojiWithCategory, i (emojiWithCategory.category)}
         <div
           id="menu-label-{i}"

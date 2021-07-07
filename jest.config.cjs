@@ -8,8 +8,6 @@ module.exports = {
     '^.+\\.svelte$': ['svelte-jester', {
       preprocess: true,
       compilerOptions: {
-        css: true,
-        customElement: true,
         dev: false
       }
     }]
