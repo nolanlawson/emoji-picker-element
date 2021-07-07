@@ -4,8 +4,6 @@ import FDBKeyRange from 'fake-indexeddb/build/FDBKeyRange'
 import { Crypto } from '@peculiar/webcrypto'
 import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js'
 import { deleteDatabase } from '../src/database/databaseLifecycle'
-import path from 'path'
-import fs from 'fs'
 
 if (!global.performance) {
   global.performance = {}
@@ -26,10 +24,11 @@ global.crypto = new Crypto()
 global.ResizeObserver = ResizeObserver
 
 process.env.NODE_ENV = 'test'
-process.env.STYLES = fs.readFileSync(path.join(__dirname, '../picker.css'), 'utf8')
 
 global.IDBKeyRange = FDBKeyRange
 global.indexedDB = new FDBFactory()
+
+jest.mock('emoji-picker-element-styles', () => '', { virtual: true })
 
 beforeAll(() => {
   jest.spyOn(global.console, 'log').mockImplementation()

@@ -5,10 +5,9 @@ import strip from '@rollup/plugin-strip'
 import svelte from 'rollup-plugin-svelte'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
-import path from 'path'
-import fs from 'fs'
+import { buildStyles } from './bin/buildStyles'
+import virtual from '@rollup/plugin-virtual'
 
-const styles = fs.readFileSync(path.join(__dirname, './picker.css'), 'utf8')
 const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
 
@@ -35,10 +34,12 @@ const baseConfig = {
   plugins: [
     resolve(),
     cjs(),
+    virtual({
+      'emoji-picker-element-styles': `export default ${JSON.stringify(buildStyles())}`
+    }),
     replace({
       'process.env.NODE_ENV': dev ? '"development"' : '"production"',
       'process.env.PERF': !!process.env.PERF,
-      'process.env.STYLES': JSON.stringify(styles),
       preventAssignment: true
     }),
     replace({

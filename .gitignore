@@ -135,4 +135,3 @@ dist
 /bundle.js
 /test/benchmark/node_modules
 /test/benchmark/data.json
-/picker.css

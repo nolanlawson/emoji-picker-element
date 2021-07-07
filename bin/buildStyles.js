@@ -1,19 +1,8 @@
 import sass from 'sass'
-import cssnano from 'cssnano'
-import path from 'path'
-import postcss from 'postcss'
-import { writeFile } from './fs.js'
+import csso from 'csso'
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname)
-
-async function main () {
-  const file = path.join(__dirname, '../src/picker/styles/picker.scss')
-  const css = sass.renderSync({ file, outputStyle: 'compressed' }).css
-  const compressedCss = (await postcss([cssnano()]).process(css, { from: undefined })).css
-  await writeFile(path.join(__dirname, '../picker.css'), compressedCss, 'utf8')
+export function buildStyles () {
+  const file = './src/picker/styles/picker.scss'
+  const css = sass.renderSync({ file, outputStyle: 'compressed' }).css.toString('utf8')
+  return csso.minify(css).css
 }
-
-main().catch(err => {
-  console.error(err)
-  process.exit(1)
-})
