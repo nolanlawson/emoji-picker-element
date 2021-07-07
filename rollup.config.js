@@ -5,21 +5,14 @@ import strip from '@rollup/plugin-strip'
 import svelte from 'rollup-plugin-svelte'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
-import cssnano from 'cssnano'
+import path from 'path'
+import fs from 'fs'
 
+const styles = fs.readFileSync(path.join(__dirname, './picker.css'), 'utf8')
 const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
 
-const preprocessConfig = preprocess({
-  scss: true,
-  postcss: {
-    plugins: [
-      cssnano({
-        preset: 'default'
-      })
-    ]
-  }
-})
+const preprocessConfig = preprocess()
 
 const origMarkup = preprocessConfig.markup
 // minify the HTML by removing extra whitespace
@@ -45,6 +38,7 @@ const baseConfig = {
     replace({
       'process.env.NODE_ENV': dev ? '"development"' : '"production"',
       'process.env.PERF': !!process.env.PERF,
+      'process.env.STYLES': JSON.stringify(styles),
       preventAssignment: true
     }),
     replace({
@@ -54,17 +48,9 @@ const baseConfig = {
     }),
     svelte({
       compilerOptions: {
-        customElement: true,
         dev
       },
       preprocess: preprocessConfig
-    }),
-    replace({
-      preventAssignment: true,
-      delimiters: ['', ''],
-      // Reduce bundle size by removing this bit
-      // https://github.com/sveltejs/svelte/blob/5d82496/src/runtime/internal/Component.ts#L64-L78
-      '(!customElement)': '(false)'
     }),
     strip({
       include: ['**/*.js', '**/*.svelte'],

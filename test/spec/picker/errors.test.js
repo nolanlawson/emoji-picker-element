@@ -8,14 +8,15 @@ describe('errors', () => {
   afterEach(basicAfterEach)
 
   // seems not possible to do
-  test.skip('throws error when setting the database', async () => {
+  test('throws error when setting the database', async () => {
     const picker = new Picker({ dataSource: ALL_EMOJI, locale: 'en' })
+    document.body.appendChild(picker)
     await tick(20)
     expect(() => {
       picker.database = null
     }).toThrow()
     await tick(20)
-    await new Database({ dataSource: ALL_EMOJI, locale: 'en' }).delete()
+    document.body.removeChild(picker)
     await tick(20)
   })
 
@@ -27,7 +28,7 @@ describe('errors', () => {
     fetch.head(dataSource, { body: null, status: 500 })
 
     const picker = new Picker({ dataSource })
-    const container = picker.shadowRoot.querySelector('.picker')
+    const container = picker.shadowRoot
     document.body.appendChild(picker)
 
     await tick(20)
@@ -50,7 +51,7 @@ describe('errors', () => {
       { delay: 1500 })
 
     const picker = new Picker({ dataSource })
-    const container = picker.shadowRoot.querySelector('.picker')
+    const container = picker.shadowRoot
     document.body.appendChild(picker)
     await tick(20)
 
