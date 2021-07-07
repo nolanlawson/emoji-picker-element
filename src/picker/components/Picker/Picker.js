@@ -1,7 +1,6 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
 
 import Database from '../../ImportedDatabase'
-import enI18n from '../../i18n/en'
 import { groups as defaultGroups, customGroup } from '../../groups'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
@@ -13,7 +12,7 @@ import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
   DEFAULT_CATEGORY_SORTING,
   DEFAULT_NUM_COLUMNS,
-  DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY,
+  FONT_FAMILY,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
@@ -25,16 +24,15 @@ import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame
 import { onMount, tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
-import { runAll } from '../../utils/runAll'
 
 // public
-let locale = null
-let dataSource = null
-let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
-let i18n = enI18n
-let database = null
-let customEmoji = null
-let customCategorySorting = DEFAULT_CATEGORY_SORTING
+let locale
+let dataSource
+let skinToneEmoji
+let i18n
+let database
+let customEmoji
+let customCategorySorting
 
 // private
 let initialLoad = true
@@ -45,8 +43,6 @@ let searchText = ''
 let rootElement
 let baselineEmoji
 let tabpanelElement
-let tabpanelInnerElement
-let indicatorElement
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
 let message // eslint-disable-line no-unused-vars
@@ -145,19 +141,7 @@ $: {
 }
 
 onMount(() => {
-  const destroys = [
-    calculateIndicatorWidth(indicatorElement),
-    // The reason for the tabpanelInnerElement is that, if we measure the width on the tabpanelElement,
-    // then we don't always exclude the scrollbar. In Chrome/WebKit it does, in Firefox it does not.
-    calculateEmojiGridWidth(tabpanelInnerElement)
-  ]
-
   return async () => {
-    // TODO: using a workaround for Svelte actions never calling destroy() when used in
-    // custom elements. Instead of waiting for a destroy event, we use the mount/unmount
-    // lifecycle to clean up.
-    // https://github.com/sveltejs/svelte/issues/5989#issuecomment-796366910
-    runAll(destroys)
     // Close the database when the component is disconnected. It will automatically reconnect anyway
     // if the component is ever reconnected.
     if (database) {

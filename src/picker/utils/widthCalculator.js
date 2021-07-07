@@ -24,10 +24,12 @@ export function calculateWidth (node, onUpdate) {
     ))
   }
 
-  // cleanup function (called on disconnect)
-  return () => {
-    if (resizeObserver) {
-      resizeObserver.disconnect()
+  // cleanup function (called on destroy)
+  return {
+    destroy () {
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+      }
     }
   }
 }

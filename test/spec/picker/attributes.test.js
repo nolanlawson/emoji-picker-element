@@ -130,14 +130,14 @@ describe('attributes tests', () => {
     await tick(20)
 
     testDefaultProps(picker)
-    expectTruthyDatabase(picker)
+    expect(picker.database).toBeNull()
   })
 
   test('default properties - never connected', async () => {
     const picker = new Picker()
 
     testDefaultProps(picker)
-    expectTruthyDatabase(picker)
+    expect(picker.database).toBeNull()
 
     document.body.appendChild(picker)
     await tick(20)

@@ -28,6 +28,8 @@ process.env.NODE_ENV = 'test'
 global.IDBKeyRange = FDBKeyRange
 global.indexedDB = new FDBFactory()
 
+jest.mock('emoji-picker-element-styles', () => '', { virtual: true })
+
 beforeAll(() => {
   jest.spyOn(global.console, 'log').mockImplementation()
   jest.spyOn(global.console, 'warn').mockImplementation()

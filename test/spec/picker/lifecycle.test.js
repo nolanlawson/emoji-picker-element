@@ -25,9 +25,9 @@ describe('lifecycle', () => {
     document.body.appendChild(picker)
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
-    // fetches are unchanged, no new fetches after re-insertion
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
+    // fetch is called once again after re-insertion
+    expect(fetch).toHaveBeenCalledTimes(2)
+    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, { method: 'HEAD' })
 
     document.body.removeChild(picker)
     await tick(20)
