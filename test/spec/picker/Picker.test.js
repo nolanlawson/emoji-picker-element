@@ -469,4 +469,56 @@ describe('Picker tests', () => {
       ])
     ))
   })
+
+  test('Custom emoji with all the same category', async () => {
+    picker.customEmoji = [
+      {
+        name: 'sheep',
+        url: 'sheep.png',
+        category: 'Ungulates'
+      },
+      {
+        name: 'deer',
+        url: 'deer.png',
+        category: 'Ungulates'
+      },
+      {
+        name: 'pig',
+        url: 'pig.png',
+        category: 'Ungulates'
+      },
+      {
+        name: 'horse',
+        url: 'horse.png',
+        category: 'Ungulates'
+      },
+      {
+        name: 'donkey',
+        url: 'donkey.png',
+        category: 'Ungulates'
+      },
+      {
+        name: 'rhinoceros',
+        url: 'rhinoceros.png',
+        category: 'Ungulates'
+      }
+    ]
+
+    await waitFor(() => expect(getAllByRole('tab')).toHaveLength(groups.length + 1))
+    await waitFor(() => expect(getAllByRole('menu')).toHaveLength(2)) // favorites + 1 custom categories
+
+    await waitFor(async () => (
+      expect(
+        await Promise.all(getAllByRole('menu').map(node => getAccessibleName(container, node)))
+      ).toStrictEqual([
+        'Ungulates',
+        'Favorites'
+      ])
+    ))
+
+    // Visibility test, has nothing to do with accessibility. We visually show the label if there's a single category
+    // and it's not the default "Custom" one.
+    expect(container.querySelector('.category').textContent).toEqual('Ungulates')
+    expect(container.querySelector('.category')).not.toHaveClass('gone')
+  })
 })
