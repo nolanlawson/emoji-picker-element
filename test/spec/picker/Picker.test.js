@@ -157,10 +157,11 @@ describe('Picker tests', () => {
 
     await fireEvent.keyDown(activeElement(), { key: 'Escape', code: 'Escape' })
 
-    // listbox closes, which we observe by seeing what's focused
+    // listbox closes and skintone dropdown button becomes active element
     await waitFor(async () => (
       expect(await getAccessibleName(container, activeElement())).toEqual('Choose a skin tone (currently Default)'))
     )
+    await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
   })
 
   test('nav keyboard test', async () => {

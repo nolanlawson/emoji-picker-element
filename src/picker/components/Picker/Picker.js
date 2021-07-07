@@ -625,6 +625,7 @@ function onSkinToneOptionsKeydown (event) {
       return onSkinToneOptionsClick(event)
     case 'Escape':
       halt(event)
+      skinTonePickerExpanded = false
       return focus('skintone-button')
   }
 }
