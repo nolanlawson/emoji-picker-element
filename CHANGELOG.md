@@ -1,3 +1,12 @@
+## [1.6.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.1...v1.6.2) (2021-07-07)
+
+
+### Bug Fixes
+
+* esc key dismisses listbox ([#169](https://github.com/nolanlawson/emoji-picker-element/issues/169)) ([13e6c12](https://github.com/nolanlawson/emoji-picker-element/commit/13e6c128d4931d7ea1d09ad635b13729c1b8852e)), closes [#168](https://github.com/nolanlawson/emoji-picker-element/issues/168)
+
+
+
 ## [1.6.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.0...v1.6.1) (2021-07-03)
 
 
