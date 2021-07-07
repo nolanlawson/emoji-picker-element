@@ -11,6 +11,7 @@ import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
+  DEFAULT_CATEGORY_SORTING,
   DEFAULT_NUM_COLUMNS,
   DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY,
   MOST_COMMONLY_USED_EMOJI,
@@ -33,7 +34,7 @@ let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
 let i18n = enI18n
 let database = null
 let customEmoji = null
-let customCategorySorting = (a, b) => a < b ? -1 : a > b ? 1 : 0
+let customCategorySorting = DEFAULT_CATEGORY_SORTING
 
 // private
 let initialLoad = true

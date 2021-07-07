@@ -1,10 +1,11 @@
-import { ALL_EMOJI, basicBeforeEach, tick } from '../shared'
+import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick } from '../shared'
 import { groups } from '../../../src/picker/groups'
 import Picker from '../../../src/picker/PickerElement'
 import { getAllByRole, getByRole, waitFor } from '@testing-library/dom'
 
 describe('Custom emojis tests', () => {
   beforeEach(basicBeforeEach)
+  afterEach(basicAfterEach)
 
   test('Setting custom emoji shows the proper first page', async () => {
     const picker = new Picker({
