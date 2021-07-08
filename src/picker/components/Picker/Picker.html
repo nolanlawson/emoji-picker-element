@@ -125,7 +125,8 @@
           aria-hidden="true">
           <!-- This logic is a bit complicated in order to avoid a flash of the word "Custom" while switching
                from a tabpanel with custom emoji to a regular group. I.e. we don't want it to suddenly flash
-               from "Custom" to "Smileys and emoticons" when you click the second nav button. -->
+               from "Custom" to "Smileys and emoticons" when you click the second nav button. The easiest
+               way to repro this is to add an artificial delay to the IndexedDB operations. -->
           {
             searchMode ?
             i18n.searchResultsLabel : (
