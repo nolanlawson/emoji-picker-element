@@ -38,6 +38,14 @@ export default class PickerElement extends SveltePicker {
       newValue
     )
   }
+
+  get database () {
+    return super.database
+  }
+
+  set database (val) {
+    throw new Error('database is read-only')
+  }
 }
 
 customElements.define('emoji-picker', PickerElement)
