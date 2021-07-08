@@ -2,6 +2,7 @@ import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick } from '../shared'
 import { groups } from '../../../src/picker/groups'
 import Picker from '../../../src/picker/PickerElement'
 import { getAllByRole, getByRole, waitFor } from '@testing-library/dom'
+import { getAccessibleName } from '../utils'
 
 describe('Custom emojis tests', () => {
   beforeEach(basicBeforeEach)
@@ -31,6 +32,20 @@ describe('Custom emojis tests', () => {
     await tick(50)
 
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: 'monkey' })).toBeVisible())
+
+    await waitFor(async () => (
+      expect(
+        await Promise.all(getAllByRole(container, 'menu').map(node => getAccessibleName(container, node)))
+      ).toStrictEqual([
+        'Custom',
+        'Favorites'
+      ])
+    ))
+
+    // Visibility test, has nothing to do with accessibility. We don't visually show the label if there's
+    // just one category and it's the default "Custom" one.
+    expect(container.querySelector('.category').textContent).toEqual('Custom')
+    expect(container.querySelector('.category')).toHaveClass('gone')
 
     document.body.removeChild(picker)
     await tick(20)
