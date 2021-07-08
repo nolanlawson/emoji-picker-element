@@ -69,7 +69,6 @@ let groups = defaultGroups
 let currentGroup
 let databaseLoaded = false // eslint-disable-line no-unused-vars
 let activeSearchItemId // eslint-disable-line no-unused-vars
-let showCustomCategoryLabel // eslint-disable-line no-unused-vars
 
 //
 // Utils/helpers
@@ -290,12 +289,6 @@ function calculateEmojiGridWidth (node) {
 //
 
 $: currentGroup = groups[currentGroupIndex]
-
-//
-// Update whether to show custom categories visually or not
-//
-// eslint-disable-next-line no-unused-vars
-$: showCustomCategoryLabel = !(currentEmojisWithCategories.length === 1 && currentEmojisWithCategories[0].category === '')
 
 //
 // Animate the indicator
