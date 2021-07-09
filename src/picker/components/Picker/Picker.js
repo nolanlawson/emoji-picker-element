@@ -10,7 +10,6 @@ import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
-  DEFAULT_CATEGORY_SORTING,
   DEFAULT_NUM_COLUMNS,
   FONT_FAMILY,
   MOST_COMMONLY_USED_EMOJI,
