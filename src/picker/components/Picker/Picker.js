@@ -1,6 +1,5 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
 
-import Database from '../../ImportedDatabase'
 import { groups as defaultGroups, customGroup } from '../../groups'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
@@ -25,13 +24,11 @@ import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 
 // public
-let locale
-let dataSource
-let skinToneEmoji
-let i18n
-let database
-let customEmoji
-let customCategorySorting
+export let skinToneEmoji
+export let i18n
+export let database
+export let customEmoji
+export let customCategorySorting
 
 // private
 let initialLoad = true
@@ -153,15 +150,6 @@ onMount(() => {
     }
   }
 })
-
-$: {
-  // API props like locale and dataSource are not actually set until the onMount phase
-  // https://github.com/sveltejs/svelte/pull/4522
-  if (locale && dataSource && (!database || (database.locale !== locale && database.dataSource !== dataSource))) {
-    console.log('creating database', { locale, dataSource })
-    database = new Database({ dataSource, locale })
-  }
-}
 
 //
 // Global styles for the entire picker
@@ -635,14 +623,4 @@ async function onSkinToneOptionsFocusOut (event) {
   if (!relatedTarget || !isSkinToneOption(relatedTarget)) {
     skinTonePickerExpanded = false
   }
-}
-
-export {
-  locale,
-  dataSource,
-  database,
-  i18n,
-  skinToneEmoji,
-  customEmoji,
-  customCategorySorting
 }

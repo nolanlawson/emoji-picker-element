@@ -3,6 +3,7 @@ import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
 import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI } from './constants'
 import enI18n from '../picker/i18n/en.js'
 import styles from 'emoji-picker-element-styles'
+import Database from './ImportedDatabase'
 
 export default class PickerElement extends HTMLElement {
   constructor (props) {
@@ -22,12 +23,14 @@ export default class PickerElement extends HTMLElement {
       i18n: enI18n,
       ...props
     }
+    this._dbFlush() // wait for a flush in case the user calls setAttribute('locale') or something
   }
 
   connectedCallback () {
+    const { skinToneEmoji, customCategorySorting, i18n, customEmoji, database } = this._ctx
     this._cmp = new SveltePicker({
       target: this.shadowRoot,
-      props: this._ctx
+      props: { skinToneEmoji, customCategorySorting, i18n, customEmoji, database }
     })
   }
 
@@ -53,6 +56,32 @@ export default class PickerElement extends HTMLElement {
       this._cmp.$set({ [prop]: newValue })
     }
   }
+
+  _dbCreate () {
+    const context = this._ctx
+    let { locale, dataSource, database } = context
+    if (!database || database.locale !== locale || database.dataSource !== dataSource) {
+      database = new Database({ locale: context.locale, dataSource: context.dataSource })
+    }
+    if (database !== this._ctx.database) {
+      this._ctx.database = database
+      if (this._cmp) {
+        this._cmp.$set({ database })
+      }
+    }
+  }
+
+  // Update the Database in one microtask if the locale/dataSource/customEmoji change. We do one microtask
+  // so we don't create two Databases if e.g. both the locale and the dataSource change
+  _dbFlush () {
+    if (this._dbTask) {
+      return
+    }
+    this._dbTask = Promise.resolve().then(() => {
+      this._dbTask = undefined
+      this._dbCreate()
+    })
+  }
 }
 
 const props = [
@@ -64,29 +93,28 @@ const props = [
   'locale',
   'skinToneEmoji'
 ]
-const definitions = Object.fromEntries(
+
+Object.defineProperties(PickerElement.prototype, Object.fromEntries(
   props.map(prop => ([
     prop, {
       get () {
-        if (prop === 'database') {
-          if (!this._cmp) {
-            return null
-          }
-          const { $$ } = this._cmp
-          return $$.ctx[$$.props[prop]]
+        if (prop === 'database' && !this._ctx[prop]) {
+          // in rare cases, the microtask may not be flushed yet, so we need to instantiate the DB
+          // now if the user is asking for it
+          this._dbCreate()
         }
         return this._ctx[prop]
       },
       set (val) {
         if (prop === 'database') {
-          throw new Error('Cannot set database')
+          throw new Error('database is read-only')
+        } else if (['locale', 'dataSource', 'customEmoji'].includes(prop)) {
+          this._dbFlush()
         }
         this._setProp(prop, val)
       }
     }
   ]))
-)
-
-Object.defineProperties(PickerElement.prototype, definitions)
+))
 
 customElements.define('emoji-picker', PickerElement)
