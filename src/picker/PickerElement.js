@@ -56,7 +56,7 @@ export default class PickerElement extends HTMLElement {
     if (this._cmp) {
       this._cmp.$set({ [prop]: newValue })
     }
-    if (['locale', 'dataSource', 'customEmoji'].includes(prop)) {
+    if (['locale', 'dataSource'].includes(prop)) {
       this._dbFlush()
     }
   }
@@ -69,7 +69,7 @@ export default class PickerElement extends HTMLElement {
     }
   }
 
-  // Update the Database in one microtask if the locale/dataSource/customEmoji change. We do one microtask
+  // Update the Database in one microtask if the locale/dataSource change. We do one microtask
   // so we don't create two Databases if e.g. both the locale and the dataSource change
   _dbFlush () {
     Promise.resolve().then(() => (
