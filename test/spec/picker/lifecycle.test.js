@@ -49,4 +49,15 @@ describe('lifecycle', () => {
 
     spy.mockRestore()
   })
+
+  test('connect and immediately disconnect', async () => {
+    const picker = new Picker()
+    document.body.appendChild(picker)
+    document.body.removeChild(picker)
+
+    await tick(20)
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
+  })
 })

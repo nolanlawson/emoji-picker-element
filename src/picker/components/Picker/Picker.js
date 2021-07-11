@@ -314,7 +314,9 @@ $: {
   } else {
     currentEmojis = currentEmojis.filter(isZwjSupported)
     requestAnimationFrame(() => { // reset scroll top to 0 when emojis change
-      tabpanelElement.scrollTop = 0
+      if (tabpanelElement) { // can be null if element is disconnected immediately after connected
+        tabpanelElement.scrollTop = 0
+      }
     })
   }
 }
