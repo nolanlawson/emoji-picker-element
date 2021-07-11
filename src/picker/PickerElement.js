@@ -23,7 +23,7 @@ export default class PickerElement extends HTMLElement {
       i18n: enI18n,
       ...props
     }
-    this._dbFlush() // wait for a flush in case the user calls setAttribute('locale') or something
+    this._dbFlush() // wait for a flush before creating the db, in case the user calls e.g. a setter or setAttribute
   }
 
   connectedCallback () {
@@ -45,14 +45,19 @@ export default class PickerElement extends HTMLElement {
   attributeChangedCallback (attrName, oldValue, newValue) {
     // convert from kebab-case to camelcase
     // see https://github.com/sveltejs/svelte/issues/3852#issuecomment-665037015
-    const prop = attrName.replace(/-([a-z])/g, (_, up) => up.toUpperCase())
-    this._setProp(prop, newValue)
+    this._set(
+      attrName.replace(/-([a-z])/g, (_, up) => up.toUpperCase()),
+      newValue
+    )
   }
 
-  _setProp (prop, newValue) {
+  _set (prop, newValue) {
     this._ctx[prop] = newValue
     if (this._cmp) {
       this._cmp.$set({ [prop]: newValue })
+    }
+    if (['locale', 'dataSource', 'customEmoji'].includes(prop)) {
+      this._dbFlush()
     }
   }
 
@@ -60,19 +65,16 @@ export default class PickerElement extends HTMLElement {
     const { locale, dataSource, database } = this._ctx
     // only create a new database if we really need to
     if (!database || database.locale !== locale || database.dataSource !== dataSource) {
-      this._setProp('database', new Database({ locale, dataSource }))
+      this._set('database', new Database({ locale, dataSource }))
     }
   }
 
   // Update the Database in one microtask if the locale/dataSource/customEmoji change. We do one microtask
   // so we don't create two Databases if e.g. both the locale and the dataSource change
   _dbFlush () {
-    if (!this._task) {
-      this._task = Promise.resolve().then(() => {
-        this._task = undefined
-        this._dbCreate()
-      })
-    }
+    Promise.resolve().then(() => (
+      this._dbCreate()
+    ))
   }
 }
 
@@ -90,7 +92,7 @@ const definitions = {}
 for (const prop of props) {
   definitions[prop] = {
     get () {
-      if (prop === 'database' && !this._ctx[prop]) {
+      if (prop === 'database') {
         // in rare cases, the microtask may not be flushed yet, so we need to instantiate the DB
         // now if the user is asking for it
         this._dbCreate()
@@ -100,10 +102,8 @@ for (const prop of props) {
     set (val) {
       if (prop === 'database') {
         throw new Error('database is read-only')
-      } else if (['locale', 'dataSource', 'customEmoji'].includes(prop)) {
-        this._dbFlush()
       }
-      this._setProp(prop, val)
+      this._set(prop, val)
     }
   }
 }
