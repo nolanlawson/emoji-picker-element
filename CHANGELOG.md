@@ -1,3 +1,14 @@
+## [1.6.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.2...v1.6.3) (2021-07-11)
+
+
+### Bug Fixes
+
+* make database read-only ([#174](https://github.com/nolanlawson/emoji-picker-element/issues/174)) ([ede65df](https://github.com/nolanlawson/emoji-picker-element/commit/ede65df9f330b3c7622bb754803f08e3f4ebed4c))
+* render custom category if only one exists ([#173](https://github.com/nolanlawson/emoji-picker-element/issues/173)) ([7a2e2c1](https://github.com/nolanlawson/emoji-picker-element/commit/7a2e2c141ad29b5aac4ccd6362e25ce2378a38e7)), closes [#172](https://github.com/nolanlawson/emoji-picker-element/issues/172)
+* use our own custom element implementation ([#170](https://github.com/nolanlawson/emoji-picker-element/issues/170)) ([d63c1f8](https://github.com/nolanlawson/emoji-picker-element/commit/d63c1f8c0b0af93bc309c392be91a9d45d4a240b)), closes [#176](https://github.com/nolanlawson/emoji-picker-element/issues/176)
+
+
+
 ## [1.6.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.1...v1.6.2) (2021-07-07)
 
 
