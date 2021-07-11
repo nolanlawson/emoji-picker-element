@@ -1,4 +1,4 @@
-import { basicAfterEach, basicBeforeEach, mockDefaultDataSource, tick } from '../shared'
+import { basicAfterEach, basicBeforeEach, tick } from '../shared'
 import Picker from '../../../src/picker/PickerElement'
 import { getByRole, waitFor } from '@testing-library/dom'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../../../src/database/constants'
@@ -8,7 +8,6 @@ describe('constructor', () => {
   afterEach(basicAfterEach)
 
   async function testWithDefaults (...args) {
-    mockDefaultDataSource()
     const picker = new Picker(...args)
     document.body.appendChild(picker)
     const container = picker.shadowRoot.querySelector('.picker')

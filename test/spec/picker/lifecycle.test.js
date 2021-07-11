@@ -1,4 +1,4 @@
-import { basicAfterEach, basicBeforeEach, mockDefaultDataSource, tick } from '../shared'
+import { basicAfterEach, basicBeforeEach, tick } from '../shared'
 import Picker from '../../../src/picker/PickerElement'
 import { getByRole, waitFor } from '@testing-library/dom'
 import { DEFAULT_DATA_SOURCE } from '../../../src/database/constants'
@@ -8,7 +8,6 @@ describe('lifecycle', () => {
   afterEach(basicAfterEach)
 
   test('can remove and re-append custom element', async () => {
-    mockDefaultDataSource()
     const picker = new Picker()
     const container = picker.shadowRoot
 
@@ -34,7 +33,6 @@ describe('lifecycle', () => {
   })
 
   test('database.close() is called when disconnected', async () => {
-    mockDefaultDataSource()
     const picker = new Picker()
     document.body.appendChild(picker)
     const container = picker.shadowRoot

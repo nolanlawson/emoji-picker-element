@@ -46,6 +46,8 @@ export function basicBeforeEach () {
       headers: { ETag: 'W/xxx' }
     }))
     .head(ALL_EMOJI_MISCONFIGURED_ETAG, () => new Response(null))
+    .get(DEFAULT_DATA_SOURCE, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/def' } }))
+    .head(DEFAULT_DATA_SOURCE, () => new Response(null, { headers: { ETag: 'W/def' } }))
 }
 
 export function basicAfterEach () {
@@ -57,11 +59,6 @@ export async function tick (times = 1) {
   for (let i = 0; i < times; i++) {
     await new Promise(resolve => setTimeout(resolve))
   }
-}
-
-export function mockDefaultDataSource () {
-  fetch.get(DEFAULT_DATA_SOURCE, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/def' } }))
-  fetch.head(DEFAULT_DATA_SOURCE, () => new Response(null, { headers: { ETag: 'W/def' } }))
 }
 
 export function mockFrenchDataSource () {
