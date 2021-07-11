@@ -36,6 +36,13 @@ export default class PickerElement extends HTMLElement {
   disconnectedCallback () {
     this._cmp.$destroy()
     this._cmp = undefined
+
+    const { database } = this._ctx
+    if (database) {
+      database.close()
+        // only happens if the database failed to load in the first place, so we don't care)
+        .catch(err => console.error(err))
+    }
   }
 
   static get observedAttributes () {

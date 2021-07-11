@@ -19,7 +19,7 @@ import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 import * as widthCalculator from '../../utils/widthCalculator'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
-import { onMount, tick } from 'svelte'
+import { tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 
@@ -135,21 +135,6 @@ $: {
     /* no await */ handleDatabaseLoading()
   }
 }
-
-onMount(() => {
-  return async () => {
-    // Close the database when the component is disconnected. It will automatically reconnect anyway
-    // if the component is ever reconnected.
-    if (database) {
-      console.log('closing database')
-      try {
-        await database.close()
-      } catch (err) {
-        console.error(err) // only happens if the database failed to load in the first place, so we don't care
-      }
-    }
-  }
-})
 
 //
 // Global styles for the entire picker
