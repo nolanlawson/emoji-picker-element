@@ -822,7 +822,7 @@ If `emoji-picker-element` fails to fetch the JSON data the first time it loads, 
 
 For browsers that don't support IndexedDB, such as [Firefox in private browsing mode](https://bugzilla.mozilla.org/show_bug.cgi?id=1639542), you can polyfill it using [fake-indexeddb](https://github.com/dumbmatter/fakeIndexedDB). Here is [a working example](https://bl.ocks.org/nolanlawson/651e6fbe4356ff098f505e6cc5fb8cd8) and [more details](https://github.com/nolanlawson/emoji-picker-element/issues/9).
 
-For Node.js environments such as [Jest](https://jestjs.io/) or [JSDom](https://github.com/jsdom/jsdom), you can also use fake-indexeddb. A [working example](https://github.com/nolanlawson/emoji-picker-element/blob/d45b61b559b8cef6840b7036e3d1749a213c490e/config/jest.setup.js#L15-L18) can be found in the tests for this very project.
+For Node.js environments such as [Jest](https://jestjs.io/) or [JSDom](https://github.com/jsdom/jsdom), you can also use fake-indexeddb. A [working example](https://github.com/nolanlawson/emoji-picker-element/blob/39c50c3ce4c4c4d2cd8a15f337a722ad86c739e9/config/jest.setup.js#L28-L29) can be found in the tests for this very project.
 
 ## Design decisions
 
