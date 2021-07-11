@@ -10,7 +10,7 @@ describe('lifecycle', () => {
   test('can remove and re-append custom element', async () => {
     mockDefaultDataSource()
     const picker = new Picker()
-    const container = picker.shadowRoot.querySelector('.picker')
+    const container = picker.shadowRoot
 
     document.body.appendChild(picker)
 
@@ -37,7 +37,7 @@ describe('lifecycle', () => {
     mockDefaultDataSource()
     const picker = new Picker()
     document.body.appendChild(picker)
-    const container = picker.shadowRoot.querySelector('.picker')
+    const container = picker.shadowRoot
 
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 

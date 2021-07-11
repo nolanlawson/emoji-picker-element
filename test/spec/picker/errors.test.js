@@ -28,7 +28,7 @@ describe('errors', () => {
     fetch.head(dataSource, { body: null, status: 500 })
 
     const picker = new Picker({ dataSource })
-    const container = picker.shadowRoot.querySelector('.picker')
+    const container = picker.shadowRoot
     document.body.appendChild(picker)
 
     await tick(20)
@@ -51,7 +51,7 @@ describe('errors', () => {
       { delay: 1500 })
 
     const picker = new Picker({ dataSource })
-    const container = picker.shadowRoot.querySelector('.picker')
+    const container = picker.shadowRoot
     document.body.appendChild(picker)
     await tick(20)
 
