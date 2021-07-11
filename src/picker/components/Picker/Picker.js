@@ -313,9 +313,11 @@ $: {
     requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
   } else {
     currentEmojis = currentEmojis.filter(isZwjSupported)
-    requestAnimationFrame(() => { // reset scroll top to 0 when emojis change
-      if (tabpanelElement) { // can be null if element is disconnected immediately after connected
+    requestAnimationFrame(() => { // reset scroll top to 0 when emojis change]
+      try {
         tabpanelElement.scrollTop = 0
+      } catch (e) {
+        // tabpanelElement can be null if element is disconnected immediately after connected. ignore
       }
     })
   }
