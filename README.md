@@ -15,7 +15,7 @@ A lightweight emoji picker, distributed as a web component.
 - Uses IndexedDB, so it consumes [far less memory](https://nolanlawson.com/2020/06/28/introducing-emoji-picker-element-a-memory-efficient-emoji-picker-for-the-web/) than other emoji pickers
 - [Small bundle size](https://bundlephobia.com/result?p=emoji-picker-element) (41kB minified, ~14.4kB gzipped)
 - Renders native emoji only, no spritesheets
-- Accessible by default
+- [Accessible by default](https://nolanlawson.com/2020/07/01/building-an-accessible-emoji-picker/)
 - Framework and bundler not required, just add a `<script>` tag and use it
 
 **Table of contents:**
