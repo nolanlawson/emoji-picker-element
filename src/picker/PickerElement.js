@@ -1,51 +1,120 @@
 import SveltePicker from './components/Picker/Picker.svelte'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
-import { runAll } from './utils/runAll'
+import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI } from './constants'
+import enI18n from '../picker/i18n/en.js'
+import styles from 'emoji-picker-element-styles'
+import Database from './ImportedDatabase'
 
-export default class PickerElement extends SveltePicker {
+export default class PickerElement extends HTMLElement {
   constructor (props) {
     performance.mark('initialLoad')
-    // Make the API simpler, directly pass in the props
-    super({
-      props: {
-        // Set defaults
-        locale: DEFAULT_LOCALE,
-        dataSource: DEFAULT_DATA_SOURCE,
-        ...props
-      }
+    super()
+    this.attachShadow({ mode: 'open' })
+    const style = document.createElement('style')
+    style.textContent = styles
+    this.shadowRoot.appendChild(style)
+    this._ctx = {
+      // Set defaults
+      locale: DEFAULT_LOCALE,
+      dataSource: DEFAULT_DATA_SOURCE,
+      skinToneEmoji: DEFAULT_SKIN_TONE_EMOJI,
+      customCategorySorting: DEFAULT_CATEGORY_SORTING,
+      customEmoji: null,
+      i18n: enI18n,
+      ...props
+    }
+    this._dbFlush() // wait for a flush before creating the db, in case the user calls e.g. a setter or setAttribute
+  }
+
+  connectedCallback () {
+    this._cmp = new SveltePicker({
+      target: this.shadowRoot,
+      props: this._ctx
     })
   }
 
   disconnectedCallback () {
-    // For Svelte v <3.33.0, we have to run the destroy logic ourselves because it doesn't have this fix:
-    // https://github.com/sveltejs/svelte/commit/d4f98f
-    // We can safely just run on_disconnect and on_destroy to cover all versions of Svelte. In older versions
-    // the on_destroy array will have length 1, whereas in more recent versions it'll be on_disconnect instead.
-    // TODO: remove this when we drop support for Svelte < 3.33.0
-    runAll(this.$$.on_destroy)
-    runAll(this.$$.on_disconnect)
+    this._cmp.$destroy()
+    this._cmp = undefined
+
+    const { database } = this._ctx
+    if (database) {
+      database.close()
+        // only happens if the database failed to load in the first place, so we don't care)
+        .catch(err => console.error(err))
+    }
   }
 
   static get observedAttributes () {
     return ['locale', 'data-source', 'skin-tone-emoji'] // complex objects aren't supported, also use kebab-case
   }
 
-  // via https://github.com/sveltejs/svelte/issues/3852#issuecomment-665037015
   attributeChangedCallback (attrName, oldValue, newValue) {
-    super.attributeChangedCallback(
+    // convert from kebab-case to camelcase
+    // see https://github.com/sveltejs/svelte/issues/3852#issuecomment-665037015
+    this._set(
       attrName.replace(/-([a-z])/g, (_, up) => up.toUpperCase()),
-      oldValue,
       newValue
     )
   }
 
-  get database () {
-    return super.database
+  _set (prop, newValue) {
+    this._ctx[prop] = newValue
+    if (this._cmp) {
+      this._cmp.$set({ [prop]: newValue })
+    }
+    if (['locale', 'dataSource'].includes(prop)) {
+      this._dbFlush()
+    }
   }
 
-  set database (val) {
-    throw new Error('database is read-only')
+  _dbCreate () {
+    const { locale, dataSource, database } = this._ctx
+    // only create a new database if we really need to
+    if (!database || database.locale !== locale || database.dataSource !== dataSource) {
+      this._set('database', new Database({ locale, dataSource }))
+    }
+  }
+
+  // Update the Database in one microtask if the locale/dataSource change. We do one microtask
+  // so we don't create two Databases if e.g. both the locale and the dataSource change
+  _dbFlush () {
+    Promise.resolve().then(() => (
+      this._dbCreate()
+    ))
   }
 }
+
+const props = [
+  'customEmoji',
+  'customCategorySorting',
+  'database',
+  'dataSource',
+  'i18n',
+  'locale',
+  'skinToneEmoji'
+]
+const definitions = {}
+
+for (const prop of props) {
+  definitions[prop] = {
+    get () {
+      if (prop === 'database') {
+        // in rare cases, the microtask may not be flushed yet, so we need to instantiate the DB
+        // now if the user is asking for it
+        this._dbCreate()
+      }
+      return this._ctx[prop]
+    },
+    set (val) {
+      if (prop === 'database') {
+        throw new Error('database is read-only')
+      }
+      this._set(prop, val)
+    }
+  }
+}
+
+Object.defineProperties(PickerElement.prototype, definitions)
 
 customElements.define('emoji-picker', PickerElement)

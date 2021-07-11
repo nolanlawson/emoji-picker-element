@@ -5,21 +5,13 @@ import strip from '@rollup/plugin-strip'
 import svelte from 'rollup-plugin-svelte'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
-import cssnano from 'cssnano'
+import { buildStyles } from './bin/buildStyles'
+import virtual from '@rollup/plugin-virtual'
 
 const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
 
-const preprocessConfig = preprocess({
-  scss: true,
-  postcss: {
-    plugins: [
-      cssnano({
-        preset: 'default'
-      })
-    ]
-  }
-})
+const preprocessConfig = preprocess()
 
 const origMarkup = preprocessConfig.markup
 // minify the HTML by removing extra whitespace
@@ -42,6 +34,9 @@ const baseConfig = {
   plugins: [
     resolve(),
     cjs(),
+    virtual({
+      'emoji-picker-element-styles': `export default ${JSON.stringify(buildStyles())}`
+    }),
     replace({
       'process.env.NODE_ENV': dev ? '"development"' : '"production"',
       'process.env.PERF': !!process.env.PERF,
@@ -54,17 +49,9 @@ const baseConfig = {
     }),
     svelte({
       compilerOptions: {
-        customElement: true,
         dev
       },
       preprocess: preprocessConfig
-    }),
-    replace({
-      preventAssignment: true,
-      delimiters: ['', ''],
-      // Reduce bundle size by removing this bit
-      // https://github.com/sveltejs/svelte/blob/5d82496/src/runtime/internal/Component.ts#L64-L78
-      '(!customElement)': '(false)'
     }),
     strip({
       include: ['**/*.js', '**/*.svelte'],

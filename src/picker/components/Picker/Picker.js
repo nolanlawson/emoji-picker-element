@@ -1,7 +1,5 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
 
-import Database from '../../ImportedDatabase'
-import enI18n from '../../i18n/en'
 import { groups as defaultGroups, customGroup } from '../../groups'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
@@ -11,9 +9,8 @@ import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
-  DEFAULT_CATEGORY_SORTING,
   DEFAULT_NUM_COLUMNS,
-  DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY,
+  FONT_FAMILY,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
@@ -22,19 +19,16 @@ import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 import * as widthCalculator from '../../utils/widthCalculator'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
-import { onMount, tick } from 'svelte'
+import { tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
-import { runAll } from '../../utils/runAll'
 
 // public
-let locale = null
-let dataSource = null
-let skinToneEmoji = DEFAULT_SKIN_TONE_EMOJI
-let i18n = enI18n
-let database = null
-let customEmoji = null
-let customCategorySorting = DEFAULT_CATEGORY_SORTING
+export let skinToneEmoji
+export let i18n
+export let database
+export let customEmoji
+export let customCategorySorting
 
 // private
 let initialLoad = true
@@ -45,8 +39,6 @@ let searchText = ''
 let rootElement
 let baselineEmoji
 let tabpanelElement
-let tabpanelInnerElement
-let indicatorElement
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
 let message // eslint-disable-line no-unused-vars
@@ -141,42 +133,6 @@ $: {
   }
   if (database) {
     /* no await */ handleDatabaseLoading()
-  }
-}
-
-onMount(() => {
-  const destroys = [
-    calculateIndicatorWidth(indicatorElement),
-    // The reason for the tabpanelInnerElement is that, if we measure the width on the tabpanelElement,
-    // then we don't always exclude the scrollbar. In Chrome/WebKit it does, in Firefox it does not.
-    calculateEmojiGridWidth(tabpanelInnerElement)
-  ]
-
-  return async () => {
-    // TODO: using a workaround for Svelte actions never calling destroy() when used in
-    // custom elements. Instead of waiting for a destroy event, we use the mount/unmount
-    // lifecycle to clean up.
-    // https://github.com/sveltejs/svelte/issues/5989#issuecomment-796366910
-    runAll(destroys)
-    // Close the database when the component is disconnected. It will automatically reconnect anyway
-    // if the component is ever reconnected.
-    if (database) {
-      console.log('closing database')
-      try {
-        await database.close()
-      } catch (err) {
-        console.error(err) // only happens if the database failed to load in the first place, so we don't care
-      }
-    }
-  }
-})
-
-$: {
-  // API props like locale and dataSource are not actually set until the onMount phase
-  // https://github.com/sveltejs/svelte/pull/4522
-  if (locale && dataSource && (!database || (database.locale !== locale && database.dataSource !== dataSource))) {
-    console.log('creating database', { locale, dataSource })
-    database = new Database({ dataSource, locale })
   }
 }
 
@@ -358,7 +314,9 @@ $: {
   } else {
     currentEmojis = currentEmojis.filter(isZwjSupported)
     requestAnimationFrame(() => { // reset scroll top to 0 when emojis change
-      tabpanelElement.scrollTop = 0
+      if (tabpanelElement) { // can be null if element is disconnected immediately after connected
+        tabpanelElement.scrollTop = 0
+      }
     })
   }
 }
@@ -652,14 +610,4 @@ async function onSkinToneOptionsFocusOut (event) {
   if (!relatedTarget || !isSkinToneOption(relatedTarget)) {
     skinTonePickerExpanded = false
   }
-}
-
-export {
-  locale,
-  dataSource,
-  database,
-  i18n,
-  skinToneEmoji,
-  customEmoji,
-  customCategorySorting
 }

@@ -1,5 +1,4 @@
-<svelte:options tag={null} />
-<section
+<svelte:options tag={null} /><section
   class="picker"
   aria-label={i18n.regionLabel}
   style={pickerStyle}
@@ -98,7 +97,7 @@
   <div class="indicator-wrapper">
     <div class="indicator"
          style={indicatorStyle}
-         bind:this={indicatorElement}>
+         use:calculateIndicatorWidth>
     </div>
   </div>
 
@@ -117,7 +116,7 @@
        on:click={onEmojiClick}
        bind:this={tabpanelElement}
   >
-    <div bind:this={tabpanelInnerElement}>
+    <div use:calculateEmojiGridWidth>
       {#each currentEmojisWithCategories as emojiWithCategory, i (emojiWithCategory.category)}
         <div
           id="menu-label-{i}"
@@ -167,10 +166,8 @@
        style="padding-right: {scrollbarWidth}px;"
        on:click={onEmojiClick}
        data-testid="favorites">
-    <!-- TODO: the reason so much of this emoji logic is duplicated is because it would be wasteful
-         or incorrect to extract this logic into a custom Svelte component, because in customElements
-         mode, Svelte will render _all_ components as custom elements. Ideally we just want one
-         custom element wrapper around the outer component -->
+    <!-- The reason the emoji logic below is largely duplicated is because it turns out we get a smaller
+         bundle size from just repeating it twice, rather than creating a second Svelte component. -->
     {#each currentFavorites as emoji, i (emoji.id)}
       <button role="menuitem"
               aria-label={labelWithSkin(emoji, currentSkinTone)}

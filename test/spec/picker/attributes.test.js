@@ -1,4 +1,11 @@
-import { basicAfterEach, basicBeforeEach, FR_EMOJI, ALL_EMOJI, mockFrenchDataSource, tick } from '../shared'
+import {
+  basicAfterEach,
+  basicBeforeEach,
+  FR_EMOJI,
+  ALL_EMOJI,
+  mockFrenchDataSource,
+  tick
+} from '../shared'
 import Picker from '../../../src/picker/PickerElement.js'
 import { getByRole } from '@testing-library/dom'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../../../src/database/constants'

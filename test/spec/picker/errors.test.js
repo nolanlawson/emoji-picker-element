@@ -4,8 +4,16 @@ import Database from '../../../src/database/Database'
 import { getByRole, waitFor } from '@testing-library/dom'
 
 describe('errors', () => {
-  beforeEach(basicBeforeEach)
-  afterEach(basicAfterEach)
+  let errorSpy
+
+  beforeEach(() => {
+    basicBeforeEach()
+    errorSpy = jest.spyOn(global.console, 'error').mockImplementation()
+  })
+  afterEach(() => {
+    basicAfterEach()
+    errorSpy.mockRestore()
+  })
 
   // seems not possible to do
   test('throws error when setting the database', async () => {
