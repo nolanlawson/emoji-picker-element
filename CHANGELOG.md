@@ -1,3 +1,12 @@
+## [1.6.4](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.3...v1.6.4) (2021-07-11)
+
+
+### Bug Fixes
+
+* fix tabPanel scrollTop bug ([#180](https://github.com/nolanlawson/emoji-picker-element/issues/180)) ([0554821](https://github.com/nolanlawson/emoji-picker-element/commit/05548210a4fc54f3662c99aa9b7dc2e44a177d50))
+
+
+
 ## [1.6.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.2...v1.6.3) (2021-07-11)
 
 
