@@ -17,6 +17,7 @@ A lightweight emoji picker, distributed as a web component.
 - Renders native emoji only, no spritesheets
 - [Accessible by default](https://nolanlawson.com/2020/07/01/building-an-accessible-emoji-picker/)
 - Framework and bundler not required, just add a `<script>` tag and use it
+- Can be used [as a React component](#in-a-react-project) as well
 
 **Table of contents:**
 
@@ -57,7 +58,8 @@ A lightweight emoji picker, distributed as a web component.
       - [`skin-tone-change`](#skin-tone-change)
     + [Custom emoji](#custom-emoji)
     + [Tree-shaking](#tree-shaking)
-    + [Within a Svelte project](#within-a-svelte-project)
+    + [In a React project](#in-a-react-project)
+    + [In a Svelte project](#in-a-svelte-project)
   * [Data and offline](#data-and-offline)
     + [Data source and JSON format](#data-source-and-json-format)
     + [Shortcodes](#shortcodes)
@@ -250,7 +252,7 @@ The `new Picker(options)` constructor supports several options:
 
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
-`customCategorySorting` | function | - | Function to sort custom category strings (sorted alphabetically by default)  |
+`customCategorySorting` | CategorySortingFunction | - | Function to sort custom category strings (sorted alphabetically by default)  |
 `customEmoji` | CustomEmoji[] | - | Array of custom emoji |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json" | URL to fetch the emoji data from (`data-source` when used as an attribute) |
 `i18n` | I18n | - | i18n object (see below for details) |
@@ -729,10 +731,56 @@ import Database from 'emoji-picker-element/database';
 
 The reason for this is that `Picker` automatically registers itself as a custom element, following [web component best practices](https://justinfagnani.com/2019/11/01/how-to-publish-web-components-to-npm/). But this adds side effects, so bundlers like Webpack and Rollup do not tree-shake as well, unless the modules are imported from completely separate files.
 
-### Within a Svelte project
+### In a React project
 
-`emoji-picker-element` is explicitly designed as a custom element, and won't work
-as a direct Svelte component. However, if you're already using Svelte 3, then you
+You can use `emoji-picker-element` as a standard web component in React. However, [React does not fully support web components](https://custom-elements-everywhere.com/libraries/react/results/results.html), so you may find this awkward. To make things a bit easier, `emoji-picker-element` ships with a small React shim.
+
+First, install dependencies:
+
+```shell
+npm install --save prop-types emoji-picker-element
+```
+
+Then use the `EmojiPicker` component like so:
+
+```jsx
+import EmojiPicker from 'emoji-picker-element/react'
+
+export default () => (<EmojiPicker />)
+```
+
+You can pass in properties:
+
+```jsx
+import EmojiPicker from 'emoji-picker-element/react'
+
+export default () => (<EmojiPicker dataSource="/path/to/emoji.json" skinToneEmoji="👍" />)
+```
+
+And add event listeners:
+
+```jsx
+import EmojiPicker from 'emoji-picker-element/react'
+
+export default () => {
+  const onEmojiClick = event => console.log(event.detail)
+  const onSkinToneChange = event => console.log(event.detail)
+  
+  return (<EmojiPicker onEmojiClick={onEmojiClick} onSkinToneChange={onSkinToneChange} />)
+}
+```
+
+And set the `class` or styles:
+
+```jsx
+import EmojiPicker from 'emoji-picker-element/react'
+
+export default () => (<EmojiPicker className="dark" style={{ '--num-columns': 6 }} />)
+```
+
+### In a Svelte project
+
+`emoji-picker-element` can't be used as a direct Svelte component. However, if you're already using Svelte 3, then you
 can avoid importing Svelte twice by using:
 
 ```js

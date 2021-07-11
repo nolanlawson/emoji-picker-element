@@ -90,10 +90,22 @@ const entryPoints = [
     input: './src/picker/PickerElement.js',
     output: './svelte.js',
     external: ['svelte', 'svelte/internal']
+  },
+  {
+    input: './src/react/index.js',
+    output: './react.js',
+    external: ['./picker.js', '../picker/PickerElement.js', 'react'],
+    plugins: [
+      replace({
+        '\'../picker/PickerElement.js\'': '\'./picker.js\'',
+        delimiters: ['', ''],
+        preventAssignment: true
+      })
+    ]
   }
 ]
 
-export default entryPoints.map(({ input, output, format = 'es', external = [] }) => {
+export default entryPoints.map(({ input, output, format = 'es', external = [], plugins = [] }) => {
   const res = {
     ...baseConfig,
     input,
@@ -105,5 +117,6 @@ export default entryPoints.map(({ input, output, format = 'es', external = [] })
     }
   }
   res.external = [...res.external, ...external]
+  res.plugins = [...res.plugins, ...plugins]
   return res
 })

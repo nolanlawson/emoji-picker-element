@@ -32,13 +32,15 @@ export interface DatabaseConstructorOptions {
   customEmoji?: CustomEmoji[]
 }
 
+export type CategorySortingFunction = (a: string, b: string) => number
+
 export interface PickerConstructorOptions {
   dataSource?: string
   locale?: string
   i18n?: I18n
   skinToneEmoji?: string
   customEmoji?: CustomEmoji[]
-  customCategorySorting?: (a: string, b: string) => number
+  customCategorySorting?: CategorySortingFunction
 }
 
 export interface I18n {
