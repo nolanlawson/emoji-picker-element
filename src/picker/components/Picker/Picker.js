@@ -313,9 +313,13 @@ $: {
     requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
   } else {
     currentEmojis = currentEmojis.filter(isZwjSupported)
-    requestAnimationFrame(() => { // reset scroll top to 0 when emojis change]
+    requestAnimationFrame(() => {
       try {
-        tabpanelElement.scrollTop = 0
+        // Avoid Svelte doing an invalidation on the "setter" here by using (0 || element).
+        // At best the invalidation is useless, at worst it can cause bugs like
+        // https://github.com/nolanlawson/emoji-picker-element/pull/180
+        // where we get an infinite rAF loop.
+        (0 || tabpanelElement).scrollTop = 0 // reset scroll top to 0 when emojis change
       } catch (e) {
         // tabpanelElement can be null if element is disconnected immediately after connected. ignore
       }
