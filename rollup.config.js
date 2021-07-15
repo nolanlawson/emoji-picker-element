@@ -94,7 +94,7 @@ const entryPoints = [
   {
     input: './src/react/index.js',
     output: './react.js',
-    external: ['./picker.js', '../picker/PickerElement.js', 'react'],
+    external: ['./picker.js', '../picker/PickerElement.js', 'react', 'prop-types'],
     plugins: [
       replace({
         '\'../picker/PickerElement.js\'': '\'./picker.js\'',
