@@ -60,6 +60,21 @@ const baseConfig = {
         !dev && 'console.log'
       ].filter(Boolean)
     }),
+    replace({
+      '(options.hydrate)': '(false)',
+      delimiters: ['', ''],
+      preventAssignment: true
+    }),
+    replace({
+      '(is_hydrating)': '(false)',
+      delimiters: ['', ''],
+      preventAssignment: true
+    }),
+    replace({
+      'is_hydrating &&': 'false &&',
+      delimiters: ['', ''],
+      preventAssignment: true
+    }),
     DEBUG && analyze({ summaryOnly: true })
   ],
   external: [
