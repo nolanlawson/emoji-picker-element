@@ -744,7 +744,7 @@ npm install --save prop-types emoji-picker-element
 Then use the `EmojiPicker` component like so:
 
 ```jsx
-import EmojiPicker from 'emoji-picker-element/react'
+import EmojiPicker from 'emoji-picker-element/react';
 
 export default () => (<EmojiPicker />)
 ```
@@ -752,7 +752,7 @@ export default () => (<EmojiPicker />)
 You can pass in properties:
 
 ```jsx
-import EmojiPicker from 'emoji-picker-element/react'
+import EmojiPicker from 'emoji-picker-element/react';
 
 export default () => (<EmojiPicker dataSource="/path/to/emoji.json" skinToneEmoji="👍" />)
 ```
@@ -760,20 +760,20 @@ export default () => (<EmojiPicker dataSource="/path/to/emoji.json" skinToneEmoj
 And add event listeners:
 
 ```jsx
-import EmojiPicker from 'emoji-picker-element/react'
+import EmojiPicker from 'emoji-picker-element/react';
 
 export default () => {
-  const onEmojiClick = event => console.log(event.detail)
-  const onSkinToneChange = event => console.log(event.detail)
+  const onEmojiClick = event => console.log(event.detail);
+  const onSkinToneChange = event => console.log(event.detail);
   
-  return (<EmojiPicker onEmojiClick={onEmojiClick} onSkinToneChange={onSkinToneChange} />)
+  return (<EmojiPicker onEmojiClick={onEmojiClick} onSkinToneChange={onSkinToneChange} />);
 }
 ```
 
 And set the `className` or `style`:
 
 ```jsx
-import EmojiPicker from 'emoji-picker-element/react'
+import EmojiPicker from 'emoji-picker-element/react';
 
 export default () => (<EmojiPicker className="dark" style={{ '--num-columns': 6 }} />)
 ```
