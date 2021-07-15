@@ -770,13 +770,15 @@ export default () => {
 }
 ```
 
-And set the `class` or styles:
+And set the `className` or `style`:
 
 ```jsx
 import EmojiPicker from 'emoji-picker-element/react'
 
 export default () => (<EmojiPicker className="dark" style={{ '--num-columns': 6 }} />)
 ```
+
+In general, the React component supports the same props (`i18n`, `locale`, etc.) as the web component. For styling, use the `style` or `className` props as shown above.
 
 ### In a Svelte project
 
