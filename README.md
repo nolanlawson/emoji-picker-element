@@ -733,7 +733,7 @@ The reason for this is that `Picker` automatically registers itself as a custom 
 
 ### In a React project
 
-You can use `emoji-picker-element` as a standard web component in React. However, [React does not fully support web components](https://custom-elements-everywhere.com/libraries/react/results/results.html), so you may find this awkward. To make things a bit easier, `emoji-picker-element` ships with a small React shim.
+You can use `emoji-picker-element` as a standard web component in React. However, [React does not fully support web components](https://custom-elements-everywhere.com/libraries/react/results/results.html) (as of this writing), so you may find this awkward. To make things a bit easier, `emoji-picker-element` ships with a small React shim.
 
 First, install dependencies:
 
