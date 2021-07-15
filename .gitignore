@@ -129,7 +129,8 @@ dist
 /trimEmojiData.d.ts
 /svelte.js
 /svelte.js.map
-
+/react.js
+/react.js.map
 /docs-tmp
 /ts-tmp
 /bundle.js
