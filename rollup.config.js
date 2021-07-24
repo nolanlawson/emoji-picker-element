@@ -53,6 +53,12 @@ const baseConfig = {
       },
       preprocess: preprocessConfig
     }),
+    // make the svelte output slightly smaller
+    replace({
+      'options.hydrate': 'false',
+      delimiters: ['', ''],
+      preventAssignment: true
+    }),
     strip({
       include: ['**/*.js', '**/*.svelte'],
       functions: [
