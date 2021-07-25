@@ -246,8 +246,6 @@ document.body.appendChild(picker);
 
 The `new Picker(options)` constructor supports several options:
 
-<!-- picker API start -->
-
 Name | Type | Default | Description |
 ------ | ------ | ------ | ------ |
 `customCategorySorting` | function | - | Function to sort custom category strings (sorted alphabetically by default)  |
@@ -258,8 +256,6 @@ Name | Type | Default | Description |
 `skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute) |
 
 
-
-<!-- picker API end -->
 
 For instance:
 
@@ -368,8 +364,6 @@ Note that under the hood, IndexedDB data is partitioned based on the `locale`. S
 Also note that, unlike the picker, the database does not filter emoji based on whether they are supported by the current browser/OS or not. To detect emoji support, you can use a library like [is-emoji-supported](https://github.com/koala-interactive/is-emoji-supported).
 
 Full API:
-
-<!-- database API start -->
 
 #### Constructors
 
@@ -595,8 +589,6 @@ Name | Type | Description |
 
 **Returns:** *Promise‹void›*
 
-
-<!-- database API end -->
 
 ### Events
 

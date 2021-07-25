@@ -69,12 +69,6 @@ So for now: it's one big component.
 
 Since it's one big component, it's more readable if we split up the HTML/CSS/JS. Plus, we can lint the JS more easily that way. Plus, I like SCSS.
 
-### Why are TypeScript files separate?
-
-I don't really like writing TypeScript, but I appreciate the documentation and autocompletion it provides for consumers. I could just author the `.d.ts` files, but 1) I don't really know how to do that, and 2) `typedoc` seems to require TypeScript as input, not `.d.ts`.
-
-So, I just have a `types/` directory with some fake TypeScript files to generate the types and docs. Happy to revisit later if there's a better solution.
-
 ### Why are the built JS files at the root of the project?
 
 When publishing to npm, we want people to be able to do e.g. `import Picker from 'emoji-picker-element/picker'`. The only way to get that is to put `picker.js` at the top level.

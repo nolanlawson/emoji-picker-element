@@ -119,14 +119,10 @@ dist
 /database.js.map
 /picker.js
 /picker.js.map
-/picker.d.ts
-/database.d.ts
-/shared.d.ts
 /trimEmojiData.js
 /trimEmojiData.js.map
 /trimEmojiData.cjs
 /trimEmojiData.cjs.map
-/trimEmojiData.d.ts
 /svelte.js
 /svelte.js.map
 
