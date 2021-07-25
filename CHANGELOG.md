@@ -1,3 +1,13 @@
+## [1.6.5](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.4...v1.6.5) (2021-07-25)
+
+
+### Bug Fixes
+
+* fix types for event listeners, remove typedoc ([#193](https://github.com/nolanlawson/emoji-picker-element/issues/193)) ([8c7bbc7](https://github.com/nolanlawson/emoji-picker-element/commit/8c7bbc7a89e8eca0254676aa56ee5202788cb39e)), closes [#191](https://github.com/nolanlawson/emoji-picker-element/issues/191)
+* remove Svelte assignment invalidation ([#182](https://github.com/nolanlawson/emoji-picker-element/issues/182)) ([ed63bed](https://github.com/nolanlawson/emoji-picker-element/commit/ed63bedd617bdbf5301804977756be480956f326))
+
+
+
 ## [1.6.4](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.3...v1.6.4) (2021-07-11)
 
 
