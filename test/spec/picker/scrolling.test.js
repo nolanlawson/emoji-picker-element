@@ -73,7 +73,7 @@ describe('scrolling', () => {
 
     tabPanel.scrollTop = 1
 
-    await tick(20)
+    await tick(40)
     expect(tabPanel.scrollTop).toEqual(1)
 
     await userEvent.type(getByRole(container, 'combobox'), ' face')
@@ -81,7 +81,7 @@ describe('scrolling', () => {
     await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1))
     expect(getByRole(container, 'option', { name: /🐵/ })).toBeVisible()
 
-    await tick(20)
+    await tick(40)
     expect(tabPanel.scrollTop).toEqual(0)
 
     document.body.removeChild(picker)
