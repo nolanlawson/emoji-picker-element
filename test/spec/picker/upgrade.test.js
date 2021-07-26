@@ -40,14 +40,15 @@ describe('upgrade tests', () => {
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
 
-    expect(getByRole(container, 'menuitem', { name: /👍/ })).toBeVisible()
+    expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('👍')
 
     expect(picker.locale).toEqual('fr')
     expect(picker.dataSource).toEqual(FR_EMOJI)
 
+    // The setter should now work as expected
     picker.skinToneEmoji = '✌'
 
-    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /👍/ })).toBeVisible())
+    await waitFor(() => expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('✌'))
 
     document.body.removeChild(div)
     await tick(20)

@@ -37,6 +37,7 @@ export default class PickerElement extends HTMLElement {
     for (const prop of PROPS) {
       if (prop !== 'database' && Object.hasOwnProperty.call(this, prop)) {
         this._ctx[prop] = this[prop]
+        delete this[prop]
       }
     }
     this._dbFlush() // wait for a flush before creating the db, in case the user calls e.g. a setter or setAttribute
