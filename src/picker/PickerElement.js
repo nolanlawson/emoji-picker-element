@@ -5,6 +5,16 @@ import enI18n from '../picker/i18n/en.js'
 import styles from 'emoji-picker-element-styles'
 import Database from './ImportedDatabase'
 
+const PROPS = [
+  'customEmoji',
+  'customCategorySorting',
+  'database',
+  'dataSource',
+  'i18n',
+  'locale',
+  'skinToneEmoji'
+]
+
 export default class PickerElement extends HTMLElement {
   constructor (props) {
     performance.mark('initialLoad')
@@ -22,6 +32,12 @@ export default class PickerElement extends HTMLElement {
       customEmoji: null,
       i18n: enI18n,
       ...props
+    }
+    // Handle properties set before the element was upgraded
+    for (const prop of PROPS) {
+      if (prop !== 'database' && typeof this[prop] !== 'undefined') {
+        this._ctx[prop] = this[prop]
+      }
     }
     this._dbFlush() // wait for a flush before creating the db, in case the user calls e.g. a setter or setAttribute
   }
@@ -85,18 +101,9 @@ export default class PickerElement extends HTMLElement {
   }
 }
 
-const props = [
-  'customEmoji',
-  'customCategorySorting',
-  'database',
-  'dataSource',
-  'i18n',
-  'locale',
-  'skinToneEmoji'
-]
 const definitions = {}
 
-for (const prop of props) {
+for (const prop of PROPS) {
   definitions[prop] = {
     get () {
       if (prop === 'database') {
