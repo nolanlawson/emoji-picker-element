@@ -16,9 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install system dependencies
-        run: sudo apt-get install -y fonts-noto-color-emoji google-chrome-stable
-
       - uses: actions/setup-node@v1
         with:
           node-version: 14
@@ -39,6 +36,8 @@ jobs:
       - name: yarn install
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
+          # install the chromedriver corresponding to whatever version of chrome is installed
+          yarn add chromedriver@^$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
           yarn --immutable --ignore-scripts
           PERF=1 yarn build:rollup
           ./bin/setup-benchmark.sh
