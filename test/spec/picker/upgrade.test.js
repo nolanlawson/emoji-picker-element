@@ -45,6 +45,10 @@ describe('upgrade tests', () => {
     expect(picker.locale).toEqual('fr')
     expect(picker.dataSource).toEqual(FR_EMOJI)
 
+    picker.skinToneEmoji = '✌'
+
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /👍/ })).toBeVisible())
+
     document.body.removeChild(div)
     await tick(20)
   })

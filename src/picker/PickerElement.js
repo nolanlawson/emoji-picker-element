@@ -35,7 +35,7 @@ export default class PickerElement extends HTMLElement {
     }
     // Handle properties set before the element was upgraded
     for (const prop of PROPS) {
-      if (prop !== 'database' && typeof this[prop] !== 'undefined') {
+      if (prop !== 'database' && Object.hasOwnProperty.call(this, prop)) {
         this._ctx[prop] = this[prop]
       }
     }
