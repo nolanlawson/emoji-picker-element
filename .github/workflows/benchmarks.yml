@@ -36,9 +36,9 @@ jobs:
       - name: yarn install
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
+          yarn --immutable --ignore-scripts
           # install the chromedriver corresponding to whatever version of chrome is installed
           yarn add chromedriver@^$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
-          yarn --immutable --ignore-scripts
           PERF=1 yarn build:rollup
           ./bin/setup-benchmark.sh
 
