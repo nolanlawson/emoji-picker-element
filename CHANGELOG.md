@@ -1,3 +1,12 @@
+## [1.6.6](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.5...v1.6.6) (2021-07-27)
+
+
+### Bug Fixes
+
+* fix setting props before element upgrade ([#194](https://github.com/nolanlawson/emoji-picker-element/issues/194)) ([8e7b5d5](https://github.com/nolanlawson/emoji-picker-element/commit/8e7b5d5aab55788f07cc894e8e72489b13bdfc1f)), closes [#190](https://github.com/nolanlawson/emoji-picker-element/issues/190)
+
+
+
 ## [1.6.5](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.4...v1.6.5) (2021-07-25)
 
 
