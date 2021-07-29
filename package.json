@@ -196,5 +196,9 @@
       "maxSize": "13 kB",
       "compression": "brotli"
     }
-  ]
+  ],
+  "volta": {
+    "node": "14.17.3",
+    "yarn": "1.22.11"
+  }
 }
