@@ -1,7 +1,7 @@
 import SveltePicker from './components/Picker/Picker.svelte'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
 import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI } from './constants'
-import enI18n from '../picker/i18n/en.js'
+import enI18n from './i18n/en.js'
 import styles from 'emoji-picker-element-styles'
 import Database from './ImportedDatabase'
 

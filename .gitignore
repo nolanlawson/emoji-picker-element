@@ -131,3 +131,4 @@ dist
 /bundle.js
 /test/benchmark/node_modules
 /test/benchmark/data.json
+/i18n
