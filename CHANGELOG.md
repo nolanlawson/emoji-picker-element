@@ -1,3 +1,12 @@
+## [1.6.7](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.6...v1.6.7) (2021-08-02)
+
+
+### Bug Fixes
+
+* use Object.prototype.hasOwnProperty ([#198](https://github.com/nolanlawson/emoji-picker-element/issues/198)) ([b8302b2](https://github.com/nolanlawson/emoji-picker-element/commit/b8302b215bbecd8e4f1aeb5e9095c5e672b9ede2))
+
+
+
 ## [1.6.6](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.5...v1.6.6) (2021-07-27)
 
 
