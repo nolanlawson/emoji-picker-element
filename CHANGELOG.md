@@ -1,3 +1,18 @@
+# [1.7.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.7...v1.7.0) (2021-08-06)
+
+
+### Bug Fixes
+
+* actually publish i18n files ([#202](https://github.com/nolanlawson/emoji-picker-element/issues/202)) ([3fd2eae](https://github.com/nolanlawson/emoji-picker-element/commit/3fd2eaef2a3404c513175b57654efd86b607e934))
+
+
+### Features
+
+* add built-in translations ([#200](https://github.com/nolanlawson/emoji-picker-element/issues/200)) ([96d0d1d](https://github.com/nolanlawson/emoji-picker-element/commit/96d0d1d171aa95519be36e763a1708c9ff9e2431))
+* create pt_PT.js ([#188](https://github.com/nolanlawson/emoji-picker-element/issues/188)) ([69541a3](https://github.com/nolanlawson/emoji-picker-element/commit/69541a3957f2f03517066925138edf2cc9a2a3b0))
+
+
+
 ## [1.6.7](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.6...v1.6.7) (2021-08-02)
 
 
