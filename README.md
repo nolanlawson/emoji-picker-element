@@ -33,7 +33,7 @@ A lightweight emoji picker, distributed as a web component.
     + [Custom styling](#custom-styling)
   * [JavaScript API](#javascript-api)
     + [Picker](#picker)
-      - [i18n structure](#i18n-structure)
+      - [Internationalization](#internationalization)
         * [Built-in translations](#built-in-translations)
       - [Custom category order](#custom-category-order)
     + [Database](#database)
@@ -287,7 +287,7 @@ Some values can also be set as declarative attributes:
 Note that complex properties like `i18n` or `customEmoji` are not supported as attributes, because the DOM only
 supports string attributes, not complex objects.
 
-#### i18n structure
+#### Internationalization
 
 The `i18n` parameter specifies translations for the picker interface. Here is the default English `i18n` object:
 
@@ -344,7 +344,7 @@ import fr from 'emoji-picker-element/i18n/fr';
 const picker = new Picker({ i18n: fr });
 ```
 
-Note that translations for the interface are not the same as translations for the emoji data. To support both, you should do something like:
+Note that translations for the interface (`i18n`) are not the same as translations for the emoji data (`dataSource` and `locale`). To support both, you should do something like:
 
 ```js
 import fr from 'emoji-picker-element/i18n/fr';
