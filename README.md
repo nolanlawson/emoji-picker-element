@@ -340,8 +340,13 @@ Community-provided translations for some languages [are available](https://githu
 
 ```js
 import fr from 'emoji-picker-element/i18n/fr';
+import de from 'emoji-picker-element/i18n/de';
 
-const picker = new Picker({ i18n: fr });
+// French
+picker.i18n = fr;
+
+// German
+picker.i18n = de;
 ```
 
 Note that translations for the interface (`i18n`) are not the same as translations for the emoji data (`dataSource` and `locale`). To support both, you should do something like:
@@ -763,11 +768,19 @@ While this option can reduce your bundle size, note that it only works if your S
 
 ### Data source and JSON format
 
-If you'd like to host the emoji JSON yourself, you can do:
+If you'd like to host the emoji data (`dataSource`) yourself, you can do:
 
     npm install emoji-picker-element-data@^1
 
 Then host `node_modules/emoji-picker-element-data/en/emojibase/data.json` (or other JSON files) on your web server.
+
+```js
+const picker = new Picker({
+  dataSource: '/path/to/my/webserver/data.json'
+});
+```
+
+See [`emoji-picker-element-data`](https://www.npmjs.com/package/emoji-picker-element-data) for details.
 
 ### Shortcodes
 
