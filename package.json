@@ -18,11 +18,12 @@
   ],
   "scripts": {
     "prepare": "run-s build",
-    "build": "run-s build:rollup build:css-docs build:i18n-docs build:toc",
+    "build": "run-s build:rollup build:i18n build:css-docs build:i18n-docs build:toc",
     "build:rollup": "cross-env NODE_ENV=production rollup -c",
     "build:css-docs": "node ./bin/generateCssDocs",
     "build:i18n-docs": "node ./bin/generateI18nDocs",
     "build:toc": "node ./bin/generateTOC",
+    "build:i18n": "node ./bin/buildI18n",
     "benchmark:runtime": "cross-env PERF=1 run-s build:rollup && ./bin/run-benchmark.sh",
     "benchmark:bundlesize": "run-s build:rollup benchmark:bundle benchmark:run-bundlesize",
     "benchmark:bundle": "rollup -c ./test/bundlesize/rollup.config.js",

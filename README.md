@@ -33,7 +33,8 @@ A lightweight emoji picker, distributed as a web component.
     + [Custom styling](#custom-styling)
   * [JavaScript API](#javascript-api)
     + [Picker](#picker)
-      - [i18n structure](#i18n-structure)
+      - [Internationalization](#internationalization)
+        * [Built-in translations](#built-in-translations)
       - [Custom category order](#custom-category-order)
     + [Database](#database)
       - [Constructors](#constructors)
@@ -287,9 +288,9 @@ Some values can also be set as declarative attributes:
 Note that complex properties like `i18n` or `customEmoji` are not supported as attributes, because the DOM only
 supports string attributes, not complex objects.
 
-#### i18n structure
+#### Internationalization
 
-Here is the default English `i18n` object (`"en"` locale):
+The `i18n` parameter specifies translations for the picker interface. Here is the default English `i18n` object:
 
 <!-- i18n options start -->
 
@@ -332,8 +333,36 @@ Here is the default English `i18n` object (`"en"` locale):
 
 <!-- i18n options end -->
 
-Note that some of these strings are only visible to users of screen readers.
-But you should still support them if you internationalize your app!
+Note that some of these strings are only visible to users of screen readers. They are still important for accessibility!
+
+##### Built-in translations
+
+Community-provided translations for some languages [are available](https://github.com/nolanlawson/emoji-picker-element/tree/master/src/i18n). You can use them like so:
+
+```js
+import fr from 'emoji-picker-element/i18n/fr';
+import de from 'emoji-picker-element/i18n/de';
+
+// French
+picker.i18n = fr;
+
+// German
+picker.i18n = de;
+```
+
+Note that translations for the interface (`i18n`) are not the same as translations for the emoji data (`dataSource` and `locale`). To support both, you should do something like:
+
+```js
+import fr from 'emoji-picker-element/i18n/fr';
+
+const picker = new Picker({ 
+  i18n: fr,
+  locale: 'fr',
+  dataSource: 'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/fr/emojibase/data.json',
+});
+```
+
+If a built-in translation for your target language is not available, you can also write your own translation and pass it in as `i18n`. Please feel free to contribute your translation [here](https://github.com/nolanlawson/emoji-picker-element/tree/master/src/i18n).
 
 #### Custom category order
 
@@ -740,11 +769,19 @@ While this option can reduce your bundle size, note that it only works if your S
 
 ### Data source and JSON format
 
-If you'd like to host the emoji JSON yourself, you can do:
+If you'd like to host the emoji data (`dataSource`) yourself, you can do:
 
     npm install emoji-picker-element-data@^1
 
 Then host `node_modules/emoji-picker-element-data/en/emojibase/data.json` (or other JSON files) on your web server.
+
+```js
+const picker = new Picker({
+  dataSource: '/path/to/my/webserver/data.json'
+});
+```
+
+See [`emoji-picker-element-data`](https://www.npmjs.com/package/emoji-picker-element-data) for details.
 
 ### Shortcodes
 
