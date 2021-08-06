@@ -8,13 +8,14 @@
   "type": "module",
   "customElements": "custom-elements.json",
   "files": [
-    "database.js*",
-    "index.js*",
-    "picker.js*",
-    "trimEmojiData.*",
-    "svelte.js*",
-    "*.d.ts",
-    "custom-elements.json"
+    "/database.js*",
+    "/index.js*",
+    "/picker.js*",
+    "/trimEmojiData.*",
+    "/svelte.js*",
+    "/*.d.ts",
+    "/custom-elements.json",
+    "/i18n/*"
   ],
   "scripts": {
     "prepare": "run-s build",
