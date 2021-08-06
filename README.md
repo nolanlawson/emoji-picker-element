@@ -337,7 +337,7 @@ Note that some of these strings are only visible to users of screen readers. The
 
 ##### Built-in translations
 
-Community-provided translations for some languages [are available](https://github.com/nolanlawson/emoji-picker-element/tree/master/src/i18n). You can use them like so:
+Community-provided translations for some languages [are available](https://github.com/nolanlawson/emoji-picker-element/tree/master/src/picker/i18n). You can use them like so:
 
 ```js
 import fr from 'emoji-picker-element/i18n/fr';
@@ -362,7 +362,7 @@ const picker = new Picker({
 });
 ```
 
-If a built-in translation for your target language is not available, you can also write your own translation and pass it in as `i18n`. Please feel free to contribute your translation [here](https://github.com/nolanlawson/emoji-picker-element/tree/master/src/i18n).
+If a built-in translation for your target language is not available, you can also write your own translation and pass it in as `i18n`. Please feel free to contribute your translation [here](https://github.com/nolanlawson/emoji-picker-element/tree/master/src/picker/i18n).
 
 #### Custom category order
 
