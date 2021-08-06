@@ -33,6 +33,9 @@ A lightweight emoji picker, distributed as a web component.
     + [Custom styling](#custom-styling)
   * [JavaScript API](#javascript-api)
     + [Picker](#picker)
+      - [Events](#events)
+        * [`emoji-click`](#emoji-click)
+        * [`skin-tone-change`](#skin-tone-change)
       - [Internationalization](#internationalization)
         * [Built-in translations](#built-in-translations)
       - [Custom category order](#custom-category-order)
@@ -53,9 +56,6 @@ A lightweight emoji picker, distributed as a web component.
         * [incrementFavoriteEmojiCount](#incrementfavoriteemojicount)
         * [ready](#ready)
         * [setPreferredSkinTone](#setpreferredskintone)
-    + [Events](#events)
-      - [`emoji-click`](#emoji-click)
-      - [`skin-tone-change`](#skin-tone-change)
     + [Custom emoji](#custom-emoji)
     + [Tree-shaking](#tree-shaking)
     + [Within a Svelte project](#within-a-svelte-project)
@@ -287,6 +287,67 @@ Some values can also be set as declarative attributes:
 
 Note that complex properties like `i18n` or `customEmoji` are not supported as attributes, because the DOM only
 supports string attributes, not complex objects.
+
+#### Events
+
+##### `emoji-click`
+
+The `emoji-click` event is fired when an emoji is selected by the user. Example format:
+
+```javascript
+{
+  emoji: {
+    annotation: 'thumbs up',
+    group: 1,
+    order: 280,
+    shortcodes: ['thumbsup', '+1', 'yes'],
+    tags: ['+1', 'hand', 'thumb', 'up'],
+    unicode: '👍️',
+    version: 0.6,
+    skins: [
+      { tone: 1, unicode: '👍🏻', version: 1 },
+      { tone: 2, unicode: '👍🏼', version: 1 },
+      { tone: 3, unicode: '👍🏽', version: 1 },
+      { tone: 4, unicode: '👍🏾', version: 1 },
+      { tone: 5, unicode: '👍🏿', version: 1 }
+    ]
+  },
+  skinTone: 4,
+  unicode: '👍🏾'
+}
+```
+
+And usage:
+
+```js
+picker.addEventListener('emoji-click', event => {
+  console.log(event.detail); // will log something like the above
+});
+```
+
+Note that `unicode` will represent whatever the emoji should look like
+with the given `skinTone`. If the `skinTone` is 0, or if the emoji has
+no skin tones, then no skin tone is applied to `unicode`.
+
+##### `skin-tone-change`
+
+This event is fired whenever the user selects a new skin tone. Example format:
+
+```js
+{
+  skinTone: 5
+}
+```
+
+And usage:
+
+```js
+picker.addEventListener('skin-tone-change', event => {
+  console.log(event.detail); // will log something like the above
+})
+```
+
+Note that skin tones are an integer from 0 (default) to 1 (light) through 5 (dark).
 
 #### Internationalization
 
@@ -618,68 +679,6 @@ Name | Type | Description |
 `skinTone` | SkinTone | preferred skin tone  |
 
 **Returns:** *Promise‹void›*
-
-
-### Events
-
-#### `emoji-click`
-
-The `emoji-click` event is fired when an emoji is selected by the user. Example format:
-
-```javascript
-{
-  emoji: {
-    annotation: 'thumbs up',
-    group: 1,
-    order: 280,
-    shortcodes: ['thumbsup', '+1', 'yes'],
-    tags: ['+1', 'hand', 'thumb', 'up'],
-    unicode: '👍️',
-    version: 0.6,
-    skins: [
-      { tone: 1, unicode: '👍🏻', version: 1 },
-      { tone: 2, unicode: '👍🏼', version: 1 },
-      { tone: 3, unicode: '👍🏽', version: 1 },
-      { tone: 4, unicode: '👍🏾', version: 1 },
-      { tone: 5, unicode: '👍🏿', version: 1 }
-    ]
-  },
-  skinTone: 4,
-  unicode: '👍🏾'
-}
-```
-
-And usage:
-
-```js
-picker.addEventListener('emoji-click', event => {
-  console.log(event.detail); // will log something like the above
-});
-```
-
-Note that `unicode` will represent whatever the emoji should look like
-with the given `skinTone`. If the `skinTone` is 0, or if the emoji has
-no skin tones, then no skin tone is applied to `unicode`.
-
-#### `skin-tone-change`
-
-This event is fired whenever the user selects a new skin tone. Example format:
-
-```js
-{
-  skinTone: 5
-}
-```
-
-And usage:
-
-```js
-picker.addEventListener('skin-tone-change', event => {
-  console.log(event.detail); // will log something like the above
-})
-```
-
-Note that skin tones are an integer from 0 (default) to 1 (light) through 5 (dark).
 
 ### Custom emoji
 
