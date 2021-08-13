@@ -8,7 +8,6 @@ import allData from 'emoji-picker-element-data/en/emojibase/data.json'
 import { MOST_COMMONLY_USED_EMOJI } from '../../../src/picker/constants'
 import { uniqBy } from '../../../src/shared/uniqBy'
 import { groups } from '../../../src/picker/groups'
-import Database from '../../../src/database/Database'
 
 const dataSource = 'with-favs.json'
 
@@ -37,14 +36,21 @@ describe('Favorites UI', () => {
     await tick(40)
     document.body.removeChild(picker)
     await tick(40)
-    await new Database({ dataSource, locale: 'en' }).delete()
-    await tick(40)
     basicAfterEach()
   })
 
+  async function remount () {
+    await tick(40)
+    document.body.removeChild(picker)
+    await tick(40)
+    document.body.appendChild(picker)
+    container = picker.shadowRoot
+    await tick(40)
+  }
+
   test('Favorites UI basic test', async () => {
     // using a testId because testing-library seems to think role=menu has no aria-label
-    const favoritesBar = getByTestId(container, 'favorites')
+    let favoritesBar = getByTestId(container, 'favorites')
     expect(favoritesBar).toBeVisible()
     await waitFor(() => expect(getAllByRole(favoritesBar, 'menuitem')).toHaveLength(8))
     expect(getAllByRole(favoritesBar, 'menuitem').map(_ => _.getAttribute('id').substring(4))).toStrictEqual(
@@ -52,6 +58,11 @@ describe('Favorites UI', () => {
     )
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /🤣/ })).toBeVisible())
     fireEvent.click(getByRole(container, 'menuitem', { name: /🤣/ }))
+
+    // have to unmount/remount to force a favorites refresh
+    await remount()
+
+    favoritesBar = getByTestId(container, 'favorites')
     await waitFor(() => expect(getAllByRole(favoritesBar, 'menuitem')
       .map(_ => _.getAttribute('id').substring(4))).toStrictEqual([
       '🤣',
@@ -97,6 +108,9 @@ describe('Favorites UI', () => {
 
     fireEvent.click(getByRole(container, 'menuitem', { name: /transparent/i }))
     fireEvent.click(getByRole(container, 'menuitem', { name: /black/i }))
+
+    // have to unmount/remount to force a favorites refresh
+    await remount()
 
     await waitFor(
       () => expect(getByRole(getByTestId(container, 'favorites'), 'menuitem', { name: /transparent/i })).toBeVisible

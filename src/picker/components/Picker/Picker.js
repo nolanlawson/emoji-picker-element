@@ -496,8 +496,6 @@ async function clickEmoji (unicodeOrName) {
     .find(_ => (_.id === unicodeOrName))
   const skinTonedUnicode = emojiSummary.unicode && unicodeWithSkin(emojiSummary, currentSkinTone)
   await database.incrementFavoriteEmojiCount(unicodeOrName)
-  // eslint-disable-next-line no-self-assign
-  defaultFavoriteEmojis = defaultFavoriteEmojis // force favorites to re-render
   fireEvent('emoji-click', {
     emoji,
     skinTone: currentSkinTone,
