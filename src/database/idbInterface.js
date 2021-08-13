@@ -8,7 +8,7 @@ import {
 } from './constants'
 import { transformEmojiData } from './utils/transformEmojiData'
 import { extractTokens } from './utils/extractTokens'
-import { getAllIDB, getAllKeysIDB, getIDB } from './idbUtil'
+import { getAllIDB, getIDB } from './idbUtil'
 import { findCommonMembers } from './utils/findCommonMembers'
 import { normalizeTokens } from './utils/normalizeTokens'
 
@@ -67,11 +67,10 @@ export async function loadData (db, emojiData, url, eTag) {
     await dbPromise(db, [STORE_EMOJI, STORE_KEYVALUE], MODE_READWRITE, ([emojiStore, metaStore]) => {
       let oldETag
       let oldUrl
-      let oldKeys
       let todo = 0
 
       function checkFetched () {
-        if (++todo === 3) {
+        if (++todo === 2) { // 2 requests made
           onFetched()
         }
       }
@@ -82,9 +81,7 @@ export async function loadData (db, emojiData, url, eTag) {
           return
         }
         // delete old data
-        for (const key of oldKeys) {
-          emojiStore.delete(key)
-        }
+        emojiStore.clear()
         // insert new data
         for (const data of transformedData) {
           emojiStore.put(data)
@@ -101,11 +98,6 @@ export async function loadData (db, emojiData, url, eTag) {
 
       getIDB(metaStore, KEY_URL, result => {
         oldUrl = result
-        checkFetched()
-      })
-
-      getAllKeysIDB(emojiStore, undefined, result => {
-        oldKeys = result
         checkFetched()
       })
     })
