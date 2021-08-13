@@ -21,7 +21,7 @@ $skintoneZIndex3: 3;
 
 .skintone-list {
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   top: 0;
   z-index: $skintoneZIndex2;
   overflow: visible;
@@ -175,12 +175,11 @@ button.emoji,
   background: var(--background);
 }
 
-
 .search-row {
   display: flex;
   align-items: center;
   position: relative;
-  padding-left: var(--emoji-padding);
+  padding-inline-start: var(--emoji-padding);
   padding-bottom: var(--emoji-padding);
 }
 

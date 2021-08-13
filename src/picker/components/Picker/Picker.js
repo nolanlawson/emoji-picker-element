@@ -42,7 +42,6 @@ let tabpanelElement
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
 let message // eslint-disable-line no-unused-vars
-let indicatorStyle = '' // eslint-disable-line no-unused-vars
 let skinTonePickerExpanded = false
 let skinTonePickerExpandedAfterAnimation = false // eslint-disable-line no-unused-vars
 let skinToneDropdown
@@ -55,6 +54,7 @@ let skinTones = []
 let currentFavorites = [] // eslint-disable-line no-unused-vars
 let defaultFavoriteEmojis
 let numColumns = DEFAULT_NUM_COLUMNS
+let isRtl = false
 let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
 let currentGroupIndex = 0
 let groups = defaultGroups
@@ -221,22 +221,31 @@ $: {
 // 1) Re-calculate the --num-columns var because it may have changed
 // 2) Re-calculate the scrollbar width because it may have changed
 //   (i.e. because the number of items changed)
+// 3) Re-calculate whether we're in RTL mode or not.
+//
+// The benefit of doing this in one place is to align with rAF/ResizeObserver
+// and do all the calculations in one go. RTL vs LTR is not strictly width-related,
+// but since we're already reading the style here, and since it's already aligned with
+// the rAF loop, this is the most appropriate place to do it perf-wise.
 //
 
 // eslint-disable-next-line no-unused-vars
-function calculateEmojiGridWidth (node) {
+function calculateEmojiGridStyle (node) {
   return widthCalculator.calculateWidth(node, width => {
     /* istanbul ignore next */
-    const newNumColumns = process.env.NODE_ENV === 'test'
-      ? DEFAULT_NUM_COLUMNS
-      : parseInt(getComputedStyle(rootElement).getPropertyValue('--num-columns'), 10)
-    /* istanbul ignore next */
-    const parentWidth = process.env.NODE_ENV === 'test' // jsdom throws an error here occasionally
-      ? 1
-      : node.parentElement.getBoundingClientRect().width
-    const newScrollbarWidth = parentWidth - width
-    numColumns = newNumColumns
-    scrollbarWidth = newScrollbarWidth // eslint-disable-line no-unused-vars
+    if (process.env.NODE_ENV !== 'test') { // jsdom throws errors for this kind of fancy stuff
+      // read all the style/layout calculations we need to make
+      const style = getComputedStyle(rootElement)
+      const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
+      const newIsRtl = style.getPropertyValue('direction') === 'rtl'
+      const parentWidth = node.parentElement.getBoundingClientRect().width
+      const newScrollbarWidth = parentWidth - width
+
+      // write to Svelte variables
+      numColumns = newNumColumns
+      scrollbarWidth = newScrollbarWidth // eslint-disable-line no-unused-vars
+      isRtl = newIsRtl // eslint-disable-line no-unused-vars
+    }
   })
 }
 
@@ -245,13 +254,6 @@ function calculateEmojiGridWidth (node) {
 //
 
 $: currentGroup = groups[currentGroupIndex]
-
-//
-// Animate the indicator (little blue bar below category icons)
-//
-
-// eslint-disable-next-line no-unused-vars
-$: indicatorStyle = `transform: translateX(${`${currentGroupIndex * 100}%`})`
 
 //
 // Set or update the currentEmojis. Check for invalid ZWJ renderings

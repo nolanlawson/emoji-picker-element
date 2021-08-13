@@ -77,7 +77,7 @@
   </div>
   <div class="nav"
        role="tablist"
-       style="grid-template-columns: repeat({groups.length}, 1fr);"
+       style="grid-template-columns: repeat({groups.length}, 1fr)"
        aria-label={i18n.categoriesLabel}
        on:keydown={onNavKeydown}>
     {#each groups as group (group.id)}
@@ -95,7 +95,8 @@
     {/each}
   </div>
   <div class="indicator-wrapper">
-    <div class="indicator" style={indicatorStyle}>
+    <div class="indicator"
+         style="transform: translateX({(isRtl ? -1 : 1) * currentGroupIndex * 100}%)">
     </div>
   </div>
 
@@ -114,7 +115,7 @@
        on:click={onEmojiClick}
        bind:this={tabpanelElement}
   >
-    <div use:calculateEmojiGridWidth>
+    <div use:calculateEmojiGridStyle>
       {#each currentEmojisWithCategories as emojiWithCategory, i (emojiWithCategory.category)}
         <div
           id="menu-label-{i}"
@@ -161,7 +162,7 @@
   <div class="favorites emoji-menu {message ? 'gone': ''}"
        role="menu"
        aria-label={i18n.favoritesLabel}
-       style="padding-right: {scrollbarWidth}px;"
+       style="padding-inline-end: {scrollbarWidth}px"
        on:click={onEmojiClick}
        data-testid="favorites">
     <!-- The reason the emoji logic below is largely duplicated is because it turns out we get a smaller
