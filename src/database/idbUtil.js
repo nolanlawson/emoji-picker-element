@@ -11,7 +11,3 @@ export function getIDB (store, key, cb) {
 export function getAllIDB (store, key, cb) {
   callStore(store, 'getAll', key, cb)
 }
-
-export function getAllKeysIDB (store, key, cb) {
-  callStore(store, 'getAllKeys', key, cb)
-}
