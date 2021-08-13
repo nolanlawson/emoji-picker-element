@@ -42,7 +42,6 @@ let tabpanelElement
 let searchMode = false // eslint-disable-line no-unused-vars
 let activeSearchItem = -1
 let message // eslint-disable-line no-unused-vars
-let computedIndicatorWidth = 0
 let indicatorStyle = '' // eslint-disable-line no-unused-vars
 let skinTonePickerExpanded = false
 let skinTonePickerExpandedAfterAnimation = false // eslint-disable-line no-unused-vars
@@ -248,28 +247,11 @@ function calculateEmojiGridWidth (node) {
 $: currentGroup = groups[currentGroupIndex]
 
 //
-// Animate the indicator
+// Animate the indicator (little blue bar below category icons)
 //
 
 // eslint-disable-next-line no-unused-vars
-function calculateIndicatorWidth (node) {
-  return widthCalculator.calculateWidth(node, width => {
-    computedIndicatorWidth = width
-  })
-}
-
-// TODO: Chrome has an unfortunate bug where we can't use a simple percent-based transform
-// here, becuause it's janky. You can especially see this on a Nexus 5.
-// So we calculate of the indicator and use exact pixel values in the animation instead
-// (where ResizeObserver is supported).
-$: {
-  // eslint-disable-next-line no-unused-vars
-  indicatorStyle = `transform: translateX(${
-    widthCalculator.resizeObserverSupported
-      ? `${currentGroupIndex * computedIndicatorWidth}px` // exact pixels
-      : `${currentGroupIndex * 100}%` // fallback to percent-based
-  })`
-}
+$: indicatorStyle = `transform: translateX(${`${currentGroupIndex * 100}%`})`
 
 //
 // Set or update the currentEmojis. Check for invalid ZWJ renderings
