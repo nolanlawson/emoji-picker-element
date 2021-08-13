@@ -41,6 +41,12 @@ $skintoneZIndex3: 3;
     transition-duration: 0.001s;
   }
 
+  // TODO: remove this when old iOS Safari drops out of usage: https://caniuse.com/css-logical-props
+  // For now, we don't support RTL in old versions of iOS
+  @supports not (inset-inline-end: 0) {
+    right: 0;
+  }
+
   &.no-animate {
     transition: none;
   }
