@@ -521,4 +521,9 @@ describe('Picker tests', () => {
     expect(container.querySelector('.category').textContent).toEqual('Ungulates')
     expect(container.querySelector('.category')).not.toHaveClass('gone')
   })
+
+  test('Styles are working in Jest', async () => {
+    const style = picker.shadowRoot.querySelector('style')
+    expect(style.textContent).not.toEqual('')
+  })
 })

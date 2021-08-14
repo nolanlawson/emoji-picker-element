@@ -6,7 +6,6 @@ import svelte from 'rollup-plugin-svelte'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
 import { buildStyles } from './bin/buildStyles'
-import virtual from '@rollup/plugin-virtual'
 
 const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
@@ -34,12 +33,10 @@ const baseConfig = {
   plugins: [
     resolve(),
     cjs(),
-    virtual({
-      'emoji-picker-element-styles': `export default ${JSON.stringify(buildStyles())}`
-    }),
     replace({
       'process.env.NODE_ENV': dev ? '"development"' : '"production"',
       'process.env.PERF': !!process.env.PERF,
+      'process.env.STYLES': JSON.stringify(buildStyles()),
       preventAssignment: true
     }),
     replace({
