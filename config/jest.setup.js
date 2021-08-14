@@ -4,6 +4,7 @@ import FDBKeyRange from 'fake-indexeddb/build/FDBKeyRange'
 import { Crypto } from '@peculiar/webcrypto'
 import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js'
 import { deleteDatabase } from '../src/database/databaseLifecycle'
+import styles from '../node_modules/.cache/emoji-picker-element/styles.js'
 
 if (!global.performance) {
   global.performance = {}
@@ -25,12 +26,10 @@ global.ResizeObserver = ResizeObserver
 
 process.env.NODE_ENV = 'test'
 
+process.env.STYLES = styles
+
 global.IDBKeyRange = FDBKeyRange
 global.indexedDB = new FDBFactory()
-
-// TODO: figure out how to get the styles into Jest. For now it doesn't really
-// matter because none of the tests rely on visibility checks etc.
-jest.mock('emoji-picker-element-styles', () => '', { virtual: true })
 
 beforeAll(() => {
   jest.spyOn(global.console, 'log').mockImplementation()
