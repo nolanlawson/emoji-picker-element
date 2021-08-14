@@ -30,6 +30,7 @@ A lightweight emoji picker, distributed as a web component.
     + [Dark mode](#dark-mode)
     + [CSS variables](#css-variables)
     + [Focus outline](#focus-outline)
+    + [Small screen sizes](#small-screen-sizes)
     + [Custom styling](#custom-styling)
   * [JavaScript API](#javascript-api)
     + [Picker](#picker)
@@ -223,6 +224,21 @@ applyFocusVisiblePolyfill(picker.shadowRoot);
 ```
 
 `emoji-picker-element` already ships with the proper CSS for both the `:focus-visible` standard and the polyfill.
+
+### Small screen sizes
+
+For small screen sizes, you should probably add some CSS like the following:
+
+```css
+@media screen and (max-width: 320px) {
+  emoji-picker {
+    --num-columns: 6;
+    --category-emoji-size: 1.125rem;
+  }
+}
+```
+
+`emoji-picker-element` does not ship with any CSS to explicitly handle small screen sizes. The right CSS depends on which screen sizes your app supports, and the size of the picker within your app. Perhaps in the future [container queries](https://caniuse.com/css-container-queries) can solve this problem.
 
 ### Custom styling
 
