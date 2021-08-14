@@ -21,7 +21,7 @@ $skintoneZIndex3: 3;
 
 .skintone-list {
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   top: 0;
   z-index: $skintoneZIndex2;
   overflow: visible;
@@ -39,6 +39,12 @@ $skintoneZIndex3: 3;
     // while still fixing WebKit (which doesn't work if you set 0s or transition-delay: -1s or other hacks).
     // see also: https://github.com/jensimmons/cssremedy/issues/11
     transition-duration: 0.001s;
+  }
+
+  // TODO: remove this when old iOS Safari drops out of usage: https://caniuse.com/css-logical-props
+  // For now, we don't support RTL in old versions of iOS
+  @supports not (inset-inline-end: 0) {
+    right: 0;
   }
 
   &.no-animate {
@@ -175,12 +181,11 @@ button.emoji,
   background: var(--background);
 }
 
-
 .search-row {
   display: flex;
   align-items: center;
   position: relative;
-  padding-left: var(--emoji-padding);
+  padding-inline-start: var(--emoji-padding);
   padding-bottom: var(--emoji-padding);
 }
 
