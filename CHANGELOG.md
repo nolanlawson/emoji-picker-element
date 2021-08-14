@@ -1,3 +1,19 @@
+## [1.7.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.7.0...v1.7.1) (2021-08-14)
+
+
+### Bug Fixes
+
+* support RTL direction ([#213](https://github.com/nolanlawson/emoji-picker-element/issues/213)) ([7875925](https://github.com/nolanlawson/emoji-picker-element/commit/7875925be09d4a851edcea48c0f897d139398264)), closes [#212](https://github.com/nolanlawson/emoji-picker-element/issues/212)
+* update favorites only on mount ([#210](https://github.com/nolanlawson/emoji-picker-element/issues/210)) ([567da73](https://github.com/nolanlawson/emoji-picker-element/commit/567da7316aa0aae29b3e853c99c0a4e73f94bb1d)), closes [#205](https://github.com/nolanlawson/emoji-picker-element/issues/205)
+
+
+### Performance Improvements
+
+* remove pixel-based indicator animation ([#211](https://github.com/nolanlawson/emoji-picker-element/issues/211)) ([468fd80](https://github.com/nolanlawson/emoji-picker-element/commit/468fd805b955413914e2ccd321927acbed795d8b))
+* use IDBObjectStore.clear ([#208](https://github.com/nolanlawson/emoji-picker-element/issues/208)) ([ed0ffac](https://github.com/nolanlawson/emoji-picker-element/commit/ed0ffac1e12634f1e7a5cf40045853ffb1c77654))
+
+
+
 # [1.7.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.6.7...v1.7.0) (2021-08-06)
 
 
