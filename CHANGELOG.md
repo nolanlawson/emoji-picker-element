@@ -1,3 +1,12 @@
+# [1.8.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.7.1...v1.8.0) (2021-08-18)
+
+
+### Features
+
+* add new translations ([#217](https://github.com/nolanlawson/emoji-picker-element/issues/217)) ([267c55b](https://github.com/nolanlawson/emoji-picker-element/commit/267c55b3fbb17f4e49fcb8c42839ddf74bf5f44b)), closes [#216](https://github.com/nolanlawson/emoji-picker-element/issues/216)
+
+
+
 ## [1.7.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.7.0...v1.7.1) (2021-08-14)
 
 
