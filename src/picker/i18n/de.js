@@ -3,7 +3,7 @@ export default {
   emojiUnsupportedMessage: 'Dein Browser unterstützt keine farbigen Emojis.',
   favoritesLabel: 'Favoriten',
   loadingMessage: 'Wird geladen…',
-  networkErrorMessage: 'Konnte Emoji nicht laden. Versuche, die Seite neu zu laden.',
+  networkErrorMessage: 'Konnte Emoji nicht laden.',
   regionLabel: 'Emoji auswählen',
   searchDescription: 'Wenn Suchergebnisse verfügbar sind, wähle sie mit Pfeil rauf und runter, dann Eingabetaste, aus.',
   searchLabel: 'Suchen',

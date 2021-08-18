@@ -389,7 +389,7 @@ The `i18n` parameter specifies translations for the picker interface. Here is th
   "emojiUnsupportedMessage": "Your browser does not support color emoji.",
   "favoritesLabel": "Favorites",
   "loadingMessage": "Loading…",
-  "networkErrorMessage": "Could not load emoji. Try refreshing.",
+  "networkErrorMessage": "Could not load emoji.",
   "regionLabel": "Emoji picker",
   "searchDescription": "When search results are available, press up or down to select and enter to choose.",
   "searchLabel": "Search",

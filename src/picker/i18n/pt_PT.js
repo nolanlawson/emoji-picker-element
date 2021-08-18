@@ -3,7 +3,7 @@ export default {
   emojiUnsupportedMessage: 'O seu browser não suporta emojis.',
   favoritesLabel: 'Favoritos',
   loadingMessage: 'A Carregar…',
-  networkErrorMessage: 'Não foi possível carregar o emoji. Faça refresh.',
+  networkErrorMessage: 'Não foi possível carregar o emoji.',
   regionLabel: 'Emoji picker',
   searchDescription: 'Quando os resultados da pesquisa estiverem disponíveis, pressione para cima ou para baixo para selecionar e digite para escolher.',
   searchLabel: 'Procurar',
