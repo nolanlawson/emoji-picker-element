@@ -14,7 +14,7 @@
     await database.ready()
 
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
       await database.getEmojiByUnicodeOrName('💥')
       await database.getEmojiBySearchQuery('boom')
       await database.getEmojiByShortcode('boom')
