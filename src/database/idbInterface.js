@@ -196,12 +196,12 @@ export function set (db, storeName, key, value) {
 }
 
 export function incrementFavoriteEmojiCount (db, unicode) {
-  return dbPromise(db, STORE_FAVORITES, MODE_READWRITE, (store, txn) => {
+  return dbPromise(db, STORE_FAVORITES, MODE_READWRITE, (store, txn) => (
     getIDB(store, unicode, result => {
       store.put((result || 0) + 1, unicode)
       commit(txn)
     })
-  })
+  ))
 }
 
 export function getTopFavoriteEmoji (db, customEmojiIndex, limit) {
