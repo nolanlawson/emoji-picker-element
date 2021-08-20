@@ -8,7 +8,7 @@ import {
 } from './constants'
 import { transformEmojiData } from './utils/transformEmojiData'
 import { extractTokens } from './utils/extractTokens'
-import { getAllIDB, getIDB } from './idbUtil'
+import { commit, getAllIDB, getIDB } from './idbUtil'
 import { findCommonMembers } from './utils/findCommonMembers'
 import { normalizeTokens } from './utils/normalizeTokens'
 
@@ -88,10 +88,7 @@ export async function loadData (db, emojiData, url, eTag) {
         }
         metaStore.put(eTag, KEY_ETAG)
         metaStore.put(url, KEY_URL)
-        /* istanbul ignore else */
-        if (txn.commit) {
-          txn.commit()
-        }
+        commit(txn)
         performance.mark('commitAllData')
       }
 
@@ -192,19 +189,17 @@ export function get (db, storeName, key) {
 }
 
 export function set (db, storeName, key, value) {
-  return dbPromise(db, storeName, MODE_READWRITE, (store) => (
+  return dbPromise(db, storeName, MODE_READWRITE, (store, txn) => {
     store.put(value, key)
-  ))
+    commit(txn)
+  })
 }
 
 export function incrementFavoriteEmojiCount (db, unicode) {
   return dbPromise(db, STORE_FAVORITES, MODE_READWRITE, (store, txn) => {
     getIDB(store, unicode, result => {
       store.put((result || 0) + 1, unicode)
-      /* istanbul ignore else */
-      if (txn.commit) {
-        txn.commit()
-      }
+      commit(txn)
     })
   })
 }

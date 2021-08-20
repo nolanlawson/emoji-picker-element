@@ -11,3 +11,10 @@ export function getIDB (store, key, cb) {
 export function getAllIDB (store, key, cb) {
   callStore(store, 'getAll', key, cb)
 }
+
+export function commit (txn) {
+  /* istanbul ignore else */
+  if (txn.commit) {
+    txn.commit()
+  }
+}
