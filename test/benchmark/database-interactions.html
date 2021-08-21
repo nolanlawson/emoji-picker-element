@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <script type="module" src="./benchmark.js"></script>
+  <script type="module">
+    import Database from 'emoji-picker-element/database'
+
+    performance.mark('initialLoad')
+    const dataSource = '/data.json'
+    const database = new Database({ dataSource })
+    await database.ready()
+
+
+    for (let i = 0; i < 10; i++) {
+      await database.getEmojiByUnicodeOrName('💥')
+      await database.getEmojiBySearchQuery('boom')
+      await database.getEmojiByShortcode('boom')
+      await database.getEmojiByGroup(1)
+      await database.getPreferredSkinTone()
+      await database.getTopFavoriteEmoji(10)
+      await database.incrementFavoriteEmojiCount('💥')
+      await database.setPreferredSkinTone(0)
+    }
+
+    performance.measure('initialLoad', 'initialLoad')
+  </script>
+</body>
+</html>
