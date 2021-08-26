@@ -78,3 +78,8 @@
     @include colors(true);
   }
 }
+
+// See https://developers.google.com/web/fundamentals/web-components/best-practices
+:host([hidden]) {
+  display: none;
+}
