@@ -1,3 +1,17 @@
+## [1.8.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.8.0...v1.8.1) (2021-09-03)
+
+
+### Bug Fixes
+
+* respect the hidden attribute ([#221](https://github.com/nolanlawson/emoji-picker-element/issues/221)) ([b3a5138](https://github.com/nolanlawson/emoji-picker-element/commit/b3a51381194af1f9ec6031a0afb1af39b4444a6f))
+
+
+### Performance Improvements
+
+* use relaxed IDB transactions and manually commit ([#218](https://github.com/nolanlawson/emoji-picker-element/issues/218)) ([d732610](https://github.com/nolanlawson/emoji-picker-element/commit/d732610e7fede78df4e9bbc6ce964690d2fe4adf))
+
+
+
 # [1.8.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.7.1...v1.8.0) (2021-08-18)
 
 
