@@ -1,3 +1,12 @@
+## [1.8.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.8.1...v1.8.2) (2021-09-26)
+
+
+### Bug Fixes
+
+* fix db undefined when adding/removing element ([#227](https://github.com/nolanlawson/emoji-picker-element/issues/227)) ([fa24942](https://github.com/nolanlawson/emoji-picker-element/commit/fa2494223dbc241e18fab764f7ec1a659618d8a9)), closes [#225](https://github.com/nolanlawson/emoji-picker-element/issues/225)
+
+
+
 ## [1.8.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.8.0...v1.8.1) (2021-09-03)
 
 
