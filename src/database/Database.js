@@ -50,10 +50,19 @@ export default class Database {
   }
 
   async ready () {
-    if (!this._ready) {
-      this._ready = this._init()
+    const checkReady = async () => {
+      if (!this._ready) {
+        this._ready = this._init()
+      }
+      return this._ready
     }
-    return this._ready
+    await checkReady()
+    // There's a possibility of a race condition where the element gets added, removed, and then added again
+    // with a particular timing, which would set the _db to undefined.
+    // We *could* do a while loop here, but that seems excessive and could lead to an infinite loop.
+    if (!this._db) {
+      await checkReady()
+    }
   }
 
   async getEmojiByGroup (group) {

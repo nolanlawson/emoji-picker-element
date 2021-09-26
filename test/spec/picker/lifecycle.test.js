@@ -60,4 +60,20 @@ describe('lifecycle', () => {
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
   })
+
+  test('connect, disconnect, and reconnect with a particular timing (#225)', async () => {
+    const picker = new Picker()
+    document.body.appendChild(picker)
+    await tick(1)
+    document.body.removeChild(picker)
+    document.body.appendChild(picker)
+
+    await expect(() => (
+      expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
+    ))
+
+    await tick(20)
+    document.body.removeChild(picker)
+    await tick(20)
+  })
 })
