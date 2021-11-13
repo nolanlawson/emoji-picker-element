@@ -127,9 +127,9 @@ This will log:
 
 ### Examples
 
-- [Demo](https://nolanlawson.github.io/emoji-picker-element)
-- [Button with tooltip/popover](https://bl.ocks.org/nolanlawson/781e7084e4c17acb921357489d51a5b0)
-- [In a React app](https://codepen.io/nolanlawson/pen/bGWmmrz)
+- [Demo](https://nolanlawson.github.io/emoji-picker-element) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/index.html))
+- [Button with tooltip/popover](https://bl.ocks.org/nolanlawson/raw/781e7084e4c17acb921357489d51a5b0/) ([source](https://bl.ocks.org/nolanlawson/781e7084e4c17acb921357489d51a5b0))
+- [In a React app](https://bl.ocks.org/nolanlawson/raw/fa60717eceb719b729e10d522c62c9ec/) ([source](https://bl.ocks.org/nolanlawson/fa60717eceb719b729e10d522c62c9ec))
 
 ## Styling
 
