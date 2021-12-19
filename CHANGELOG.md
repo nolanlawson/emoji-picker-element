@@ -1,3 +1,12 @@
+# [1.9.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.8.2...v1.9.0) (2021-12-19)
+
+
+### Features
+
+* added ms_MY.js (Malaysian text) ([#234](https://github.com/nolanlawson/emoji-picker-element/issues/234)) ([f30160d](https://github.com/nolanlawson/emoji-picker-element/commit/f30160db6689fd31f924f78d430eb7ef40dd3f00))
+
+
+
 ## [1.8.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.8.1...v1.8.2) (2021-09-26)
 
 
