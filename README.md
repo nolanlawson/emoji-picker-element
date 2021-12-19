@@ -1,4 +1,4 @@
-emoji-picker-element [![Build status](https://circleci.com/gh/nolanlawson/emoji-picker-element.svg?style=svg)](https://app.circleci.com/pipelines/gh/nolanlawson/emoji-picker-element)
+emoji-picker-element
 ====
 
 ![Screenshot of emoji-picker-element in light and dark modes](https://nolanwlawson.files.wordpress.com/2020/06/out.png)
