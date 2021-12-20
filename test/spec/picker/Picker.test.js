@@ -220,8 +220,7 @@ describe('Picker tests', () => {
         shortcodes: ['grinning', 'grinning_face'],
         tags: ['face', 'grin'],
         unicode: '😀',
-        version: 1,
-        emoticon: ':D'
+        version: 1
       },
       skinTone: 0,
       unicode: '😀'
@@ -268,8 +267,7 @@ describe('Picker tests', () => {
         shortcodes: ['grinning', 'grinning_face'],
         tags: ['face', 'grin'],
         unicode: '😀',
-        version: 1,
-        emoticon: ':D'
+        version: 1
       },
       skinTone: 4,
       unicode: '😀'
