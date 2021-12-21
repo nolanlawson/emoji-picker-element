@@ -1,6 +1,6 @@
 {
   "name": "emoji-picker-element",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Lightweight emoji picker distributed as a web component",
   "main": "index.js",
   "module": "index.js",
