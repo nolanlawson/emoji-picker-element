@@ -120,7 +120,7 @@
     "stylelint": "^14.3.0",
     "stylelint-config-recommended-scss": "^5.0.2",
     "stylelint-scss": "^4.1.0",
-    "svelte": "^3.40.2",
+    "svelte": "^3.46.4",
     "svelte-jester": "nolanlawson/svelte-jester#auto-preprocess",
     "svelte-preprocess": "^4.7.3",
     "svgo": "^2.3.1",
