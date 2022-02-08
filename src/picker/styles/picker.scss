@@ -1,4 +1,4 @@
-@import './global.scss';
+@import './global';
 
 // These z-indexes are used to manage the skintone picker animation and make it look nicer.
 // The skintone picker should appear to expand "behind" the skintone button.
@@ -6,9 +6,7 @@ $skintoneZIndex1: 1;
 $skintoneZIndex2: 2;
 $skintoneZIndex3: 3;
 
-//
 // skintone picker
-//
 
 .skintone-button-wrapper {
   background: var(--background);
@@ -53,9 +51,7 @@ $skintoneZIndex3: 3;
 }
 
 
-//
 // tab panel
-//
 
 .tabpanel {
   overflow-y: auto;
@@ -80,9 +76,7 @@ $skintoneZIndex3: 3;
   color: var(--category-font-color);
 }
 
-//
 // emoji
-//
 
 button.emoji,
 .emoji {
@@ -122,9 +116,7 @@ button.emoji,
   background-size: var(--emoji-size) var(--emoji-size);
 }
 
-//
 // nav
-//
 
 .nav {
   display: grid;
@@ -145,9 +137,7 @@ button.emoji,
   height: var(--total-category-emoji-size);
 }
 
-//
 // indicator
-//
 
 .indicator-wrapper {
   display: flex;
@@ -170,9 +160,7 @@ button.emoji,
   }
 }
 
-//
 // search
-//
 
 .pad-top {
   width: 100%;
@@ -218,9 +206,7 @@ input.search {
   contain: content;
 }
 
-//
 // unsupported warning
-//
 
 .message {
   padding: var(--emoji-padding);
