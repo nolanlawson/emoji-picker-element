@@ -124,4 +124,6 @@ for (const prop of PROPS) {
 
 Object.defineProperties(PickerElement.prototype, definitions)
 
-customElements.define('emoji-picker', PickerElement)
+if (!customElements.get('emoji-picker')) { // if already defined, do nothing (e.g. same script imported twice)
+  customElements.define('emoji-picker', PickerElement)
+}
