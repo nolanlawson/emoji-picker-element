@@ -12,7 +12,7 @@ jobs:
           node-version: '16'
           cache: 'yarn'
       - run: sudo apt-get install fonts-noto-color-emoji
-      - run: yarn --immutable
+      - run: yarn --frozen-lockfile
       - run: yarn lint
       - run: yarn benchmark:bundlesize
       - run: yarn cover
