@@ -1,3 +1,12 @@
+## [1.10.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.10.0...v1.10.1) (2022-02-08)
+
+
+### Bug Fixes
+
+* customElements.define called twice ([#246](https://github.com/nolanlawson/emoji-picker-element/issues/246)) ([7588bd1](https://github.com/nolanlawson/emoji-picker-element/commit/7588bd1652af885cef470a80607fca58b33163da))
+
+
+
 # [1.10.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.9.0...v1.10.0) (2021-12-21)
 
 
