@@ -72,7 +72,7 @@ describe('custom emoji', () => {
     await db.ready()
   })
   afterEach(async () => {
-    basicAfterEach()
+    await basicAfterEach()
     await db.delete()
   })
 

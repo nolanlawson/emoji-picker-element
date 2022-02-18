@@ -53,9 +53,10 @@ export function basicBeforeEach () {
     .head(DEFAULT_DATA_SOURCE, () => new Response(null, { headers: { ETag: 'W/def' } }))
 }
 
-export function basicAfterEach () {
+export async function basicAfterEach () {
   fetch.mockClear()
   fetch.reset()
+  await tick(20)
 }
 
 export async function tick (times = 1) {

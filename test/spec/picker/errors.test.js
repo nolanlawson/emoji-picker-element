@@ -10,8 +10,8 @@ describe('errors', () => {
     basicBeforeEach()
     errorSpy = jest.spyOn(global.console, 'error').mockImplementation()
   })
-  afterEach(() => {
-    basicAfterEach()
+  afterEach(async () => {
+    await basicAfterEach()
     errorSpy.mockRestore()
   })
 

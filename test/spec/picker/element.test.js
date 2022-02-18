@@ -40,7 +40,7 @@ describe('element tests', () => {
       await new Database({ dataSource: FR_EMOJI, locale: 'fr' }).delete()
       await new Database({ dataSource: ALL_EMOJI, locale: 'en' }).delete()
       await tick(20)
-      basicAfterEach()
+      await basicAfterEach()
     })
 
     test('changing locale/dataSource prop causes only one network request', async () => {

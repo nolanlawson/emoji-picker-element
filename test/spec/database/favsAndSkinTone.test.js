@@ -9,7 +9,7 @@ describe('database tests', () => {
     db = new Database({ dataSource: ALL_EMOJI })
   })
   afterEach(async () => {
-    basicAfterEach()
+    await basicAfterEach()
     await db.delete()
   })
 
