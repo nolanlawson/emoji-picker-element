@@ -6,7 +6,7 @@ module.exports = {
   transform: {
     '^.+\\.js$': './config/babelJestTransform.cjs',
     '^.+\\.svelte$': ['svelte-jester', {
-      preprocess: true,
+      preprocess: './svelte.config.cjs',
       compilerOptions: {
         dev: false
       }
