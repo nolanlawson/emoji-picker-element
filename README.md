@@ -131,6 +131,7 @@ This will log:
 - [Button with tooltip/popover](https://bl.ocks.org/nolanlawson/raw/781e7084e4c17acb921357489d51a5b0/) ([source](https://bl.ocks.org/nolanlawson/781e7084e4c17acb921357489d51a5b0))
 - [Inserting emoji into a text input](https://bl.ocks.org/nolanlawson/raw/4f13bc639cdb3483efca8b657f30a1e0/) ([source](https://bl.ocks.org/nolanlawson/4f13bc639cdb3483efca8b657f30a1e0))
 - [In a React app](https://bl.ocks.org/nolanlawson/raw/fa60717eceb719b729e10d522c62c9ec/) ([source](https://bl.ocks.org/nolanlawson/fa60717eceb719b729e10d522c62c9ec))
+- [With Twemoji](https://bl.ocks.org/nolanlawson/raw/fead700a0325aabd92670d56d6d422d8) ([source](https://bl.ocks.org/nolanlawson/fead700a0325aabd92670d56d6d422d8)) (**Note:** has a performance cost. Use with care.)
 
 ## Styling
 
