@@ -18,7 +18,7 @@
     "/i18n/*"
   ],
   "scripts": {
-    "prepare": "run-s build",
+    "prepare": "run-s build && husky install",
     "build": "run-s build:rollup build:i18n build:css-docs build:i18n-docs build:toc",
     "build:rollup": "cross-env NODE_ENV=production rollup -c",
     "build:css-docs": "node ./bin/generateCssDocs",
@@ -94,18 +94,18 @@
     "fetch-mock-jest": "^1.5.1",
     "flat-color-icons": "^1.1.0",
     "focus-visible": "^5.2.0",
-    "get-folder-size": "^2.0.1",
-    "husky": "^4.3.6",
+    "get-folder-size": "^3.1.0",
+    "husky": "^7.0.0",
     "jest": "^27.5.1",
-    "lint-staged": "^10.5.3",
+    "lint-staged": "^12.3.4",
     "lodash-es": "^4.17.15",
-    "markdown-table": "^2.0.0",
+    "markdown-table": "^3.0.2",
     "markdown-toc": "^1.2.0",
     "mkdirp": "^1.0.4",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.2.0",
     "npm-run-all": "^4.1.5",
     "playwright": "^1.19.1",
-    "pretty-bytes": "^5.4.1",
+    "pretty-bytes": "^6.0.0",
     "puppeteer": "^13.3.2",
     "recursive-readdir": "^2.2.2",
     "rimraf": "^3.0.2",
@@ -175,11 +175,6 @@
           ]
         }
       ]
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
