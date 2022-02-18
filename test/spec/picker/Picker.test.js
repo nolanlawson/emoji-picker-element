@@ -43,7 +43,7 @@ describe('Picker tests', () => {
     await tick(20)
     await new Database({ dataSource: ALL_EMOJI, locale: 'en' }).delete()
     await tick(20)
-    basicAfterEach()
+    await basicAfterEach()
   })
 
   const numInGroup1 = truncatedEmoji.filter(_ => _.group === 0).length

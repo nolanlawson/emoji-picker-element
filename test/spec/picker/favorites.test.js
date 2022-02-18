@@ -36,7 +36,7 @@ describe('Favorites UI', () => {
     await tick(40)
     document.body.removeChild(picker)
     await tick(40)
-    basicAfterEach()
+    await basicAfterEach()
   })
 
   async function remount () {

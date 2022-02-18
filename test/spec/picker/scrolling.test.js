@@ -37,10 +37,11 @@ describe('scrolling', () => {
 
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
+    await tick(100)
     const tabPanel = getByRole(container, 'tabpanel')
     tabPanel.scrollTop = 1
 
-    await tick(20)
+    await tick(100)
     expect(tabPanel.scrollTop).toEqual(1)
 
     await userEvent.click(getByRole(container, 'tab', { name: 'People and body' }))
@@ -71,9 +72,10 @@ describe('scrolling', () => {
     await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(2))
     expect(getByRole(container, 'option', { name: /🐵/ })).toBeVisible()
 
+    await tick(100)
     tabPanel.scrollTop = 1
 
-    await tick(40)
+    await tick(100)
     expect(tabPanel.scrollTop).toEqual(1)
 
     await userEvent.type(getByRole(container, 'combobox'), ' face')
