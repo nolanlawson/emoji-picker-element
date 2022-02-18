@@ -163,8 +163,7 @@
        role="menu"
        aria-label={i18n.favoritesLabel}
        style="padding-inline-end: {scrollbarWidth}px"
-       on:click={onEmojiClick}
-       data-testid="favorites">
+       on:click={onEmojiClick}>
     <!-- The reason the emoji logic below is largely duplicated is because it turns out we get a smaller
          bundle size from just repeating it twice, rather than creating a second Svelte component. -->
     {#each currentFavorites as emoji, i (emoji.id)}

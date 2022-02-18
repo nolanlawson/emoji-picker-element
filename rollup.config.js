@@ -21,9 +21,6 @@ preprocessConfig.markup = async function () {
   // remove whitespace
   res.code = res.code.replace(/([>}])\s+([<{])/sg, '$1$2')
 
-  // remove data-testid (only used for testing-library)
-  res.code = res.code.replace(/data-testid=".*?"/g, '')
-
   return res
 }
 

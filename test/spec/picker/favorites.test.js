@@ -1,5 +1,5 @@
 import {
-  waitFor, getByTestId, getAllByRole,
+  waitFor, getAllByRole,
   getByRole, fireEvent, queryAllByRole
 } from '@testing-library/dom'
 import { basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
@@ -49,8 +49,7 @@ describe('Favorites UI', () => {
   }
 
   test('Favorites UI basic test', async () => {
-    // using a testId because testing-library seems to think role=menu has no aria-label
-    let favoritesBar = getByTestId(container, 'favorites')
+    let favoritesBar = getByRole(container, 'menu', { name: 'Favorites' })
     expect(favoritesBar).toBeVisible()
     await waitFor(() => expect(getAllByRole(favoritesBar, 'menuitem')).toHaveLength(8))
     expect(getAllByRole(favoritesBar, 'menuitem').map(_ => _.getAttribute('id').substring(4))).toStrictEqual(
@@ -62,7 +61,7 @@ describe('Favorites UI', () => {
     // have to unmount/remount to force a favorites refresh
     await remount()
 
-    favoritesBar = getByTestId(container, 'favorites')
+    favoritesBar = getByRole(container, 'menu', { name: 'Favorites' })
     await waitFor(() => expect(getAllByRole(favoritesBar, 'menuitem')
       .map(_ => _.getAttribute('id').substring(4))).toStrictEqual([
       '🤣',
@@ -113,11 +112,11 @@ describe('Favorites UI', () => {
     await remount()
 
     await waitFor(
-      () => expect(getByRole(getByTestId(container, 'favorites'), 'menuitem', { name: /transparent/i })).toBeVisible
+      () => expect(getByRole(getByRole(container, 'menu', { name: 'Favorites' }), 'menuitem', { name: /transparent/i })).toBeVisible
     )
 
     await waitFor(
-      () => expect(getByRole(getByTestId(container, 'favorites'), 'menuitem', { name: /black/i })).toBeVisible
+      () => expect(getByRole(getByRole(container, 'menu', { name: 'Favorites' }), 'menuitem', { name: /black/i })).toBeVisible
     )
 
     // when setting custom emoji back to [], the favorites bar removes the custom emoji
@@ -126,10 +125,10 @@ describe('Favorites UI', () => {
     await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length))
 
     await waitFor(
-      () => expect(queryAllByRole(getByTestId(container, 'favorites'), 'menuitem', { name: /transparent/i })).toHaveLength(0)
+      () => expect(queryAllByRole(getByRole(container, 'menu', { name: 'Favorites' }), 'menuitem', { name: /transparent/i })).toHaveLength(0)
     )
     await waitFor(
-      () => expect(queryAllByRole(getByTestId(container, 'favorites'), 'menuitem', { name: /black/i })).toHaveLength(0)
+      () => expect(queryAllByRole(getByRole(container, 'menu', { name: 'Favorites' }), 'menuitem', { name: /black/i })).toHaveLength(0)
     )
   })
 })
