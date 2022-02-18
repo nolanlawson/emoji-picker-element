@@ -1,6 +1,6 @@
 import path from 'path'
 import sass from 'sass'
-import table from 'markdown-table'
+import { markdownTable as table } from 'markdown-table'
 import { readFile, writeFile } from './fs.js'
 import { replaceInReadme } from './replaceInReadme.js'
 import postcss from 'postcss'

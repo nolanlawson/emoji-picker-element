@@ -5,7 +5,7 @@ import rimrafCB from 'rimraf'
 import getFolderSizeCB from 'get-folder-size'
 import path from 'path'
 import prettyBytes from 'pretty-bytes'
-import table from 'markdown-table'
+import { markdownTable as table } from 'markdown-table'
 import process from 'process'
 
 const rimraf = promisify(rimrafCB)
