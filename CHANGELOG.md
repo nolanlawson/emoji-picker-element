@@ -1,3 +1,12 @@
+# [1.11.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.10.1...v1.11.0) (2022-03-12)
+
+
+### Features
+
+* added Dutch translation file ([#267](https://github.com/nolanlawson/emoji-picker-element/issues/267)) ([d7727a3](https://github.com/nolanlawson/emoji-picker-element/commit/d7727a3d2e5b8f3b88cc9327c7467c1b1d87a148))
+
+
+
 ## [1.10.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.10.0...v1.10.1) (2022-02-08)
 
 
