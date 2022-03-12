@@ -12,12 +12,12 @@ export default {
   skinToneLabel: 'Kies een huidskleur (momenteel {skinTone})',
   skinTonesLabel: 'Huidskleuren',
   skinTones: [
-     'Standaard',
-     'Licht',
-     'Medium-Licht',
-     'Medium',
-     'Middeldonker',
-     'Donker'
+    'Standaard',
+    'Licht',
+    'Medium-Licht',
+    'Medium',
+    'Middeldonker',
+    'Donker'
   ],
   categories: {
     custom: 'Aangepast',
