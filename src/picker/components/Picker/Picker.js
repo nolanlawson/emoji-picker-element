@@ -99,7 +99,7 @@ const isSkinToneOption = element => /^skintone-/.test(element.id)
 emojiSupportLevelPromise.then(level => {
   // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
   /* istanbul ignore next */
-  if (!level) {
+  if (!level?.version) {
     message = i18n.emojiUnsupportedMessage
   }
 })
@@ -323,8 +323,16 @@ function isZwjSupported (emoji) {
 
 async function filterEmojisByVersion (emojis) {
   const emojiSupportLevel = await emojiSupportLevelPromise
+
   // !version corresponds to custom emoji
-  return emojis.filter(({ version }) => !version || version <= emojiSupportLevel)
+  const emojisByVersion = emojis.filter(({ version }) => !version || version <= emojiSupportLevel.version)
+  if (emojiSupportLevel.countryFlags) {
+    return emojisByVersion
+  } else {
+    // a country flag emoji is a sequence two "regional indicator symbols"
+    const countryFlagRegex = /^[\uD83C][\uDDE6-\uDDFF][\uD83C][\uDDE6-\uDDFF]$/
+    return emojisByVersion.filter(({ unicode }) => !countryFlagRegex.test(unicode))
+  }
 }
 
 async function summarizeEmojis (emojis) {

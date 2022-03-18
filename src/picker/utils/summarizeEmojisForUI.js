@@ -8,7 +8,7 @@ export function summarizeEmojisForUI (emojis, emojiSupportLevel) {
       // ignore arrays like [1, 2] with multiple skin tones
       // also ignore variants that are in an unsupported emoji version
       // (these do exist - variants from a different version than their base emoji)
-      if (typeof skin.tone === 'number' && skin.version <= emojiSupportLevel) {
+      if (typeof skin.tone === 'number' && skin.version <= emojiSupportLevel.version) {
         res[skin.tone] = skin.unicode
       }
     }

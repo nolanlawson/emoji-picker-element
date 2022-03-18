@@ -4,7 +4,7 @@ import { setSimulateCanvasError, setSimulateOldBrowser } from '../../../src/pick
 
 describe('emoji support', () => {
   test('returns latest emoji', () => {
-    const version = determineEmojiSupportLevel()
+    const { version } = determineEmojiSupportLevel()
     expect(version).toEqual(Math.max(...Object.values(versionsAndTestEmoji)))
   })
 
@@ -18,7 +18,7 @@ describe('emoji support', () => {
     })
 
     test('returns latest emoji when there is a canvas error', () => {
-      const version = determineEmojiSupportLevel()
+      const { version } = determineEmojiSupportLevel()
       expect(version).toEqual(Math.max(...Object.values(versionsAndTestEmoji)))
     })
   })
@@ -33,7 +33,7 @@ describe('emoji support', () => {
     })
 
     test('returns older emoji version for older browser', () => {
-      const version = determineEmojiSupportLevel()
+      const { version } = determineEmojiSupportLevel()
       expect(version).toEqual(11)
     })
   })
