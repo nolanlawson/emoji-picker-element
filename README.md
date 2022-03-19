@@ -132,6 +132,7 @@ This will log:
 - [Inserting emoji into a text input](https://bl.ocks.org/nolanlawson/raw/4f13bc639cdb3483efca8b657f30a1e0/) ([source](https://bl.ocks.org/nolanlawson/4f13bc639cdb3483efca8b657f30a1e0))
 - [In a React app](https://bl.ocks.org/nolanlawson/raw/fa60717eceb719b729e10d522c62c9ec/) ([source](https://bl.ocks.org/nolanlawson/fa60717eceb719b729e10d522c62c9ec))
 - [With Twemoji](https://bl.ocks.org/nolanlawson/raw/fead700a0325aabd92670d56d6d422d8) ([source](https://bl.ocks.org/nolanlawson/fead700a0325aabd92670d56d6d422d8)) (**Note:** has a performance cost. Use with care.)
+- [Fallback for missing flag emoji on Windows](https://bl.ocks.org/nolanlawson/raw/1c67a41fb24978bab93a44ed1d62fab2/) ([source](https://gist.github.com/nolanlawson/1c67a41fb24978bab93a44ed1d62fab2))
 
 ## Styling
 
