@@ -1,3 +1,12 @@
+## [1.11.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.0...v1.11.1) (2022-03-20)
+
+
+### Bug Fixes
+
+* newer emoji and flags on Firefox on Windows ([#271](https://github.com/nolanlawson/emoji-picker-element/issues/271)) ([c45e3e9](https://github.com/nolanlawson/emoji-picker-element/commit/c45e3e9b4368d36716eaf325217b81c2c29905c5))
+
+
+
 # [1.11.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.10.1...v1.11.0) (2022-03-12)
 
 
