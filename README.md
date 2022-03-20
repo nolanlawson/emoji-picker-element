@@ -898,19 +898,19 @@ Or, if you don't want to process text in JavaScript, you could use
 
 ```css
 @font-face {
-    font-family: MyEmojiFont;
-    src:
-        local("Twemoji Mozilla"),
-        local("Apple Color Emoji"),
-        local("Segoe UI Emoji"),
-        local("Segoe UI Symbol"),
-        local("Noto Color Emoji"),
-        local("EmojiOne Color"),
-        local("Android Emoji");
-    unicode-range: /* copy from emoji-unicode-range */;
+  font-family: MyEmojiFont;
+  src:
+    local("Twemoji Mozilla"),
+    local("Apple Color Emoji"),
+    local("Segoe UI Emoji"),
+    local("Segoe UI Symbol"),
+    local("Noto Color Emoji"),
+    local("EmojiOne Color"),
+    local("Android Emoji");
+  unicode-range: /* copy from emoji-unicode-range */;
 }
 body {
-    font-family: MyEmojiFont, sans-serif;
+  font-family: MyEmojiFont, sans-serif;
 }
 ```
 
