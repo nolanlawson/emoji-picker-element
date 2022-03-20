@@ -31,6 +31,7 @@ A lightweight emoji picker, distributed as a web component.
     + [CSS variables](#css-variables)
     + [Focus outline](#focus-outline)
     + [Small screen sizes](#small-screen-sizes)
+    + [Custom emoji fonts](#custom-emoji-fonts)
     + [Custom styling](#custom-styling)
   * [JavaScript API](#javascript-api)
     + [Picker](#picker)
@@ -241,6 +242,19 @@ For small screen sizes, you should probably add some CSS like the following:
 ```
 
 `emoji-picker-element` does not ship with any CSS to explicitly handle small screen sizes. The right CSS depends on which screen sizes your app supports, and the size of the picker within your app. Perhaps in the future [container queries](https://caniuse.com/css-container-queries) can solve this problem.
+
+### Custom emoji fonts
+
+If you have your own custom emoji font you'd like you use, then include it with the special font-family name `emoji-picker-element-custom`:
+
+```css
+@font-face {
+  font-family: emoji-picker-element-custom;
+  src: url("http://example.com/myfont.woff2") format("woff2");
+}
+```
+
+Note that [support for color fonts](https://github.com/hfg-gmuend/openmoji/issues/93#issuecomment-561305796) is mixed across browsers and OSes. Use this technique carefully.
 
 ### Custom styling
 

@@ -43,6 +43,21 @@
       bottom: 5px;
       padding: 5px;
     }
+
+    @font-face {
+        font-family: "emoji-picker-element-custom";
+        src: url("https://cdn.jsdelivr.net/npm/twemoji-colr-font@0.0.4/twemoji.woff2") format("woff2");
+        unicode-range:
+            /* Regional Indicator Symbol Letters A to Z, e.g. "U" and "S" for the US flag */
+                U+1F1E6-1F1FF,
+                    /* The following are required to match England, Scotland, and Wales flags */
+                    /* Waving Black Flag */
+                U+1F3F4,
+                    /* Latin small letters a to z */
+                U+E0061-E007A,
+                    /* Cancel tag */
+                U+E007F
+    }
   </style>
 </head>
 <body>
