@@ -68,6 +68,7 @@ A lightweight emoji picker, distributed as a web component.
     + [Trimming the emoji data (deprecated)](#trimming-the-emoji-data-deprecated)
     + [Offline-first](#offline-first)
     + [Environments without IndexedDB](#environments-without-indexeddb)
+  * [Using native emoji fonts](#using-native-emoji-fonts)
   * [Design decisions](#design-decisions)
     + [IndexedDB](#indexeddb)
     + [Native emoji](#native-emoji)
