@@ -872,6 +872,49 @@ For browsers that don't support IndexedDB, such as [Firefox in private browsing 
 
 For Node.js environments such as [Jest](https://jestjs.io/) or [JSDom](https://github.com/jsdom/jsdom), you can also use fake-indexeddb. A [working example](https://github.com/nolanlawson/emoji-picker-element/blob/39c50c3ce4c4c4d2cd8a15f337a722ad86c739e9/config/jest.setup.js#L28-L29) can be found in the tests for this very project.
 
+## Using native emoji fonts
+
+If you're using emoji elsewhere in your website, and you want the emoji to exactly match the font used
+in `emoji-picker-element`, then add a CSS `font-family` that is
+[the same as the one used by `emoji-picker-element`](https://github.com/nolanlawson/emoji-picker-element/blob/master/src/picker/constants.js). For example:
+
+```css
+.my-emoji-class {
+  font-family: "Twemoji Mozilla","Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol",
+               "Noto Color Emoji","EmojiOne Color","Android Emoji",sans-serif;
+}
+```
+
+```html
+Hello <span class="my-emoji-class">🌍</span>!
+```
+
+To determine which spans of text to apply this `font-family` to (i.e. the `my-emoji-class` above), you can use a tool
+like [emoji-regex](https://www.npmjs.com/package/emoji-regex).
+
+Or, if you don't want to process text in JavaScript, you could use
+[emoji-unicode-range](https://www.npmjs.com/package/emoji-unicode-range) with a custom `@font-face`:
+
+```css
+@font-face {
+    font-family: MyEmojiFont;
+    src:
+        local("Twemoji Mozilla"),
+        local("Apple Color Emoji"),
+        local("Segoe UI Emoji"),
+        local("Segoe UI Symbol"),
+        local("Noto Color Emoji"),
+        local("EmojiOne Color"),
+        local("Android Emoji");
+    unicode-range: /* copy from emoji-unicode-range */;
+}
+body {
+    font-family: MyEmojiFont, sans-serif;
+}
+```
+
+Here is [a demo](https://bl.ocks.org/nolanlawson/61e10fab056e75b02b5c6a0a223a5ad7).
+
 ## Design decisions
 
 Some of the reasoning behind why `emoji-picker-element` is built the way it is.
