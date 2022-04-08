@@ -1,3 +1,12 @@
+## [1.11.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.1...v1.11.2) (2022-04-08)
+
+
+### Bug Fixes
+
+* remove aria-owns ([#275](https://github.com/nolanlawson/emoji-picker-element/issues/275)) ([306ca06](https://github.com/nolanlawson/emoji-picker-element/commit/306ca067aa29e896bd16d06fb80578c426786642))
+
+
+
 ## [1.11.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.0...v1.11.1) (2022-03-20)
 
 
