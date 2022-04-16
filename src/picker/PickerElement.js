@@ -11,7 +11,9 @@ const PROPS = [
   'dataSource',
   'i18n',
   'locale',
-  'skinToneEmoji'
+  'skinToneEmoji',
+  'emojiFontFamily',
+  'emojiVersion'
 ]
 
 export default class PickerElement extends HTMLElement {
@@ -30,6 +32,8 @@ export default class PickerElement extends HTMLElement {
       customCategorySorting: DEFAULT_CATEGORY_SORTING,
       customEmoji: null,
       i18n: enI18n,
+      emojiFontFamily: null,
+      emojiVersion: null,
       ...props
     }
     // Handle properties set before the element was upgraded

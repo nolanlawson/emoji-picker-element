@@ -4,7 +4,7 @@ import { groups as defaultGroups, customGroup } from '../../groups'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { hasZwj } from '../../utils/hasZwj'
-import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiSupport'
+import { detectEmojiSupportLevel, supportedZwjEmojis } from '../../utils/emojiSupport'
 import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
@@ -29,6 +29,8 @@ export let i18n
 export let database
 export let customEmoji
 export let customCategorySorting
+export let emojiFontFamily
+export let emojiVersion
 
 // private
 let initialLoad = true
@@ -96,13 +98,15 @@ const isSkinToneOption = element => /^skintone-/.test(element.id)
 // Determine the emoji support level (in requestIdleCallback)
 //
 
-emojiSupportLevelPromise.then(level => {
-  // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
-  /* istanbul ignore next */
-  if (!level) {
-    message = i18n.emojiUnsupportedMessage
-  }
-})
+if (!emojiVersion) {
+  detectEmojiSupportLevel().then(level => {
+    // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
+    /* istanbul ignore next */
+    if (!level) {
+      message = i18n.emojiUnsupportedMessage
+    }
+  })
+}
 
 //
 // Set or update the database object
@@ -141,7 +145,7 @@ $: {
 
 /* eslint-disable no-unused-vars */
 $: pickerStyle = `
-  --font-family: ${FONT_FAMILY};
+  --font-family: ${emojiFontFamily ? `${JSON.stringify(emojiFontFamily)},` : ''}${FONT_FAMILY};
   --num-groups: ${groups.length}; 
   --indicator-opacity: ${searchMode ? 0 : 1}; 
   --num-skintones: ${NUM_SKIN_TONES};`
@@ -297,11 +301,11 @@ $: {
   const zwjEmojisToCheck = currentEmojis
     .filter(emoji => emoji.unicode) // filter custom emoji
     .filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
-  if (zwjEmojisToCheck.length) {
+  if (!emojiVersion && zwjEmojisToCheck.length) {
     // render now, check their length later
     requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
   } else {
-    currentEmojis = currentEmojis.filter(isZwjSupported)
+    currentEmojis = emojiVersion ? currentEmojis : currentEmojis.filter(isZwjSupported)
     requestAnimationFrame(() => {
       // Avoid Svelte doing an invalidation on the "setter" here.
       // At best the invalidation is useless, at worst it can cause infinite loops:
@@ -327,13 +331,13 @@ function isZwjSupported (emoji) {
 }
 
 async function filterEmojisByVersion (emojis) {
-  const emojiSupportLevel = await emojiSupportLevelPromise
+  const emojiSupportLevel = emojiVersion || await detectEmojiSupportLevel()
   // !version corresponds to custom emoji
   return emojis.filter(({ version }) => !version || version <= emojiSupportLevel)
 }
 
 async function summarizeEmojis (emojis) {
-  return summarizeEmojisForUI(emojis, await emojiSupportLevelPromise)
+  return summarizeEmojisForUI(emojis, emojiVersion || await detectEmojiSupportLevel())
 }
 
 async function getEmojisByGroup (group) {

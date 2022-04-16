@@ -43,6 +43,10 @@
       bottom: 5px;
       padding: 5px;
     }
+    @font-face {
+        font-family: CustomEmoji;
+        src: url('../../Twemoji Mozilla.ttf') format('truetype');
+    }
   </style>
 </head>
 <body>
@@ -68,7 +72,9 @@
     }
 
     const opts = {
-      dataSource: '/node_modules/emoji-picker-element-data/en/emojibase/data.json'
+      dataSource: '/node_modules/emoji-picker-element-data/en/emojibase/data.json',
+      emojiVersion: 14.0,
+      emojiFontFamily: 'CustomEmoji'
     }
 
     document.querySelector('.delete').addEventListener('click', () => {
