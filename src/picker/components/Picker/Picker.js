@@ -162,6 +162,11 @@ $: {
   if (customEmoji && customEmoji.length) {
     groups = [customGroup, ...defaultGroups]
   } else if (groups !== defaultGroups) {
+    if (currentGroupIndex) {
+      // If the current group is anything other than "custom" (which is first), decrement.
+      // This fixes the odd case where you set customEmoji, then pick a category, then unset customEmoji
+      currentGroupIndex--
+    }
     groups = defaultGroups
   }
 }
