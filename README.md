@@ -11,10 +11,10 @@ A lightweight emoji picker, distributed as a web component.
 
 **Features:**
 
-- Supports [Emoji v14.0](https://emojipedia.org/emoji-14.0/) (depending on OS) and custom emoji
+- Supports [Emoji v14.0](https://emojipedia.org/emoji-14.0/) and custom emoji
 - Uses IndexedDB, so it consumes [far less memory](https://nolanlawson.com/2020/06/28/introducing-emoji-picker-element-a-memory-efficient-emoji-picker-for-the-web/) than other emoji pickers
 - [Small bundle size](https://bundlephobia.com/result?p=emoji-picker-element) (41kB minified, ~14.4kB gzipped)
-- Renders native emoji only, no spritesheets
+- Renders native emoji by default, with support for custom fonts
 - [Accessible by default](https://nolanlawson.com/2020/07/01/building-an-accessible-emoji-picker/)
 - Framework and bundler not required, just add a `<script>` tag and use it
 
@@ -25,6 +25,7 @@ A lightweight emoji picker, distributed as a web component.
 - [emoji-picker-element](#emoji-picker-element-)
   * [Usage](#usage)
     + [Examples](#examples)
+    + [Emoji support](#emoji-support)
   * [Styling](#styling)
     + [Size](#size)
     + [Dark mode](#dark-mode)
@@ -134,6 +135,58 @@ This will log:
 - [With Twemoji](https://bl.ocks.org/nolanlawson/raw/fead700a0325aabd92670d56d6d422d8) ([source](https://bl.ocks.org/nolanlawson/fead700a0325aabd92670d56d6d422d8)) (**Note:** has a performance cost. Use with care.)
 - [Fallback for missing flag emoji on Windows](https://bl.ocks.org/nolanlawson/raw/1c67a41fb24978bab93a44ed1d62fab2/) ([source](https://gist.github.com/nolanlawson/1c67a41fb24978bab93a44ed1d62fab2))
 
+### Emoji support
+
+[Emoji support varies](https://nolanlawson.com/2022/04/08/the-struggle-of-using-native-emoji-on-the-web/) across browsers and operating systems. By default, `emoji-picker-element` will hide unsupported emoji from the picker.
+
+You can customize this behavior in two ways:
+
+**Using your own emoji font**
+
+Set the `--emoji-font-family`:
+
+```css
+emoji-picker {
+  --emoji-font-family: MyCustomFont;
+}
+```
+
+And specify the emoji version supported by the font (see [Emojipedia](https://emojipedia.org/) for a list of versions).
+
+In HTML:
+
+```html
+<emoji-picker emoji-version="13.1"></emoji-picker>
+```
+
+Or JavaScript:
+
+```js
+import { picker } from 'emoji-picker-element';
+const picker = new Picker({
+  emojiVersion: 13.1
+});
+```
+
+By setting the `emoji-version`/`emojiVersion`, you assert that your font supports this emoji version. `emoji-picker-element` will not attempt to detect or hide unsupported emoji.
+
+Note that color font support varies across browsers. You can use [ChromaCheck](https://github.com/RoelN/ChromaCheck) to test the browser support for your font.
+
+**Polyfilling flag emoji on Windows**
+
+As of this writing, [Windows does not support country flag emoji](https://answers.microsoft.com/en-us/windows/forum/all/where-are-the-flag-emoji-in-windows-10/93daa6e8-880a-48b1-9891-ab5bfbfbce98). This is only a problem in Chromium-based browsers, because Firefox ships with its own emoji font.
+
+To work around this, use [country-flag-emoji-polyfill](https://www.npmjs.com/package/country-flag-emoji-polyfill):
+
+```js
+import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill';
+
+// emoji-picker-element will use "Twemoji Mozilla" and fall back to other fonts for non-flag emoji
+polyfillCountryFlagEmojis('Twemoji Mozilla');
+```
+
+You do not need to do this if you are using your own `--emoji-font-family` and the font you provide supports country flag emoji.
+
 ## Styling
 
 `emoji-picker-element` uses [Shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM), so its inner styling cannot be (easily) changed with arbitrary CSS. Refer to the API below for style customization.
@@ -185,33 +238,34 @@ Here is a full list of options:
 
 <!-- CSS variable options start -->
 
-| Variable                     | Default                | Default (dark) | Description                                                                                          |
-| ---------------------------- | ---------------------- | -------------- | ---------------------------------------------------------------------------------------------------- |
-| `--background`               | `#fff`                 | `#222`         | Background of the entire `<emoji-picker>`                                                            |
-| `--border-color`             | `#e0e0e0`              | `#444`         |                                                                                                      |
-| `--border-size`              | `1px`                  |                | Width of border used in most of the picker                                                           |
-| `--button-active-background` | `#e6e6e6`              | `#555555`      | Background of an active button                                                                       |
-| `--button-hover-background`  | `#d9d9d9`              | `#484848`      | Background of a hovered button                                                                       |
-| `--category-emoji-padding`   | `var(--emoji-padding)` |                | Vertical/horizontal padding on category emoji, if you want it to be different from `--emoji-padding` |
-| `--category-emoji-size`      | `var(--emoji-size)`    |                | Width/height of category emoji, if you want it to be different from `--emoji-size`                   |
-| `--category-font-color`      | `#111`                 | `#efefef`      | Font color of custom emoji category headings                                                         |
-| `--category-font-size`       | `1rem`                 |                | Font size of custom emoji category headings                                                          |
-| `--emoji-padding`            | `0.5rem`               |                | Vertical and horizontal padding on emoji                                                             |
-| `--emoji-size`               | `1.375rem`             |                | Width and height of all emoji                                                                        |
-| `--indicator-color`          | `#385ac1`              | `#5373ec`      | Color of the nav indicator                                                                           |
-| `--indicator-height`         | `3px`                  |                | Height of the nav indicator                                                                          |
-| `--input-border-color`       | `#999`                 | `#ccc`         |                                                                                                      |
-| `--input-border-radius`      | `0.5rem`               |                |                                                                                                      |
-| `--input-border-size`        | `1px`                  |                |                                                                                                      |
-| `--input-font-color`         | `#111`                 | `#efefef`      |                                                                                                      |
-| `--input-font-size`          | `1rem`                 |                |                                                                                                      |
-| `--input-line-height`        | `1.5`                  |                |                                                                                                      |
-| `--input-padding`            | `0.25rem`              |                |                                                                                                      |
-| `--input-placeholder-color`  | `#999`                 | `#ccc`         |                                                                                                      |
-| `--num-columns`              | `8`                    |                | How many columns to display in the emoji grid                                                        |
-| `--outline-color`            | `#999`                 | `#fff`         | Focus outline color                                                                                  |
-| `--outline-size`             | `2px`                  |                | Focus outline width                                                                                  |
-| `--skintone-border-radius`   | `1rem`                 |                | Border radius of the skintone dropdown                                                               |
+| Variable                     | Default                                                                                                                                   | Default (dark) | Description                                                                                                       |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `--background`               | `#fff`                                                                                                                                    | `#222`         | Background of the entire `<emoji-picker>`                                                                         |
+| `--border-color`             | `#e0e0e0`                                                                                                                                 | `#444`         |                                                                                                                   |
+| `--border-size`              | `1px`                                                                                                                                     |                | Width of border used in most of the picker                                                                        |
+| `--button-active-background` | `#e6e6e6`                                                                                                                                 | `#555555`      | Background of an active button                                                                                    |
+| `--button-hover-background`  | `#d9d9d9`                                                                                                                                 | `#484848`      | Background of a hovered button                                                                                    |
+| `--category-emoji-padding`   | `var(--emoji-padding)`                                                                                                                    |                | Vertical/horizontal padding on category emoji, if you want it to be different from `--emoji-padding`              |
+| `--category-emoji-size`      | `var(--emoji-size)`                                                                                                                       |                | Width/height of category emoji, if you want it to be different from `--emoji-size`                                |
+| `--category-font-color`      | `#111`                                                                                                                                    | `#efefef`      | Font color of custom emoji category headings                                                                      |
+| `--category-font-size`       | `1rem`                                                                                                                                    |                | Font size of custom emoji category headings                                                                       |
+| `--emoji-font-family`        | `"Twemoji Mozilla","Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji","EmojiOne Color","Android Emoji",sans-serif` |                | CSS font-family to use for the emoji. If you set a custom font, you should use the `emojiVersion` option as well. |
+| `--emoji-padding`            | `0.5rem`                                                                                                                                  |                | Vertical and horizontal padding on emoji                                                                          |
+| `--emoji-size`               | `1.375rem`                                                                                                                                |                | Width and height of all emoji                                                                                     |
+| `--indicator-color`          | `#385ac1`                                                                                                                                 | `#5373ec`      | Color of the nav indicator                                                                                        |
+| `--indicator-height`         | `3px`                                                                                                                                     |                | Height of the nav indicator                                                                                       |
+| `--input-border-color`       | `#999`                                                                                                                                    | `#ccc`         |                                                                                                                   |
+| `--input-border-radius`      | `0.5rem`                                                                                                                                  |                |                                                                                                                   |
+| `--input-border-size`        | `1px`                                                                                                                                     |                |                                                                                                                   |
+| `--input-font-color`         | `#111`                                                                                                                                    | `#efefef`      |                                                                                                                   |
+| `--input-font-size`          | `1rem`                                                                                                                                    |                |                                                                                                                   |
+| `--input-line-height`        | `1.5`                                                                                                                                     |                |                                                                                                                   |
+| `--input-padding`            | `0.25rem`                                                                                                                                 |                |                                                                                                                   |
+| `--input-placeholder-color`  | `#999`                                                                                                                                    | `#ccc`         |                                                                                                                   |
+| `--num-columns`              | `8`                                                                                                                                       |                | How many columns to display in the emoji grid                                                                     |
+| `--outline-color`            | `#999`                                                                                                                                    | `#fff`         | Focus outline color                                                                                               |
+| `--outline-size`             | `2px`                                                                                                                                     |                | Focus outline width                                                                                               |
+| `--skintone-border-radius`   | `1rem`                                                                                                                                    |                | Border radius of the skintone dropdown                                                                            |
 
 <!-- CSS variable options end -->
 
@@ -272,6 +326,7 @@ Name | Type | Default | Description |
 `customCategorySorting` | function | - | Function to sort custom category strings (sorted alphabetically by default)  |
 `customEmoji` | CustomEmoji[] | - | Array of custom emoji |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json" | URL to fetch the emoji data from (`data-source` when used as an attribute) |
+`emojiVersion` | number | undefined | Maximum supported emoji version (e.g. `14.0` or `13.1`). Setting this disables the default emoji support detection.
 `i18n` | I18n | - | i18n object (see below for details) |
 `locale` | string | "en" | Locale string |
 `skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute) |

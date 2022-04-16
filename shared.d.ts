@@ -35,7 +35,6 @@ export interface PickerConstructorOptions {
     skinToneEmoji?: string;
     customEmoji?: CustomEmoji[];
     customCategorySorting?: (a: string, b: string) => number;
-    emojiFontFamily?: string;
     emojiVersion?: number;
 }
 export interface I18n {

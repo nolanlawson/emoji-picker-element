@@ -10,7 +10,6 @@ import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
   DEFAULT_NUM_COLUMNS,
-  FONT_FAMILY,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
@@ -29,7 +28,6 @@ export let i18n
 export let database
 export let customEmoji
 export let customCategorySorting
-export let emojiFontFamily
 export let emojiVersion
 
 // private
@@ -149,7 +147,6 @@ $: {
 
 /* eslint-disable no-unused-vars */
 $: pickerStyle = `
-  --font-family: ${emojiFontFamily ? `${JSON.stringify(emojiFontFamily)},` : ''}${FONT_FAMILY};
   --num-groups: ${groups.length}; 
   --indicator-opacity: ${searchMode ? 0 : 1}; 
   --num-skintones: ${NUM_SKIN_TONES};`

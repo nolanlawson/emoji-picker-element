@@ -16,6 +16,7 @@
   --border-size: 1px; /* Width of border used in most of the picker */
   --skintone-border-radius: 1rem; /* Border radius of the skintone dropdown */
   --category-font-size: 1rem; /* Font size of custom emoji category headings */
+  --emoji-font-family: "Twemoji Mozilla","Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji","EmojiOne Color","Android Emoji",sans-serif; /* CSS font-family to use for the emoji. If you set a custom font, you should use the `emojiVersion` option as well. */
 }
 
 @mixin colors($dark) {

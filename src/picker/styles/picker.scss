@@ -89,7 +89,7 @@ button.emoji,
   width: var(--total-emoji-size);
   line-height: 1;
   overflow: hidden;
-  font-family: var(--font-family);
+  font-family: var(--emoji-font-family);
   cursor: pointer;
 
   // see https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/

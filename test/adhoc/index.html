@@ -14,6 +14,7 @@
     }
     emoji-picker {
       margin: 0 auto;
+      --emoji-font-family: CustomEmoji;
     }
     @media screen and (max-width: 320px) {
       emoji-picker {
@@ -73,8 +74,7 @@
 
     const opts = {
       dataSource: '/node_modules/emoji-picker-element-data/en/emojibase/data.json',
-      emojiVersion: 14.0,
-      emojiFontFamily: 'CustomEmoji'
+      emojiVersion: 14.0
     }
 
     document.querySelector('.delete').addEventListener('click', () => {

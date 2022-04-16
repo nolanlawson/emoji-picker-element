@@ -12,7 +12,6 @@ const PROPS = [
   'i18n',
   'locale',
   'skinToneEmoji',
-  'emojiFontFamily',
   'emojiVersion'
 ]
 
@@ -32,7 +31,6 @@ export default class PickerElement extends HTMLElement {
       customCategorySorting: DEFAULT_CATEGORY_SORTING,
       customEmoji: null,
       i18n: enI18n,
-      emojiFontFamily: null,
       emojiVersion: null,
       ...props
     }
@@ -66,15 +64,16 @@ export default class PickerElement extends HTMLElement {
   }
 
   static get observedAttributes () {
-    return ['locale', 'data-source', 'skin-tone-emoji'] // complex objects aren't supported, also use kebab-case
+    return ['locale', 'data-source', 'skin-tone-emoji', 'emoji-version'] // complex objects aren't supported, also use kebab-case
   }
 
   attributeChangedCallback (attrName, oldValue, newValue) {
-    // convert from kebab-case to camelcase
-    // see https://github.com/sveltejs/svelte/issues/3852#issuecomment-665037015
     this._set(
+      // convert from kebab-case to camelcase
+      // see https://github.com/sveltejs/svelte/issues/3852#issuecomment-665037015
       attrName.replace(/-([a-z])/g, (_, up) => up.toUpperCase()),
-      newValue
+      // convert string attribute to float if necessary
+      attrName === 'emoji-version' ? parseFloat(newValue) : newValue
     )
   }
 
