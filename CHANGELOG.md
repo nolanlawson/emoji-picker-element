@@ -1,3 +1,12 @@
+## [1.11.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.2...v1.11.3) (2022-04-16)
+
+
+### Bug Fixes
+
+* fix category with unsetting customEmoji ([#277](https://github.com/nolanlawson/emoji-picker-element/issues/277)) ([3601f79](https://github.com/nolanlawson/emoji-picker-element/commit/3601f79eafefccc481685d512b18f003d83f1814)), closes [#276](https://github.com/nolanlawson/emoji-picker-element/issues/276)
+
+
+
 ## [1.11.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.1...v1.11.2) (2022-04-08)
 
 
