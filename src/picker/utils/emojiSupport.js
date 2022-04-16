@@ -15,10 +15,3 @@ export const detectEmojiSupportLevel = () => {
 // determine which emojis containing ZWJ (zero width joiner) characters
 // are supported (rendered as one glyph) rather than unsupported (rendered as two or more glyphs)
 export const supportedZwjEmojis = new Map()
-
-/* istanbul ignore else */
-if (process.env.NODE_ENV !== 'production') {
-  detectEmojiSupportLevel().then(emojiSupportLevel => {
-    console.log('emoji support level', emojiSupportLevel)
-  })
-}
