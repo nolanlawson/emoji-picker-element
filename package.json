@@ -31,7 +31,7 @@
     "benchmark:memory": "run-s build:rollup benchmark:bundle && run-p --race benchmark:memory:server benchmark:memory:test",
     "benchmark:memory:server": "node ./test/memory/server.js",
     "benchmark:memory:test": "node ./test/memory/test.js",
-    "benchmark:run-bundlesize": "bundlesize",
+    "benchmark:run-bundlesize": "node ./bin/bundlesize.js",
     "benchmark:storage": "cross-env PERF=1 run-s build:rollup && run-p --race test:adhoc benchmark:storage:test",
     "benchmark:storage:test": "node ./test/storage/test.js",
     "test:leak": "run-p --race test:leak:server test:leak:test",
@@ -81,7 +81,6 @@
     "@testing-library/user-event": "^13.5.0",
     "babel-jest": "^27.5.1",
     "blob-util": "^2.0.2",
-    "bundlesize": "^0.18.1",
     "compression": "^1.7.4",
     "conventional-changelog-cli": "^2.2.2",
     "cross-env": "^7.0.3",
@@ -124,7 +123,8 @@
     "svelte-jester": "^2.3.2",
     "svelte-preprocess": "^4.10.3",
     "svgo": "^2.8.0",
-    "tachometer": "^0.5.10"
+    "tachometer": "^0.5.10",
+    "terser": "^5.12.1"
   },
   "standard": {
     "ignore": [
@@ -181,18 +181,6 @@
     "*.js": "standard --fix",
     "*.(css|scss)": "stylelint --fix '**/*.scss'"
   },
-  "bundlesize": [
-    {
-      "path": "./bundle.js",
-      "maxSize": "41 kB",
-      "compression": "none"
-    },
-    {
-      "path": "./bundle.js",
-      "maxSize": "13 kB",
-      "compression": "brotli"
-    }
-  ],
   "volta": {
     "node": "14.17.3",
     "yarn": "1.22.11"
