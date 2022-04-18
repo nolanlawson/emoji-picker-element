@@ -13,7 +13,7 @@ A lightweight emoji picker, distributed as a web component.
 
 - Supports [Emoji v14.0](https://emojipedia.org/emoji-14.0/) and custom emoji
 - Uses IndexedDB, so it consumes [far less memory](https://nolanlawson.com/2020/06/28/introducing-emoji-picker-element-a-memory-efficient-emoji-picker-for-the-web/) than other emoji pickers
-- [Small bundle size](https://bundlephobia.com/result?p=emoji-picker-element) (41kB minified, ~14.4kB gzipped)
+- [Small bundle size](https://bundlephobia.com/result?p=emoji-picker-element) (<15kB min+gz)
 - Renders native emoji by default, with support for custom fonts
 - [Accessible by default](https://nolanlawson.com/2020/07/01/building-an-accessible-emoji-picker/)
 - Framework and bundler not required, just add a `<script>` tag and use it
