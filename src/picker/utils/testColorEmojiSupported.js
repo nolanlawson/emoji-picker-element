@@ -5,6 +5,7 @@
 
 /* istanbul ignore file */
 
+import { FONT_FAMILY } from '../constants'
 import { versionsAndTestEmoji } from '../../../bin/versionsAndTestEmoji'
 
 // only used in jest tests
@@ -23,11 +24,7 @@ const getTextFeature = (text, color) => {
 
   const ctx = canvas.getContext('2d')
   ctx.textBaseline = 'top'
-  // This font is borrowed from is-emoji-supported.
-  // The important thing here is that we have to use the variation selector
-  // for certain older emoji so that they always render in color. See:
-  // https://nolanlawson.com/2022/04/08/the-struggle-of-using-native-emoji-on-the-web/#comment-219937
-  ctx.font = '100px sans-serif'
+  ctx.font = `100px ${FONT_FAMILY}`
   ctx.fillStyle = color
   ctx.scale(0.01, 0.01)
   ctx.fillText(text, 0, 0)

@@ -7,9 +7,6 @@
 // test, even in browsers that display them as double emoji. (E.g. "face in clouds" might render as
 // "face without mouth" plus "fog".) These emoji can only be filtered using the width test,
 // which happens in checkZwjSupport.js.
-//
-// Also note that for the 0.6 emoji, we actually need a variation selector to make it color:
-// https://nolanlawson.com/2022/04/08/the-struggle-of-using-native-emoji-on-the-web/#comment-219937
 export const versionsAndTestEmoji = {
   '🫠': 14,
   '🥲': 13.1, // smiling face with tear, technically from v13 but see note above
@@ -21,5 +18,5 @@ export const versionsAndTestEmoji = {
   '👁️‍🗨️': 2,
   '😀': 1,
   '😐️': 0.7,
-  '😃️': 0.6
+  '😃': 0.6
 }
