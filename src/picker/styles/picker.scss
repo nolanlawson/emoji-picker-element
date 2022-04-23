@@ -60,6 +60,7 @@ $skintoneZIndex3: 3;
   min-height: 0;
   flex: 1;
   contain: content;
+  scrollbar-gutter: stable;
 }
 
 .emoji-menu {
@@ -204,6 +205,8 @@ input.search {
   flex-direction: row;
   border-top: var(--border-size) solid var(--border-color);
   contain: content;
+  overflow: hidden;
+  scrollbar-gutter: stable;
 }
 
 // unsupported warning

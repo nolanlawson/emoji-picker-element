@@ -55,7 +55,6 @@ let currentFavorites = [] // eslint-disable-line no-unused-vars
 let defaultFavoriteEmojis
 let numColumns = DEFAULT_NUM_COLUMNS
 let isRtl = false
-let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
 let currentGroupIndex = 0
 let groups = defaultGroups
 let currentGroup
@@ -224,9 +223,7 @@ $: {
 //
 // Calculate the width of the emoji grid. This serves two purposes:
 // 1) Re-calculate the --num-columns var because it may have changed
-// 2) Re-calculate the scrollbar width because it may have changed
-//   (i.e. because the number of items changed)
-// 3) Re-calculate whether we're in RTL mode or not.
+// 2) Re-calculate whether we're in RTL mode or not.
 //
 // The benefit of doing this in one place is to align with rAF/ResizeObserver
 // and do all the calculations in one go. RTL vs LTR is not strictly width-related,
@@ -243,12 +240,9 @@ function calculateEmojiGridStyle (node) {
       const style = getComputedStyle(rootElement)
       const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
       const newIsRtl = style.getPropertyValue('direction') === 'rtl'
-      const parentWidth = node.parentElement.getBoundingClientRect().width
-      const newScrollbarWidth = parentWidth - width
 
       // write to Svelte variables
       numColumns = newNumColumns
-      scrollbarWidth = newScrollbarWidth // eslint-disable-line no-unused-vars
       isRtl = newIsRtl // eslint-disable-line no-unused-vars
     }
   })
