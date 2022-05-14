@@ -11,7 +11,7 @@ A lightweight emoji picker, distributed as a web component.
 
 **Features:**
 
-- Supports [Emoji v14.0](https://emojipedia.org/emoji-14.0/) and custom emoji
+- Supports [Emoji v14.0](https://emojipedia.org/emoji-14.0/) (depending on OS) and custom emoji
 - Uses IndexedDB, so it consumes [far less memory](https://nolanlawson.com/2020/06/28/introducing-emoji-picker-element-a-memory-efficient-emoji-picker-for-the-web/) than other emoji pickers
 - [Small bundle size](https://bundlephobia.com/result?p=emoji-picker-element) (<15kB min+gz)
 - Renders native emoji by default, with support for custom fonts
