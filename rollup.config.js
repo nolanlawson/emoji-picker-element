@@ -49,7 +49,11 @@ const baseConfig = {
     }),
     // make the svelte output slightly smaller
     replace({
-      'options.hydrate': 'false',
+      'options.anchor': 'undefined',
+      'options.context': 'undefined',
+      'options.customElement': 'undefined',
+      'options.hydrate': 'undefined',
+      'options.intro': 'undefined',
       delimiters: ['', ''],
       preventAssignment: true
     }),
