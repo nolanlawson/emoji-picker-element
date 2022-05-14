@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
-
+import { onMount, tick } from 'svelte'
 import { groups as defaultGroups, customGroup } from '../../groups'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
@@ -18,7 +18,6 @@ import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 import * as widthCalculator from '../../utils/widthCalculator'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
-import { tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 
@@ -96,19 +95,21 @@ const isSkinToneOption = element => /^skintone-/.test(element.id)
 // Determine the emoji support level (in requestIdleCallback)
 //
 
-if (!emojiVersion) {
-  detectEmojiSupportLevel().then(level => {
-    // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
-    /* istanbul ignore next */
-    if (!level) {
-      message = i18n.emojiUnsupportedMessage
-    }
-    /* istanbul ignore else */
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('emoji support level', level)
-    }
-  })
-}
+onMount(() => {
+  if (!emojiVersion) {
+    detectEmojiSupportLevel().then(level => {
+      // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
+      /* istanbul ignore next */
+      if (!level) {
+        message = i18n.emojiUnsupportedMessage
+      }
+      /* istanbul ignore else */
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('emoji support level', level)
+      }
+    })
+  }
+})
 
 //
 // Set or update the database object
