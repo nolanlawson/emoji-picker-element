@@ -1,3 +1,17 @@
+# [1.12.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.3...v1.12.0) (2022-06-24)
+
+
+### Features
+
+* create zh-CN.js ([#284](https://github.com/nolanlawson/emoji-picker-element/issues/284)) ([01986b4](https://github.com/nolanlawson/emoji-picker-element/commit/01986b4740d22def4538016837ac0e6c9b8868bb))
+
+
+### Performance Improvements
+
+* trim unused svelte options ([#280](https://github.com/nolanlawson/emoji-picker-element/issues/280)) ([149cfa9](https://github.com/nolanlawson/emoji-picker-element/commit/149cfa94598fd6d21398bbfe9e3ef27d7cf42a38))
+
+
+
 ## [1.11.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.2...v1.11.3) (2022-04-16)
 
 
