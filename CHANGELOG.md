@@ -1,3 +1,12 @@
+## [1.12.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.12.0...v1.12.1) (2022-06-24)
+
+
+### Bug Fixes
+
+* rename zh-CN to match other intl files ([#288](https://github.com/nolanlawson/emoji-picker-element/issues/288)) ([27ef3fd](https://github.com/nolanlawson/emoji-picker-element/commit/27ef3fd4fdab112375a20d57e7da640e92b9fc7e))
+
+
+
 # [1.12.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.3...v1.12.0) (2022-06-24)
 
 
