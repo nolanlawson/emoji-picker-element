@@ -1,3 +1,12 @@
+# [1.13.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.12.1...v1.13.0) (2022-10-17)
+
+
+### Features
+
+* add italian translation file ([#291](https://github.com/nolanlawson/emoji-picker-element/issues/291)) ([0607ac3](https://github.com/nolanlawson/emoji-picker-element/commit/0607ac39b5f8573704179ad367f038091a6b83a5))
+
+
+
 ## [1.12.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.12.0...v1.12.1) (2022-06-24)
 
 
