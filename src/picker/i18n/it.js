@@ -12,12 +12,12 @@ export default {
   skinToneLabel: 'Scegli una tonalità della pelle (corrente {skinTone})',
   skinTonesLabel: 'Tonalità della pelle',
   skinTones: [
-    'Default',
-    'Light',
-    'Medium-Light',
-    'Medium',
-    'Medium-Dark',
-    'Dark'
+    'Predefinita',
+    'Chiara',
+    'Medio-Chiara',
+    'Media',
+    'Medio-Scura',
+    'Scura'
   ],
   categories: {
     custom: 'Personalizzata',
