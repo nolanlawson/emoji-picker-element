@@ -27,7 +27,12 @@
   $input-placeholder: #999;
   $outline: #999;
   $categoryFontColor: #111;
-
+  @if $dark {
+    color-scheme: dark;
+  }
+  @else {
+    color-scheme: light;
+  }
   @if $dark {
     $bg: #222;
     $border: #444;
