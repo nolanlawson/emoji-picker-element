@@ -1,3 +1,12 @@
+## [1.13.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.13.0...v1.13.1) (2022-10-23)
+
+
+### Bug Fixes
+
+* used dark colors for scrollbar in dark mode ([#294](https://github.com/nolanlawson/emoji-picker-element/issues/294)) ([af959ae](https://github.com/nolanlawson/emoji-picker-element/commit/af959ae7fc1801f91b8291ea82009d9e7443cf44))
+
+
+
 # [1.13.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.12.1...v1.13.0) (2022-10-17)
 
 
