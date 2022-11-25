@@ -1,3 +1,12 @@
+# [1.14.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.13.1...v1.14.0) (2022-11-25)
+
+
+### Features
+
+* add ru_RU locale ([#296](https://github.com/nolanlawson/emoji-picker-element/issues/296)) ([70946d9](https://github.com/nolanlawson/emoji-picker-element/commit/70946d95a22e017e6e9b3ba7ccd45ff3d924fa45))
+
+
+
 ## [1.13.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.13.0...v1.13.1) (2022-10-23)
 
 
