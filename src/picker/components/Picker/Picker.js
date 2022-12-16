@@ -271,7 +271,7 @@ $: {
     if (!databaseLoaded) {
       currentEmojis = []
       searchMode = false
-    } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
+    } else if (searchText.length > MIN_SEARCH_TEXT_LENGTH) {
       const currentSearchText = searchText
       const newEmojis = await getEmojisBySearchQuery(currentSearchText)
       if (currentSearchText === searchText) { // if the situation changes asynchronously, do not update
