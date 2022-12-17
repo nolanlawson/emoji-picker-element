@@ -18,7 +18,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
 
       # via https://github.com/actions/cache/blob/0638051/examples.md#node---yarn
       - name: Get yarn cache directory path
