@@ -333,9 +333,6 @@ async function summarizeEmojis (emojis) {
 
 async function getEmojisByGroup (group) {
   console.log('getEmojiByGroup', group)
-  if (typeof group === 'undefined') {
-    return EMPTY_ARRAY
-  }
   // -1 is custom emoji
   const emoji = group === -1 ? customEmoji : await database.getEmojiByGroup(group)
   return summarizeEmojis(await filterEmojisByVersion(emoji))
