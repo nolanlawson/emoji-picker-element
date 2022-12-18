@@ -1,6 +1,8 @@
 // trie data structure for prefix searches
 // loosely based on https://github.com/nolanlawson/substring-trie
 
+import { EMPTY_ARRAY } from '../../shared/lang.js'
+
 const CODA_MARKER = '' // marks the end of the string
 
 export function trie (arr, itemToTokens) {
@@ -35,13 +37,13 @@ export function trie (arr, itemToTokens) {
       if (nextMap) {
         currentMap = nextMap
       } else {
-        return []
+        return EMPTY_ARRAY
       }
     }
 
     if (exact) {
       const results = currentMap.get(CODA_MARKER)
-      return results || []
+      return results || EMPTY_ARRAY
     }
 
     const results = []

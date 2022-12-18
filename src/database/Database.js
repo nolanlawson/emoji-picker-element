@@ -21,9 +21,10 @@ import {
 import { customEmojiIndex } from './customEmojiIndex'
 import { cleanEmoji } from './utils/cleanEmoji'
 import { loadDataForFirstTime, checkForUpdates } from './dataLoading'
+import { EMPTY_ARRAY, EMPTY_OBJECT } from '../shared/lang.js'
 
 export default class Database {
-  constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE, customEmoji = [] } = {}) {
+  constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE, customEmoji = EMPTY_ARRAY } = EMPTY_OBJECT) {
     this.dataSource = dataSource
     this.locale = locale
     this._dbName = `emoji-picker-element-${this.locale}`

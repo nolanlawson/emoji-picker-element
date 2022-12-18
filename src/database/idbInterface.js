@@ -11,6 +11,7 @@ import { extractTokens } from './utils/extractTokens'
 import { commit, getAllIDB, getIDB } from './idbUtil'
 import { findCommonMembers } from './utils/findCommonMembers'
 import { normalizeTokens } from './utils/normalizeTokens'
+import { EMPTY_ARRAY } from '../shared/lang.js'
 
 export async function isEmpty (db) {
   return !(await get(db, STORE_KEYVALUE, KEY_URL))
@@ -119,7 +120,7 @@ export async function getEmojiBySearchQuery (db, query) {
   const tokens = normalizeTokens(extractTokens(query))
 
   if (!tokens.length) {
-    return []
+    return EMPTY_ARRAY
   }
 
   return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, txn, cb) => {
@@ -161,12 +162,12 @@ export async function getEmojiByShortcode (db, shortcode) {
   // index on shortcodes.
 
   if (!emojis.length) {
-    const predicate = _ => ((_.shortcodes || []).includes(shortcode.toLowerCase()))
+    const predicate = _ => ((_.shortcodes || EMPTY_ARRAY).includes(shortcode.toLowerCase()))
     return (await doFullDatabaseScanForSingleResult(db, predicate)) || null
   }
 
   return emojis.filter(_ => {
-    const lowerShortcodes = (_.shortcodes || []).map(_ => _.toLowerCase())
+    const lowerShortcodes = (_.shortcodes || EMPTY_ARRAY).map(_ => _.toLowerCase())
     return lowerShortcodes.includes(shortcode.toLowerCase())
   })[0] || null
 }
@@ -206,7 +207,7 @@ export function incrementFavoriteEmojiCount (db, unicode) {
 
 export function getTopFavoriteEmoji (db, customEmojiIndex, limit) {
   if (limit === 0) {
-    return []
+    return EMPTY_ARRAY
   }
   return dbPromise(db, [STORE_FAVORITES, STORE_EMOJI], MODE_READONLY, ([favoritesStore, emojiStore], txn, cb) => {
     const results = []

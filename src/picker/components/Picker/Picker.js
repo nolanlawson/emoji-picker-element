@@ -22,6 +22,8 @@ import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame
 import { tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
+import { EMPTY_ARRAY } from '../../../shared/lang.js'
+import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.js'
 
 // public
 export let skinToneEmoji
@@ -32,8 +34,8 @@ export let customCategorySorting
 
 // private
 let initialLoad = true
-let currentEmojis = []
-let currentEmojisWithCategories = [] // eslint-disable-line no-unused-vars
+let currentEmojis = EMPTY_ARRAY
+let currentEmojisWithCategories = EMPTY_ARRAY // eslint-disable-line no-unused-vars
 let rawSearchText = ''
 let searchText = ''
 let rootElement
@@ -50,8 +52,8 @@ let activeSkinTone = 0
 let skinToneButtonText // eslint-disable-line no-unused-vars
 let pickerStyle // eslint-disable-line no-unused-vars
 let skinToneButtonLabel = '' // eslint-disable-line no-unused-vars
-let skinTones = []
-let currentFavorites = [] // eslint-disable-line no-unused-vars
+let skinTones = EMPTY_ARRAY
+let currentFavorites = EMPTY_ARRAY // eslint-disable-line no-unused-vars
 let defaultFavoriteEmojis
 let numColumns = DEFAULT_NUM_COLUMNS
 let isRtl = false
@@ -85,9 +87,10 @@ const unicodeWithSkin = (emoji, currentSkinTone) => (
 )
 
 // eslint-disable-next-line no-unused-vars
-const labelWithSkin = (emoji, currentSkinTone) => (
-  uniq([(emoji.name || unicodeWithSkin(emoji, currentSkinTone)), ...(emoji.shortcodes || [])]).join(', ')
-)
+const labelWithSkin = (emoji, currentSkinTone) => {
+  console.log('labelWithSkin')
+  return uniq([(emoji.name || unicodeWithSkin(emoji, currentSkinTone)), ...(emoji.shortcodes || EMPTY_ARRAY)]).join(', ')
+}
 
 // Detect a skintone option button
 const isSkinToneOption = element => /^skintone-/.test(element.id)
@@ -269,7 +272,7 @@ $: {
   async function updateEmojis () {
     console.log('updateEmojis')
     if (!databaseLoaded) {
-      currentEmojis = []
+      currentEmojis = EMPTY_ARRAY
       searchMode = false
     } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
       const currentSearchText = searchText
@@ -302,15 +305,7 @@ $: {
     requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
   } else {
     currentEmojis = currentEmojis.filter(isZwjSupported)
-    requestAnimationFrame(() => {
-      // Avoid Svelte doing an invalidation on the "setter" here.
-      // At best the invalidation is useless, at worst it can cause infinite loops:
-      // https://github.com/nolanlawson/emoji-picker-element/pull/180
-      // https://github.com/sveltejs/svelte/issues/6521
-      // Also note tabpanelElement can be null if the element is disconnected
-      // immediately after connected, hence `|| {}`
-      (tabpanelElement || {}).scrollTop = 0 // reset scroll top to 0 when emojis change
-    })
+    requestAnimationFrame(() => resetScrollTopIfPossible(tabpanelElement))
   }
 }
 
@@ -339,7 +334,7 @@ async function summarizeEmojis (emojis) {
 async function getEmojisByGroup (group) {
   console.log('getEmojiByGroup', group)
   if (typeof group === 'undefined') {
-    return []
+    return EMPTY_ARRAY
   }
   // -1 is custom emoji
   const emoji = group === -1 ? customEmoji : await database.getEmojiByGroup(group)

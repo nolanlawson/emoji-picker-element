@@ -1,5 +1,6 @@
 import { extractTokens } from './extractTokens'
 import { normalizeTokens } from './normalizeTokens'
+import { EMPTY_ARRAY } from '../../shared/lang.js'
 
 // Transform emoji data for storage in IDB
 export function transformEmojiData (emojiData) {
@@ -7,7 +8,7 @@ export function transformEmojiData (emojiData) {
   const res = emojiData.map(({ annotation, emoticon, group, order, shortcodes, skins, tags, emoji, version }) => {
     const tokens = [...new Set(
       normalizeTokens([
-        ...(shortcodes || []).map(extractTokens).flat(),
+        ...(shortcodes || EMPTY_ARRAY).map(extractTokens).flat(),
         ...tags.map(extractTokens).flat(),
         ...extractTokens(annotation),
         emoticon
