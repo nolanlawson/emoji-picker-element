@@ -303,6 +303,7 @@ $: {
     requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
   } else {
     currentEmojis = currentEmojis.filter(isZwjSupported)
+    // Reset scroll top to 0 when emojis change
     requestAnimationFrame(() => resetScrollTopIfPossible(tabpanelElement))
   }
 }

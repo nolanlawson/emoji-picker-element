@@ -1,4 +1,3 @@
-// Reset scroll top to 0 when emojis change
 // Note we put this in its own function outside Picker.js to avoid Svelte doing an invalidation on the "setter" here.
 // At best the invalidation is useless, at worst it can cause infinite loops:
 // https://github.com/nolanlawson/emoji-picker-element/pull/180
