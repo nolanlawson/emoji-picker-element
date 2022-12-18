@@ -22,6 +22,7 @@ import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame
 import { tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
+import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.js'
 
 // public
 export let skinToneEmoji
@@ -302,15 +303,8 @@ $: {
     requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
   } else {
     currentEmojis = currentEmojis.filter(isZwjSupported)
-    requestAnimationFrame(() => {
-      // Avoid Svelte doing an invalidation on the "setter" here.
-      // At best the invalidation is useless, at worst it can cause infinite loops:
-      // https://github.com/nolanlawson/emoji-picker-element/pull/180
-      // https://github.com/sveltejs/svelte/issues/6521
-      // Also note tabpanelElement can be null if the element is disconnected
-      // immediately after connected, hence `|| {}`
-      (tabpanelElement || {}).scrollTop = 0 // reset scroll top to 0 when emojis change
-    })
+    // Reset scroll top to 0 when emojis change
+    requestAnimationFrame(() => resetScrollTopIfPossible(tabpanelElement))
   }
 }
 
