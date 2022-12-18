@@ -54,7 +54,7 @@ let skinTones = []
 let currentFavorites = [] // eslint-disable-line no-unused-vars
 let defaultFavoriteEmojis
 let numColumns = DEFAULT_NUM_COLUMNS
-let isRtl = false
+let isRtl = false // eslint-disable-line no-unused-vars
 let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
 let currentGroupIndex = 0
 let groups = defaultGroups
