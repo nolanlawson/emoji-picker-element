@@ -1,3 +1,13 @@
+## [1.14.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.14.0...v1.14.1) (2022-12-19)
+
+
+### Bug Fixes
+
+* remove unused code ([#301](https://github.com/nolanlawson/emoji-picker-element/issues/301)) ([5fafdbd](https://github.com/nolanlawson/emoji-picker-element/commit/5fafdbd8f7340801091c1760cd62608b55db8639))
+* simpler solution to avoid svelte invalidations ([#303](https://github.com/nolanlawson/emoji-picker-element/issues/303)) ([4af86a8](https://github.com/nolanlawson/emoji-picker-element/commit/4af86a8b54afe46d85c7b2ab68dd3eb9c4b02735))
+
+
+
 # [1.14.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.13.1...v1.14.0) (2022-11-25)
 
 
