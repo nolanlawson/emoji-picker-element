@@ -105,7 +105,11 @@
     {message}
   </div>
 
-  <!-- tabindex is so people can scroll up and down with the keyboard -->
+  <!-- The tabindex=0 is so people can scroll up and down with the keyboard. The element has a role and a label, so I
+       feel it's appropriate to have the tabindex. -->
+  <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+  <!-- This on:click is a delegated click listener -->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div class="tabpanel {(!databaseLoaded || message) ? 'gone': ''}"
        role={searchMode ? 'region' : 'tabpanel'}
        aria-label={searchMode ? i18n.searchResultsLabel : i18n.categories[currentGroup.name]}
@@ -158,6 +162,8 @@
       {/each}
     </div>
   </div>
+  <!-- This on:click is a delegated click listener -->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div class="favorites emoji-menu {message ? 'gone': ''}"
        role="menu"
        aria-label={i18n.favoritesLabel}
