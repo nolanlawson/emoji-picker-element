@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang=en>
+<head>
+  <title>emoji-picker-element: Windows flag emoji fallback</title>
+</head>
+<body>
+<h1>emoji-picker-element: Windows flag emoji fallback</h1>
+<p>
+  On Windows 10/11, country flag emoji are currently
+  <a href="https://github.com/nolanlawson/emoji-picker-element/issues/269">not rendered as flags</a>.
+  This demo shows how to use emoji-picker-element with
+  <a href="https://github.com/talkjs/country-flag-emoji-polyfill">country-flag-emoji-polyfill</a>,
+  which replaces the missing country flag emoji with
+  Mozilla's <a href="https://github.com/mozilla/twemoji-colr">twemoji-colr</a> web font.
+</p>
+<emoji-picker></emoji-picker>
+<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+<script type="module">
+  import { polyfillCountryFlagEmojis } from 'https://cdn.skypack.dev/country-flag-emoji-polyfill@v0.1.1'
+
+  // Use "Twemoji Mozilla" font-family name because emoji-picker-element places that first in the font-family list
+  polyfillCountryFlagEmojis('Twemoji Mozilla')
+</script>
+</body>
+</html>
