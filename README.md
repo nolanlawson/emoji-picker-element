@@ -128,11 +128,11 @@ This will log:
 ### Examples
 
 - [Demo](https://nolanlawson.github.io/emoji-picker-element) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/index.html))
-- [Button with tooltip/popover](https://nolanlawson.github.io/emoji-picker-element/tooltip/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/tooltip/index.html))
-- [Inserting emoji into a text input](https://nolanlawson.github.io/emoji-picker-element/input/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/input/index.html))
-- [In a React app](https://nolanlawson.github.io/emoji-picker-element/react/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/react/index.html))
-- [With Twemoji](https://nolanlawson.github.io/emoji-picker-element/twemoji/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/twemoji/index.html)) (**Note:** has a performance cost. Use with care.)
-- [Fallback for missing flag emoji on Windows](https://nolanlawson.github.io/emoji-picker-element/flags/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/flags/index.html))
+- [Button with tooltip/popover](https://nolanlawson.github.io/emoji-picker-element/demos/tooltip/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/tooltip/index.html))
+- [Inserting emoji into a text input](https://nolanlawson.github.io/emoji-picker-element/demos/input/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/input/index.html))
+- [In a React app](https://nolanlawson.github.io/emoji-picker-element/demos/react/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/react/index.html))
+- [With Twemoji](https://nolanlawson.github.io/emoji-picker-element/demos/twemoji/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/twemoji/index.html)) (**Note:** has a performance cost. Use with care.)
+- [Fallback for missing flag emoji on Windows](https://nolanlawson.github.io/emoji-picker-element/demos/flags/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/flags/index.html))
 
 ## Styling
 
