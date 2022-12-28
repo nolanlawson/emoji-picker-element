@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>emoji-picker tooltip demo</title>
+  <style>
+      .tooltip:not(.shown) {
+          display: none;
+      }
+  </style>
+</head>
+<body>
+<button onclick="toggle()">Click me</button>
+<div class="tooltip" role="tooltip">
+  <emoji-picker></emoji-picker>
+</div>
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script type="module" src="https://unpkg.com/emoji-picker-element@1"></script>
+<script>
+  const button = document.querySelector('button')
+  const tooltip = document.querySelector('.tooltip')
+  Popper.createPopper(button, tooltip)
+
+  function toggle() {
+    tooltip.classList.toggle('shown')
+  }
+</script>
+</body>
+</html>
