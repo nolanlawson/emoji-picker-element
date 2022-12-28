@@ -8,6 +8,7 @@ import { FONT_FAMILY } from '../src/picker/constants.js'
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
+// To avoid code duplication, we could not declare this in variables.scss
 const MANUAL_VARS = [{
   name: '--emoji-font-family',
   value: FONT_FAMILY,
