@@ -8,14 +8,15 @@ export default class Picker extends HTMLElement {
     customCategorySorting?: (a: string, b: string) => number;
     /**
      *
-     * @param dataSource - URL to fetch the emoji data from (`data-source` when used as an attribute)
-     * @param locale - Locale string
-     * @param i18n - i18n object (see below for details)
-     * @param skinToneEmoji - The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute)
-     * @param customEmoji - Array of custom emoji
-     * @param customCategorySorting - Function to sort custom category strings (sorted alphabetically by default)
+     * @param dataSource - URL to fetch the emoji data from (`data-source` when used as an attribute).
+     * @param locale - Locale string.
+     * @param i18n - i18n object (see below for details).
+     * @param skinToneEmoji - The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute).
+     * @param customEmoji - Array of custom emoji.
+     * @param customCategorySorting - Function to sort custom category strings (sorted alphabetically by default).
+     * @param emojiVersion - Maximum supported emoji version as a number (e.g. `14.0` or `13.1`). Setting this disables the default emoji support detection.
      */
-    constructor({ dataSource, locale, i18n, skinToneEmoji, customEmoji, customCategorySorting }?: PickerConstructorOptions);
+    constructor({ dataSource, locale, i18n, skinToneEmoji, customEmoji, customCategorySorting, emojiVersion }?: PickerConstructorOptions);
 
     addEventListener<K extends keyof EmojiPickerEventMap>(type: K, listener: (this: Picker, ev: EmojiPickerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;

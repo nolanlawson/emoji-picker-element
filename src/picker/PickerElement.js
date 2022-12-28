@@ -1,6 +1,6 @@
 import SveltePicker from './components/Picker/Picker.svelte'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
-import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI } from './constants'
+import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY } from './constants'
 import enI18n from './i18n/en.js'
 import Database from './ImportedDatabase'
 
@@ -11,8 +11,12 @@ const PROPS = [
   'dataSource',
   'i18n',
   'locale',
-  'skinToneEmoji'
+  'skinToneEmoji',
+  'emojiVersion'
 ]
+
+// Styles injected ourselves, so we can declare the FONT_FAMILY variable in one place
+const EXTRA_STYLES = `:host{--emoji-font-family:${FONT_FAMILY}}`
 
 export default class PickerElement extends HTMLElement {
   constructor (props) {
@@ -20,7 +24,7 @@ export default class PickerElement extends HTMLElement {
     super()
     this.attachShadow({ mode: 'open' })
     const style = document.createElement('style')
-    style.textContent = process.env.STYLES
+    style.textContent = process.env.STYLES + EXTRA_STYLES
     this.shadowRoot.appendChild(style)
     this._ctx = {
       // Set defaults
@@ -30,6 +34,7 @@ export default class PickerElement extends HTMLElement {
       customCategorySorting: DEFAULT_CATEGORY_SORTING,
       customEmoji: null,
       i18n: enI18n,
+      emojiVersion: null,
       ...props
     }
     // Handle properties set before the element was upgraded
@@ -62,15 +67,16 @@ export default class PickerElement extends HTMLElement {
   }
 
   static get observedAttributes () {
-    return ['locale', 'data-source', 'skin-tone-emoji'] // complex objects aren't supported, also use kebab-case
+    return ['locale', 'data-source', 'skin-tone-emoji', 'emoji-version'] // complex objects aren't supported, also use kebab-case
   }
 
   attributeChangedCallback (attrName, oldValue, newValue) {
-    // convert from kebab-case to camelcase
-    // see https://github.com/sveltejs/svelte/issues/3852#issuecomment-665037015
     this._set(
+      // convert from kebab-case to camelcase
+      // see https://github.com/sveltejs/svelte/issues/3852#issuecomment-665037015
       attrName.replace(/-([a-z])/g, (_, up) => up.toUpperCase()),
-      newValue
+      // convert string attribute to float if necessary
+      attrName === 'emoji-version' ? parseFloat(newValue) : newValue
     )
   }
 

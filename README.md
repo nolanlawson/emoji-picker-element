@@ -13,8 +13,8 @@ A lightweight emoji picker, distributed as a web component.
 
 - Supports [Emoji v14.0](https://emojipedia.org/emoji-14.0/) (depending on OS) and custom emoji
 - Uses IndexedDB, so it consumes [far less memory](https://nolanlawson.com/2020/06/28/introducing-emoji-picker-element-a-memory-efficient-emoji-picker-for-the-web/) than other emoji pickers
-- [Small bundle size](https://bundlephobia.com/result?p=emoji-picker-element) (41kB minified, ~14.4kB gzipped)
-- Renders native emoji only, no spritesheets
+- [Small bundle size](https://bundlephobia.com/result?p=emoji-picker-element) (<15kB min+gz)
+- Renders native emoji by default, with support for custom fonts
 - [Accessible by default](https://nolanlawson.com/2020/07/01/building-an-accessible-emoji-picker/)
 - Framework and bundler not required, just add a `<script>` tag and use it
 
@@ -25,6 +25,7 @@ A lightweight emoji picker, distributed as a web component.
 - [emoji-picker-element](#emoji-picker-element-)
   * [Usage](#usage)
     + [Examples](#examples)
+    + [Emoji support](#emoji-support)
   * [Styling](#styling)
     + [Size](#size)
     + [Dark mode](#dark-mode)
@@ -131,8 +132,59 @@ This will log:
 - [Button with tooltip/popover](https://nolanlawson.github.io/emoji-picker-element/demos/tooltip/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/tooltip/index.html))
 - [Inserting emoji into a text input](https://nolanlawson.github.io/emoji-picker-element/demos/input/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/input/index.html))
 - [In a React app](https://nolanlawson.github.io/emoji-picker-element/demos/react/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/react/index.html))
-- [With Twemoji](https://nolanlawson.github.io/emoji-picker-element/demos/twemoji/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/twemoji/index.html)) (**Note:** has a performance cost. Use with care.)
 - [Fallback for missing flag emoji on Windows](https://nolanlawson.github.io/emoji-picker-element/demos/flags/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/flags/index.html))
+- [With Twemoji Mozilla as custom font](https://nolanlawson.github.io/emoji-picker-element/demos/twemoji-mozilla/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/twemoji-mozilla/index.html))
+
+### Emoji support
+
+[Emoji support varies](https://nolanlawson.com/2022/04/08/the-struggle-of-using-native-emoji-on-the-web/) across browsers and operating systems. By default, `emoji-picker-element` will hide unsupported emoji from the picker.
+
+To work around this, you can use [a custom emoji font](#custom-emoji-font) or [polyfill flag emoji on Windows](#polyfilling-flag-emoji-on-windows).
+
+**Custom emoji font**
+
+To use a custom emoji font, first set the `--emoji-font-family` CSS property:
+
+```css
+emoji-picker {
+  --emoji-font-family: MyCustomFont;
+}
+```
+
+Then, specify the maximum emoji version supported by the font (see [Emojipedia](https://emojipedia.org/) for a list of versions).
+
+In HTML:
+
+```html
+<emoji-picker emoji-version="14.0"></emoji-picker>
+```
+
+Or JavaScript:
+
+```js
+const picker = new Picker({
+  emojiVersion: 14.0
+});
+```
+
+By setting the `emoji-version` attribute (or `emojiVersion` property),  `emoji-picker-element` will not attempt to detect or hide unsupported emoji. If your font does not really support this version, the emoji might not render properly.
+
+Note that support for color fonts varies across browsers. You can use [ChromaCheck](https://github.com/RoelN/ChromaCheck) to test the browser support for your font.
+
+**Polyfilling flag emoji on Windows**
+
+As of this writing, [Windows does not support country flag emoji](https://answers.microsoft.com/en-us/windows/forum/all/where-are-the-flag-emoji-in-windows-10/93daa6e8-880a-48b1-9891-ab5bfbfbce98). This is only a problem in Chromium-based browsers, because Firefox ships with its own emoji font.
+
+To work around this, use [country-flag-emoji-polyfill](https://www.npmjs.com/package/country-flag-emoji-polyfill):
+
+```js
+import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill';
+
+// emoji-picker-element will use "Twemoji Mozilla" and fall back to other fonts for non-flag emoji
+polyfillCountryFlagEmojis('Twemoji Mozilla');
+```
+
+Note that you do not need to do this if you are using your own `--emoji-font-family` and the font you provide supports country flag emoji.
 
 ## Styling
 
@@ -272,6 +324,7 @@ Name | Type | Default | Description |
 `customCategorySorting` | function | - | Function to sort custom category strings (sorted alphabetically by default)  |
 `customEmoji` | CustomEmoji[] | - | Array of custom emoji |
 `dataSource` | string | "https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json" | URL to fetch the emoji data from (`data-source` when used as an attribute) |
+`emojiVersion` | number | undefined | Maximum supported emoji version as a number (e.g. `14.0` or `13.1`). Setting this disables the default emoji support detection.
 `i18n` | I18n | - | i18n object (see below for details) |
 `locale` | string | "en" | Locale string |
 `skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute) |
@@ -888,9 +941,11 @@ Using IndexedDB has a few advantages:
 
 ### Native emoji
 
-To avoid downloading a large sprite sheet that renders a particular emoji set – which may look out-of-place on different platforms, or may have [IP issues](https://blog.emojipedia.org/apples-emoji-crackdown/) – `emoji-picker-element` only renders native emoji. This means it is limited to the emoji actually installed on the user's device.
+To avoid downloading a large sprite sheet or font file – which may look out-of-place on different platforms, or may have [IP issues](https://blog.emojipedia.org/apples-emoji-crackdown/) – `emoji-picker-element` only renders native emoji by default. This means it is limited to the emoji font actually installed on the user's device.
 
 To avoid rendering ugly unsupported or half-supported emoji, `emoji-picker-element` will automatically detect emoji support and only render the supported characters. (So no empty boxes or awkward double emoji.) If no color emoji are supported by the browser/OS, then an error message is displayed (e.g. older browsers, some odd Linux configurations).
+
+That said, `emoji-picker-element` does support [custom emoji fonts](#custom-emoji-font) if you really want.
 
 ### JSON loading
 
