@@ -132,8 +132,8 @@ This will log:
 - [Button with tooltip/popover](https://nolanlawson.github.io/emoji-picker-element/demos/tooltip/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/tooltip/index.html))
 - [Inserting emoji into a text input](https://nolanlawson.github.io/emoji-picker-element/demos/input/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/input/index.html))
 - [In a React app](https://nolanlawson.github.io/emoji-picker-element/demos/react/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/react/index.html))
+- [With Twemoji Mozilla as custom font](https://nolanlawson.github.io/emoji-picker-element/demos/twemoji-mozilla/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/twemoji-mozilla/index.html)) 
 - [Fallback for missing flag emoji on Windows](https://nolanlawson.github.io/emoji-picker-element/demos/flags/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/flags/index.html))
-- [With Twemoji Mozilla as custom font](https://nolanlawson.github.io/emoji-picker-element/demos/twemoji-mozilla/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/twemoji-mozilla/index.html))
 
 ### Emoji support
 
@@ -141,7 +141,7 @@ This will log:
 
 To work around this, you can use [a custom emoji font](#custom-emoji-font) or [polyfill flag emoji on Windows](#polyfilling-flag-emoji-on-windows).
 
-**Custom emoji font**
+#### Custom emoji font
 
 To use a custom emoji font, first set the `--emoji-font-family` CSS property:
 
@@ -171,7 +171,7 @@ By setting the `emoji-version` attribute (or `emojiVersion` property),  `emoji-p
 
 Note that support for color fonts varies across browsers. You can use [ChromaCheck](https://github.com/RoelN/ChromaCheck) to test the browser support for your font.
 
-**Polyfilling flag emoji on Windows**
+#### Polyfilling flag emoji on Windows
 
 As of this writing, [Windows does not support country flag emoji](https://answers.microsoft.com/en-us/windows/forum/all/where-are-the-flag-emoji-in-windows-10/93daa6e8-880a-48b1-9891-ab5bfbfbce98). This is only a problem in Chromium-based browsers, because Firefox ships with its own emoji font.
 
