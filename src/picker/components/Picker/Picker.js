@@ -104,10 +104,6 @@ onMount(() => {
       if (!level) {
         message = i18n.emojiUnsupportedMessage
       }
-      /* istanbul ignore else */
-      if (process.env.NODE_ENV !== 'production') {
-        console.log('emoji support level', level)
-      }
     })
   }
 })

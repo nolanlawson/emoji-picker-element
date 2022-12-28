@@ -33,6 +33,12 @@
               "description": "The emoji to use for the skin tone picker",
               "type": "string",
               "default": "\"🖐\""
+            },
+            {
+              "name": "emoji-version",
+              "description": "Maximum supported emoji version as a number (e.g. `14.0` or `13.1`). Setting this disables the default emoji support detection.",
+              "type": "string",
+              "default": null
             }
           ],
           "members": [
@@ -67,6 +73,11 @@
             {
               "name": "customCategorySorting",
               "description": "Function to sort custom category strings (sorted alphabetically by default)",
+              "kind": "field"
+            },
+            {
+              "name": "emojiVersion",
+              "description": "Maximum supported emoji version as a number (e.g. `14.0` or `13.1`). Setting this disables the default emoji support detection.",
               "kind": "field"
             }
           ],
