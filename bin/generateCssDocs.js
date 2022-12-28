@@ -4,8 +4,15 @@ import { markdownTable as table } from 'markdown-table'
 import { readFile, writeFile } from './fs.js'
 import { replaceInReadme } from './replaceInReadme.js'
 import postcss from 'postcss'
+import { FONT_FAMILY } from '../src/picker/constants.js'
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname)
+
+const MANUAL_VARS = [{
+  name: '--emoji-font-family',
+  value: FONT_FAMILY,
+  comment: 'Font family for a custom emoji font (as opposed to native emoji)'
+}]
 
 const START_MARKER = '<!-- CSS variable options start -->'
 const END_MARKER = '<!-- CSS variable options end -->'
@@ -33,7 +40,7 @@ async function generateCssVariablesData (css) {
   const ast = postcss.parse(css)
   const hosts = ast.nodes.filter(({ selector }) => ([':host', ':host,\n:host(.light)'].includes(selector)))
   const darkHosts = ast.nodes.filter(({ selector }) => selector === ':host(.dark)')
-  const vars = hosts.map(extractCSSVariables).flat()
+  const vars = hosts.map(extractCSSVariables).flat().concat(MANUAL_VARS)
   const darkVars = darkHosts.map(extractCSSVariables).flat()
 
   const sortedVars = vars.sort((a, b) => a.name < b.name ? -1 : 1)

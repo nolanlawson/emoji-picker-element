@@ -127,6 +127,11 @@
               "default": "\"1rem\""
             },
             {
+              "name": "--emoji-font-family",
+              "description": "Font family for a custom emoji font (as opposed to native emoji) (default: `\"Twemoji Mozilla\",\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\",\"EmojiOne Color\",\"Android Emoji\",sans-serif`)",
+              "default": "\"\\\"Twemoji Mozilla\\\",\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\",\\\"Segoe UI Symbol\\\",\\\"Noto Color Emoji\\\",\\\"EmojiOne Color\\\",\\\"Android Emoji\\\",sans-serif\""
+            },
+            {
               "name": "--emoji-padding",
               "description": "Vertical and horizontal padding on emoji (default: `0.5rem`)",
               "default": "\"0.5rem\""
