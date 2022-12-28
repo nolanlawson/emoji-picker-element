@@ -322,15 +322,15 @@ document.body.appendChild(picker);
 
 The `new Picker(options)` constructor supports several options:
 
-Name | Type | Default | Description |
------- | ------ | ------ | ------ |
-`customCategorySorting` | function | - | Function to sort custom category strings (sorted alphabetically by default)  |
-`customEmoji` | CustomEmoji[] | - | Array of custom emoji |
-`dataSource` | string | "https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json" | URL to fetch the emoji data from (`data-source` when used as an attribute) |
-`emojiVersion` | number | undefined | Maximum supported emoji version as a number (e.g. `14.0` or `13.1`). Setting this disables the default emoji support detection.
-`i18n` | I18n | - | i18n object (see below for details) |
-`locale` | string | "en" | Locale string |
-`skinToneEmoji` | string | "🖐️" | The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute) |
+| Name                    | Type          | Default                                                                            | Description                                                                                                                     |
+|-------------------------|---------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| `customCategorySorting` | function      | -                                                                                  | Function to sort custom category strings (sorted alphabetically by default)                                                     |
+| `customEmoji`           | CustomEmoji[] | -                                                                                  | Array of custom emoji                                                                                                           |
+| `dataSource`            | string        | "https://cdn.jsdelivr.net/npm/emoji-picker-element-data@^1/en/emojibase/data.json" | URL to fetch the emoji data from (`data-source` when used as an attribute)                                                      |
+| `emojiVersion`          | number        | -                                                                                  | Maximum supported emoji version as a number (e.g. `14.0` or `13.1`). Setting this disables the default emoji support detection. |
+| `i18n`                  | I18n          | -                                                                                  | i18n object (see below for details)                                                                                             |
+| `locale`                | string        | "en"                                                                               | Locale string                                                                                                                   |
+| `skinToneEmoji`         | string        | "🖐️"                                                                              | The emoji to use for the skin tone picker (`skin-tone-emoji` when used as an attribute)                                         |
 
 
 
