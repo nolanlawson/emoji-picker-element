@@ -134,7 +134,7 @@ This will log:
 - [Button with tooltip/popover](https://nolanlawson.github.io/emoji-picker-element/demos/tooltip/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/tooltip/index.html))
 - [Inserting emoji into a text input](https://nolanlawson.github.io/emoji-picker-element/demos/input/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/input/index.html))
 - [In a React app](https://nolanlawson.github.io/emoji-picker-element/demos/react/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/react/index.html))
-- [With Twemoji Mozilla as custom font](https://nolanlawson.github.io/emoji-picker-element/demos/twemoji-mozilla/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/twemoji-mozilla/index.html)) 
+- [Custom emoji font](https://nolanlawson.github.io/emoji-picker-element/demos/twemoji-mozilla/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/twemoji-mozilla/index.html)) 
 - [Fallback for missing flag emoji on Windows](https://nolanlawson.github.io/emoji-picker-element/demos/flags/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/flags/index.html))
 
 ### Emoji support
@@ -169,9 +169,9 @@ const picker = new Picker({
 });
 ```
 
-If the `emoji-version` attribute or `emojiVersion` property is set,  `emoji-picker-element` will not attempt to detect unsupported emoji or hide them. If your font does not really support this version, then the emoji might not render properly.
+If the `emoji-version`/`emojiVersion` option is set, then `emoji-picker-element` will not attempt to detect unsupported emoji or hide them.
 
-Note that support for color fonts varies across browsers. You can use [ChromaCheck](https://github.com/RoelN/ChromaCheck) to test support for your font.
+Also note that support for color fonts [varies across browsers and OSes](https://caniuse.com/colr), and some browsers may have <a href="https://github.com/nolanlawson/emoji-picker-element/pull/308#issuecomment-1367491149">bugs</a> or not render the font at all. Be careful to test your supported browsers when using this approach.
 
 #### Polyfilling flag emoji on Windows
 

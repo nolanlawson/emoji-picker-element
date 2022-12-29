@@ -5,7 +5,7 @@
   <style>
       @font-face {
           font-family: "MozillaTwemojiColr";
-          src: url("https://unpkg.com/twemoji-colr-font@14.0.2/twemoji.woff2") format("woff2");
+          src: url("https://cdn.jsdelivr.net/npm/twemoji-colr-font@^14/twemoji.woff2") format("woff2");
       }
 
       emoji-picker {
@@ -16,8 +16,10 @@
 <body>
 <h1>emoji-picker-element: using Twemoji Mozilla COLR font</h1>
 <p>
-  This demo shows how to use emoji-picker-element with the <a href="https://github.com/mozilla/twemoji-colr">Twemoji Mozilla COLR font</a>.
-  Note that this carries a performance cost due to downloading the additional font file. Use this approach with care.
+  This demo shows how to use emoji-picker-element with the <a href="https://github.com/mozilla/twemoji-colr">Twemoji Mozilla COLR font</a> as a custom emoji font.
+  Note that this carries a performance cost due to downloading the additional font file. Also note that alignment may be off in Safari due to <a href="https://bugs.webkit.org/show_bug.cgi?id=249943">a WebKit bug</a>, and
+  that <a href="https://caniuse.com/colr">not all browsers support COLR fonts</a>.
+  Use this approach with care.
 </p>
 <emoji-picker emoji-version="14.0"></emoji-picker>
 <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
