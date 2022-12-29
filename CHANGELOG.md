@@ -1,3 +1,12 @@
+# [1.15.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.14.1...v1.15.0) (2022-12-29)
+
+
+### Features
+
+* add support for custom emoji fonts ([#308](https://github.com/nolanlawson/emoji-picker-element/issues/308)) ([da524c2](https://github.com/nolanlawson/emoji-picker-element/commit/da524c240de84d790fa110306c211b2b2a9671a5)), closes [#82](https://github.com/nolanlawson/emoji-picker-element/issues/82)
+
+
+
 ## [1.14.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.14.0...v1.14.1) (2022-12-19)
 
 
