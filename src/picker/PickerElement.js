@@ -101,7 +101,6 @@ export default class PickerElement extends HTMLElement {
   // Update the Database in one microtask if the locale/dataSource change. We do one microtask
   // so we don't create two Databases if e.g. both the locale and the dataSource change
   _dbFlush () {
-    console.log('Queueing microtask to create the database')
     Promise.resolve().then(() => (
       this._dbCreate()
     ))
