@@ -1,16 +1,15 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
-
+import { onMount, tick } from 'svelte'
 import { groups as defaultGroups, customGroup } from '../../groups'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { hasZwj } from '../../utils/hasZwj'
-import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiSupport'
+import { detectEmojiSupportLevel, supportedZwjEmojis } from '../../utils/emojiSupport'
 import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
   DEFAULT_NUM_COLUMNS,
-  FONT_FAMILY,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
@@ -19,7 +18,6 @@ import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 import * as widthCalculator from '../../utils/widthCalculator'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
-import { tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.js'
@@ -30,6 +28,7 @@ export let i18n
 export let database
 export let customEmoji
 export let customCategorySorting
+export let emojiVersion
 
 // private
 let initialLoad = true
@@ -97,11 +96,15 @@ const isSkinToneOption = element => /^skintone-/.test(element.id)
 // Determine the emoji support level (in requestIdleCallback)
 //
 
-emojiSupportLevelPromise.then(level => {
-  // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
-  /* istanbul ignore next */
-  if (!level) {
-    message = i18n.emojiUnsupportedMessage
+onMount(() => {
+  if (!emojiVersion) {
+    detectEmojiSupportLevel().then(level => {
+      // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
+      /* istanbul ignore next */
+      if (!level) {
+        message = i18n.emojiUnsupportedMessage
+      }
+    })
   }
 })
 
@@ -142,7 +145,6 @@ $: {
 
 /* eslint-disable no-unused-vars */
 $: pickerStyle = `
-  --font-family: ${FONT_FAMILY};
   --num-groups: ${groups.length}; 
   --indicator-opacity: ${searchMode ? 0 : 1}; 
   --num-skintones: ${NUM_SKIN_TONES};`
@@ -298,11 +300,11 @@ $: {
   const zwjEmojisToCheck = currentEmojis
     .filter(emoji => emoji.unicode) // filter custom emoji
     .filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
-  if (zwjEmojisToCheck.length) {
+  if (!emojiVersion && zwjEmojisToCheck.length) {
     // render now, check their length later
     requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
   } else {
-    currentEmojis = currentEmojis.filter(isZwjSupported)
+    currentEmojis = emojiVersion ? currentEmojis : currentEmojis.filter(isZwjSupported)
     // Reset scroll top to 0 when emojis change
     requestAnimationFrame(() => resetScrollTopIfPossible(tabpanelElement))
   }
@@ -321,13 +323,13 @@ function isZwjSupported (emoji) {
 }
 
 async function filterEmojisByVersion (emojis) {
-  const emojiSupportLevel = await emojiSupportLevelPromise
+  const emojiSupportLevel = emojiVersion || await detectEmojiSupportLevel()
   // !version corresponds to custom emoji
   return emojis.filter(({ version }) => !version || version <= emojiSupportLevel)
 }
 
 async function summarizeEmojis (emojis) {
-  return summarizeEmojisForUI(emojis, await emojiSupportLevelPromise)
+  return summarizeEmojisForUI(emojis, emojiVersion || await detectEmojiSupportLevel())
 }
 
 async function getEmojisByGroup (group) {

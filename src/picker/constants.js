@@ -24,7 +24,7 @@ export const MOST_COMMONLY_USED_EMOJI = [
 ]
 
 // It's important to list Twemoji Mozilla before everything else, because Mozilla bundles their
-// own font on some platforms (notably Windows and Linux as of this writing). Typically Mozilla
+// own font on some platforms (notably Windows and Linux as of this writing). Typically, Mozilla
 // updates faster than the underlying OS, and we don't want to render older emoji in one font and
 // newer emoji in another font:
 // https://github.com/nolanlawson/emoji-picker-element/pull/268#issuecomment-1073347283
