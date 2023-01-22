@@ -69,9 +69,6 @@
     "url": "https://github.com/nolanlawson/emoji-picker-element/issues"
   },
   "homepage": "https://github.com/nolanlawson/emoji-picker-element#readme",
-  "//": {
-    "tachometer": "cannot upgrade to 0.6.0 due to https://github.com/google/tachometer/issues/244"
-  },
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
     "@peculiar/webcrypto": "^1.2.3",
@@ -126,7 +123,7 @@
     "svelte-jester": "^2.3.2",
     "svelte-preprocess": "^4.10.3",
     "svgo": "^2.8.0",
-    "tachometer": "0.5.10",
+    "tachometer": "^0.7.0",
     "terser": "^5.12.1"
   },
   "standard": {

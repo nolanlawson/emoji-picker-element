@@ -6,7 +6,7 @@
 <body>
 <script type="module" src="./benchmark.js"></script>
   <script type="module">
-    import Database from 'emoji-picker-element/database'
+    import Database from '../../database.js'
 
     (async () => {
       const dataSource = '/data.json'
@@ -17,7 +17,7 @@
       await db.close()
 
       // lazy-load the picker so that its logic to determine emoji support runs during the perf measure
-      const { default: Picker } = await import('emoji-picker-element/picker.js')
+      const { default: Picker } = await import('../../picker.js')
 
       document.body.appendChild(new Picker({ dataSource }))
     })()
