@@ -48,22 +48,31 @@ export default class PickerElement extends HTMLElement {
   }
 
   connectedCallback () {
-    this._cmp = new SveltePicker({
-      target: this.shadowRoot,
-      props: this._ctx
-    })
+    // The _cmp may be defined if the component was immediately disconnected and then reconnected. In that case,
+    // do nothing (preserve the state)
+    if (!this._cmp) {
+      this._cmp = new SveltePicker({
+        target: this.shadowRoot,
+        props: this._ctx
+      })
+    }
   }
 
   disconnectedCallback () {
-    this._cmp.$destroy()
-    this._cmp = undefined
+    // Check in a microtask if the element is still connected. If so, treat this as a "move" rather than a disconnect
+    // Inspired by Vue: https://vuejs.org/guide/extras/web-components.html#building-custom-elements-with-vue
+    Promise.resolve().then(() => {
+      // this._cmp may be defined if connect-disconnect-connect-disconnect occurs synchronously
+      if (!this.isConnected && this._cmp) {
+        this._cmp.$destroy()
+        this._cmp = undefined
 
-    const { database } = this._ctx
-    if (database) {
-      database.close()
-        // only happens if the database failed to load in the first place, so we don't care)
-        .catch(err => console.error(err))
-    }
+        const { database } = this._ctx
+        database.close()
+          // only happens if the database failed to load in the first place, so we don't care)
+          .catch(err => console.error(err))
+      }
+    })
   }
 
   static get observedAttributes () {
