@@ -6,6 +6,9 @@ import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js'
 import { deleteDatabase } from '../src/database/databaseLifecycle'
 import styles from '../node_modules/.cache/emoji-picker-element/styles.js'
 
+// See https://github.com/jsdom/jsdom/issues/3455#issuecomment-1333567714
+global.crypto.subtle = new Crypto().subtle
+
 if (!global.performance) {
   global.performance = {}
 }
@@ -21,7 +24,6 @@ jest.setTimeout(60000)
 
 global.fetch = require('node-fetch')
 global.Response = fetch.Response
-global.crypto = new Crypto()
 global.ResizeObserver = ResizeObserver
 
 process.env.NODE_ENV = 'test'

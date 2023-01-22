@@ -45,10 +45,9 @@ jobs:
       # first-load
       - name: Benchmark first-load
         run: |
-          cd test/benchmark
-          ../../node_modules/.bin/tach \
-            --config ./first-load.tachometer.json \
-            --json-file ./first-load.results.json
+          ./node_modules/.bin/tach \
+            --config ./test/benchmark/first-load.tachometer.json \
+            --json-file ./test/benchmark/first-load.results.json
 
       - name: Report first-load
         uses: andrewiggins/tachometer-reporter-action@v2
@@ -61,10 +60,9 @@ jobs:
       # second-load
       - name: Benchmark second-load
         run: |
-          cd test/benchmark
-          ../../node_modules/.bin/tach \
-            --config ./second-load.tachometer.json \
-            --json-file ./second-load.results.json
+          ./node_modules/.bin/tach \
+            --config ./test/benchmark/second-load.tachometer.json \
+            --json-file ./test/benchmark/second-load.results.json
 
       - name: Report second-load
         uses: andrewiggins/tachometer-reporter-action@v2
@@ -77,10 +75,9 @@ jobs:
       # database-interactions
       - name: Benchmark database-interactions
         run: |
-          cd test/benchmark
-          ../../node_modules/.bin/tach \
-            --config ./database-interactions.tachometer.json \
-            --json-file ./database-interactions.results.json
+          ./node_modules/.bin/tach \
+            --config ./test/benchmark/database-interactions.tachometer.json \
+            --json-file ./test/benchmark/database-interactions.results.json
 
       - name: Report database-interactions
         uses: andrewiggins/tachometer-reporter-action@v2
