@@ -69,7 +69,7 @@ export default class PickerElement extends HTMLElement {
 
         const { database } = this._ctx
         database.close()
-          // only happens if the database failed to load in the first place, so we don't care)
+          // only happens if the database failed to load in the first place, so we don't care
           .catch(err => console.error(err))
       }
     })
