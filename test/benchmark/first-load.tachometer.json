@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/Polymer/tachometer/master/config.schema.json",
   "sampleSize": 50,
   "timeout": 5,
-  "horizons": ["10%"],
+  "autoSampleConditions": ["10%"],
   "benchmarks": [
     {
       "url": "./first-load.html",

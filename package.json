@@ -25,7 +25,11 @@
     "build:i18n-docs": "node ./bin/generateI18nDocs",
     "build:toc": "node ./bin/generateTOC",
     "build:i18n": "node ./bin/buildI18n",
-    "benchmark:runtime": "cross-env PERF=1 run-s build:rollup && ./bin/run-benchmark.sh",
+    "benchmark:runtime": "cross-env PERF=1 run-s build:rollup benchmark:runtime:setup benchmark:runtime:firstload benchmark:runtime:secondload benchmark:runtime:database",
+    "benchmark:runtime:setup": "./bin/setup-benchmark.sh",
+    "benchmark:runtime:firstload": "tach --config ./test/benchmark/first-load.tachometer.json",
+    "benchmark:runtime:secondload": "tach --config ./test/benchmark/second-load.tachometer.json",
+    "benchmark:runtime:database": "tach --config ./test/benchmark/database-interactions.tachometer.json",
     "benchmark:bundlesize": "run-s build:rollup benchmark:bundle benchmark:run-bundlesize",
     "benchmark:bundle": "rollup -c ./test/bundlesize/rollup.config.js",
     "benchmark:memory": "run-s build:rollup benchmark:bundle && run-p --race benchmark:memory:server benchmark:memory:test",
@@ -69,9 +73,6 @@
     "url": "https://github.com/nolanlawson/emoji-picker-element/issues"
   },
   "homepage": "https://github.com/nolanlawson/emoji-picker-element#readme",
-  "//": {
-    "tachometer": "cannot upgrade to 0.6.0 due to https://github.com/google/tachometer/issues/244"
-  },
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
     "@peculiar/webcrypto": "^1.4.1",
@@ -127,7 +128,7 @@
     "svelte-jester": "^2.3.2",
     "svelte-preprocess": "^4.10.3",
     "svgo": "^2.8.0",
-    "tachometer": "0.5.10",
+    "tachometer": "^0.7.0",
     "terser": "^5.12.1"
   },
   "standard": {
