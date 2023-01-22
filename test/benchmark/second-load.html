@@ -6,10 +6,10 @@
 <body>
 <script type="module" src="./benchmark.js"></script>
   <script type="module">
-    import Database from '../../database.js'
+    import Database from './database.js'
 
     (async () => {
-      const dataSource = '/data.json'
+      const dataSource = './data.json'
 
       // populate IndexedDB so the Picker is just reading from the local store
       const db = new Database({ dataSource })

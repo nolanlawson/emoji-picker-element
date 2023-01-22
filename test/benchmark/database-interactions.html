@@ -6,10 +6,10 @@
 <body>
   <script type="module" src="./benchmark.js"></script>
   <script type="module">
-    import Database from '../../database.js'
+    import Database from './database.js'
 
     performance.mark('initialLoad')
-    const dataSource = '/data.json'
+    const dataSource = './data.json'
     const database = new Database({ dataSource })
     await database.ready()
 
