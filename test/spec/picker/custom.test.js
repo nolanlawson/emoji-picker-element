@@ -47,8 +47,9 @@ describe('Custom emojis tests', () => {
     expect(container.querySelector('.category').textContent).toEqual('Custom')
     expect(container.querySelector('.category')).toHaveClass('gone')
 
+    await tick(40)
     document.body.removeChild(picker)
-    await tick(20)
+    await tick(40)
   })
 
   test('Setting custom emoji, selecting flags, unsetting custom emoji', async () => {
@@ -83,8 +84,9 @@ describe('Custom emojis tests', () => {
 
     expect(getByRole(container, 'tab', { name: 'Flags' }).getAttribute('aria-selected')).toEqual('true')
 
+    await tick(40)
     document.body.removeChild(picker)
-    await tick(20)
+    await tick(40)
   })
 
   test('Setting custom emoji, unsetting custom emoji', async () => {
@@ -115,7 +117,8 @@ describe('Custom emojis tests', () => {
 
     expect(getByRole(container, 'tab', { name: 'Smileys and emoticons' }).getAttribute('aria-selected')).toEqual('true')
 
+    await tick(40)
     document.body.removeChild(picker)
-    await tick(20)
+    await tick(40)
   })
 })
