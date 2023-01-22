@@ -1,3 +1,12 @@
+## [1.15.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.15.0...v1.15.1) (2023-01-22)
+
+
+### Bug Fixes
+
+* preserve state if component disconnects then immediately reconnects ([#313](https://github.com/nolanlawson/emoji-picker-element/issues/313)) ([5a8fc19](https://github.com/nolanlawson/emoji-picker-element/commit/5a8fc19b961ffbd02aa58a9b8cb41e0034f5aeda)), closes [#312](https://github.com/nolanlawson/emoji-picker-element/issues/312)
+
+
+
 # [1.15.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.14.1...v1.15.0) (2022-12-29)
 
 
