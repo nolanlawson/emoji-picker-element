@@ -2,14 +2,13 @@ import playwright from 'playwright'
 import { promisify } from 'util'
 import mkdirp from 'mkdirp'
 import rimrafCB from 'rimraf'
-import getFolderSizeCB from 'get-folder-size'
+import getFolderSize from 'get-folder-size'
 import path from 'path'
 import prettyBytes from 'pretty-bytes'
-import table from 'markdown-table'
+import { markdownTable as table } from 'markdown-table'
 import process from 'process'
 
 const rimraf = promisify(rimrafCB)
-const getFolderSize = promisify(getFolderSizeCB)
 
 const port = process.env.PORT || 3000
 
@@ -42,8 +41,7 @@ async function main () {
     await context.close()
 
     const idbFolder = getIdbFolder(browserType, userDataDir)
-    const bytes = await getFolderSize(idbFolder)
-
+    const { size: bytes } = await getFolderSize(idbFolder)
     results.push({
       browserType,
       bytes

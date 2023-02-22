@@ -17,7 +17,7 @@ describe('properties', () => {
 
     document.body.appendChild(picker)
 
-    await tick(20)
+    await tick(40)
 
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
@@ -28,7 +28,7 @@ describe('properties', () => {
     expect(picker.getAttribute('data-source')).toEqual(null)
 
     document.body.removeChild(picker)
-    await tick(20)
+    await tick(40)
   })
 
   test('setting initial dataSource', async () => {
@@ -37,7 +37,7 @@ describe('properties', () => {
 
     document.body.appendChild(picker)
 
-    await tick(20)
+    await tick(40)
 
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
@@ -48,7 +48,7 @@ describe('properties', () => {
     expect(picker.getAttribute('data-source')).toEqual(null)
 
     document.body.removeChild(picker)
-    await tick(20)
+    await tick(40)
   })
 
   test('setting initial locale', async () => {
@@ -57,7 +57,7 @@ describe('properties', () => {
 
     document.body.appendChild(picker)
 
-    await tick(20)
+    await tick(40)
 
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
@@ -68,6 +68,6 @@ describe('properties', () => {
     expect(picker.getAttribute('data-source')).toEqual(null)
 
     document.body.removeChild(picker)
-    await tick(20)
+    await tick(40)
   })
 })

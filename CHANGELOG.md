@@ -1,3 +1,144 @@
+## [1.15.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.15.0...v1.15.1) (2023-01-22)
+
+
+### Bug Fixes
+
+* preserve state if component disconnects then immediately reconnects ([#313](https://github.com/nolanlawson/emoji-picker-element/issues/313)) ([5a8fc19](https://github.com/nolanlawson/emoji-picker-element/commit/5a8fc19b961ffbd02aa58a9b8cb41e0034f5aeda)), closes [#312](https://github.com/nolanlawson/emoji-picker-element/issues/312)
+
+
+
+# [1.15.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.14.1...v1.15.0) (2022-12-29)
+
+
+### Features
+
+* add support for custom emoji fonts ([#308](https://github.com/nolanlawson/emoji-picker-element/issues/308)) ([da524c2](https://github.com/nolanlawson/emoji-picker-element/commit/da524c240de84d790fa110306c211b2b2a9671a5)), closes [#82](https://github.com/nolanlawson/emoji-picker-element/issues/82)
+
+
+
+## [1.14.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.14.0...v1.14.1) (2022-12-19)
+
+
+### Bug Fixes
+
+* remove unused code ([#301](https://github.com/nolanlawson/emoji-picker-element/issues/301)) ([5fafdbd](https://github.com/nolanlawson/emoji-picker-element/commit/5fafdbd8f7340801091c1760cd62608b55db8639))
+* simpler solution to avoid svelte invalidations ([#303](https://github.com/nolanlawson/emoji-picker-element/issues/303)) ([4af86a8](https://github.com/nolanlawson/emoji-picker-element/commit/4af86a8b54afe46d85c7b2ab68dd3eb9c4b02735))
+
+
+
+# [1.14.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.13.1...v1.14.0) (2022-11-25)
+
+
+### Features
+
+* add ru_RU locale ([#296](https://github.com/nolanlawson/emoji-picker-element/issues/296)) ([70946d9](https://github.com/nolanlawson/emoji-picker-element/commit/70946d95a22e017e6e9b3ba7ccd45ff3d924fa45))
+
+
+
+## [1.13.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.13.0...v1.13.1) (2022-10-23)
+
+
+### Bug Fixes
+
+* used dark colors for scrollbar in dark mode ([#294](https://github.com/nolanlawson/emoji-picker-element/issues/294)) ([af959ae](https://github.com/nolanlawson/emoji-picker-element/commit/af959ae7fc1801f91b8291ea82009d9e7443cf44))
+
+
+
+# [1.13.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.12.1...v1.13.0) (2022-10-17)
+
+
+### Features
+
+* add italian translation file ([#291](https://github.com/nolanlawson/emoji-picker-element/issues/291)) ([0607ac3](https://github.com/nolanlawson/emoji-picker-element/commit/0607ac39b5f8573704179ad367f038091a6b83a5))
+
+
+
+## [1.12.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.12.0...v1.12.1) (2022-06-24)
+
+
+### Bug Fixes
+
+* rename zh-CN to match other intl files ([#288](https://github.com/nolanlawson/emoji-picker-element/issues/288)) ([27ef3fd](https://github.com/nolanlawson/emoji-picker-element/commit/27ef3fd4fdab112375a20d57e7da640e92b9fc7e))
+
+
+
+# [1.12.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.3...v1.12.0) (2022-06-24)
+
+
+### Features
+
+* create zh-CN.js ([#284](https://github.com/nolanlawson/emoji-picker-element/issues/284)) ([01986b4](https://github.com/nolanlawson/emoji-picker-element/commit/01986b4740d22def4538016837ac0e6c9b8868bb))
+
+
+### Performance Improvements
+
+* trim unused svelte options ([#280](https://github.com/nolanlawson/emoji-picker-element/issues/280)) ([149cfa9](https://github.com/nolanlawson/emoji-picker-element/commit/149cfa94598fd6d21398bbfe9e3ef27d7cf42a38))
+
+
+
+## [1.11.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.2...v1.11.3) (2022-04-16)
+
+
+### Bug Fixes
+
+* fix category with unsetting customEmoji ([#277](https://github.com/nolanlawson/emoji-picker-element/issues/277)) ([3601f79](https://github.com/nolanlawson/emoji-picker-element/commit/3601f79eafefccc481685d512b18f003d83f1814)), closes [#276](https://github.com/nolanlawson/emoji-picker-element/issues/276)
+
+
+
+## [1.11.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.1...v1.11.2) (2022-04-08)
+
+
+### Bug Fixes
+
+* remove aria-owns ([#275](https://github.com/nolanlawson/emoji-picker-element/issues/275)) ([306ca06](https://github.com/nolanlawson/emoji-picker-element/commit/306ca067aa29e896bd16d06fb80578c426786642))
+
+
+
+## [1.11.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.11.0...v1.11.1) (2022-03-20)
+
+
+### Bug Fixes
+
+* newer emoji and flags on Firefox on Windows ([#271](https://github.com/nolanlawson/emoji-picker-element/issues/271)) ([c45e3e9](https://github.com/nolanlawson/emoji-picker-element/commit/c45e3e9b4368d36716eaf325217b81c2c29905c5))
+
+
+
+# [1.11.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.10.1...v1.11.0) (2022-03-12)
+
+
+### Features
+
+* added Dutch translation file ([#267](https://github.com/nolanlawson/emoji-picker-element/issues/267)) ([d7727a3](https://github.com/nolanlawson/emoji-picker-element/commit/d7727a3d2e5b8f3b88cc9327c7467c1b1d87a148))
+
+
+
+## [1.10.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.10.0...v1.10.1) (2022-02-08)
+
+
+### Bug Fixes
+
+* customElements.define called twice ([#246](https://github.com/nolanlawson/emoji-picker-element/issues/246)) ([7588bd1](https://github.com/nolanlawson/emoji-picker-element/commit/7588bd1652af885cef470a80607fca58b33163da))
+
+
+
+# [1.10.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.9.0...v1.10.0) (2021-12-21)
+
+
+### Features
+
+* update to emoji 14.0 ([#237](https://github.com/nolanlawson/emoji-picker-element/issues/237)) ([7b0f17a](https://github.com/nolanlawson/emoji-picker-element/commit/7b0f17aaf2f5652b04f02531ddd7184d03d5fe70))
+
+
+
+# [1.9.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.8.2...v1.9.0) (2021-12-19)
+
+
+### Features
+
+* added ms_MY.js (Malaysian text) ([#234](https://github.com/nolanlawson/emoji-picker-element/issues/234)) ([f30160d](https://github.com/nolanlawson/emoji-picker-element/commit/f30160db6689fd31f924f78d430eb7ef40dd3f00))
+
+
+
 ## [1.8.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.8.1...v1.8.2) (2021-09-26)
 
 

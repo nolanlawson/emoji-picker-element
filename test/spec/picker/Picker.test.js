@@ -43,7 +43,7 @@ describe('Picker tests', () => {
     await tick(20)
     await new Database({ dataSource: ALL_EMOJI, locale: 'en' }).delete()
     await tick(20)
-    basicAfterEach()
+    await basicAfterEach()
   })
 
   const numInGroup1 = truncatedEmoji.filter(_ => _.group === 0).length
@@ -220,8 +220,7 @@ describe('Picker tests', () => {
         shortcodes: ['grinning', 'grinning_face'],
         tags: ['face', 'grin'],
         unicode: '😀',
-        version: 1,
-        emoticon: ':D'
+        version: 1
       },
       skinTone: 0,
       unicode: '😀'
@@ -268,8 +267,7 @@ describe('Picker tests', () => {
         shortcodes: ['grinning', 'grinning_face'],
         tags: ['face', 'grin'],
         unicode: '😀',
-        version: 1,
-        emoticon: ':D'
+        version: 1
       },
       skinTone: 4,
       unicode: '😀'

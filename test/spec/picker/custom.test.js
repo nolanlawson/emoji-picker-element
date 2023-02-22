@@ -47,7 +47,78 @@ describe('Custom emojis tests', () => {
     expect(container.querySelector('.category').textContent).toEqual('Custom')
     expect(container.querySelector('.category')).toHaveClass('gone')
 
+    await tick(40)
     document.body.removeChild(picker)
-    await tick(20)
+    await tick(40)
+  })
+
+  test('Setting custom emoji, selecting flags, unsetting custom emoji', async () => {
+    const picker = new Picker({
+      locale: 'en',
+      dataSource: ALL_EMOJI
+    })
+    picker.customEmoji = [
+      {
+        name: 'themonkey',
+        shortcodes: ['themonkey'],
+        url: 'themonkey.png'
+      }
+    ]
+    document.body.appendChild(picker)
+
+    const container = picker.shadowRoot.querySelector('.picker')
+
+    await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length + 1))
+
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: 'themonkey' })).toBeVisible())
+
+    getByRole(container, 'tab', { name: 'Flags' }).click()
+
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /🏁/ })).toBeVisible())
+
+    picker.customEmoji = undefined
+
+    await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length))
+
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /🏁/ })).toBeVisible())
+
+    expect(getByRole(container, 'tab', { name: 'Flags' }).getAttribute('aria-selected')).toEqual('true')
+
+    await tick(40)
+    document.body.removeChild(picker)
+    await tick(40)
+  })
+
+  test('Setting custom emoji, unsetting custom emoji', async () => {
+    const picker = new Picker({
+      locale: 'en',
+      dataSource: ALL_EMOJI
+    })
+    picker.customEmoji = [
+      {
+        name: 'themonkey',
+        shortcodes: ['themonkey'],
+        url: 'themonkey.png'
+      }
+    ]
+    document.body.appendChild(picker)
+
+    const container = picker.shadowRoot.querySelector('.picker')
+
+    await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length + 1))
+
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: 'themonkey' })).toBeVisible())
+
+    picker.customEmoji = undefined
+
+    await waitFor(() => expect(getAllByRole(container, 'tab')).toHaveLength(groups.length))
+
+    await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
+
+    expect(getByRole(container, 'tab', { name: 'Smileys and emoticons' }).getAttribute('aria-selected')).toEqual('true')
+
+    await tick(40)
+    document.body.removeChild(picker)
+    await tick(40)
   })
 })

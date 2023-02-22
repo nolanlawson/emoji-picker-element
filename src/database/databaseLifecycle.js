@@ -1,7 +1,7 @@
 import { initialMigration } from './migrations'
 import { DB_VERSION_INITIAL, DB_VERSION_CURRENT } from './constants'
 
-const openReqs = {}
+export const openIndexedDBRequests = {}
 const databaseCache = {}
 const onCloseListeners = {}
 
@@ -18,7 +18,7 @@ async function createDatabase (dbName) {
   performance.mark('createDatabase')
   const db = await new Promise((resolve, reject) => {
     const req = indexedDB.open(dbName, DB_VERSION_CURRENT)
-    openReqs[dbName] = req
+    openIndexedDBRequests[dbName] = req
     req.onupgradeneeded = e => {
       // Technically there is only one version, so we don't need this `if` check
       // But if an old version of the JS is in another browser tab
@@ -69,7 +69,7 @@ export function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
 
 export function closeDatabase (dbName) {
   // close any open requests
-  const req = openReqs[dbName]
+  const req = openIndexedDBRequests[dbName]
   const db = req && req.result
   if (db) {
     db.close()
@@ -81,7 +81,7 @@ export function closeDatabase (dbName) {
       }
     }
   }
-  delete openReqs[dbName]
+  delete openIndexedDBRequests[dbName]
   delete databaseCache[dbName]
   delete onCloseListeners[dbName]
 }

@@ -13,7 +13,7 @@ describe('upgrade tests', () => {
     mockFrenchDataSource()
   })
   afterEach(async () => {
-    basicAfterEach()
+    await basicAfterEach()
   })
 
   test('setting props and attributes before upgrade', async () => {

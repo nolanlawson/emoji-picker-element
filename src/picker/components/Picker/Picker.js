@@ -1,16 +1,15 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
-
+import { onMount, tick } from 'svelte'
 import { groups as defaultGroups, customGroup } from '../../groups'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { hasZwj } from '../../utils/hasZwj'
-import { emojiSupportLevelPromise, supportedZwjEmojis } from '../../utils/emojiSupport'
+import { detectEmojiSupportLevel, supportedZwjEmojis } from '../../utils/emojiSupport'
 import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
   DEFAULT_NUM_COLUMNS,
-  FONT_FAMILY,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
@@ -19,9 +18,9 @@ import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
 import * as widthCalculator from '../../utils/widthCalculator'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
-import { tick } from 'svelte'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
+import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.js'
 
 // public
 export let skinToneEmoji
@@ -29,6 +28,7 @@ export let i18n
 export let database
 export let customEmoji
 export let customCategorySorting
+export let emojiVersion
 
 // private
 let initialLoad = true
@@ -54,7 +54,7 @@ let skinTones = []
 let currentFavorites = [] // eslint-disable-line no-unused-vars
 let defaultFavoriteEmojis
 let numColumns = DEFAULT_NUM_COLUMNS
-let isRtl = false
+let isRtl = false // eslint-disable-line no-unused-vars
 let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
 let currentGroupIndex = 0
 let groups = defaultGroups
@@ -96,11 +96,15 @@ const isSkinToneOption = element => /^skintone-/.test(element.id)
 // Determine the emoji support level (in requestIdleCallback)
 //
 
-emojiSupportLevelPromise.then(level => {
-  // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
-  /* istanbul ignore next */
-  if (!level) {
-    message = i18n.emojiUnsupportedMessage
+onMount(() => {
+  if (!emojiVersion) {
+    detectEmojiSupportLevel().then(level => {
+      // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
+      /* istanbul ignore next */
+      if (!level) {
+        message = i18n.emojiUnsupportedMessage
+      }
+    })
   }
 })
 
@@ -141,7 +145,6 @@ $: {
 
 /* eslint-disable no-unused-vars */
 $: pickerStyle = `
-  --font-family: ${FONT_FAMILY};
   --num-groups: ${groups.length}; 
   --indicator-opacity: ${searchMode ? 0 : 1}; 
   --num-skintones: ${NUM_SKIN_TONES};`
@@ -162,6 +165,11 @@ $: {
   if (customEmoji && customEmoji.length) {
     groups = [customGroup, ...defaultGroups]
   } else if (groups !== defaultGroups) {
+    if (currentGroupIndex) {
+      // If the current group is anything other than "custom" (which is first), decrement.
+      // This fixes the odd case where you set customEmoji, then pick a category, then unset customEmoji
+      currentGroupIndex--
+    }
     groups = defaultGroups
   }
 }
@@ -292,20 +300,13 @@ $: {
   const zwjEmojisToCheck = currentEmojis
     .filter(emoji => emoji.unicode) // filter custom emoji
     .filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
-  if (zwjEmojisToCheck.length) {
+  if (!emojiVersion && zwjEmojisToCheck.length) {
     // render now, check their length later
     requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
   } else {
-    currentEmojis = currentEmojis.filter(isZwjSupported)
-    requestAnimationFrame(() => {
-      // Avoid Svelte doing an invalidation on the "setter" here.
-      // At best the invalidation is useless, at worst it can cause infinite loops:
-      // https://github.com/nolanlawson/emoji-picker-element/pull/180
-      // https://github.com/sveltejs/svelte/issues/6521
-      // Also note tabpanelElement can be null if the element is disconnected
-      // immediately after connected, hence `|| {}`
-      (tabpanelElement || {}).scrollTop = 0 // reset scroll top to 0 when emojis change
-    })
+    currentEmojis = emojiVersion ? currentEmojis : currentEmojis.filter(isZwjSupported)
+    // Reset scroll top to 0 when emojis change
+    requestAnimationFrame(() => resetScrollTopIfPossible(tabpanelElement))
   }
 }
 
@@ -322,20 +323,17 @@ function isZwjSupported (emoji) {
 }
 
 async function filterEmojisByVersion (emojis) {
-  const emojiSupportLevel = await emojiSupportLevelPromise
+  const emojiSupportLevel = emojiVersion || await detectEmojiSupportLevel()
   // !version corresponds to custom emoji
   return emojis.filter(({ version }) => !version || version <= emojiSupportLevel)
 }
 
 async function summarizeEmojis (emojis) {
-  return summarizeEmojisForUI(emojis, await emojiSupportLevelPromise)
+  return summarizeEmojisForUI(emojis, emojiVersion || await detectEmojiSupportLevel())
 }
 
 async function getEmojisByGroup (group) {
   console.log('getEmojiByGroup', group)
-  if (typeof group === 'undefined') {
-    return []
-  }
   // -1 is custom emoji
   const emoji = group === -1 ? customEmoji : await database.getEmojiByGroup(group)
   return summarizeEmojis(await filterEmojisByVersion(emoji))

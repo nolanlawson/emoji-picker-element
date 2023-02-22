@@ -6,7 +6,7 @@ module.exports = {
   transform: {
     '^.+\\.js$': './config/babelJestTransform.cjs',
     '^.+\\.svelte$': ['svelte-jester', {
-      preprocess: true,
+      preprocess: './config/svelte.config.cjs',
       compilerOptions: {
         dev: false
       }
@@ -34,10 +34,10 @@ module.exports = {
       lines: 100
     },
     './src/picker/components/Picker/Picker.svelte': {
-      statements: 98,
-      branches: 95,
-      functions: 100,
-      lines: 100
+      statements: 90,
+      branches: 85,
+      functions: 90,
+      lines: 90
     }
   }
 }

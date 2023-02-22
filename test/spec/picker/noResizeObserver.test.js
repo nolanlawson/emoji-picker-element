@@ -36,7 +36,7 @@ describe('ResizeObserver unsupported', () => {
     await tick(40)
     await new Database({ dataSource: ALL_EMOJI }).delete()
     await tick(40)
-    basicAfterEach()
+    await basicAfterEach()
 
     global.ResizeObserver = oldResizeObserver
     resetResizeObserverSupported()

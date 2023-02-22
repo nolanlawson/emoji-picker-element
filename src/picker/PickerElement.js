@@ -1,6 +1,6 @@
 import SveltePicker from './components/Picker/Picker.svelte'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
-import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI } from './constants'
+import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY } from './constants'
 import enI18n from './i18n/en.js'
 import Database from './ImportedDatabase'
 
@@ -11,8 +11,12 @@ const PROPS = [
   'dataSource',
   'i18n',
   'locale',
-  'skinToneEmoji'
+  'skinToneEmoji',
+  'emojiVersion'
 ]
+
+// Styles injected ourselves, so we can declare the FONT_FAMILY variable in one place
+const EXTRA_STYLES = `:host{--emoji-font-family:${FONT_FAMILY}}`
 
 export default class PickerElement extends HTMLElement {
   constructor (props) {
@@ -20,7 +24,7 @@ export default class PickerElement extends HTMLElement {
     super()
     this.attachShadow({ mode: 'open' })
     const style = document.createElement('style')
-    style.textContent = process.env.STYLES
+    style.textContent = process.env.STYLES + EXTRA_STYLES
     this.shadowRoot.appendChild(style)
     this._ctx = {
       // Set defaults
@@ -30,6 +34,7 @@ export default class PickerElement extends HTMLElement {
       customCategorySorting: DEFAULT_CATEGORY_SORTING,
       customEmoji: null,
       i18n: enI18n,
+      emojiVersion: null,
       ...props
     }
     // Handle properties set before the element was upgraded
@@ -43,34 +48,44 @@ export default class PickerElement extends HTMLElement {
   }
 
   connectedCallback () {
-    this._cmp = new SveltePicker({
-      target: this.shadowRoot,
-      props: this._ctx
-    })
-  }
-
-  disconnectedCallback () {
-    this._cmp.$destroy()
-    this._cmp = undefined
-
-    const { database } = this._ctx
-    if (database) {
-      database.close()
-        // only happens if the database failed to load in the first place, so we don't care)
-        .catch(err => console.error(err))
+    // The _cmp may be defined if the component was immediately disconnected and then reconnected. In that case,
+    // do nothing (preserve the state)
+    if (!this._cmp) {
+      this._cmp = new SveltePicker({
+        target: this.shadowRoot,
+        props: this._ctx
+      })
     }
   }
 
+  disconnectedCallback () {
+    // Check in a microtask if the element is still connected. If so, treat this as a "move" rather than a disconnect
+    // Inspired by Vue: https://vuejs.org/guide/extras/web-components.html#building-custom-elements-with-vue
+    Promise.resolve().then(() => {
+      // this._cmp may be defined if connect-disconnect-connect-disconnect occurs synchronously
+      if (!this.isConnected && this._cmp) {
+        this._cmp.$destroy()
+        this._cmp = undefined
+
+        const { database } = this._ctx
+        database.close()
+          // only happens if the database failed to load in the first place, so we don't care
+          .catch(err => console.error(err))
+      }
+    })
+  }
+
   static get observedAttributes () {
-    return ['locale', 'data-source', 'skin-tone-emoji'] // complex objects aren't supported, also use kebab-case
+    return ['locale', 'data-source', 'skin-tone-emoji', 'emoji-version'] // complex objects aren't supported, also use kebab-case
   }
 
   attributeChangedCallback (attrName, oldValue, newValue) {
-    // convert from kebab-case to camelcase
-    // see https://github.com/sveltejs/svelte/issues/3852#issuecomment-665037015
     this._set(
+      // convert from kebab-case to camelcase
+      // see https://github.com/sveltejs/svelte/issues/3852#issuecomment-665037015
       attrName.replace(/-([a-z])/g, (_, up) => up.toUpperCase()),
-      newValue
+      // convert string attribute to float if necessary
+      attrName === 'emoji-version' ? parseFloat(newValue) : newValue
     )
   }
 
@@ -124,4 +139,7 @@ for (const prop of PROPS) {
 
 Object.defineProperties(PickerElement.prototype, definitions)
 
-customElements.define('emoji-picker', PickerElement)
+/* istanbul ignore else */
+if (!customElements.get('emoji-picker')) { // if already defined, do nothing (e.g. same script imported twice)
+  customElements.define('emoji-picker', PickerElement)
+}

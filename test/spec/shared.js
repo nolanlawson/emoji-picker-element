@@ -8,6 +8,9 @@ export function truncateEmoji (allEmoji) {
   // into fake-indexeddb: https://github.com/dumbmatter/fakeIndexedDB/issues/44
   const groupsToEmojis = new Map()
   for (const emoji of allEmoji) {
+    if (emoji.version >= 14) {
+      continue // skip newer emoji so I don't have to change the tests every time there's an update
+    }
     let emojis = groupsToEmojis.get(emoji.group)
     if (!emojis) {
       emojis = []
@@ -50,9 +53,10 @@ export function basicBeforeEach () {
     .head(DEFAULT_DATA_SOURCE, () => new Response(null, { headers: { ETag: 'W/def' } }))
 }
 
-export function basicAfterEach () {
+export async function basicAfterEach () {
   fetch.mockClear()
   fetch.reset()
+  await tick(20)
 }
 
 export async function tick (times = 1) {

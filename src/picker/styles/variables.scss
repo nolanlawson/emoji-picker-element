@@ -1,3 +1,5 @@
+@use "sass:color";
+
 @mixin sizes() {
   --emoji-size: 1.375rem; /* Width and height of all emoji */
   --emoji-padding: 0.5rem; /* Vertical and horizontal padding on emoji */
@@ -25,7 +27,12 @@
   $input-placeholder: #999;
   $outline: #999;
   $categoryFontColor: #111;
-
+  @if $dark {
+    color-scheme: dark;
+  }
+  @else {
+    color-scheme: light;
+  }
   @if $dark {
     $bg: #222;
     $border: #444;
@@ -47,13 +54,13 @@
   --category-font-color: #{$categoryFontColor}; /* Font color of custom emoji category headings */
 
   @if $dark {
-    --button-active-background: #{lighten($bg, 20%)};
-    --button-hover-background: #{lighten($bg, 15%)};
+    --button-active-background: #{color.adjust($bg, $lightness: 20%)};
+    --button-hover-background: #{color.adjust($bg, $lightness: 15%)};
   }
 
   @else {
-    --button-active-background: #{darken($bg, 10%)}; /* Background of an active button */
-    --button-hover-background: #{darken($bg, 15%)}; /* Background of a hovered button */
+    --button-active-background: #{color.adjust($bg, $lightness: -10%)}; /* Background of an active button */
+    --button-hover-background: #{color.adjust($bg, $lightness: -15%)}; /* Background of a hovered button */
   }
 }
 
