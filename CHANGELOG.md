@@ -1,3 +1,12 @@
+# [1.16.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.15.1...v1.16.0) (2023-02-25)
+
+
+### Features
+
+* added Hindi & Indonesian text ([#322](https://github.com/nolanlawson/emoji-picker-element/issues/322)) ([db7021a](https://github.com/nolanlawson/emoji-picker-element/commit/db7021aaadb7d47aa8f148418aa9c228bf08b6ba))
+
+
+
 ## [1.15.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.15.0...v1.15.1) (2023-01-22)
 
 
