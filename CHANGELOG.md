@@ -1,3 +1,12 @@
+# [1.17.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.16.0...v1.17.0) (2023-04-18)
+
+
+### Features
+
+* added polish translation file ([#325](https://github.com/nolanlawson/emoji-picker-element/issues/325)) ([69b2f81](https://github.com/nolanlawson/emoji-picker-element/commit/69b2f81e551a74da52dc0030e2db8880cd4ff766))
+
+
+
 # [1.16.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.15.1...v1.16.0) (2023-02-25)
 
 
