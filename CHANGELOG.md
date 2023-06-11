@@ -1,3 +1,12 @@
+## [1.18.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.18.0...v1.18.1) (2023-06-11)
+
+
+### Bug Fixes
+
+* simplify skintone listbox ([#336](https://github.com/nolanlawson/emoji-picker-element/issues/336)) ([7d9096b](https://github.com/nolanlawson/emoji-picker-element/commit/7d9096b06ca40ea9785fbfd782fe62317f68b5ab))
+
+
+
 # [1.18.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.17.0...v1.18.0) (2023-06-11)
 
 
