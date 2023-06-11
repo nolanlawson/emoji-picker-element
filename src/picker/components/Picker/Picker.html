@@ -31,8 +31,13 @@
       <label class="sr-only" for="search">{i18n.searchLabel}</label>
       <span id="search-description" class="sr-only">{i18n.searchDescription}</span>
     </div>
-    <!-- For the pattern used for the skintone dropdown, see
-         https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/ -->
+    <!-- For the pattern used for the skintone dropdown, see:
+         https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
+         The one case where we deviate from the example is that we move focus from the button to the
+         listbox. (The example uses a combobox, so it's not exactly the same.) This was tested in NVDA and VoiceOver.
+         Note that Svelte's a11y checker will warn if the listbox does not have a tabindex.
+         https://github.com/sveltejs/svelte/blob/3bc791b/site/content/docs/06-accessibility-warnings.md#a11y-aria-activedescendant-has-tabindex
+         -->
     <div class="skintone-button-wrapper {skinTonePickerExpandedAfterAnimation ? 'expanded' : ''}">
       <button id="skintone-button"
               class="emoji {skinTonePickerExpanded ? 'hide-focus' : ''}"
@@ -47,31 +52,25 @@
       </button>
     </div>
     <span id="skintone-description" class="sr-only">{i18n.skinToneDescription}</span>
-    <!-- In this pattern, the listbox is not focusable, only the button is focusable.
-         This was tested in NVDA and VoiceOver and worked in both. -->
-    <!-- svelte-ignore a11y-aria-activedescendant-has-tabindex -->
     <div id="skintone-list"
-         class="skintone-list {skinTonePickerExpanded ? '' : 'hidden no-animate'}"
+         class="skintone-list hide-focus {skinTonePickerExpanded ? '' : 'hidden no-animate'}"
          style="transform:translateY({ skinTonePickerExpanded ? 0 : 'calc(-1 * var(--num-skintones) * var(--total-emoji-size))'})"
          role="listbox"
          aria-label={i18n.skinTonesLabel}
          aria-activedescendant="skintone-{activeSkinTone}"
          aria-hidden={!skinTonePickerExpanded}
+         tabindex="-1"
          on:focusout={onSkinToneOptionsFocusOut}
          on:click={onSkinToneOptionsClick}
          on:keydown={onSkinToneOptionsKeydown}
          on:keyup={onSkinToneOptionsKeyup}
          bind:this={skinToneDropdown}>
       {#each skinTones as skinTone, i (skinTone)}
-        <!-- would use a button here, but iOS Safari misreports relatedTarget in that case, see issue #14 -->
-        <!-- see https://stackoverflow.com/a/42764495/680742 -->
-        <!-- see also https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#Clicking_and_focus -->
         <div    id="skintone-{i}"
-                class="emoji hide-focus {i === activeSkinTone ? 'active' : ''}"
+                class="emoji {i === activeSkinTone ? 'active' : ''}"
                 aria-selected={i === activeSkinTone}
                 role="option"
                 title={i18n.skinTones[i]}
-                tabindex="-1"
                 aria-label={i18n.skinTones[i]}>
           {skinTone}
         </div>
