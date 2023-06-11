@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
-import { onMount, tick } from 'svelte'
+import { onMount } from 'svelte'
 import { groups as defaultGroups, customGroup } from '../../groups'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
@@ -88,9 +88,6 @@ const unicodeWithSkin = (emoji, currentSkinTone) => (
 const labelWithSkin = (emoji, currentSkinTone) => (
   uniq([(emoji.name || unicodeWithSkin(emoji, currentSkinTone)), ...(emoji.shortcodes || [])]).join(', ')
 )
-
-// Detect a skintone option button
-const isSkinToneOption = element => /^skintone-/.test(element.id)
 
 //
 // Determine the emoji support level (in requestIdleCallback)
@@ -503,13 +500,7 @@ async function onEmojiClick (event) {
 //
 
 // eslint-disable-next-line no-unused-vars
-async function onSkinToneOptionsClick (event) {
-  const { target } = event
-  if (!isSkinToneOption(target)) {
-    return
-  }
-  halt(event)
-  const skinTone = parseInt(target.id.slice(9), 10) // remove 'skintone-' prefix
+function changeSkinTone (skinTone) {
   currentSkinTone = skinTone
   skinTonePickerExpanded = false
   focus('skintone-button')
@@ -518,12 +509,24 @@ async function onSkinToneOptionsClick (event) {
 }
 
 // eslint-disable-next-line no-unused-vars
-async function onClickSkinToneButton (event) {
+function onSkinToneOptionsClick (event) {
+  const { target: { id } } = event
+  const match = id && id.match(/^skintone-(\d)/) // skintone option format
+  if (!match) { // not a skintone option
+    return
+  }
+  halt(event)
+  const skinTone = parseInt(match[1], 10) // remove 'skintone-' prefix
+  changeSkinTone(skinTone)
+}
+
+// eslint-disable-next-line no-unused-vars
+function onClickSkinToneButton (event) {
   skinTonePickerExpanded = !skinTonePickerExpanded
   activeSkinTone = currentSkinTone
   if (skinTonePickerExpanded) {
     halt(event)
-    requestAnimationFrame(() => focus(`skintone-${activeSkinTone}`))
+    requestAnimationFrame(() => focus('skintone-list'))
   }
 }
 
@@ -549,8 +552,6 @@ function onSkinToneOptionsKeydown (event) {
   const changeActiveSkinTone = async nextSkinTone => {
     halt(event)
     activeSkinTone = nextSkinTone
-    await tick()
-    focus(`skintone-${activeSkinTone}`)
   }
 
   switch (event.key) {
@@ -565,7 +566,8 @@ function onSkinToneOptionsKeydown (event) {
     case 'Enter':
       // enter on keydown, space on keyup. this is just how browsers work for buttons
       // https://lists.w3.org/Archives/Public/w3c-wai-ig/2019JanMar/0086.html
-      return onSkinToneOptionsClick(event)
+      halt(event)
+      return changeSkinTone(activeSkinTone)
     case 'Escape':
       halt(event)
       skinTonePickerExpanded = false
@@ -582,16 +584,16 @@ function onSkinToneOptionsKeyup (event) {
     case ' ':
       // enter on keydown, space on keyup. this is just how browsers work for buttons
       // https://lists.w3.org/Archives/Public/w3c-wai-ig/2019JanMar/0086.html
-      return onSkinToneOptionsClick(event)
+      halt(event)
+      return changeSkinTone(activeSkinTone)
   }
 }
 
 // eslint-disable-next-line no-unused-vars
 async function onSkinToneOptionsFocusOut (event) {
-  // On blur outside of the skintone options, collapse the skintone picker.
-  // Except if focus is just moving to another skintone option, e.g. pressing up/down to change focus
+  // On blur outside of the skintone listbox, collapse the skintone picker.
   const { relatedTarget } = event
-  if (!relatedTarget || !isSkinToneOption(relatedTarget)) {
+  if (!relatedTarget || relatedTarget.id !== 'skintone-list') {
     skinTonePickerExpanded = false
   }
 }
