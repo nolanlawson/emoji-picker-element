@@ -16,6 +16,11 @@ export async function openSkintoneListbox (container) {
   // JSDom doesn't fire transitionend events, so we do it manually here
   // https://github.com/jsdom/jsdom/issues/1781#issuecomment-467935000
   fireEvent(getByRole(container, 'listbox', { name: 'Skin tones' }), new Event('transitionend'))
+
+  await waitFor(() => (
+    expect(container.getRootNode().activeElement)
+      .toBe(getByRole(container, 'listbox', { name: 'Skin tones' }))
+  ))
 }
 
 export function checkEmojiEquals (actual, expected) {

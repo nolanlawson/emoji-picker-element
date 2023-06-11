@@ -21,7 +21,7 @@ describe('Picker tests', () => {
       }
     }
   })
-  const { getAllByRole, getByRole, queryAllByRole } = proxy
+  const { getAllByRole, getByRole, queryAllByRole, queryByRole } = proxy
 
   const activeElement = () => container.getRootNode().activeElement
 
@@ -85,13 +85,23 @@ describe('Picker tests', () => {
     })
 
     await openSkintoneListbox(container)
-    await waitFor(() => expect(getByRole('option', { name: 'Default', selected: true }))
-      .toBe(activeElement()))
+
+    await waitFor(() => (
+      expect(
+        getByRole('option', { name: 'Default', selected: true }).id)
+        .toBe(queryByRole('listbox', { name: 'Skin tones' }).getAttribute('aria-activedescendant'))
+    )
+    )
 
     const pressKeyAndExpectActiveOption = async (key, name) => {
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))) // delay
       await fireEvent.keyDown(activeElement(), { key, code: key })
-      await waitFor(() => expect(getByRole('option', { name, selected: true })).toBe(activeElement()))
+      await waitFor(() => {
+        const selectedOption = getByRole('option', { name, selected: true })
+        return expect(selectedOption.id).toBe(
+          queryByRole('listbox', { name: 'Skin tones' }).getAttribute('aria-activedescendant')
+        )
+      })
     }
 
     await pressKeyAndExpectActiveOption('ArrowDown', 'Light')
@@ -106,7 +116,7 @@ describe('Picker tests', () => {
     await pressKeyAndExpectActiveOption('End', 'Dark')
     await pressKeyAndExpectActiveOption('End', 'Dark')
 
-    await fireEvent.click(activeElement(), { key: 'Enter', code: 'Enter' })
+    await fireEvent.keyDown(activeElement(), { key: 'Enter', code: 'Enter' })
 
     await waitFor(() => expect(event && event.detail).toStrictEqual({ skinTone: 5 }))
     await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
@@ -152,8 +162,12 @@ describe('Picker tests', () => {
 
   test('Escape key dismisses skintone listbox', async () => {
     await openSkintoneListbox(container)
-    await waitFor(() => expect(getByRole('option', { name: 'Default', selected: true }))
-      .toBe(activeElement()))
+    await waitFor(() => (
+      expect(
+        getByRole('option', { name: 'Default', selected: true }).id)
+        .toBe(queryByRole('listbox', { name: 'Skin tones' }).getAttribute('aria-activedescendant'))
+    )
+    )
 
     await fireEvent.keyDown(activeElement(), { key: 'Escape', code: 'Escape' })
 
