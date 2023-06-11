@@ -3092,10 +3092,10 @@ emittery@^0.13.1:
   resolved "https://registry.yarnpkg.com/emittery/-/emittery-0.13.1.tgz#c04b8c3457490e0847ae51fced3af52d338e3dad"
   integrity sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==
 
-emoji-picker-element-data@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/emoji-picker-element-data/-/emoji-picker-element-data-1.3.0.tgz#64423b97a91dd0da798023077ebe745c287b23d4"
-  integrity sha512-0Hsp+MgX0R7wUKaRx34ILJsVsTaz2rpEDwdnb0lP3eEoquLVgZUY+jyrbdFzuwceY026egaeIRMVCcs239SCbQ==
+emoji-picker-element-data@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/emoji-picker-element-data/-/emoji-picker-element-data-1.4.0.tgz#85ec882fff5ed7345ba8547a34dcdd8ec944680d"
+  integrity sha512-1SSP0Tat3zswRus82/D8tSpQWY/raP/FDSmlZmSH4Ek+R24DnO2ihn3Y77RuHjmnMWtZBAzSEM4+an/b91RYyg==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
