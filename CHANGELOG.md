@@ -1,3 +1,12 @@
+# [1.18.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.17.0...v1.18.0) (2023-06-11)
+
+
+### Features
+
+* add support for emoji v15 ([#333](https://github.com/nolanlawson/emoji-picker-element/issues/333)) ([c68ecf5](https://github.com/nolanlawson/emoji-picker-element/commit/c68ecf515b4e6f73674172f4e38ed9513d5f4169))
+
+
+
 # [1.17.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.16.0...v1.17.0) (2023-04-18)
 
 
