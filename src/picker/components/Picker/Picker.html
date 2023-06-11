@@ -31,6 +31,8 @@
       <label class="sr-only" for="search">{i18n.searchLabel}</label>
       <span id="search-description" class="sr-only">{i18n.searchDescription}</span>
     </div>
+    <!-- For the pattern used for the skintone dropdown, see
+         https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/ -->
     <div class="skintone-button-wrapper {skinTonePickerExpandedAfterAnimation ? 'expanded' : ''}">
       <button id="skintone-button"
               class="emoji {skinTonePickerExpanded ? 'hide-focus' : ''}"
@@ -45,6 +47,9 @@
       </button>
     </div>
     <span id="skintone-description" class="sr-only">{i18n.skinToneDescription}</span>
+    <!-- In this pattern, the listbox is not focusable, only the button is focusable.
+         This was tested in NVDA and VoiceOver and worked in both. -->
+    <!-- svelte-ignore a11y-aria-activedescendant-has-tabindex -->
     <div id="skintone-list"
          class="skintone-list {skinTonePickerExpanded ? '' : 'hidden no-animate'}"
          style="transform:translateY({ skinTonePickerExpanded ? 0 : 'calc(-1 * var(--num-skintones) * var(--total-emoji-size))'})"
@@ -74,6 +79,8 @@
     </div>
 
   </div>
+  <!-- this is interactive because of keydown; it doesn't really need focus -->
+  <!-- svelte-ignore a11y-interactive-supports-focus -->
   <div class="nav"
        role="tablist"
        style="grid-template-columns: repeat({groups.length}, 1fr)"
@@ -164,6 +171,7 @@
   </div>
   <!-- This on:click is a delegated click listener -->
   <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-interactive-supports-focus -->
   <div class="favorites emoji-menu {message ? 'gone': ''}"
        role="menu"
        aria-label={i18n.favoritesLabel}
