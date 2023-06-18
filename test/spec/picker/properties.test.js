@@ -4,11 +4,15 @@ import { DEFAULT_DATA_SOURCE } from '../../../src/database/constants'
 
 describe('properties', () => {
   beforeEach(async () => {
-    basicBeforeEach()
-    mockFrenchDataSource()
+    await basicBeforeEach()
+    await mockFrenchDataSource()
+    await tick(40)
   })
-
-  afterEach(basicAfterEach)
+  afterEach(async () => {
+    await tick(40)
+    await basicAfterEach()
+    await tick(40)
+  })
 
   test('setting initial dataSource and locale', async () => {
     const picker = new Picker()
