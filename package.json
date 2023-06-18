@@ -129,6 +129,12 @@
     "tachometer": "^0.7.0",
     "terser": "^5.18.0"
   },
+  "//": {
+    "jsonwebtoken": "comes from tachometer, tachometer is pinned for now due to breaking change, but jsonwebtoken 8 has a vuln"
+  },
+  "resolutions": {
+    "jsonwebtoken": "^9.0.0"
+  },
   "standard": {
     "ignore": [
       "/database.js",
