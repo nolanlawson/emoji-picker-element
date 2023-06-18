@@ -79,7 +79,7 @@ async function addAndRemovePicker (page) {
 
 async function main () {
   await waitForServerReady()
-  const browser = await puppeteer.launch({ headless: true })
+  const browser = await puppeteer.launch({ headless: 'new' })
   const context = await browser.createIncognitoBrowserContext() // not sure why Addy uses incognito, but sure
   const page = await context.newPage()
   await page.goto('http://localhost:3000/')
