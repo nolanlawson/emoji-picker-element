@@ -1,10 +1,11 @@
 import '@testing-library/jest-dom/extend-expect'
-import FDBFactory from 'fake-indexeddb/build/FDBFactory'
-import FDBKeyRange from 'fake-indexeddb/build/FDBKeyRange'
+import * as FakeIndexedDB from 'fake-indexeddb'
 import { Crypto } from '@peculiar/webcrypto'
 import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js'
 import { deleteDatabase } from '../src/database/databaseLifecycle'
 import styles from '../node_modules/.cache/emoji-picker-element/styles.js'
+
+const { IDBFactory, IDBKeyRange } = FakeIndexedDB
 
 // See https://github.com/jsdom/jsdom/issues/3455#issuecomment-1333567714
 global.crypto.subtle = new Crypto().subtle
@@ -30,8 +31,8 @@ process.env.NODE_ENV = 'test'
 
 process.env.STYLES = styles
 
-global.IDBKeyRange = FDBKeyRange
-global.indexedDB = new FDBFactory()
+global.IDBKeyRange = IDBKeyRange
+global.indexedDB = new IDBFactory()
 
 beforeAll(() => {
   jest.spyOn(global.console, 'log').mockImplementation()
