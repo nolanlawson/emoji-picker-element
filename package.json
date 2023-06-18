@@ -86,7 +86,7 @@
     "babel-jest": "^29.5.0",
     "blob-util": "^2.0.2",
     "compression": "^1.7.4",
-    "conventional-changelog-cli": "^3.0.0",
+    "conventional-changelog-cli": "^2.2.2",
     "cross-env": "^7.0.3",
     "csso": "^5.0.2",
     "d2l-resize-aware": "BrightspaceUI/resize-aware#semver:^1.2.2",
