@@ -6,7 +6,10 @@ import { openIndexedDBRequests } from '../../../src/database/databaseLifecycle.j
 
 describe('lifecycle', () => {
   beforeEach(basicBeforeEach)
-  afterEach(basicAfterEach)
+  afterEach(async () => {
+    await tick(120)
+    await basicAfterEach()
+  })
 
   test('can remove and re-append custom element', async () => {
     const picker = new Picker()
@@ -20,7 +23,7 @@ describe('lifecycle', () => {
     expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
 
     document.body.removeChild(picker)
-    await tick(20)
+    await tick(40)
 
     document.body.appendChild(picker)
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
@@ -90,7 +93,7 @@ describe('lifecycle', () => {
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
 
-    await tick(20)
+    await tick(40)
     document.body.removeChild(picker)
     await tick(60)
     expect(Object.keys(openIndexedDBRequests).length).toBe(0) // no open IDB connections
@@ -99,7 +102,7 @@ describe('lifecycle', () => {
   test('preserves state if component is disconnected and reconnected synchronously', async () => {
     const picker = new Picker()
     document.body.appendChild(picker)
-    await tick(20)
+    await tick(40)
 
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
@@ -110,14 +113,14 @@ describe('lifecycle', () => {
     document.body.removeChild(picker)
     document.body.appendChild(picker)
 
-    await tick(20)
+    await tick(40)
 
     expect(fetch).toHaveBeenCalledTimes(1) // fetch is not called again because no re-render
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
 
-    await tick(20)
+    await tick(40)
     document.body.removeChild(picker)
     await tick(60)
     expect(Object.keys(openIndexedDBRequests).length).toBe(0) // no open IDB connections
@@ -126,7 +129,7 @@ describe('lifecycle', () => {
   test('does not preserve state if component is disconnected and reconnected in separate microtasks', async () => {
     const picker = new Picker()
     document.body.appendChild(picker)
-    await tick(20)
+    await tick(40)
 
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
@@ -138,7 +141,7 @@ describe('lifecycle', () => {
     await Promise.resolve()
     document.body.appendChild(picker)
 
-    await tick(20)
+    await tick(40)
 
     expect(fetch).toHaveBeenCalledTimes(2) // fetch is called again due to re-render
     expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, { method: 'HEAD' }) // cached, so does a HEAD
@@ -146,7 +149,7 @@ describe('lifecycle', () => {
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
 
-    await tick(20)
+    await tick(40)
     document.body.removeChild(picker)
     await tick(60)
     expect(Object.keys(openIndexedDBRequests).length).toBe(0) // no open IDB connections
@@ -160,7 +163,7 @@ describe('lifecycle', () => {
     document.body.removeChild(picker)
     document.body.appendChild(picker)
 
-    await tick(20)
+    await tick(40)
 
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
@@ -168,7 +171,7 @@ describe('lifecycle', () => {
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
 
-    await tick(20)
+    await tick(40)
     document.body.removeChild(picker)
     await tick(60)
     expect(Object.keys(openIndexedDBRequests).length).toBe(0) // no open IDB connections
