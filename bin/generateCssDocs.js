@@ -1,5 +1,5 @@
 import path from 'node:path'
-import sass from 'sass'
+import * as sass from 'sass'
 import { markdownTable as table } from 'markdown-table'
 import { readFile, writeFile } from './fs.js'
 import { replaceInReadme } from './replaceInReadme.js'
@@ -84,7 +84,7 @@ async function replaceInCustomElementsJson (cssData) {
 }
 
 async function main () {
-  const css = sass.renderSync({ file: './src/picker/styles/variables.scss' }).css.toString('utf8')
+  const css = sass.compile('./src/picker/styles/variables.scss').css
 
   const cssData = await generateCssVariablesData(css)
   const markdown = generateMarkdownTable(cssData)

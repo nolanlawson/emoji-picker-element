@@ -1,8 +1,8 @@
-import sass from 'sass'
+import * as sass from 'sass'
 import { minify } from 'csso'
 
 export function buildStyles () {
   const file = './src/picker/styles/picker.scss'
-  const css = sass.renderSync({ file, outputStyle: 'compressed' }).css.toString('utf8')
+  const css = sass.compile(file, { style: 'compressed' }).css
   return minify(css).css
 }
