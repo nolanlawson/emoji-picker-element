@@ -14,7 +14,9 @@ module.exports = {
   },
   moduleFileExtensions: ['js', 'svelte'],
   testPathIgnorePatterns: ['node_modules'],
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!lodash-es|if-emoji|d2l-resize-aware)'],
+  transformIgnorePatterns: [
+    '<rootDir>/node_modules/(?!lodash-es|if-emoji|d2l-resize-aware|fake-indexeddb)'
+  ],
   bail: true,
   verbose: true,
   silent: false,
