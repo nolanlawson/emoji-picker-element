@@ -1,3 +1,7 @@
+## [1.18.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.18.1...v1.18.2) (2023-06-18)
+
+* Updated dependencies; this affects code comments in the `dist/` files and size of SVGs in docs page
+
 ## [1.18.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.18.0...v1.18.1) (2023-06-11)
 
 
