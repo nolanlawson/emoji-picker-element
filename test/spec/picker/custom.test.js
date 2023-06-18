@@ -5,8 +5,15 @@ import { getAllByRole, getByRole, waitFor } from '@testing-library/dom'
 import { getAccessibleName } from '../utils'
 
 describe('Custom emojis tests', () => {
-  beforeEach(basicBeforeEach)
-  afterEach(basicAfterEach)
+  beforeEach(async () => {
+    await basicBeforeEach()
+    await tick(40)
+  })
+  afterEach(async () => {
+    await tick(40)
+    await basicAfterEach()
+    await tick(40)
+  })
 
   test('Setting custom emoji shows the proper first page', async () => {
     const picker = new Picker({

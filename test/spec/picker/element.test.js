@@ -29,17 +29,18 @@ describe('element tests', () => {
     beforeEach(async () => {
       basicBeforeEach()
       mockFrenchDataSource()
+      await tick(40)
       picker = new Picker({ dataSource: ALL_EMOJI, locale: 'en' })
       container = picker.shadowRoot
       document.body.appendChild(picker)
-      await tick(20)
+      await tick(40)
     })
     afterEach(async () => {
       document.body.removeChild(picker)
-      await tick(20)
+      await tick(40)
       await new Database({ dataSource: FR_EMOJI, locale: 'fr' }).delete()
       await new Database({ dataSource: ALL_EMOJI, locale: 'en' }).delete()
-      await tick(20)
+      await tick(40)
       await basicAfterEach()
     })
 

@@ -13,8 +13,15 @@ import { fireEvent, getByRole, waitFor } from '@testing-library/dom'
 import { openSkintoneListbox } from './shared'
 
 describe('dataSource test', () => {
-  beforeEach(basicBeforeEach)
-  afterEach(basicAfterEach)
+  beforeEach(async () => {
+    await basicBeforeEach()
+    await tick(40)
+  })
+  afterEach(async () => {
+    await tick(40)
+    await basicAfterEach()
+    await tick(40)
+  })
 
   test('emoji with no shortcodes still work', async () => {
     mockDataSourceWithNoShortcodes()
