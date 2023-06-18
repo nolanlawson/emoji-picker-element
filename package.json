@@ -50,7 +50,7 @@
     "test:adhoc": "node ./test/adhoc/server.js",
     "cover": "node ./bin/buildStylesForJest.js && jest --runInBand --coverage",
     "docs": "node bin/processCustomEmoji.js",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "version": "run-s changelog docs && git add CHANGELOG.md docs"
   },
   "repository": {
