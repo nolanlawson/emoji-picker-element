@@ -1,9 +1,9 @@
 // Simple script to check bundlesize based on https://github.com/siddharthkp/bundlesize
 import { minify } from 'terser'
-import { gzip } from 'zlib'
-import { promisify } from 'util'
+import { gzip } from 'node:zlib'
+import { promisify } from 'node:util'
 import prettyBytes from 'pretty-bytes'
-import fs from 'fs/promises'
+import fs from 'node:fs/promises'
 
 const MAX_SIZE_MIN = '42.5 kB'
 const MAX_SIZE_MINGZ = '15 kB'

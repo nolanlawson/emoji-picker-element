@@ -1,7 +1,6 @@
 import { buildStyles } from './buildStyles.js'
-import { writeFile } from './fs.js'
-import mkdirp from 'mkdirp'
-import path from 'path'
+import { writeFile, mkdirp } from './fs.js'
+import path from 'node:path'
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname)
 

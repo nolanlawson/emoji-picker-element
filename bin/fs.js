@@ -1,7 +1,6 @@
-import fs from 'fs'
-import { promisify } from 'util'
+import { rm, mkdir } from 'node:fs/promises'
 
-export const readFile = promisify(fs.readFile)
-export const writeFile = promisify(fs.writeFile)
-export const copyFile = promisify(fs.copyFile)
-export const readdir = promisify(fs.readdir)
+export { readFile, writeFile, copyFile, readdir } from 'node:fs/promises'
+
+export const rimraf = (...args) => rm(...args, { recursive: true, force: true })
+export const mkdirp = (...args) => mkdir(...args, { recursive: true })

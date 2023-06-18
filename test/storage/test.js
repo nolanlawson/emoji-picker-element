@@ -1,14 +1,10 @@
 import playwright from 'playwright'
-import { promisify } from 'util'
-import mkdirp from 'mkdirp'
-import rimrafCB from 'rimraf'
+import { mkdirp, rimraf } from '../../bin/fs.js'
 import getFolderSize from 'get-folder-size'
 import path from 'path'
 import prettyBytes from 'pretty-bytes'
 import { markdownTable as table } from 'markdown-table'
 import process from 'process'
-
-const rimraf = promisify(rimrafCB)
 
 const port = process.env.PORT || 3000
 

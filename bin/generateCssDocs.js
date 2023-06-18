@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import sass from 'sass'
 import { markdownTable as table } from 'markdown-table'
 import { readFile, writeFile } from './fs.js'
