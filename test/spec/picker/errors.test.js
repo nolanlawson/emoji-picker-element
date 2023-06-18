@@ -6,13 +6,16 @@ import { getByRole, waitFor } from '@testing-library/dom'
 describe('errors', () => {
   let errorSpy
 
-  beforeEach(() => {
-    basicBeforeEach()
+  beforeEach(async () => {
+    await basicBeforeEach()
     errorSpy = jest.spyOn(global.console, 'error').mockImplementation()
+    await tick(40)
   })
   afterEach(async () => {
+    await tick(40)
     await basicAfterEach()
     errorSpy.mockRestore()
+    await tick(40)
   })
 
   // seems not possible to do
