@@ -1,15 +1,12 @@
-import path from 'path'
-import { copyFile, readdir, writeFile } from './fs.js'
-import mkdirp from 'mkdirp'
-import rimraf from 'rimraf'
-import { promisify } from 'util'
+import path from 'node:path'
+import { copyFile, readdir, writeFile, mkdirp, rimraf } from './fs.js'
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 async function main () {
   const targetDir = path.join(__dirname, '../i18n')
 
-  await promisify(rimraf)(targetDir)
+  await rimraf(targetDir)
   await mkdirp(targetDir)
 
   const sourceDir = path.join(__dirname, '../src/picker/i18n')

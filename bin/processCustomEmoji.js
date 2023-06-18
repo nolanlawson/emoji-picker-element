@@ -1,7 +1,4 @@
-import { readdir, writeFile, readFile } from './fs.js'
-import rimraf from 'rimraf'
-import { promisify } from 'util'
-import mkdirp from 'mkdirp'
+import { readdir, writeFile, readFile, rimraf, mkdirp } from './fs.js'
 import { optimize } from 'svgo'
 
 const categories = [
@@ -144,7 +141,7 @@ function remove (name) {
 }
 
 async function main () {
-  await promisify(rimraf)('./docs/custom')
+  await rimraf('./docs/custom')
   await mkdirp('./docs/custom')
   const emojis = await readdir('./node_modules/flat-color-icons/svg')
 
