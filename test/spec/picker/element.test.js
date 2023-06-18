@@ -13,7 +13,14 @@ import enI18n from '../../../src/picker/i18n/en'
 import Database from '../../../src/database/Database'
 import { DEFAULT_SKIN_TONE_EMOJI } from '../../../src/picker/constants'
 import { DEFAULT_DATA_SOURCE } from '../../../src/database/constants'
-const { type, clear } = userEvent
+const { type } = userEvent
+
+// Workaround for clear() not working in shadow roots: https://github.com/testing-library/user-event/issues/1143
+const clear = async (element) => {
+  expect(element.value.length).not.toBe(0)
+  await type(element, '{backspace}'.repeat(element.value.length))
+  expect(element.value.length).toBe(0)
+}
 
 const frI18n = JSON.parse(JSON.stringify(enI18n))
 
