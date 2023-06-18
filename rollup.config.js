@@ -5,7 +5,7 @@ import strip from '@rollup/plugin-strip'
 import svelte from 'rollup-plugin-svelte'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
-import { buildStyles } from './bin/buildStyles'
+import { buildStyles } from './bin/buildStyles.js'
 
 const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
