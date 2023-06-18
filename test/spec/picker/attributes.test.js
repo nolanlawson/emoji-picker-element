@@ -14,11 +14,15 @@ import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI } from '../../../src/
 
 describe('attributes tests', () => {
   beforeEach(async () => {
-    basicBeforeEach()
-    mockFrenchDataSource()
+    await basicBeforeEach()
+    await mockFrenchDataSource()
+    await tick(40)
   })
-
-  afterEach(basicAfterEach)
+  afterEach(async () => {
+    await tick(40)
+    await basicAfterEach()
+    await tick(40)
+  })
 
   test('setting initial locale/dataSource issues only one GET', async () => {
     const picker = new Picker()
