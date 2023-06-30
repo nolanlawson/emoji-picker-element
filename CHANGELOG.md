@@ -1,3 +1,17 @@
+## [1.18.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.18.2...v1.18.3) (2023-06-30)
+
+
+### Bug Fixes
+
+* make "People and body" category work in Firefox content script ([#357](https://github.com/nolanlawson/emoji-picker-element/issues/357)) ([b829d4c](https://github.com/nolanlawson/emoji-picker-element/commit/b829d4c8ce546cbe9bef03fb35e4d8ffa412c9cf))
+
+
+### Performance Improvements
+
+* hoist global check ([#358](https://github.com/nolanlawson/emoji-picker-element/issues/358)) ([60eeb8e](https://github.com/nolanlawson/emoji-picker-element/commit/60eeb8ef17287d96298539343fb75b93f8580b17))
+
+
+
 ## [1.18.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.18.1...v1.18.2) (2023-06-18)
 
 * Updated dependencies; this affects code comments in the `dist/` files and size of SVGs in docs page
