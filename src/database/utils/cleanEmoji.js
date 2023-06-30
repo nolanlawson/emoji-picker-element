@@ -1,12 +1,15 @@
+const isFirefoxContentScript = typeof wrappedJSObject !== 'undefined'
+
 // remove some internal implementation details, i.e. the "tokens" array on the emoji object
 // essentially, convert the emoji from the version stored in IDB to the version used in-memory
 export function cleanEmoji (emoji) {
   if (!emoji) {
     return emoji
   }
-  // if inside a Firefox content script, need to clone the emoji object to prevent Firefox from complaining about cross-origin object
+  // if inside a Firefox content script, need to clone the emoji object to prevent Firefox from complaining about
+  // cross-origin object. See: https://github.com/nolanlawson/emoji-picker-element/issues/356
   /* istanbul ignore if */
-  if (typeof wrappedJSObject !== 'undefined') {
+  if (isFirefoxContentScript) {
     emoji = structuredClone(emoji)
   }
   delete emoji.tokens
