@@ -5,6 +5,7 @@ export function cleanEmoji (emoji) {
     return emoji
   }
   // if inside a Firefox content script, need to clone the emoji object to prevent Firefox from complaining about cross-origin object
+  /* istanbul ignore if */
   if (typeof wrappedJSObject !== 'undefined') {
     emoji = structuredClone(emoji)
   }
