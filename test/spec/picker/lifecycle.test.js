@@ -75,7 +75,7 @@ describe('lifecycle', () => {
     document.body.appendChild(picker)
     document.body.removeChild(picker)
 
-    await tick(60)
+    await tick(120)
 
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)

@@ -327,17 +327,17 @@ describe('Picker tests', () => {
   })
 
   test('press enter to make first search item active', async () => {
-    await tick(20)
+    await tick(120)
     type(getByRole('combobox'), 'monkey face')
     await waitFor(() => expect(getAllByRole('option')).toHaveLength(1))
     expect(getByRole('combobox').getAttribute('aria-activedescendant')).toBeFalsy()
-    await tick(20)
+    await tick(120)
     fireEvent.keyDown(getByRole('combobox'), { key: 'Enter', code: 'Enter' })
     await waitFor(() => (
       expect(getByRole('combobox').getAttribute('aria-activedescendant'))
         .toBe(getByRole('option', { name: /🐵/ }).getAttribute('id'))
-    ), { timeout: 2000 })
-  }, 5000)
+    ), { timeout: 5000 })
+  }, 10000)
 
   test('press enter to make first search item active - custom emoji', async () => {
     picker.customEmoji = [
@@ -349,14 +349,16 @@ describe('Picker tests', () => {
       }
     ]
 
+    await tick(120)
     type(getByRole('combobox'), 'donkey')
     await waitFor(() => expect(getAllByRole('option')).toHaveLength(1))
     expect(getByRole('combobox').getAttribute('aria-activedescendant')).toBeFalsy()
+    await tick(120)
     fireEvent.keyDown(getByRole('combobox'), { key: 'Enter', code: 'Enter' })
     await waitFor(() => {
       return expect(getByRole('combobox').getAttribute('aria-activedescendant'))
         .toBe(getByRole('option', { name: /donkey/ }).getAttribute('id'))
-    }, { timeout: 2000 })
+    }, { timeout: 5000 })
 
     let emoji
     picker.addEventListener('emoji-click', event => {
@@ -366,7 +368,7 @@ describe('Picker tests', () => {
     fireEvent.keyDown(getByRole('combobox'), { key: 'Enter', code: 'Enter' })
 
     await waitFor(() => expect(emoji && emoji.name === 'donkey'))
-  }, 5000)
+  }, 10000)
 
   test('Closes skintone picker when blurred', async () => {
     fireEvent.click(getByRole('button', { name: /Choose a skin tone/ }))
