@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom/extend-expect'
+import '@testing-library/jest-dom/jest-globals'
 import * as FakeIndexedDB from 'fake-indexeddb'
 import { Crypto } from '@peculiar/webcrypto'
 import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js'

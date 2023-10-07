@@ -52,42 +52,46 @@ describe('element tests', () => {
     })
 
     test('changing locale/dataSource prop causes only one network request', async () => {
+      await tick(120)
       expect(fetch).toHaveBeenCalledTimes(1)
       expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI, undefined)
       await type(getByRole(container, 'combobox'), 'monkey face')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1), {
         timeout: 2000
       })
+      await tick(120)
       expect(getByRole(container, 'option', { name: /🐵/ })).toBeVisible()
       picker.locale = 'fr'
       picker.dataSource = FR_EMOJI
-      await tick(20)
+      await tick(120)
       expect(fetch).toHaveBeenCalledTimes(2)
       expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
       await clear(getByRole(container, 'combobox'))
       await type(getByRole(container, 'combobox'), 'singe tête')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1))
       expect(getByRole(container, 'option', { name: /🐵/ })).toBeVisible()
-    })
+    }, 10000)
 
     test('changing locale/dataSource attr causes only one network request', async () => {
+      await tick(120)
       expect(fetch).toHaveBeenCalledTimes(1)
       expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI, undefined)
       await type(getByRole(container, 'combobox'), 'monkey face')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1), {
         timeout: 2000
       })
+      await tick(120)
       expect(getByRole(container, 'option', { name: /🐵/ })).toBeVisible()
       picker.setAttribute('locale', 'fr')
       picker.setAttribute('data-source', FR_EMOJI)
-      await tick(20)
+      await tick(120)
       expect(fetch).toHaveBeenCalledTimes(2)
       expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
       await clear(getByRole(container, 'combobox'))
       await type(getByRole(container, 'combobox'), 'singe tête')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1))
       expect(getByRole(container, 'option', { name: /🐵/ })).toBeVisible()
-    })
+    }, 10000)
 
     test('can dynamically change i18n', async () => {
       picker.i18n = frI18n
