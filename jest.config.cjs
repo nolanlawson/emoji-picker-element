@@ -4,19 +4,16 @@ module.exports = {
     '<rootDir>/test/spec/**/*.{spec,test}.{js,jsx,ts,tsx}'
   ],
   transform: {
-    '^.+\\.js$': './config/babelJestTransform.cjs',
     '^.+\\.svelte$': ['svelte-jester', {
-      preprocess: './config/svelte.config.cjs',
+      preprocess: './config/svelte.config.js',
       compilerOptions: {
         dev: false
       }
     }]
   },
   moduleFileExtensions: ['js', 'svelte'],
+  extensionsToTreatAsEsm: [".svelte"],
   testPathIgnorePatterns: ['node_modules'],
-  transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!lodash-es|if-emoji|d2l-resize-aware|fake-indexeddb)'
-  ],
   bail: true,
   verbose: true,
   silent: false,
