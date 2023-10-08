@@ -1,3 +1,12 @@
+## [1.18.4](https://github.com/nolanlawson/emoji-picker-element/compare/v1.18.3...v1.18.4) (2023-10-08)
+
+
+### Bug Fixes
+
+* put annotation in title/aria-label ([#369](https://github.com/nolanlawson/emoji-picker-element/issues/369)) ([bd2004b](https://github.com/nolanlawson/emoji-picker-element/commit/bd2004b25d46554b6ecc46ea817f0233b1ec6bc5)), closes [#366](https://github.com/nolanlawson/emoji-picker-element/issues/366)
+
+
+
 ## [1.18.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.18.2...v1.18.3) (2023-06-30)
 
 
