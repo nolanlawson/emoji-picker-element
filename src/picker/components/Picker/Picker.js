@@ -62,6 +62,9 @@ let currentGroup
 let databaseLoaded = false // eslint-disable-line no-unused-vars
 let activeSearchItemId // eslint-disable-line no-unused-vars
 
+// constants
+const EMPTY_ARRAY = []
+
 //
 // Utils/helpers
 //
@@ -86,7 +89,16 @@ const unicodeWithSkin = (emoji, currentSkinTone) => (
 
 // eslint-disable-next-line no-unused-vars
 const labelWithSkin = (emoji, currentSkinTone) => (
-  uniq([(emoji.name || unicodeWithSkin(emoji, currentSkinTone)), ...(emoji.shortcodes || [])]).join(', ')
+  uniq([
+    (emoji.name || unicodeWithSkin(emoji, currentSkinTone)),
+    emoji.annotation,
+    ...(emoji.shortcodes || EMPTY_ARRAY)
+  ].filter(Boolean)).join(', ')
+)
+
+// eslint-disable-next-line no-unused-vars
+const titleForEmoji = (emoji) => (
+  emoji.annotation || (emoji.shortcodes || EMPTY_ARRAY).join(', ')
 )
 
 //

@@ -34,8 +34,8 @@ describe('dataSource test', () => {
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
     // no shortcodes, no title
-    expect(getByRole(container, 'menuitem', { name: /😀/ }).getAttribute('title')).toStrictEqual('')
-    expect(getByRole(container, 'menuitem', { name: /😀/ }).getAttribute('aria-label')).toStrictEqual('😀')
+    expect(getByRole(container, 'menuitem', { name: /😀/ }).getAttribute('title')).toStrictEqual('grinning face')
+    expect(getByRole(container, 'menuitem', { name: /😀/ }).getAttribute('aria-label')).toStrictEqual('😀, grinning face')
 
     await picker.database.delete()
     await tick(20)
@@ -54,8 +54,8 @@ describe('dataSource test', () => {
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
     // no shortcodes, no title
-    expect(getByRole(container, 'menuitem', { name: /😀/ }).getAttribute('title')).toStrictEqual('gleeful')
-    expect(getByRole(container, 'menuitem', { name: /😀/ }).getAttribute('aria-label')).toStrictEqual('😀, gleeful')
+    expect(getByRole(container, 'menuitem', { name: /😀/ }).getAttribute('title')).toStrictEqual('grinning face')
+    expect(getByRole(container, 'menuitem', { name: /😀/ }).getAttribute('aria-label')).toStrictEqual('😀, grinning face, gleeful')
 
     await picker.database.delete()
     await tick(20)
