@@ -79,6 +79,9 @@ describe('Custom emojis tests', () => {
 
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: 'themonkey' })).toBeVisible())
 
+    expect(getByRole(container, 'menuitem', { name: 'themonkey' }).getAttribute('title')).toStrictEqual('themonkey')
+    expect(getByRole(container, 'menuitem', { name: 'themonkey' }).getAttribute('aria-label')).toStrictEqual('themonkey')
+
     getByRole(container, 'tab', { name: 'Flags' }).click()
 
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /🏁/ })).toBeVisible())
