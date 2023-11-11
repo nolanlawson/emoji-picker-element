@@ -58,7 +58,7 @@ let isRtl = false // eslint-disable-line no-unused-vars
 let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
 let currentGroupIndex = 0
 let groups = defaultGroups
-let currentGroup
+let currentGroup = groups[currentGroupIndex]
 let databaseLoaded = false // eslint-disable-line no-unused-vars
 let activeSearchItemId // eslint-disable-line no-unused-vars
 
