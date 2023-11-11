@@ -93,6 +93,7 @@
     "emojibase-data": "^5.1.1",
     "express": "^4.18.2",
     "fake-indexeddb": "^5.0.1",
+    "fast-glob": "^3.3.2",
     "fetch-mock-jest": "^1.5.1",
     "flat-color-icons": "^1.1.0",
     "focus-visible": "^5.2.0",
