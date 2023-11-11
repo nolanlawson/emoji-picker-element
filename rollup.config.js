@@ -1,3 +1,4 @@
+import inject from '@rollup/plugin-inject'
 import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
@@ -94,21 +95,43 @@ const entryPoints = [
   {
     input: './src/picker/PickerElement.js',
     output: './svelte.js',
-    external: ['svelte', 'svelte/internal']
+    external: ['svelte', 'svelte/internal'],
+    // TODO: drop Svelte v3 support
+    // ensure_array_like was added in Svelte v4 - we shim it to avoid breaking Svelte v3 users
+    plugins: [
+      {
+        name: 'svelte-v3-compat',
+        transform (source) {
+          return source
+            .replaceAll('ensure_array_like(', 'ensure_array_like_shim(')
+        }
+      },
+      inject({
+        ensure_array_like_shim: [
+          '../../../../shims/svelte-v3-shim.js',
+          'ensure_array_like_shim'
+        ]
+      })
+    ],
+    onwarn (warning) {
+      if (!warning.message.includes('ensure_array_like')) { // intentionally ignore warning for unused import
+        console.warn(warning.message)
+      }
+    }
   }
 ]
 
-export default entryPoints.map(({ input, output, format = 'es', external = [] }) => {
-  const res = {
-    ...baseConfig,
+export default entryPoints.map(({ input, output, format = 'es', external = [], plugins = [], onwarn }) => {
+  return {
     input,
     output: {
       format,
       file: output,
       sourcemap: dev,
       exports: 'auto'
-    }
+    },
+    external: [...baseConfig.external, ...external],
+    plugins: [...baseConfig.plugins, ...plugins],
+    onwarn
   }
-  res.external = [...res.external, ...external]
-  return res
 })

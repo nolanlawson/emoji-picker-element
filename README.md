@@ -837,7 +837,7 @@ import Picker from 'emoji-picker-element/svelte';
 
 `svelte.js` is the same as `picker.js`, except it `import`s Svelte rather than bundling it.
 
-While this option can reduce your bundle size, note that it only works if your Svelte version is compatible with `emoji-picker-element`'s Svelte version (v3 currently).
+While this option can reduce your bundle size, note that it only works with compatible Svelte versions. Currently Svelte v3 and v4 are supported.
 
 ## Data and offline
 
