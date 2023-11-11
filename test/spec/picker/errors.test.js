@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals'
 import Picker from '../../../src/picker/PickerElement'
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Database from '../../../src/database/Database'

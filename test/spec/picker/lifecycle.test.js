@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals'
 import { basicAfterEach, basicBeforeEach, tick } from '../shared'
 import Picker from '../../../src/picker/PickerElement'
 import { getByRole, waitFor } from '@testing-library/dom'

@@ -1,7 +1,6 @@
 import puppeteer from 'puppeteer'
 import prettyBytes from 'pretty-bytes'
 import { markdownTable as table } from 'markdown-table'
-import fetch from 'node-fetch'
 
 const scenarios = [
   'blank',
