@@ -7,7 +7,6 @@
 
 /* global addPicker removePicker */
 import puppeteer from 'puppeteer'
-import fetch from 'node-fetch'
 
 const ITERATIONS = 10
 

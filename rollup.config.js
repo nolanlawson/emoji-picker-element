@@ -43,7 +43,8 @@ const baseConfig = {
     }),
     svelte({
       compilerOptions: {
-        dev
+        dev,
+        discloseVersion: false
       },
       preprocess: preprocessConfig
     }),

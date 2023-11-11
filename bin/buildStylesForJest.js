@@ -11,7 +11,7 @@ async function main () {
   await mkdirp(targetDir)
   await writeFile(
     path.join(targetDir, 'styles.js'),
-    `const styles = ${JSON.stringify(styles)}; module.exports = styles;`,
+    `export default ${JSON.stringify(styles)};`,
     'utf8'
   )
 }
