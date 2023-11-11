@@ -1,7 +1,8 @@
+import glob from 'fast-glob'
 import playwright from 'playwright'
 import { mkdirp, rimraf } from '../../bin/fs.js'
 import getFolderSize from 'get-folder-size'
-import path from 'path'
+import path from 'node:path'
 import prettyBytes from 'pretty-bytes'
 import { markdownTable as table } from 'markdown-table'
 import process from 'process'
@@ -19,7 +20,9 @@ function getIdbFolder (browserType, userDataDir) {
     case 'firefox':
       return path.join(userDataDir, `storage/default/http+++localhost+${port}/idb`)
     case 'webkit':
-      return path.join(userDataDir, `databases/indexeddb/v1/http_localhost_${port}`)
+      // IDB is stored in what appears to be a checksum-encoded folder, e.g.:
+      // storage/<checksum>-<checksum>/<checksum>-<checksum>/IndexedDB/<checksum>/
+      return path.dirname(glob.sync(path.join(userDataDir, 'storage/**/**/IndexedDB/**'))[0])
   }
 }
 
