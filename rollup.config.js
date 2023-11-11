@@ -47,7 +47,8 @@ const baseConfig = {
         dev,
         discloseVersion: false
       },
-      preprocess: preprocessConfig
+      preprocess: preprocessConfig,
+      emitCss: false
     }),
     // make the svelte output slightly smaller
     replace({
