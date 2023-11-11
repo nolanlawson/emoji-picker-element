@@ -2307,7 +2307,7 @@ csv-stringify@^6.2.0:
   resolved "https://registry.yarnpkg.com/csv-stringify/-/csv-stringify-6.4.3.tgz#71e5d7ba75d4baf8db22a9d9da4b4e33526801ea"
   integrity sha512-srC0oI9+WOHecKh0zHoqWWq9zBzwAwzA5IJ6duuM3wNMJ7+2Bv/wRCzRt/BRQI92ar43fgkb/sXjATWBFwUDkw==
 
-"d2l-resize-aware@BrightspaceUI/resize-aware#semver:^1.2.2":
+"d2l-resize-aware@github:BrightspaceUI/resize-aware#semver:^1.2.2":
   version "1.10.0"
   resolved "https://codeload.github.com/BrightspaceUI/resize-aware/tar.gz/1004e00415f90cc25bd29a75e8918b91cc1a4b0f"
   dependencies:
