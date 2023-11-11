@@ -33,6 +33,9 @@ process.env.STYLES = styles
 globalThis.IDBKeyRange = IDBKeyRange
 globalThis.indexedDB = new IDBFactory()
 
+// Hack to work around an issue with jest-environment-jsdom https://github.com/jsdom/jsdom/issues/3363
+globalThis.structuredClone = globalThis.structuredClone ?? (_ => JSON.parse(JSON.stringify(_)))
+
 beforeAll(() => {
   jest.spyOn(globalThis.console, 'log').mockImplementation()
   jest.spyOn(globalThis.console, 'warn').mockImplementation()

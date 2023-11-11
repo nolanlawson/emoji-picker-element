@@ -188,7 +188,7 @@
     "*.(css|scss)": "stylelint --fix '**/*.scss'"
   },
   "volta": {
-    "node": "18.18.0",
+    "node": "20.9.0",
     "yarn": "1.22.19"
   }
 }
