@@ -1,3 +1,12 @@
+# [1.19.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.18.4...v1.19.0) (2023-11-11)
+
+
+### Features
+
+* upgrade to svelte 4 ([#372](https://github.com/nolanlawson/emoji-picker-element/issues/372)) ([e5fde55](https://github.com/nolanlawson/emoji-picker-element/commit/e5fde551febf7209cf453d42efb975066525f396))
+
+
+
 ## [1.18.4](https://github.com/nolanlawson/emoji-picker-element/compare/v1.18.3...v1.18.4) (2023-10-08)
 
 
