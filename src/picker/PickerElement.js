@@ -67,6 +67,10 @@ export default class PickerElement extends HTMLElement {
       if (!this.isConnected && this._cmp) {
         this._cmp.$destroy()
         this._cmp = undefined
+        const picker = this.shadowRoot.querySelector('.picker')
+        if (picker) {
+          picker.remove()
+        }
 
         const { database } = this._ctx
         database.close()
