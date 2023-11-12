@@ -68,6 +68,8 @@ export default class PickerElement extends HTMLElement {
         this._cmp.$destroy()
         this._cmp = undefined
         const picker = this.shadowRoot.querySelector('.picker')
+        // This is never undefined, but I'd feel more comfortable with the `if` anyway
+        /* istanbul ignore else */
         if (picker) {
           picker.remove()
         }
