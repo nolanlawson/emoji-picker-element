@@ -1,3 +1,12 @@
+## [1.19.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.19.0...v1.19.1) (2023-11-12)
+
+
+### Bug Fixes
+
+* fix sourcemap in svelte.js ([#377](https://github.com/nolanlawson/emoji-picker-element/issues/377)) ([140574e](https://github.com/nolanlawson/emoji-picker-element/commit/140574ed1897d08482a72362f8e15c217227461c))
+
+
+
 # [1.19.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.18.4...v1.19.0) (2023-11-11)
 
 
