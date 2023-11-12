@@ -1,3 +1,4 @@
+import MagicString from 'magic-string'
 import inject from '@rollup/plugin-inject'
 import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
@@ -102,8 +103,13 @@ const entryPoints = [
       {
         name: 'svelte-v3-compat',
         transform (source) {
-          return source
-            .replaceAll('ensure_array_like(', 'ensure_array_like_shim(')
+          const magicString = new MagicString(source)
+          magicString.replaceAll('ensure_array_like(', 'ensure_array_like_shim(')
+
+          return {
+            code: magicString.toString(),
+            map: magicString.generateMap()
+          }
         }
       },
       inject({
