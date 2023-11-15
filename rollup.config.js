@@ -66,6 +66,10 @@ const baseConfig = {
       delimiters: ['', ''],
       preventAssignment: true
     }),
+    replace({
+      'active_transitions.length': '0',
+      preventAssignment: true
+    }),
     strip({
       include: ['**/*.js', '**/*.svelte'],
       functions: [
