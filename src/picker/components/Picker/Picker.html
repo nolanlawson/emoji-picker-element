@@ -1,3 +1,20 @@
+{#snippet emojiList((emojis, searchMode, idPrefix)}
+  {#each emojis as emoji, i (emoji.id)}
+    <button role={searchMode ? 'option' : 'menuitem'}
+        aria-selected={searchMode ? i == activeSearchItem : ''}
+        aria-label={labelWithSkin(emoji, currentSkinTone)}
+        title={titleForEmoji(emoji)}
+        class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
+        id="{idPrefix}-{emoji.id}">
+      {#if emoji.unicode}
+        {unicodeWithSkin(emoji, currentSkinTone)}
+      {:else}
+        <img class="custom-emoji" src={emoji.url} alt="" loading="lazy" />
+      {/if}
+    </button>
+  {/each}
+{/snippet}
+
 <section
   class="picker"
   aria-label={i18n.regionLabel}
@@ -150,20 +167,7 @@
              role={searchMode ? 'listbox' : 'menu'}
              aria-labelledby="menu-label-{i}"
              id={searchMode ? 'search-results' : ''}>
-          {#each emojiWithCategory.emojis as emoji, i (emoji.id)}
-            <button role={searchMode ? 'option' : 'menuitem'}
-                    aria-selected={searchMode ? i == activeSearchItem : ''}
-                    aria-label={labelWithSkin(emoji, currentSkinTone)}
-                    title={titleForEmoji(emoji)}
-                    class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
-                    id="emo-{emoji.id}">
-              {#if emoji.unicode}
-                {unicodeWithSkin(emoji, currentSkinTone)}
-              {:else}
-                <img class="custom-emoji" src={emoji.url} alt="" loading="lazy" />
-              {/if}
-            </button>
-          {/each}
+          {@render emojiList(emojiWithCategory.emojis, searchMode, 'emo')}
         </div>
       {/each}
     </div>
@@ -176,21 +180,7 @@
        aria-label={i18n.favoritesLabel}
        style="padding-inline-end: {scrollbarWidth}px"
        on:click={onEmojiClick}>
-    <!-- The reason the emoji logic below is largely duplicated is because it turns out we get a smaller
-         bundle size from just repeating it twice, rather than creating a second Svelte component. -->
-    {#each currentFavorites as emoji, i (emoji.id)}
-      <button role="menuitem"
-              aria-label={labelWithSkin(emoji, currentSkinTone)}
-              title={titleForEmoji(emoji)}
-              class="emoji"
-              id="fav-{emoji.id}">
-        {#if emoji.unicode}
-          {unicodeWithSkin(emoji, currentSkinTone)}
-        {:else}
-          <img class="custom-emoji" src={emoji.url} alt="" loading="lazy" />
-        {/if}
-      </button>
-    {/each}
+    {@render emojiList(favorites, false, 'fav')}
   </div>
   <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
   <button aria-hidden="true" tabindex="-1" class="abs-pos hidden emoji" bind:this={baselineEmoji}>😀</button>
