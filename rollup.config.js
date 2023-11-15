@@ -53,11 +53,16 @@ const baseConfig = {
     }),
     // make the svelte output slightly smaller
     replace({
-      'options.anchor': 'undefined',
       'options.context': 'undefined',
-      'options.customElement': 'undefined',
-      'options.hydrate': 'undefined',
+      'options.events': 'undefined',
+      'options.immutable': 'false',
       'options.intro': 'undefined',
+      'options.recover': 'false',
+      'current_hydration_fragment !== null': 'false',
+      'current_hydration_fragment === null': 'true',
+      'hydration_fragment === null': 'true',
+      'hydration_fragment !== null': 'false',
+      'get_hydration_fragment(first_child)': 'null',
       delimiters: ['', ''],
       preventAssignment: true
     }),
