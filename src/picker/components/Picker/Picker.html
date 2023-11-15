@@ -1,11 +1,14 @@
-{#snippet emojiList((emojis, searchMode, idPrefix)}
+{#snippet emojiList(args)}
+  {@const emojis = args[0]}
+  {@const searchMode = args[1]}
+  {@const prefix = args[2]}
   {#each emojis as emoji, i (emoji.id)}
     <button role={searchMode ? 'option' : 'menuitem'}
         aria-selected={searchMode ? i == activeSearchItem : ''}
         aria-label={labelWithSkin(emoji, currentSkinTone)}
         title={titleForEmoji(emoji)}
         class="emoji {searchMode && i === activeSearchItem ? 'active' : ''}"
-        id="{idPrefix}-{emoji.id}">
+        id="{prefix}-{emoji.id}">
       {#if emoji.unicode}
         {unicodeWithSkin(emoji, currentSkinTone)}
       {:else}
@@ -167,7 +170,7 @@
              role={searchMode ? 'listbox' : 'menu'}
              aria-labelledby="menu-label-{i}"
              id={searchMode ? 'search-results' : ''}>
-          {@render emojiList(emojiWithCategory.emojis, searchMode, 'emo')}
+          {@render emojiList([emojiWithCategory.emojis, searchMode, 'emo'])}
         </div>
       {/each}
     </div>
@@ -180,7 +183,7 @@
        aria-label={i18n.favoritesLabel}
        style="padding-inline-end: {scrollbarWidth}px"
        on:click={onEmojiClick}>
-    {@render emojiList(favorites, false, 'fav')}
+    {@render emojiList([currentFavorites, false, 'fav'])}
   </div>
   <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
   <button aria-hidden="true" tabindex="-1" class="abs-pos hidden emoji" bind:this={baselineEmoji}>😀</button>
