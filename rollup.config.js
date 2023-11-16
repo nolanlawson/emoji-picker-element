@@ -58,16 +58,23 @@ const baseConfig = {
       'options.immutable': 'false',
       'options.intro': 'undefined',
       'options.recover': 'false',
+      // remove hydration
       'current_hydration_fragment !== null': 'false',
       'current_hydration_fragment === null': 'true',
       'hydration_fragment === null': 'true',
       'hydration_fragment !== null': 'false',
       'get_hydration_fragment(first_child)': 'null',
-      delimiters: ['', ''],
-      preventAssignment: true
-    }),
-    replace({
+      // remove transitions
       'active_transitions.length': '0',
+      'alternate_transitions.size': '0',
+      'consequent_transitions.size': '0',
+      'transitions.size': '0',
+      'each_block.transitions': '[]',
+      'block.transitions': 'null',
+      "trigger_transitions(transitions, 'key', from)": '',
+      "trigger_transitions(transitions, 'out')": '',
+      '= each_item_transition': '= () => {}',
+      delimiters: ['', ''],
       preventAssignment: true
     }),
     strip({
