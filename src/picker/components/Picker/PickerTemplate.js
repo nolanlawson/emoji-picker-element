@@ -139,11 +139,9 @@ function emojiTabs() {
 }
 
 function emojiTabPanel() {
-  // <!-- The tabindex=0 is so people can scroll up and down with the keyboard. The element has a role and a label, so I
-  //    feel it's appropriate to have the tabindex. -->
-  // <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-  // <!-- This on:click is a delegated click listener -->
-  // <!-- svelte-ignore a11y-click-events-have-key-events -->
+  // The tabindex=0 is so people can scroll up and down with the keyboard. The element has a role and a label, so I
+  // feel it's appropriate to have the tabindex.
+  // This on:click is a delegated click listener
   return html`
     <div class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone': ''}"
          role="${state.searchMode ? 'region' : 'tabpanel'}"
@@ -215,8 +213,6 @@ function section() {
   
     ${emojiTabPanel()}
     <!-- This on:click is a delegated click listener -->
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-interactive-supports-focus -->
     <div class="favorites emoji-menu ${state.message ? 'gone': ''}"
          role="menu"
          aria-label="${state.i18n.favoritesLabel}"
@@ -230,12 +226,14 @@ function section() {
     `
 }
 
-  const dom = section()
+  const rootDom = section()
 
   return {
-    rootElement: dom.querySelector('.picker'),
-    skinToneDropdown: dom.querySelector('#skintone-list'),
-    tabpanelElement: dom.querySelector('.tabpanel'),
-    baselineEmoji: dom.querySelector('.baseline-emoji')
+    dom: {
+      rootElement: rootDom.querySelector('.picker'),
+      skinToneDropdown: rootDom.querySelector('#skintone-list'),
+      tabpanelElement: rootDom.querySelector('.tabpanel'),
+      baselineEmoji: rootDom.querySelector('.baseline-emoji')
+    }
   }
 }

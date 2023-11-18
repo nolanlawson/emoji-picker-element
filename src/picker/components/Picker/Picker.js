@@ -48,15 +48,11 @@ export function createRoot(target, props) {
     currentEmojisWithCategories: [],
     rawSearchText: '',
     searchText: '',
-    dom.rootElement: undefined,
-    baselineEmoji: undefined,
-    tabpanelElement: undefined,
     searchMode: false,
     activeSearchItem: -1,
     message: undefined,
     skinTonePickerExpanded: false,
     skinTonePickerExpandedAfterAnimation: false,
-    skinToneDropdown: undefined,
     currentSkinTone: 0,
     activeSkinTone: 0,
     skinToneButtonText: undefined,
@@ -73,6 +69,8 @@ export function createRoot(target, props) {
     databaseLoaded: false,
     activeSearchItemId: undefined,
   })
+
+  state.currentGroup = state.groups[state.currentGroupIndex]
   
 //
 // Utils/helpers
@@ -112,7 +110,7 @@ export function createRoot(target, props) {
   const helpers = {
     labelWithSkin, titleForEmoji, unicodeWithSkin
   }
-  const dom = root(state, helpers)
+  const { dom } = root(state, helpers)
   
 //
 // Determine the emoji support level (in requestIdleCallback)
@@ -340,16 +338,17 @@ createEffect(() => {
     } else {
       state.currentEmojis = state.emojiVersion ? state.currentEmojis : state.currentEmojis.filter(isZwjSupported)
       // Reset scroll top to 0 when emojis change
-      requestAnimationFrame(() => resetScrollTopIfPossible(tabpanelElement))
+      requestAnimationFrame(() => resetScrollTopIfPossible(dom.tabpanelElement))
     }
   })
 
   function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
     const rootNode = dom.rootElement.getRootNode()
     const emojiToDomNode = emoji => rootNode.getElementById(`emo-${emoji.id}`)
-    checkZwjSupport(zwjEmojisToCheck, baselineEmoji, emojiToDomNode)
+    checkZwjSupport(zwjEmojisToCheck, dom.baselineEmoji, emojiToDomNode)
     // force update
-    state.currentEmojis = currentEmojis // eslint-disable-line no-self-assign
+    const { currentEmojis } = state
+    state.currentEmojis = currentEmojis
   }
 
   function isZwjSupported (emoji) {
@@ -565,7 +564,7 @@ createEffect(() => {
 // is expanding "below" the button
   createEffect(() => {
     if (state.skinTonePickerExpanded) {
-      state.skinToneDropdown.addEventListener('transitionend', () => {
+      dom.skinToneDropdown.addEventListener('transitionend', () => {
         state.skinTonePickerExpandedAfterAnimation = true // eslint-disable-line no-unused-vars
       }, { once: true })
     } else {
