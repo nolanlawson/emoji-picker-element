@@ -1,5 +1,4 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
-import { onMount } from 'svelte'
 import { groups as defaultGroups, customGroup } from '../../groups'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
@@ -22,216 +21,235 @@ import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.js'
 
-// public
-export let skinToneEmoji
-export let i18n
-export let database
-export let customEmoji
-export let customCategorySorting
-export let emojiVersion
-
-// private
-let initialLoad = true
-let currentEmojis = []
-let currentEmojisWithCategories = [] // eslint-disable-line no-unused-vars
-let rawSearchText = ''
-let searchText = ''
-let rootElement
-let baselineEmoji
-let tabpanelElement
-let searchMode = false // eslint-disable-line no-unused-vars
-let activeSearchItem = -1
-let message // eslint-disable-line no-unused-vars
-let skinTonePickerExpanded = false
-let skinTonePickerExpandedAfterAnimation = false // eslint-disable-line no-unused-vars
-let skinToneDropdown
-let currentSkinTone = 0
-let activeSkinTone = 0
-let skinToneButtonText // eslint-disable-line no-unused-vars
-let pickerStyle // eslint-disable-line no-unused-vars
-let skinToneButtonLabel = '' // eslint-disable-line no-unused-vars
-let skinTones = []
-let currentFavorites = [] // eslint-disable-line no-unused-vars
-let defaultFavoriteEmojis
-let numColumns = DEFAULT_NUM_COLUMNS
-let isRtl = false // eslint-disable-line no-unused-vars
-let scrollbarWidth = 0 // eslint-disable-line no-unused-vars
-let currentGroupIndex = 0
-let groups = defaultGroups
-let currentGroup = groups[currentGroupIndex]
-let databaseLoaded = false // eslint-disable-line no-unused-vars
-let activeSearchItemId // eslint-disable-line no-unused-vars
-
 // constants
 const EMPTY_ARRAY = []
+
+const { assign } = Object
+
+export function createRoot(target, props) {
+
+  const state = {
+    skinToneEmoji: undefined,
+    i18n: undefined,
+    database: undefined,
+    customEmoji: undefined,
+    customCategorySorting: undefined,
+    emojiVersion: undefined,
+  }
+
+  // public
+  assign(state, props)
+
+  // private
+  assign(state, {
+    initialLoad: true,
+    currentEmojis: [],
+    currentEmojisWithCategories: [],
+    rawSearchText: '',
+    searchText: '',
+    rootElement: undefined,
+    baselineEmoji: undefined,
+    tabpanelElement: undefined,
+    searchMode: false,
+    activeSearchItem: -1,
+    message: undefined,
+    skinTonePickerExpanded: false,
+    skinTonePickerExpandedAfterAnimation: false,
+    skinToneDropdown: undefined,
+    currentSkinTone: 0,
+    activeSkinTone: 0,
+    skinToneButtonText: undefined,
+    pickerStyle: undefined,
+    skinToneButtonLabel: '',
+    skinTones: [],
+    currentFavorites: [],
+    defaultFavoriteEmojis: undefined,
+    numColumns: DEFAULT_NUM_COLUMNS,
+    isRtl: false,
+    scrollbarWidth: 0,
+    currentGroupIndex: 0,
+    groups: defaultGroups,
+    databaseLoaded: false,
+    activeSearchItemId: undefined,
+  })
 
 //
 // Utils/helpers
 //
 
-const focus = id => {
-  rootElement.getRootNode().getElementById(id).focus()
-}
+  const focus = id => {
+    rootElement.getRootNode().getElementById(id).focus()
+  }
 
 // fire a custom event that crosses the shadow boundary
-const fireEvent = (name, detail) => {
-  rootElement.dispatchEvent(new CustomEvent(name, {
-    detail,
-    bubbles: true,
-    composed: true
-  }))
-}
+  const fireEvent = (name, detail) => {
+    rootElement.dispatchEvent(new CustomEvent(name, {
+      detail,
+      bubbles: true,
+      composed: true
+    }))
+  }
 
 // eslint-disable-next-line no-unused-vars
-const unicodeWithSkin = (emoji, currentSkinTone) => (
-  (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
-)
+  const unicodeWithSkin = (emoji, currentSkinTone) => (
+    (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
+  )
 
 // eslint-disable-next-line no-unused-vars
-const labelWithSkin = (emoji, currentSkinTone) => (
-  uniq([
-    (emoji.name || unicodeWithSkin(emoji, currentSkinTone)),
-    emoji.annotation,
-    ...(emoji.shortcodes || EMPTY_ARRAY)
-  ].filter(Boolean)).join(', ')
-)
+  const labelWithSkin = (emoji, currentSkinTone) => (
+    uniq([
+      (emoji.name || unicodeWithSkin(emoji, currentSkinTone)),
+      emoji.annotation,
+      ...(emoji.shortcodes || EMPTY_ARRAY)
+    ].filter(Boolean)).join(', ')
+  )
 
 // eslint-disable-next-line no-unused-vars
-const titleForEmoji = (emoji) => (
-  emoji.annotation || (emoji.shortcodes || EMPTY_ARRAY).join(', ')
-)
+  const titleForEmoji = (emoji) => (
+    emoji.annotation || (emoji.shortcodes || EMPTY_ARRAY).join(', ')
+  )
 
 //
 // Determine the emoji support level (in requestIdleCallback)
 //
 
-onMount(() => {
-  if (!emojiVersion) {
-    detectEmojiSupportLevel().then(level => {
-      // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
-      /* istanbul ignore next */
-      if (!level) {
-        message = i18n.emojiUnsupportedMessage
-      }
-    })
-  }
-})
+  // mount logic
+    if (!state.emojiVersion) {
+      detectEmojiSupportLevel().then(level => {
+        // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
+        /* istanbul ignore next */
+        if (!level) {
+          state.message = state.i18n.emojiUnsupportedMessage
+        }
+      })
+    }
 
 //
 // Set or update the database object
 //
 
-$: {
-  // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
-  async function handleDatabaseLoading () {
-    let showingLoadingMessage = false
-    const timeoutHandle = setTimeout(() => {
-      showingLoadingMessage = true
-      message = i18n.loadingMessage
-    }, TIMEOUT_BEFORE_LOADING_MESSAGE)
-    try {
-      await database.ready()
-      databaseLoaded = true // eslint-disable-line no-unused-vars
-    } catch (err) {
-      console.error(err)
-      message = i18n.networkErrorMessage
-    } finally {
-      clearTimeout(timeoutHandle)
-      if (showingLoadingMessage) { // Seems safer than checking the i18n string, which may change
-        showingLoadingMessage = false
-        message = '' // eslint-disable-line no-unused-vars
+  createEffect(() => {
+    // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
+    async function handleDatabaseLoading () {
+      let showingLoadingMessage = false
+      const timeoutHandle = setTimeout(() => {
+        showingLoadingMessage = true
+        state.message = state.i18n.loadingMessage
+      }, TIMEOUT_BEFORE_LOADING_MESSAGE)
+      try {
+        await database.ready()
+        state.databaseLoaded = true // eslint-disable-line no-unused-vars
+      } catch (err) {
+        console.error(err)
+        state.message = state.i18n.networkErrorMessage
+      } finally {
+        clearTimeout(timeoutHandle)
+        if (showingLoadingMessage) { // Seems safer than checking the i18n string, which may change
+          showingLoadingMessage = false
+          state.message = '' // eslint-disable-line no-unused-vars
+        }
       }
     }
-  }
-  if (database) {
-    /* no await */ handleDatabaseLoading()
-  }
-}
+
+    if (state.database) {
+      /* no await */
+      handleDatabaseLoading()
+    }
+  })
 
 //
 // Global styles for the entire picker
 //
 
-/* eslint-disable no-unused-vars */
-$: pickerStyle = `
-  --num-groups: ${groups.length}; 
-  --indicator-opacity: ${searchMode ? 0 : 1}; 
-  --num-skintones: ${NUM_SKIN_TONES};`
-/* eslint-enable no-unused-vars */
+  createEffect(() => {
+    state.pickerStyle = `
+      --num-groups: ${state.groups.length}; 
+      --indicator-opacity: ${state.searchMode ? 0 : 1}; 
+      --num-skintones: ${NUM_SKIN_TONES};`
+  })
 
 //
 // Set or update the customEmoji
 //
 
-$: {
-  if (customEmoji && database) {
-    console.log('updating custom emoji')
-    database.customEmoji = customEmoji
-  }
-}
-
-$: {
-  if (customEmoji && customEmoji.length) {
-    groups = [customGroup, ...defaultGroups]
-  } else if (groups !== defaultGroups) {
-    if (currentGroupIndex) {
-      // If the current group is anything other than "custom" (which is first), decrement.
-      // This fixes the odd case where you set customEmoji, then pick a category, then unset customEmoji
-      currentGroupIndex--
+  createEffect(() => {
+    if (state.customEmoji && state.database) {
+      console.log('updating custom emoji')
+      state.database.customEmoji = state.customEmoji
     }
-    groups = defaultGroups
-  }
-}
+  })
+
+  createEffect(() => {
+    if (state.customEmoji && state.customEmoji.length) {
+      state.groups = [customGroup, ...defaultGroups]
+    } else if (state.groups !== defaultGroups) {
+      if (state.currentGroupIndex) {
+        // If the current group is anything other than "custom" (which is first), decrement.
+        // This fixes the odd case where you set customEmoji, then pick a category, then unset customEmoji
+        state.currentGroupIndex--
+      }
+      state.groups = defaultGroups
+    }
+  })
 
 //
 // Set or update the preferred skin tone
 //
 
-$: {
-  async function updatePreferredSkinTone () {
-    if (databaseLoaded) {
-      currentSkinTone = await database.getPreferredSkinTone()
+  createEffect(() => {
+    async function updatePreferredSkinTone () {
+      if (state.databaseLoaded) {
+        state.currentSkinTone = await state.database.getPreferredSkinTone()
+      }
     }
-  }
-  /* no await */ updatePreferredSkinTone()
-}
 
-$: skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => applySkinTone(skinToneEmoji, i))
-/* eslint-disable no-unused-vars */
-$: skinToneButtonText = skinTones[currentSkinTone]
-$: skinToneButtonLabel = i18n.skinToneLabel.replace('{skinTone}', i18n.skinTones[currentSkinTone])
-/* eslint-enable no-unused-vars */
+    /* no await */ updatePreferredSkinTone()
+  })
+
+  createEffect(() => {
+    state.skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => applySkinTone(state.skinToneEmoji, i))
+  })
+
+createEffect(() => {
+  state.skinToneButtonText = state.skinTones[state.currentSkinTone]
+})
+
+  createEffect(() => {
+    state.skinToneButtonLabel = state.i18n.skinToneLabel.replace('{skinTone}', state.i18n.skinTones[state.currentSkinTone])
+  })
 
 //
 // Set or update the favorites emojis
 //
 
-$: {
-  async function updateDefaultFavoriteEmojis () {
-    defaultFavoriteEmojis = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
-      database.getEmojiByUnicodeOrName(unicode)
-    )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
-  }
-  if (databaseLoaded) {
-    /* no await */ updateDefaultFavoriteEmojis()
-  }
-}
+  createEffect(() => {
+    async function updateDefaultFavoriteEmojis () {
+      state.defaultFavoriteEmojis = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
+        state.database.getEmojiByUnicodeOrName(unicode)
+      )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
+    }
 
-$: {
-  async function updateFavorites () {
-    console.log('updateFavorites')
-    const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
-    const favorites = await summarizeEmojis(uniqBy([
-      ...dbFavorites,
-      ...defaultFavoriteEmojis
-    ], _ => (_.unicode || _.name)).slice(0, numColumns))
-    currentFavorites = favorites
-  }
+    if (state.databaseLoaded) {
+      /* no await */ updateDefaultFavoriteEmojis()
+    }
+  })
 
-  if (databaseLoaded && defaultFavoriteEmojis) {
-    /* no await */ updateFavorites()
-  }
-}
+  createEffect(() => {
+    async function updateFavorites () {
+      console.log('updateFavorites')
+      const { database, defaultFavoriteEmojis, numColumns } = state
+      const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
+      const favorites = await summarizeEmojis(uniqBy([
+        ...dbFavorites,
+        ...defaultFavoriteEmojis
+      ], _ => (_.unicode || _.name)).slice(0, numColumns))
+      state.currentFavorites = favorites
+    }
+
+    if (state.databaseLoaded && state.defaultFavoriteEmojis) {
+      /* no await */ updateFavorites()
+    }
+  })
 
 //
 // Calculate the width of the emoji grid. This serves two purposes:
@@ -246,366 +264,360 @@ $: {
 // the rAF loop, this is the most appropriate place to do it perf-wise.
 //
 
-// eslint-disable-next-line no-unused-vars
-function calculateEmojiGridStyle (node) {
-  return widthCalculator.calculateWidth(node, width => {
-    /* istanbul ignore next */
-    if (process.env.NODE_ENV !== 'test') { // jsdom throws errors for this kind of fancy stuff
-      // read all the style/layout calculations we need to make
-      const style = getComputedStyle(rootElement)
-      const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
-      const newIsRtl = style.getPropertyValue('direction') === 'rtl'
-      const parentWidth = node.parentElement.getBoundingClientRect().width
-      const newScrollbarWidth = parentWidth - width
+  function calculateEmojiGridStyle (node) {
+    return widthCalculator.calculateWidth(node, width => {
+      /* istanbul ignore next */
+      if (process.env.NODE_ENV !== 'test') { // jsdom throws errors for this kind of fancy stuff
+        // read all the style/layout calculations we need to make
+        const style = getComputedStyle(rootElement)
+        const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
+        const newIsRtl = style.getPropertyValue('direction') === 'rtl'
+        const parentWidth = node.parentElement.getBoundingClientRect().width
+        const newScrollbarWidth = parentWidth - width
 
-      // write to Svelte variables
-      numColumns = newNumColumns
-      scrollbarWidth = newScrollbarWidth // eslint-disable-line no-unused-vars
-      isRtl = newIsRtl // eslint-disable-line no-unused-vars
-    }
-  })
-}
+        // write to state variables
+        state.numColumns = newNumColumns
+        state.scrollbarWidth = newScrollbarWidth // eslint-disable-line no-unused-vars
+        state.isRtl = newIsRtl // eslint-disable-line no-unused-vars
+      }
+    })
+  }
 
 //
 // Update the current group based on the currentGroupIndex
 //
 
-$: currentGroup = groups[currentGroupIndex]
+  createEffect(() => {
+    state.currentGroup = state.groups[state.currentGroupIndex]
+  })
 
 //
 // Set or update the currentEmojis. Check for invalid ZWJ renderings
 // (i.e. double emoji).
 //
 
-$: {
-  async function updateEmojis () {
-    console.log('updateEmojis')
-    if (!databaseLoaded) {
-      currentEmojis = []
-      searchMode = false
-    } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
-      const currentSearchText = searchText
-      const newEmojis = await getEmojisBySearchQuery(currentSearchText)
-      if (currentSearchText === searchText) { // if the situation changes asynchronously, do not update
-        currentEmojis = newEmojis
-        searchMode = true
-      }
-    } else if (currentGroup) {
-      const currentGroupId = currentGroup.id
-      const newEmojis = await getEmojisByGroup(currentGroupId)
-      if (currentGroupId === currentGroup.id) { // if the situation changes asynchronously, do not update
-        currentEmojis = newEmojis
-        searchMode = false
+  createEffect(() => {
+    async function updateEmojis () {
+      console.log('updateEmojis')
+      const { searchText, currentGroup, databaseLoaded } = state
+      if (!databaseLoaded) {
+        state.currentEmojis = []
+        state.searchMode = false
+      } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
+        const newEmojis = await getEmojisBySearchQuery(searchText)
+        if (state.searchText === searchText) { // if the situation changes asynchronously, do not update
+          state.currentEmojis = newEmojis
+          state.searchMode = true
+        }
+      } else if (currentGroup) {
+        const { id: currentGroupId } = currentGroup
+        const newEmojis = await getEmojisByGroup(currentGroupId)
+        if (state.currentGroup.id === currentGroupId) { // if the situation changes asynchronously, do not update
+          state.currentEmojis = newEmojis
+          state.searchMode = false
+        }
       }
     }
-  }
-  /* no await */ updateEmojis()
-}
+
+    /* no await */ updateEmojis()
+  })
 
 // Some emojis have their ligatures rendered as two or more consecutive emojis
 // We want to treat these the same as unsupported emojis, so we compare their
 // widths against the baseline widths and remove them as necessary
-$: {
-  const zwjEmojisToCheck = currentEmojis
-    .filter(emoji => emoji.unicode) // filter custom emoji
-    .filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
-  if (!emojiVersion && zwjEmojisToCheck.length) {
-    // render now, check their length later
-    requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
-  } else {
-    currentEmojis = emojiVersion ? currentEmojis : currentEmojis.filter(isZwjSupported)
-    // Reset scroll top to 0 when emojis change
-    requestAnimationFrame(() => resetScrollTopIfPossible(tabpanelElement))
-  }
-}
-
-function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
-  const rootNode = rootElement.getRootNode()
-  const emojiToDomNode = emoji => rootNode.getElementById(`emo-${emoji.id}`)
-  checkZwjSupport(zwjEmojisToCheck, baselineEmoji, emojiToDomNode)
-  // force update
-  currentEmojis = currentEmojis // eslint-disable-line no-self-assign
-}
-
-function isZwjSupported (emoji) {
-  return !emoji.unicode || !hasZwj(emoji) || supportedZwjEmojis.get(emoji.unicode)
-}
-
-async function filterEmojisByVersion (emojis) {
-  const emojiSupportLevel = emojiVersion || await detectEmojiSupportLevel()
-  // !version corresponds to custom emoji
-  return emojis.filter(({ version }) => !version || version <= emojiSupportLevel)
-}
-
-async function summarizeEmojis (emojis) {
-  return summarizeEmojisForUI(emojis, emojiVersion || await detectEmojiSupportLevel())
-}
-
-async function getEmojisByGroup (group) {
-  console.log('getEmojiByGroup', group)
-  // -1 is custom emoji
-  const emoji = group === -1 ? customEmoji : await database.getEmojiByGroup(group)
-  return summarizeEmojis(await filterEmojisByVersion(emoji))
-}
-
-async function getEmojisBySearchQuery (query) {
-  return summarizeEmojis(await filterEmojisByVersion(await database.getEmojiBySearchQuery(query)))
-}
-
-$: {
-  // consider initialLoad to be complete when the first tabpanel and favorites are rendered
-  /* istanbul ignore next */
-  if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
-    if (currentEmojis.length && currentFavorites.length && initialLoad) {
-      initialLoad = false
-      requestPostAnimationFrame(() => performance.measure('initialLoad', 'initialLoad'))
+  createEffect(() => {
+    const zwjEmojisToCheck = state.currentEmojis
+      .filter(emoji => emoji.unicode) // filter custom emoji
+      .filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
+    if (!state.emojiVersion && zwjEmojisToCheck.length) {
+      // render now, check their length later
+      requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
+    } else {
+      state.currentEmojis = state.emojiVersion ? state.currentEmojis : state.currentEmojis.filter(isZwjSupported)
+      // Reset scroll top to 0 when emojis change
+      requestAnimationFrame(() => resetScrollTopIfPossible(tabpanelElement))
     }
+  })
+
+  function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
+    const rootNode = rootElement.getRootNode()
+    const emojiToDomNode = emoji => rootNode.getElementById(`emo-${emoji.id}`)
+    checkZwjSupport(zwjEmojisToCheck, baselineEmoji, emojiToDomNode)
+    // force update
+    state.currentEmojis = currentEmojis // eslint-disable-line no-self-assign
   }
-}
+
+  function isZwjSupported (emoji) {
+    return !emoji.unicode || !hasZwj(emoji) || supportedZwjEmojis.get(emoji.unicode)
+  }
+
+  async function filterEmojisByVersion (emojis) {
+    const emojiSupportLevel = state.emojiVersion || await detectEmojiSupportLevel()
+    // !version corresponds to custom emoji
+    return emojis.filter(({ version }) => !version || version <= emojiSupportLevel)
+  }
+
+  async function summarizeEmojis (emojis) {
+    return summarizeEmojisForUI(emojis, state.emojiVersion || await detectEmojiSupportLevel())
+  }
+
+  async function getEmojisByGroup (group) {
+    console.log('getEmojiByGroup', group)
+    // -1 is custom emoji
+    const emoji = group === -1 ? state.customEmoji : await state.database.getEmojiByGroup(group)
+    return summarizeEmojis(await filterEmojisByVersion(emoji))
+  }
+
+  async function getEmojisBySearchQuery (query) {
+    return summarizeEmojis(await filterEmojisByVersion(await state.database.getEmojiBySearchQuery(query)))
+  }
+
+  createEffect(() => {
+    // consider initialLoad to be complete when the first tabpanel and favorites are rendered
+    /* istanbul ignore next */
+    if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
+      if (state.currentEmojis.length && state.currentFavorites.length && state.initialLoad) {
+        state.initialLoad = false
+        requestPostAnimationFrame(() => performance.measure('initialLoad', 'initialLoad'))
+      }
+    }
+  })
 
 //
 // Derive currentEmojisWithCategories from currentEmojis. This is always done even if there
 // are no categories, because it's just easier to code the HTML this way.
 //
 
-$: {
-  function calculateCurrentEmojisWithCategories () {
-    if (searchMode) {
-      return [
-        {
-          category: '',
-          emojis: currentEmojis
-        }
-      ]
-    }
-    const categoriesToEmoji = new Map()
-    for (const emoji of currentEmojis) {
-      const category = emoji.category || ''
-      let emojis = categoriesToEmoji.get(category)
-      if (!emojis) {
-        emojis = []
-        categoriesToEmoji.set(category, emojis)
+  createEffect(() => {
+    function calculateCurrentEmojisWithCategories () {
+      if (state.searchMode) {
+        return [
+          {
+            category: '',
+            emojis: state.currentEmojis
+          }
+        ]
       }
-      emojis.push(emoji)
+      const categoriesToEmoji = new Map()
+      for (const emoji of state.currentEmojis) {
+        const category = emoji.category || ''
+        let emojis = categoriesToEmoji.get(category)
+        if (!emojis) {
+          emojis = []
+          categoriesToEmoji.set(category, emojis)
+        }
+        emojis.push(emoji)
+      }
+      return [...categoriesToEmoji.entries()]
+        .map(([category, emojis]) => ({ category, emojis }))
+        .sort((a, b) => state.customCategorySorting(a.category, b.category))
     }
-    return [...categoriesToEmoji.entries()]
-      .map(([category, emojis]) => ({ category, emojis }))
-      .sort((a, b) => customCategorySorting(a.category, b.category))
-  }
 
-  // eslint-disable-next-line no-unused-vars
-  currentEmojisWithCategories = calculateCurrentEmojisWithCategories()
-}
+    state.currentEmojisWithCategories = calculateCurrentEmojisWithCategories()
+  })
 
 //
 // Handle active search item (i.e. pressing up or down while searching)
 //
 
-/* eslint-disable no-unused-vars */
-$: activeSearchItemId = activeSearchItem !== -1 && currentEmojis[activeSearchItem].id
-/* eslint-enable no-unused-vars */
+  createEffect(() => {
+    state.activeSearchItemId = state.activeSearchItem !== -1 && state.currentEmojis[state.activeSearchItem].id
+  })
 
 //
 // Handle user input on the search input
 //
 
-$: {
-  requestIdleCallback(() => {
-    searchText = (rawSearchText || '').trim() // defer to avoid input delays, plus we can trim here
-    activeSearchItem = -1
+  createEffect(() => {
+    const { rawSearchText } = state
+    requestIdleCallback(() => {
+      state.searchText = (rawSearchText || '').trim() // defer to avoid input delays, plus we can trim here
+      state.activeSearchItem = -1
+    })
   })
-}
 
-// eslint-disable-next-line no-unused-vars
-function onSearchKeydown (event) {
-  if (!searchMode || !currentEmojis.length) {
-    return
-  }
+  function onSearchKeydown (event) {
+    if (!state.searchMode || !state.currentEmojis.length) {
+      return
+    }
 
-  const goToNextOrPrevious = (previous) => {
-    halt(event)
-    activeSearchItem = incrementOrDecrement(previous, activeSearchItem, currentEmojis)
-  }
+    const goToNextOrPrevious = (previous) => {
+      halt(event)
+      state.activeSearchItem = incrementOrDecrement(previous, state.activeSearchItem, state.currentEmojis)
+    }
 
-  switch (event.key) {
-    case 'ArrowDown':
-      return goToNextOrPrevious(false)
-    case 'ArrowUp':
-      return goToNextOrPrevious(true)
-    case 'Enter':
-      if (activeSearchItem !== -1) {
-        halt(event)
-        return clickEmoji(currentEmojis[activeSearchItem].id)
-      } else if (currentEmojis.length) {
-        activeSearchItem = 0
-      }
+    switch (event.key) {
+      case 'ArrowDown':
+        return goToNextOrPrevious(false)
+      case 'ArrowUp':
+        return goToNextOrPrevious(true)
+      case 'Enter':
+        if (state.activeSearchItem !== -1) {
+          halt(event)
+          return clickEmoji(state.currentEmojis[state.activeSearchItem].id)
+        } else if (state.currentEmojis.length) {
+          state.activeSearchItem = 0
+        }
+    }
   }
-}
 
 //
 // Handle user input on nav
 //
 
-// eslint-disable-next-line no-unused-vars
-function onNavClick (group) {
-  rawSearchText = ''
-  searchText = ''
-  activeSearchItem = -1
-  currentGroupIndex = groups.findIndex(_ => _.id === group.id)
-}
+  function onNavClick (group) {
+    state.rawSearchText = ''
+    state.searchText = ''
+    state.activeSearchItem = -1
+    state.currentGroupIndex = state.groups.findIndex(_ => _.id === group.id)
+  }
 
-// eslint-disable-next-line no-unused-vars
-function onNavKeydown (event) {
-  const { target, key } = event
+  function onNavKeydown (event) {
+    const { target, key } = event
 
-  const doFocus = el => {
-    if (el) {
-      halt(event)
-      el.focus()
+    const doFocus = el => {
+      if (el) {
+        halt(event)
+        el.focus()
+      }
+    }
+
+    switch (key) {
+      case 'ArrowLeft':
+        return doFocus(target.previousSibling)
+      case 'ArrowRight':
+        return doFocus(target.nextSibling)
+      case 'Home':
+        return doFocus(target.parentElement.firstChild)
+      case 'End':
+        return doFocus(target.parentElement.lastChild)
     }
   }
-
-  switch (key) {
-    case 'ArrowLeft':
-      return doFocus(target.previousSibling)
-    case 'ArrowRight':
-      return doFocus(target.nextSibling)
-    case 'Home':
-      return doFocus(target.parentElement.firstChild)
-    case 'End':
-      return doFocus(target.parentElement.lastChild)
-  }
-}
 
 //
 // Handle user input on an emoji
 //
 
-async function clickEmoji (unicodeOrName) {
-  const emoji = await database.getEmojiByUnicodeOrName(unicodeOrName)
-  const emojiSummary = [...currentEmojis, ...currentFavorites]
-    .find(_ => (_.id === unicodeOrName))
-  const skinTonedUnicode = emojiSummary.unicode && unicodeWithSkin(emojiSummary, currentSkinTone)
-  await database.incrementFavoriteEmojiCount(unicodeOrName)
-  fireEvent('emoji-click', {
-    emoji,
-    skinTone: currentSkinTone,
-    ...(skinTonedUnicode && { unicode: skinTonedUnicode }),
-    ...(emojiSummary.name && { name: emojiSummary.name })
-  })
-}
-
-// eslint-disable-next-line no-unused-vars
-async function onEmojiClick (event) {
-  const { target } = event
-  if (!target.classList.contains('emoji')) {
-    return
+  async function clickEmoji (unicodeOrName) {
+    const emoji = await state.database.getEmojiByUnicodeOrName(unicodeOrName)
+    const emojiSummary = [...state.currentEmojis, ...state.currentFavorites]
+      .find(_ => (_.id === unicodeOrName))
+    const skinTonedUnicode = emojiSummary.unicode && unicodeWithSkin(emojiSummary, state.currentSkinTone)
+    await state.database.incrementFavoriteEmojiCount(unicodeOrName)
+    fireEvent('emoji-click', {
+      emoji,
+      skinTone: state.currentSkinTone,
+      ...(skinTonedUnicode && { unicode: skinTonedUnicode }),
+      ...(emojiSummary.name && { name: emojiSummary.name })
+    })
   }
-  halt(event)
-  const id = target.id.substring(4) // replace 'emo-' or 'fav-' prefix
 
-  /* no await */ clickEmoji(id)
-}
+  async function onEmojiClick (event) {
+    const { target } = event
+    if (!target.classList.contains('emoji')) {
+      return
+    }
+    halt(event)
+    const id = target.id.substring(4) // replace 'emo-' or 'fav-' prefix
+
+    /* no await */ clickEmoji(id)
+  }
 
 //
 // Handle user input on the skintone picker
 //
 
-// eslint-disable-next-line no-unused-vars
-function changeSkinTone (skinTone) {
-  currentSkinTone = skinTone
-  skinTonePickerExpanded = false
-  focus('skintone-button')
-  fireEvent('skin-tone-change', { skinTone })
-  /* no await */ database.setPreferredSkinTone(skinTone)
-}
-
-// eslint-disable-next-line no-unused-vars
-function onSkinToneOptionsClick (event) {
-  const { target: { id } } = event
-  const match = id && id.match(/^skintone-(\d)/) // skintone option format
-  if (!match) { // not a skintone option
-    return
+  function changeSkinTone (skinTone) {
+    state.currentSkinTone = skinTone
+    state.skinTonePickerExpanded = false
+    focus('skintone-button')
+    fireEvent('skin-tone-change', { skinTone })
+    /* no await */ database.setPreferredSkinTone(skinTone)
   }
-  halt(event)
-  const skinTone = parseInt(match[1], 10) // remove 'skintone-' prefix
-  changeSkinTone(skinTone)
-}
 
-// eslint-disable-next-line no-unused-vars
-function onClickSkinToneButton (event) {
-  skinTonePickerExpanded = !skinTonePickerExpanded
-  activeSkinTone = currentSkinTone
-  if (skinTonePickerExpanded) {
+  function onSkinToneOptionsClick (event) {
+    const { target: { id } } = event
+    const match = id && id.match(/^skintone-(\d)/) // skintone option format
+    if (!match) { // not a skintone option
+      return
+    }
     halt(event)
-    requestAnimationFrame(() => focus('skintone-list'))
+    const skinTone = parseInt(match[1], 10) // remove 'skintone-' prefix
+    changeSkinTone(skinTone)
   }
-}
+
+  function onClickSkinToneButton (event) {
+    state.skinTonePickerExpanded = !state.skinTonePickerExpanded
+    state.activeSkinTone = state.currentSkinTone
+    if (state.skinTonePickerExpanded) {
+      halt(event)
+      requestAnimationFrame(() => focus('skintone-list'))
+    }
+  }
 
 // To make the animation nicer, change the z-index of the skintone picker button
 // *after* the animation has played. This makes it appear that the picker box
 // is expanding "below" the button
-$: {
-  if (skinTonePickerExpanded) {
-    skinToneDropdown.addEventListener('transitionend', () => {
-      skinTonePickerExpandedAfterAnimation = true // eslint-disable-line no-unused-vars
-    }, { once: true })
-  } else {
-    skinTonePickerExpandedAfterAnimation = false // eslint-disable-line no-unused-vars
-  }
-}
+  createEffect(() => {
+    if (state.skinTonePickerExpanded) {
+      state.skinToneDropdown.addEventListener('transitionend', () => {
+        state.skinTonePickerExpandedAfterAnimation = true // eslint-disable-line no-unused-vars
+      }, { once: true })
+    } else {
+      state.skinTonePickerExpandedAfterAnimation = false // eslint-disable-line no-unused-vars
+    }
+  })
 
-// eslint-disable-next-line no-unused-vars
-function onSkinToneOptionsKeydown (event) {
-  if (!skinTonePickerExpanded) {
-    return
-  }
+  function onSkinToneOptionsKeydown (event) {
+    if (!state.skinTonePickerExpanded) {
+      return
+    }
 
-  const changeActiveSkinTone = async nextSkinTone => {
-    halt(event)
-    activeSkinTone = nextSkinTone
-  }
-
-  switch (event.key) {
-    case 'ArrowUp':
-      return changeActiveSkinTone(incrementOrDecrement(true, activeSkinTone, skinTones))
-    case 'ArrowDown':
-      return changeActiveSkinTone(incrementOrDecrement(false, activeSkinTone, skinTones))
-    case 'Home':
-      return changeActiveSkinTone(0)
-    case 'End':
-      return changeActiveSkinTone(skinTones.length - 1)
-    case 'Enter':
-      // enter on keydown, space on keyup. this is just how browsers work for buttons
-      // https://lists.w3.org/Archives/Public/w3c-wai-ig/2019JanMar/0086.html
+    const changeActiveSkinTone = async nextSkinTone => {
       halt(event)
-      return changeSkinTone(activeSkinTone)
-    case 'Escape':
-      halt(event)
-      skinTonePickerExpanded = false
-      return focus('skintone-button')
-  }
-}
+      state.activeSkinTone = nextSkinTone
+    }
 
-// eslint-disable-next-line no-unused-vars
-function onSkinToneOptionsKeyup (event) {
-  if (!skinTonePickerExpanded) {
-    return
+    switch (event.key) {
+      case 'ArrowUp':
+        return changeActiveSkinTone(incrementOrDecrement(true, state.activeSkinTone, state.skinTones))
+      case 'ArrowDown':
+        return changeActiveSkinTone(incrementOrDecrement(false, state.activeSkinTone, state.skinTones))
+      case 'Home':
+        return changeActiveSkinTone(0)
+      case 'End':
+        return changeActiveSkinTone(state.skinTones.length - 1)
+      case 'Enter':
+        // enter on keydown, space on keyup. this is just how browsers work for buttons
+        // https://lists.w3.org/Archives/Public/w3c-wai-ig/2019JanMar/0086.html
+        halt(event)
+        return changeSkinTone(state.activeSkinTone)
+      case 'Escape':
+        halt(event)
+        state.skinTonePickerExpanded = false
+        return focus('skintone-button')
+    }
   }
-  switch (event.key) {
-    case ' ':
-      // enter on keydown, space on keyup. this is just how browsers work for buttons
-      // https://lists.w3.org/Archives/Public/w3c-wai-ig/2019JanMar/0086.html
-      halt(event)
-      return changeSkinTone(activeSkinTone)
-  }
-}
 
-// eslint-disable-next-line no-unused-vars
-async function onSkinToneOptionsFocusOut (event) {
-  // On blur outside of the skintone listbox, collapse the skintone picker.
-  const { relatedTarget } = event
-  if (!relatedTarget || relatedTarget.id !== 'skintone-list') {
-    skinTonePickerExpanded = false
+  function onSkinToneOptionsKeyup (event) {
+    if (!state.skinTonePickerExpanded) {
+      return
+    }
+    switch (event.key) {
+      case ' ':
+        // enter on keydown, space on keyup. this is just how browsers work for buttons
+        // https://lists.w3.org/Archives/Public/w3c-wai-ig/2019JanMar/0086.html
+        halt(event)
+        return changeSkinTone(state.activeSkinTone)
+    }
   }
+
+  async function onSkinToneOptionsFocusOut (event) {
+    // On blur outside of the skintone listbox, collapse the skintone picker.
+    const { relatedTarget } = event
+    if (!relatedTarget || relatedTarget.id !== 'skintone-list') {
+      state.skinTonePickerExpanded = false
+    }
+  }
+
 }
