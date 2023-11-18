@@ -1,12 +1,12 @@
-import { labelWithSkin, titleForEmoji, unicodeWithSkin } from './Picker.js'
+export function root(state, helpers) {
 
-export function root(state) {
+  const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
 function emojiList(emojis, searchMode, prefix) {
   return map(emojis, (emoji, i) => {
     return html`
       <button role="${searchMode ? 'option' : 'menuitem'}"
-        aria-selected="{searchMode ? i === state.activeSearchItem : ''}"
+        aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
         aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
         title="${titleForEmoji(emoji)}"
         class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
@@ -67,8 +67,7 @@ function skintonePicker() {
        on:focusout={onSkinToneOptionsFocusOut}
        on:click={onSkinToneOptionsClick}
        on:keydown={onSkinToneOptionsKeydown}
-       on:keyup={onSkinToneOptionsKeyup}
-       bind:this={skinToneDropdown}>
+       on:keyup={onSkinToneOptionsKeyup}>
          ${skintoneButtons()}
       </div>
   `
@@ -152,7 +151,6 @@ function emojiTabPanel() {
     id="${state.searchMode ? '' : `tab-${state.currentGroup.id}`}"
     tabindex="0"
     on:click={onEmojiClick}
-    bind:this={tabpanelElement}
     >
       <div use:calculateEmojiGridStyle>
         ${emojiTabs()}
@@ -197,8 +195,7 @@ function section() {
   <section
     class="picker"
     aria-label="${state.i18n.regionLabel}"
-    style="${state.pickerStyle}"
-    bind:this={rootElement}>
+    style="${state.pickerStyle}">
     <!-- using a spacer div because this allows us to cover up the skintone picker animation -->
     <div class="pad-top"></div>
     ${searchBox()}
@@ -222,17 +219,23 @@ function section() {
     <!-- svelte-ignore a11y-interactive-supports-focus -->
     <div class="favorites emoji-menu ${state.message ? 'gone': ''}"
          role="menu"
-         aria-label="${i18n.favoritesLabel}"
-         style="padding-inline-end: ${scrollbarWidth}px"
+         aria-label="${state.i18n.favoritesLabel}"
+         style="padding-inline-end: ${state.scrollbarWidth}px"
          on:click={onEmojiClick}>
       ${emojiList(state.currentFavorites, false, 'fav')}
     </div>
     <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
-    <button aria-hidden="true" tabindex="-1" class="abs-pos hidden emoji" bind:this={baselineEmoji}>😀</button>
+    <button aria-hidden="true" tabindex="-1" class="abs-pos hidden emoji baseline-emoji">😀</button>
   </section>
     `
 }
 
-  return section()
+  const dom = section()
 
+  return {
+    rootElement: dom.querySelector('.picker'),
+    skinToneDropdown: dom.querySelector('#skintone-list'),
+    tabpanelElement: dom.querySelector('.tabpanel'),
+    baselineEmoji: dom.querySelector('.baseline-emoji')
+  }
 }

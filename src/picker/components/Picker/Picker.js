@@ -20,6 +20,7 @@ import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.js'
+import { root } from './PickerTemplate.js'
 
 // constants
 const EMPTY_ARRAY = []
@@ -47,7 +48,7 @@ export function createRoot(target, props) {
     currentEmojisWithCategories: [],
     rawSearchText: '',
     searchText: '',
-    rootElement: undefined,
+    dom.rootElement: undefined,
     baselineEmoji: undefined,
     tabpanelElement: undefined,
     searchMode: false,
@@ -72,29 +73,31 @@ export function createRoot(target, props) {
     databaseLoaded: false,
     activeSearchItemId: undefined,
   })
-
+  
 //
 // Utils/helpers
 //
 
   const focus = id => {
-    rootElement.getRootNode().getElementById(id).focus()
+    dom.rootElement.getRootNode().getElementById(id).focus()
   }
 
 // fire a custom event that crosses the shadow boundary
   const fireEvent = (name, detail) => {
-    rootElement.dispatchEvent(new CustomEvent(name, {
+    dom.rootElement.dispatchEvent(new CustomEvent(name, {
       detail,
       bubbles: true,
       composed: true
     }))
   }
 
-  export const unicodeWithSkin = (emoji, currentSkinTone) => (
+  // Helpers
+  
+  const unicodeWithSkin = (emoji, currentSkinTone) => (
     (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
   )
 
-  export const labelWithSkin = (emoji, currentSkinTone) => (
+  const labelWithSkin = (emoji, currentSkinTone) => (
     uniq([
       (emoji.name || unicodeWithSkin(emoji, currentSkinTone)),
       emoji.annotation,
@@ -102,10 +105,15 @@ export function createRoot(target, props) {
     ].filter(Boolean)).join(', ')
   )
 
-  export const titleForEmoji = (emoji) => (
+  const titleForEmoji = (emoji) => (
     emoji.annotation || (emoji.shortcodes || EMPTY_ARRAY).join(', ')
   )
 
+  const helpers = {
+    labelWithSkin, titleForEmoji, unicodeWithSkin
+  }
+  const dom = root(state, helpers)
+  
 //
 // Determine the emoji support level (in requestIdleCallback)
 //
@@ -266,7 +274,7 @@ createEffect(() => {
       /* istanbul ignore next */
       if (process.env.NODE_ENV !== 'test') { // jsdom throws errors for this kind of fancy stuff
         // read all the style/layout calculations we need to make
-        const style = getComputedStyle(rootElement)
+        const style = getComputedStyle(dom.rootElement)
         const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
         const newIsRtl = style.getPropertyValue('direction') === 'rtl'
         const parentWidth = node.parentElement.getBoundingClientRect().width
@@ -337,7 +345,7 @@ createEffect(() => {
   })
 
   function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
-    const rootNode = rootElement.getRootNode()
+    const rootNode = dom.rootElement.getRootNode()
     const emojiToDomNode = emoji => rootNode.getElementById(`emo-${emoji.id}`)
     checkZwjSupport(zwjEmojisToCheck, baselineEmoji, emojiToDomNode)
     // force update
