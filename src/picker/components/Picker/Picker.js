@@ -90,13 +90,11 @@ export function createRoot(target, props) {
     }))
   }
 
-// eslint-disable-next-line no-unused-vars
-  const unicodeWithSkin = (emoji, currentSkinTone) => (
+  export const unicodeWithSkin = (emoji, currentSkinTone) => (
     (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
   )
 
-// eslint-disable-next-line no-unused-vars
-  const labelWithSkin = (emoji, currentSkinTone) => (
+  export const labelWithSkin = (emoji, currentSkinTone) => (
     uniq([
       (emoji.name || unicodeWithSkin(emoji, currentSkinTone)),
       emoji.annotation,
@@ -104,8 +102,7 @@ export function createRoot(target, props) {
     ].filter(Boolean)).join(', ')
   )
 
-// eslint-disable-next-line no-unused-vars
-  const titleForEmoji = (emoji) => (
+  export const titleForEmoji = (emoji) => (
     emoji.annotation || (emoji.shortcodes || EMPTY_ARRAY).join(', ')
   )
 
