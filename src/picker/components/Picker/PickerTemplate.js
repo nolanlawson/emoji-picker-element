@@ -1,4 +1,4 @@
-export function root(state, helpers) {
+export function root(state, helpers, events) {
 
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
@@ -51,12 +51,14 @@ function skintonePicker() {
               aria-haspopup="listbox"
               aria-expanded="${state.skinTonePickerExpanded}"
               aria-controls="skintone-list"
-              on:click={onClickSkinToneButton}>
+              data-on-click="onClickSkinToneButton">
         ${state.skinToneButtonText}
       </button>
     </div>
     <span id="skintone-description" class="sr-only">${state.i18n.skinToneDescription}</span>
-    <div id="skintone-list"
+    <div
+       data-ref="skinToneDropdown"
+       id="skintone-list"
        class="skintone-list hide-focus ${state.skinTonePickerExpanded ? '' : 'hidden no-animate'}"
        style="transform:translateY(${ state.skinTonePickerExpanded ? 0 : 'calc(-1 * var(--num-skintones) * var(--total-emoji-size))'})"
        role="listbox"
@@ -64,10 +66,10 @@ function skintonePicker() {
        aria-activedescendant="skintone-${state.activeSkinTone}"
        aria-hidden="${!state.skinTonePickerExpanded}"
        tabIndex="-1"
-       on:focusout={onSkinToneOptionsFocusOut}
-       on:click={onSkinToneOptionsClick}
-       on:keydown={onSkinToneOptionsKeydown}
-       on:keyup={onSkinToneOptionsKeyup}>
+       data-on-focusout="onSkinToneOptionsFocusOut"
+       data-on-click="onSkinToneOptionsClick"
+       data-on-keydown="onSkinToneOptionsKeydown"
+       data-on-keyup="onSkinToneOptionsKeyup">
          ${skintoneButtons()}
       </div>
   `
@@ -95,8 +97,9 @@ function searchBox() {
           aria-describedby="search-description"
           aria-autocomplete="list"
           aria-activedescendant="${state.activeSearchItemId ? `emo-${state.activeSearchItemId}` : ''}"
-          bind:value={rawSearchText}
-          on:keydown={onSearchKeydown}
+          data-ref="searchElement"
+          data-on-input="onSearchInput"
+          data-on-keydown="onSearchKeydown"
         >
         <label class="sr-only" for="search">${state.i18n.searchLabel}</label>
         <span id="search-description" class="sr-only">${state.i18n.searchDescription}</span>
@@ -143,12 +146,12 @@ function emojiTabPanel() {
   // feel it's appropriate to have the tabindex.
   // This on:click is a delegated click listener
   return html`
-    <div class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone': ''}"
+    <div data-ref="tabpanelElement" class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone': ''}"
          role="${state.searchMode ? 'region' : 'tabpanel'}"
     aria-label="${state.searchMode ? state.i18n.searchResultsLabel : state.i18n.categories[state.currentGroup.name]}"
     id="${state.searchMode ? '' : `tab-${state.currentGroup.id}`}"
     tabindex="0"
-    on:click={onEmojiClick}
+    data-on-click="onEmojiClick"
     >
       <div use:calculateEmojiGridStyle>
         ${emojiTabs()}
@@ -166,7 +169,7 @@ function navButtons() {
               aria-label="${i18n.categories[group.name]}"
               aria-selected="${!state.searchMode && state.currentGroup.id === group.id}"
               title="${state.i18n.categories[group.name]}"
-              on:click={() => onNavClick(group)}>
+              data-on-click="() => onNavClick(group)">
         <div class="nav-emoji emoji">
           ${group.emoji}
         </div>
@@ -182,7 +185,7 @@ function nav() {
          role="tablist"
          style="grid-template-columns: repeat(${state.groups.length}, 1fr)"
          aria-label="${i18n.categoriesLabel}"
-         on:keydown={onNavKeydown}>
+         data-on-keydown="onNavKeydown">
       ${navButtons()}
     </div>
   `
@@ -191,6 +194,7 @@ function nav() {
 function section() {
   return html`
   <section
+    data-ref="rootElement"
     class="picker"
     aria-label="${state.i18n.regionLabel}"
     style="${state.pickerStyle}">
@@ -217,23 +221,33 @@ function section() {
          role="menu"
          aria-label="${state.i18n.favoritesLabel}"
          style="padding-inline-end: ${state.scrollbarWidth}px"
-         on:click={onEmojiClick}>
+         data-on-click="onEmojiClick">
       ${emojiList(state.currentFavorites, false, 'fav')}
     </div>
     <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
-    <button aria-hidden="true" tabindex="-1" class="abs-pos hidden emoji baseline-emoji">😀</button>
+    <button data-ref="baselineEmoji" aria-hidden="true" tabindex="-1" class="abs-pos hidden emoji baseline-emoji">😀</button>
   </section>
     `
 }
 
   const rootDom = section()
 
-  return {
-    dom: {
-      rootElement: rootDom.querySelector('.picker'),
-      skinToneDropdown: rootDom.querySelector('#skintone-list'),
-      tabpanelElement: rootDom.querySelector('.tabpanel'),
-      baselineEmoji: rootDom.querySelector('.baseline-emoji')
+  // bind events
+  for (const eventName of ['click', 'focusout', 'input', 'keydown', 'keyup']) {
+    for (const element of rootDom.querySelectorAll(`[data-on-${eventName}]`)) {
+      const listenerName = element.getAttribute(`data-on-${eventName}`)
+      element.addEventListener(eventName, events[listenerName])
     }
+  }
+
+  // find refs
+  const refs = {}
+  for (const element of rootDom.querySelectorAll('[data-ref]')) {
+    const { ref } = element.dataset
+    refs[ref] = element
+  }
+
+  return {
+    refs
   }
 }

@@ -77,12 +77,12 @@ export function createRoot(target, props) {
 //
 
   const focus = id => {
-    dom.rootElement.getRootNode().getElementById(id).focus()
+    refs.rootElement.getRootNode().getElementById(id).focus()
   }
 
 // fire a custom event that crosses the shadow boundary
   const fireEvent = (name, detail) => {
-    dom.rootElement.dispatchEvent(new CustomEvent(name, {
+    refs.rootElement.dispatchEvent(new CustomEvent(name, {
       detail,
       bubbles: true,
       composed: true
@@ -110,7 +110,18 @@ export function createRoot(target, props) {
   const helpers = {
     labelWithSkin, titleForEmoji, unicodeWithSkin
   }
-  const { dom } = root(state, helpers)
+  const events = {
+    onClickSkinToneButton,
+    onEmojiClick,
+    onNavClick,
+    onNavKeydown,
+    onSearchKeydown,
+    onSkinToneOptionsClick,
+    onSkinToneOptionsFocusOut,
+    onSkinToneOptionsKeydown,
+    onSkinToneOptionsKeyup
+  }
+  const { refs } = root(state, helpers, events)
   
 //
 // Determine the emoji support level (in requestIdleCallback)
@@ -272,7 +283,7 @@ createEffect(() => {
       /* istanbul ignore next */
       if (process.env.NODE_ENV !== 'test') { // jsdom throws errors for this kind of fancy stuff
         // read all the style/layout calculations we need to make
-        const style = getComputedStyle(dom.rootElement)
+        const style = getComputedStyle(refs.rootElement)
         const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
         const newIsRtl = style.getPropertyValue('direction') === 'rtl'
         const parentWidth = node.parentElement.getBoundingClientRect().width
@@ -338,14 +349,14 @@ createEffect(() => {
     } else {
       state.currentEmojis = state.emojiVersion ? state.currentEmojis : state.currentEmojis.filter(isZwjSupported)
       // Reset scroll top to 0 when emojis change
-      requestAnimationFrame(() => resetScrollTopIfPossible(dom.tabpanelElement))
+      requestAnimationFrame(() => resetScrollTopIfPossible(refs.tabpanelElement))
     }
   })
 
   function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
-    const rootNode = dom.rootElement.getRootNode()
+    const rootNode = refs.rootElement.getRootNode()
     const emojiToDomNode = emoji => rootNode.getElementById(`emo-${emoji.id}`)
-    checkZwjSupport(zwjEmojisToCheck, dom.baselineEmoji, emojiToDomNode)
+    checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
     // force update
     const { currentEmojis } = state
     state.currentEmojis = currentEmojis
@@ -470,6 +481,7 @@ createEffect(() => {
 //
 
   function onNavClick (group) {
+    refs.searchElement.value = '' // clear search box input
     state.rawSearchText = ''
     state.searchText = ''
     state.activeSearchItem = -1
@@ -564,7 +576,7 @@ createEffect(() => {
 // is expanding "below" the button
   createEffect(() => {
     if (state.skinTonePickerExpanded) {
-      dom.skinToneDropdown.addEventListener('transitionend', () => {
+      refs.skinToneDropdown.addEventListener('transitionend', () => {
         state.skinTonePickerExpandedAfterAnimation = true // eslint-disable-line no-unused-vars
       }, { once: true })
     } else {
@@ -623,5 +635,9 @@ createEffect(() => {
       state.skinTonePickerExpanded = false
     }
   }
+
+    function onSearchInput (event) {
+      state.rawSearchText = event.target.value
+    }
 
 }
