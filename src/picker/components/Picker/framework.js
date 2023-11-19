@@ -130,6 +130,8 @@ function parse(tokens) {
   }
 }
 
+const isHtmlTagTemplateExpression = Symbol('html-tag-template-expression')
+
 export function html(tokens, ...expressions) {
 
   const {
@@ -149,7 +151,8 @@ export function html(tokens, ...expressions) {
       for (let i = 0; i < bindings.length; i++) {
         const binding = bindings[i]
         const { expressionIndex } = binding
-        const escapedExpressionValue = escapeHtml(toString(expressions[expressionIndex]))
+        const expression = expressions[expressionIndex]
+        const escapedExpressionValue = escapeHtml(toString(expression))
         if (binding.withinAttribute) {
           const { attributeName, attributeValuePre, attributeValuePost } = binding
           element.setAttribute(attributeName, attributeValuePre + escapedExpressionValue + attributeValuePost)
@@ -165,9 +168,15 @@ export function html(tokens, ...expressions) {
             }
           }
           const comment = foundComments.get(i)
-          const textNode = document.createTextNode(toString(expressions[expressionIndex]))
-          binding.textNode = textNode
-          comment.replaceWith(textNode)
+
+          let targetNode
+          if (expression && expression[isHtmlTagTemplateExpression]) {
+            targetNode = expression.dom
+          } else { // primitive - string, number, etc
+            targetNode = document.createTextNode(toString(expression))
+          }
+          binding.targetNode = targetNode
+          comment.replaceWith(targetNode)
         }
         binding.element = element
       }
@@ -175,6 +184,8 @@ export function html(tokens, ...expressions) {
   } while ((element = treeWalker.nextNode()))
 
   return {
-    dom, boundExpressions
+    dom,
+    boundExpressions,
+    [isHtmlTagTemplateExpression]: true
   }
 }
