@@ -124,21 +124,65 @@ function parse(tokens) {
 
   const dom = parseDom(htmlString)
 
+  traverseAndSetupBindings(tokens, dom, boundExpressions)
+
+  const update = (expressions) => {
+    for (const bindings of boundExpressions.values()) {
+      for (const binding of bindings) {
+        const { expressionIndex, withinAttribute, targetNode, element, attributeName, attributeValuePre, attributeValuePost, lastExpression } = binding
+        const expression = expressions[expressionIndex]
+
+        if (lastExpression === expression) {
+          // no need to update, same as before
+          continue
+        }
+
+        binding.lastExpression = expression
+
+        if (withinAttribute) {
+          element.setAttribute(attributeName, attributeValuePre + escapeHtml(toString(expression)) + attributeValuePost)
+        } else { // text node / dom node replacement
+          let newNode
+          if (expression && expression[isHtmlTagTemplateExpression]) { // html tag template itself
+            newNode = expression.dom
+          } else { // primitive - string, number, etc
+            if (targetNode.nodeType === Node.TEXT_NODE) { // already transformed into a text node
+              targetNode.nodeValue = toString(expression)
+            } else { // replace comment or whatever was there before with a text node
+              newNode = document.createTextNode(toString(expression))
+              targetNode.replaceWith(newNode)
+            }
+          }
+          if (newNode) {
+            targetNode.replaceWith(newNode)
+            binding.targetNode = newNode
+          }
+        }
+      }
+    }
+  }
+
   return {
     dom,
-    boundExpressions
+    boundExpressions,
+    update
   }
 }
 
 const isHtmlTagTemplateExpression = Symbol('html-tag-template-expression')
 
-export function html(tokens, ...expressions) {
+const parseCache = new WeakMap()
 
-  const {
-    dom,
-    boundExpressions
-  } = parse(tokens, expressions)
+function parseWithCache(tokens) {
+  let cached = parseCache.get(tokens)
+  if (!cached) {
+    cached = parse(tokens)
+    parseCache.set(tokens, cached)
+  }
+  return cached
+}
 
+function traverseAndSetupBindings (tokens, dom, boundExpressions) {
   // traverse dom
   const treeWalker = document.createTreeWalker(dom, NodeFilter.SHOW_ELEMENT)
 
@@ -150,13 +194,10 @@ export function html(tokens, ...expressions) {
       let foundComments
       for (let i = 0; i < bindings.length; i++) {
         const binding = bindings[i]
-        const { expressionIndex } = binding
-        const expression = expressions[expressionIndex]
-        const escapedExpressionValue = escapeHtml(toString(expression))
-        if (binding.withinAttribute) {
-          const { attributeName, attributeValuePre, attributeValuePost } = binding
-          element.setAttribute(attributeName, attributeValuePre + escapedExpressionValue + attributeValuePost)
-        } else { // text content - replace comments
+
+        binding.element = element
+
+        if (!binding.withinAttribute) {
           if (!foundComments) {
             // find all comments once
             foundComments = new Map()
@@ -167,21 +208,21 @@ export function html(tokens, ...expressions) {
               }
             }
           }
-          const comment = foundComments.get(i)
-
-          let targetNode
-          if (expression && expression[isHtmlTagTemplateExpression]) {
-            targetNode = expression.dom
-          } else { // primitive - string, number, etc
-            targetNode = document.createTextNode(toString(expression))
-          }
-          binding.targetNode = targetNode
-          comment.replaceWith(targetNode)
+          binding.targetNode = foundComments.get(i)
         }
-        binding.element = element
       }
     }
   } while ((element = treeWalker.nextNode()))
+}
+
+export function html(tokens, ...expressions) {
+  const {
+    dom,
+    boundExpressions,
+    update
+  } = parseWithCache(tokens)
+
+  update(expressions)
 
   return {
     dom,
