@@ -1,11 +1,15 @@
-import { html, map } from './framework.js'
+import { createFramework } from './framework.js'
 
 export function createRootDom (state, helpers, events, createEffect) {
+  const { html, map } = createFramework()
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
-  const emojiList = createEffect((emojis, searchMode, prefix) => {
-    return map(emojis, (emoji, i) => {
-      return html`
+  const emojiList = (emojis, searchMode, prefix) => {
+    const { html, map } = createFramework()
+
+    return () => createEffect(() => {
+      return map(emojis, (emoji, i) => {
+        return html`
         <button role="${searchMode ? 'option' : 'menuitem'}"
                 aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
                 aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
@@ -13,14 +17,15 @@ export function createRootDom (state, helpers, events, createEffect) {
                 class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
                 id="${prefix}-${emoji.id}">
           ${
-            emoji.unicode
-              ? unicodeWithSkin(emoji, state.currentSkinTone)
-              : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
-          }
+          emoji.unicode
+            ? unicodeWithSkin(emoji, state.currentSkinTone)
+            : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
+        }
         </button>
       `
+      })
     })
-  })
+  }
 
   const skintoneButtons = createEffect(() => {
     return map(state.skinTones, (skinTone, i) => {
@@ -43,6 +48,8 @@ export function createRootDom (state, helpers, events, createEffect) {
     // The one case where we deviate from the example is that we move focus from the button to the
     // listbox. (The example uses a combobox, so it's not exactly the same.) This was tested in NVDA and VoiceOver.
     return html`
+      <!-- unnecessary div -->
+      <div>
       <div class="skintone-button-wrapper ${state.skinTonePickerExpandedAfterAnimation ? 'expanded' : ''}">
         <button id="skintone-button"
                 class="emoji ${state.skinTonePickerExpanded ? 'hide-focus' : ''}"
@@ -73,6 +80,7 @@ export function createRootDom (state, helpers, events, createEffect) {
         data-on-keyup="onSkinToneOptionsKeyup">
         ${skintoneButtons()}
       </div>
+      </div>
     `
   })
 
@@ -101,7 +109,7 @@ export function createRootDom (state, helpers, events, createEffect) {
             data-ref="searchElement"
             data-on-input="onSearchInput"
             data-on-keydown="onSearchKeydown"
-          >
+          ></input>
           <label class="sr-only" for="search">${state.i18n.searchLabel}</label>
           <span id="search-description" class="sr-only">${state.i18n.searchDescription}</span>
         </div>
@@ -112,6 +120,8 @@ export function createRootDom (state, helpers, events, createEffect) {
   const emojiTabs = createEffect(() => {
     return map(state.currentEmojisWithCategories, (emojiWithCategory, i) => {
       return html`
+        <!-- unnecessary div -->
+        <div>
         <div
           id="menu-label-${i}"
           class="category ${state.currentEmojisWithCategories.length === 1 && state.currentEmojisWithCategories[0].category === '' ? 'gone' : ''}"
@@ -138,7 +148,8 @@ export function createRootDom (state, helpers, events, createEffect) {
              role="${state.searchMode ? 'listbox' : 'menu'}"
              aria-labelledby="menu-label-${i}"
              id=${state.searchMode ? 'search-results' : ''}>
-          ${emojiList(emojiWithCategory.emojis, state.searchMode, 'emo')}
+          ${emojiList(emojiWithCategory.emojis, state.searchMode, 'emo')()}
+        </div>
         </div>
       `
     })
@@ -224,7 +235,7 @@ export function createRootDom (state, helpers, events, createEffect) {
              aria-label="${state.i18n.favoritesLabel}"
              style="padding-inline-end: ${state.scrollbarWidth}px"
              data-on-click="onEmojiClick">
-          ${emojiList(state.currentFavorites, false, 'fav')}
+          ${emojiList(state.currentFavorites, false, 'fav')()}
         </div>
         <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
         <button data-ref="baselineEmoji" aria-hidden="true" tabindex="-1" class="abs-pos hidden emoji baseline-emoji">
@@ -234,7 +245,7 @@ export function createRootDom (state, helpers, events, createEffect) {
     `
   })
 
-  const rootDom = section()
+  const { dom: rootDom } = section()
 
   // bind events
   for (const eventName of ['click', 'focusout', 'input', 'keydown', 'keyup']) {

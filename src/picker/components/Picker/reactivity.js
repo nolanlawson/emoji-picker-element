@@ -40,16 +40,21 @@ export function createState () {
           Promise.resolve().then(flush)
         }
       }
+      return true
     }
   })
 
   const createEffect = (callback) => {
-    currentObserver = callback
-    try {
-      callback()
-    } finally {
-      currentObserver = undefined
+    const runnable = () => {
+      currentObserver = callback
+      try {
+        return callback()
+      } finally {
+        currentObserver = undefined
+      }
     }
+    runnable()
+    return runnable
   }
 
   return {
