@@ -1,16 +1,25 @@
-import { createFramework } from './framework.js'
+import { html, map } from './framework.js'
 
 export function createRootDom (state, helpers, events, createEffect) {
-  const { html, map } = createFramework()
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
-  // const createHtmlEffect = callback => () => callback()
-  const createHtmlEffect = callback => createEffect(callback, true)
+  const frameworkEffect = (callback) => {
+    return createEffect(() => {
+      const result = callback()
+      if (Array.isArray(result)) {
+        for (const subResult of result) {
+          subResult.update(subResult.expressions)
+        }
+      } else {
+        result.update(result.expressions)
+      }
+      return result
+    })
+  }
 
   const emojiList = (emojis, searchMode, prefix) => {
-    return map(emojis, (emoji, i) => {
-      const { html } = createFramework()
-      return html`
+    return frameworkEffect(() => map(emojis, (emoji, i) => {
+      return frameworkEffect(() => html`
         <button role="${searchMode ? 'option' : 'menuitem'}"
                 aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
                 aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
@@ -23,13 +32,12 @@ export function createRootDom (state, helpers, events, createEffect) {
               : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
           }
         </button>
-      `
-    })
+      `)
+    }))
   }
 
-  const favorites = createHtmlEffect(() => {
-    console.log('state.currentFavorites', state.currentFavorites)
-    return html`
+  const favorites = (() => {
+    return frameworkEffect(() => html`
       <div class="favorites emoji-menu ${state.message ? 'gone' : ''}"
            role="menu"
            aria-label="${state.i18n.favoritesLabel}"
@@ -37,13 +45,12 @@ export function createRootDom (state, helpers, events, createEffect) {
            data-on-click="onEmojiClick">
         ${emojiList(state.currentFavorites, false, 'fav')}
       </div>
-    `
+    `)
   })
 
-  const skintoneButtons = createHtmlEffect(() => {
-    return map(state.skinTones, (skinTone, i) => {
-      const { html } = createFramework()
-      return html`
+  const skintoneButtons = () => {
+    return frameworkEffect(() => map(state.skinTones, (skinTone, i) => {
+      return frameworkEffect(() => html`
         <div id="skintone-${i}"
              class="emoji ${i === state.activeSkinTone ? 'active' : ''}"
              aria-selected="${i === state.activeSkinTone}"
@@ -52,12 +59,12 @@ export function createRootDom (state, helpers, events, createEffect) {
              aria-label="${state.i18n.skinTones[i]}">
           ${skinTone}
         </div>
-      `
-    })
-  })
+      `)
+    }))
+  }
 
-  const searchRow = createHtmlEffect(() => {
-    return html`
+  const searchRow = (() => {
+    return frameworkEffect(() => html`
       <div class="search-row">
         <div class="search-wrapper">
           <!-- no need for aria-haspopup=listbox, it's the default for role=combobox
@@ -120,16 +127,15 @@ export function createRootDom (state, helpers, events, createEffect) {
         ${skintoneButtons()}
       </div>
       </div>
-    `
+    `)
   })
 
-  const emojiTabs = createHtmlEffect(() => {
-    return html`
+  const emojiTabs = (() => {
+    return frameworkEffect(() => html`
       <div data-ref="emojiGrid">
         ${
           map(state.currentEmojisWithCategories, (emojiWithCategory, i) => {
-            const { html } = createFramework()
-            return html`
+            return frameworkEffect(() => html`
         <!-- unnecessary div -->
         <div>
           <div
@@ -161,18 +167,18 @@ export function createRootDom (state, helpers, events, createEffect) {
             ${emojiList(emojiWithCategory.emojis, state.searchMode, 'emo')}
           </div>
         </div>
-      `
+      `)
           })
         }
       </div>
-    `
+    `)
   })
 
-  const emojiTabPanel = createHtmlEffect(() => {
+  const emojiTabPanel = (() => {
     // The tabindex=0 is so people can scroll up and down with the keyboard. The element has a role and a label, so I
     // feel it's appropriate to have the tabindex.
     // This on:click is a delegated click listener
-    return html`
+    return frameworkEffect(() => html`
       <div data-ref="tabpanelElement" class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone' : ''}"
            role="${state.searchMode ? 'region' : 'tabpanel'}"
            aria-label="${state.searchMode ? state.i18n.searchResultsLabel : state.i18n.categories[state.currentGroup.name]}"
@@ -182,13 +188,12 @@ export function createRootDom (state, helpers, events, createEffect) {
       >
         ${emojiTabs()}
       </div>
-    `
+    `)
   })
 
-  const navButtons = createHtmlEffect(() => {
-    return map(state.groups, (group) => {
-      const { html } = createFramework()
-      return html`
+  const navButtons = () => {
+    return frameworkEffect(() => map(state.groups, (group) => {
+      return frameworkEffect(() => html`
         <button role="tab"
                 class="nav-button"
                 aria-controls="tab-${group.id}"
@@ -200,13 +205,13 @@ export function createRootDom (state, helpers, events, createEffect) {
             ${group.emoji}
           </div>
         </button>
-      `
-    })
-  })
+      `)
+    }))
+  }
 
-  const nav = createHtmlEffect(() => {
+  const nav = (() => {
     // this is interactive because of keydown; it doesn't really need focus
-    return html`
+    return frameworkEffect(() => html`
       <div class="nav"
            role="tablist"
            style="grid-template-columns: repeat(${state.groups.length}, 1fr)"
@@ -216,11 +221,11 @@ export function createRootDom (state, helpers, events, createEffect) {
       >
         ${navButtons()}
       </div>
-    `
+    `)
   })
 
-  const section = createHtmlEffect(() => {
-    return html`
+  const section = (() => {
+    return frameworkEffect(() => html`
       <section
         class="picker"
         aria-label="${state.i18n.regionLabel}"
@@ -249,7 +254,7 @@ export function createRootDom (state, helpers, events, createEffect) {
           😀
         </button>
       </section>
-    `
+    `)
   })
 
   const { dom: rootDom } = section()

@@ -46,19 +46,16 @@ export function createState () {
     }
   })
 
-  const createEffect = (callback, noInit) => {
+  const createEffect = (callback) => {
     const runnable = () => {
-      currentObserver = callback
+      currentObserver = runnable
       try {
         return callback()
       } finally {
         currentObserver = undefined
       }
     }
-    if (!noInit) {
-      runnable()
-    }
-    return runnable
+    return runnable()
   }
 
   return {
