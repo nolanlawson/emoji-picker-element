@@ -493,12 +493,17 @@ export function createRoot (target, props) {
   // Handle user input on nav
   //
 
-  function onNavClick (group) {
+  function onNavClick (event) {
+    const { target } = event
+    if (!target.classList.contains('nav-emoji')) {
+      return
+    }
+    const groupId = parseInt(target.dataset.groupId, 10)
     refs.searchElement.value = '' // clear search box input
     state.rawSearchText = ''
     state.searchText = ''
     state.activeSearchItem = -1
-    state.currentGroupIndex = state.groups.findIndex(_ => _.id === group.id)
+    state.currentGroupIndex = state.groups.findIndex(_ => _.id === groupId)
   }
 
   function onNavKeydown (event) {

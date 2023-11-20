@@ -56,7 +56,7 @@ export function createRootDom (state, helpers, events, createEffect) {
     })
   })
 
-  const searchBox = createHtmlEffect(() => {
+  const searchRow = createHtmlEffect(() => {
     return html`
       <div class="search-row">
         <div class="search-wrapper">
@@ -85,6 +85,40 @@ export function createRootDom (state, helpers, events, createEffect) {
           <label class="sr-only" for="search">${state.i18n.searchLabel}</label>
           <span id="search-description" class="sr-only">${state.i18n.searchDescription}</span>
         </div>
+        <!-- For the pattern used for the skintone dropdown, see:
+        https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
+        The one case where we deviate from the example is that we move focus from the button to the
+        listbox. (The example uses a combobox, so it's not exactly the same.) This was tested in NVDA and VoiceOver. -->
+        <div class="skintone-button-wrapper ${state.skinTonePickerExpandedAfterAnimation ? 'expanded' : ''}">
+        <button id="skintone-button"
+                class="emoji ${state.skinTonePickerExpanded ? 'hide-focus' : ''}"
+                aria-label="${state.skinToneButtonLabel}"
+                title="${state.skinToneButtonLabel}"
+                aria-describedby="skintone-description"
+                aria-haspopup="listbox"
+                aria-expanded="${state.skinTonePickerExpanded}"
+                aria-controls="skintone-list"
+                data-on-click="onClickSkinToneButton">
+          ${state.skinToneButtonText}
+        </button>
+      </div>
+      <span id="skintone-description" class="sr-only">${state.i18n.skinToneDescription}</span>
+      <div
+        data-ref="skinToneDropdown"
+        id="skintone-list"
+        class="skintone-list hide-focus ${state.skinTonePickerExpanded ? '' : 'hidden no-animate'}"
+        style="transform:translateY(${state.skinTonePickerExpanded ? 0 : 'calc(-1 * var(--num-skintones) * var(--total-emoji-size))'})"
+        role="listbox"
+        aria-label="${state.i18n.skinTonesLabel}"
+        aria-activedescendant="skintone-${state.activeSkinTone}"
+        aria-hidden="${!state.skinTonePickerExpanded}"
+        tabIndex="-1"
+        data-on-focusout="onSkinToneOptionsFocusOut"
+        data-on-click="onSkinToneOptionsClick"
+        data-on-keydown="onSkinToneOptionsKeydown"
+        data-on-keyup="onSkinToneOptionsKeyup">
+        ${skintoneButtons()}
+      </div>
       </div>
     `
   })
@@ -161,8 +195,8 @@ export function createRootDom (state, helpers, events, createEffect) {
                 aria-label="${state.i18n.categories[group.name]}"
                 aria-selected="${!state.searchMode && state.currentGroup.id === group.id}"
                 title="${state.i18n.categories[group.name]}"
-                data-on-click="() => onNavClick(group)">
-          <div class="nav-emoji emoji">
+        >
+          <div class="nav-emoji emoji" data-group-id=${group.id}>
             ${group.emoji}
           </div>
         </button>
@@ -177,7 +211,9 @@ export function createRootDom (state, helpers, events, createEffect) {
            role="tablist"
            style="grid-template-columns: repeat(${state.groups.length}, 1fr)"
            aria-label="${state.i18n.categoriesLabel}"
-           data-on-keydown="onNavKeydown">
+           data-on-keydown="onNavKeydown"
+           data-on-click="onNavClick"
+      >
         ${navButtons()}
       </div>
     `
@@ -191,41 +227,7 @@ export function createRootDom (state, helpers, events, createEffect) {
         style="${state.pickerStyle}">
         <!-- using a spacer div because this allows us to cover up the skintone picker animation -->
         <div class="pad-top"></div>
-        ${searchBox()}
-        <!-- For the pattern used for the skintone dropdown, see:
-        https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
-        The one case where we deviate from the example is that we move focus from the button to the
-        listbox. (The example uses a combobox, so it's not exactly the same.) This was tested in NVDA and VoiceOver. -->
-        <div class="skintone-button-wrapper ${state.skinTonePickerExpandedAfterAnimation ? 'expanded' : ''}">
-        <button id="skintone-button"
-                class="emoji ${state.skinTonePickerExpanded ? 'hide-focus' : ''}"
-                aria-label="${state.skinToneButtonLabel}"
-                title="${state.skinToneButtonLabel}"
-                aria-describedby="skintone-description"
-                aria-haspopup="listbox"
-                aria-expanded="${state.skinTonePickerExpanded}"
-                aria-controls="skintone-list"
-                data-on-click="onClickSkinToneButton">
-          ${state.skinToneButtonText}
-        </button>
-      </div>
-      <span id="skintone-description" class="sr-only">${state.i18n.skinToneDescription}</span>
-      <div
-        data-ref="skinToneDropdown"
-        id="skintone-list"
-        class="skintone-list hide-focus ${state.skinTonePickerExpanded ? '' : 'hidden no-animate'}"
-        style="transform:translateY(${state.skinTonePickerExpanded ? 0 : 'calc(-1 * var(--num-skintones) * var(--total-emoji-size))'})"
-        role="listbox"
-        aria-label="${state.i18n.skinTonesLabel}"
-        aria-activedescendant="skintone-${state.activeSkinTone}"
-        aria-hidden="${!state.skinTonePickerExpanded}"
-        tabIndex="-1"
-        data-on-focusout="onSkinToneOptionsFocusOut"
-        data-on-click="onSkinToneOptionsClick"
-        data-on-keydown="onSkinToneOptionsKeydown"
-        data-on-keyup="onSkinToneOptionsKeyup">
-        ${skintoneButtons()}
-      </div>
+        ${searchRow()}
         ${nav()}
         <div class="indicator-wrapper">
           <div class="indicator"
