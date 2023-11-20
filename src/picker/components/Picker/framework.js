@@ -230,3 +230,7 @@ export function html(tokens, ...expressions) {
     [isHtmlTagTemplateExpression]: true
   }
 }
+
+export function map(array, callback) {
+  return array.map(callback)
+}

@@ -67,12 +67,6 @@ export default class PickerElement extends HTMLElement {
       if (!this.isConnected && this._cmp) {
         this._cmp.$destroy()
         this._cmp = undefined
-        const picker = this.shadowRoot.querySelector('.picker')
-        // This is never undefined, but I'd feel more comfortable with the `if` anyway
-        /* istanbul ignore else */
-        if (picker) {
-          picker.remove()
-        }
 
         const { database } = this._ctx
         database.close()

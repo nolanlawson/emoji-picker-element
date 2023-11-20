@@ -20,7 +20,7 @@ import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.js'
-import { root } from './PickerTemplate.js'
+import { createRootDom } from './PickerTemplate.js'
 
 // constants
 const EMPTY_ARRAY = []
@@ -28,20 +28,23 @@ const EMPTY_ARRAY = []
 const { assign } = Object
 
 export function createRoot(target, props) {
+  const { state, createEffect } = createState()
+  const destroyCallbacks = []
 
-  const state = {
+  // initial state
+  assign(state, {
     skinToneEmoji: undefined,
     i18n: undefined,
     database: undefined,
     customEmoji: undefined,
     customCategorySorting: undefined,
     emojiVersion: undefined,
-  }
+  })
 
-  // public
+  // public props
   assign(state, props)
 
-  // private
+  // private props
   assign(state, {
     initialLoad: true,
     currentEmojis: [],
@@ -70,19 +73,24 @@ export function createRoot(target, props) {
     activeSearchItemId: undefined,
   })
 
-  state.currentGroup = state.groups[state.currentGroupIndex]
+//
+// Update the current group based on the currentGroupIndex
+//
+  createEffect(() => {
+    state.currentGroup = state.groups[state.currentGroupIndex]
+  })
   
 //
 // Utils/helpers
 //
 
   const focus = id => {
-    refs.rootElement.getRootNode().getElementById(id).focus()
+    rootNode.getRootNode().getElementById(id).focus()
   }
 
 // fire a custom event that crosses the shadow boundary
   const fireEvent = (name, detail) => {
-    refs.rootElement.dispatchEvent(new CustomEvent(name, {
+    rootNode.dispatchEvent(new CustomEvent(name, {
       detail,
       bubbles: true,
       composed: true
@@ -121,7 +129,11 @@ export function createRoot(target, props) {
     onSkinToneOptionsKeydown,
     onSkinToneOptionsKeyup
   }
-  const { refs } = root(state, helpers, events)
+
+  const {
+    refs,
+    rootNode
+  } = createRootDom(state, helpers, events, createEffect)
   
 //
 // Determine the emoji support level (in requestIdleCallback)
@@ -283,7 +295,7 @@ createEffect(() => {
       /* istanbul ignore next */
       if (process.env.NODE_ENV !== 'test') { // jsdom throws errors for this kind of fancy stuff
         // read all the style/layout calculations we need to make
-        const style = getComputedStyle(refs.rootElement)
+        const style = getComputedStyle(rootNode)
         const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
         const newIsRtl = style.getPropertyValue('direction') === 'rtl'
         const parentWidth = node.parentElement.getBoundingClientRect().width
@@ -297,13 +309,11 @@ createEffect(() => {
     })
   }
 
-//
-// Update the current group based on the currentGroupIndex
-//
+    // calculate the width and clean up on destroy
+    const calculator = calculateEmojiGridStyle(refs.emojiGrid)
 
-  createEffect(() => {
-    state.currentGroup = state.groups[state.currentGroupIndex]
-  })
+  destroyCallbacks.push(calculator.destroy)
+
 
 //
 // Set or update the currentEmojis. Check for invalid ZWJ renderings
@@ -354,7 +364,7 @@ createEffect(() => {
   })
 
   function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
-    const rootNode = refs.rootElement.getRootNode()
+    const rootNode = rootNode.getRootNode()
     const emojiToDomNode = emoji => rootNode.getElementById(`emo-${emoji.id}`)
     checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
     // force update
@@ -640,4 +650,14 @@ createEffect(() => {
       state.rawSearchText = event.target.value
     }
 
+    target.appendChild(rootNode)
+
+    return {
+      destroy () {
+        rootNode.remove()
+        for (const destroyCallback of destroyCallbacks) {
+          destroyCallback()
+        }
+      }
+    }
 }
