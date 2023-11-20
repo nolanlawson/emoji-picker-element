@@ -1,5 +1,3 @@
-const isHtmlTagTemplateExpression = Symbol('html-tag-template-expression')
-
 // via https://github.com/component/escape-html/blob/b42947eefa79efff01b3fe988c4c7e7b051ec8d8/index.js
 function escapeHtml (string) {
   const str = '' + string
@@ -114,14 +112,14 @@ function createUpdater () {
               }
               const { iteratorEndNode } = binding
               for (const subExpression of expression) {
-                if (subExpression && subExpression[isHtmlTagTemplateExpression]) { // html tag template itself
+                if (subExpression && subExpression.dom) { // html tag template itself
                   parentNode.insertBefore(subExpression.dom, iteratorEndNode)
                 } else { // primitive - string, number, etc
                   const textNode = document.createTextNode(toString(subExpression))
                   parentNode.insertBefore(textNode, iteratorEndNode)
                 }
               }
-            } else if (expression && expression[isHtmlTagTemplateExpression]) { // html tag template itself
+            } else if (expression && expression.dom) { // html tag template itself
               newNode = expression.dom
               targetNode.replaceWith(newNode)
             } else { // primitive - string, number, etc
@@ -229,7 +227,7 @@ function parse (tokens) {
 
   return {
     template,
-    boundExpressions,
+    boundExpressions
   }
 }
 
@@ -244,7 +242,7 @@ function parseWithCache (tokens) {
   return cached
 }
 
-function cloneBoundExpressions(boundExpressions) {
+function cloneBoundExpressions (boundExpressions) {
   const map = new Map()
   for (const [id, bindings] of boundExpressions.entries()) {
     map.set(id, bindings.map(_ => structuredClone(_)))
@@ -285,30 +283,35 @@ function traverseAndSetupBindings (dom, boundExpressions) {
   } while ((element = treeWalker.nextNode()))
 }
 
-function html (tokens, ...expressions) {
+function html (tokens) {
   const {
     template,
     boundExpressions
   } = parseWithCache(tokens)
 
-  const updater = createUpdater()
-  const clonedDom = template.cloneNode(true).content.firstElementChild
-  const clonedBoundExpressions = cloneBoundExpressions(boundExpressions)
-  const update = updater(clonedDom, clonedBoundExpressions)
+  let updater
+  let clonedDom
+  let clonedBoundExpressions
+
+  const update = () => {
+    if (!updater) {
+      updater = createUpdater()
+      clonedDom = template.cloneNode(true).content.firstElementChild
+      clonedBoundExpressions = cloneBoundExpressions(boundExpressions)
+    }
+
+    updater(clonedDom, clonedBoundExpressions)
+
+    return {
+      dom: clonedDom
+    }
+  }
 
   return {
-    dom: clonedDom,
-    expressions,
-    update,
-    [isHtmlTagTemplateExpression]: true
+    update
   }
 }
 
-function map (array, callback) {
-  return array.map(callback)
-}
-
 export {
-  html,
-  map
+  html
 }

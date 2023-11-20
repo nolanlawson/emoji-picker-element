@@ -48,14 +48,19 @@ export function createState () {
 
   const createEffect = (callback) => {
     const runnable = () => {
+      const oldObserver = currentObserver
       currentObserver = runnable
       try {
         return callback()
       } finally {
-        currentObserver = undefined
+        currentObserver = oldObserver
       }
     }
     return runnable()
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    window.state = state
   }
 
   return {

@@ -1,71 +1,27 @@
-import { html, map } from './framework.js'
+import { html as frameworkHtml } from './framework.js'
 
 export function createRootDom (state, helpers, events, createEffect) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
-  const frameworkEffect = (callback) => {
-    return createEffect(() => {
-      const result = callback()
-      if (Array.isArray(result)) {
-        for (const subResult of result) {
-          subResult.update(subResult.expressions)
-        }
-      } else {
-        result.update(result.expressions)
-      }
-      return result
-    })
+  function html (tokens, ...expressions) {
+    const { update } = frameworkHtml(tokens)
+    const { dom } = update(expressions)
+    return { dom, update }
   }
 
-  const emojiList = (emojis, searchMode, prefix) => {
-    return frameworkEffect(() => map(emojis, (emoji, i) => {
-      return frameworkEffect(() => html`
-        <button role="${searchMode ? 'option' : 'menuitem'}"
-                aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
-                aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
-                title="${titleForEmoji(emoji)}"
-                class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
-                id="${prefix + '-' + emoji.id}">
-          ${
-            emoji.unicode
-              ? unicodeWithSkin(emoji, state.currentSkinTone)
-              : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
-          }
-        </button>
-      `)
-    }))
+  function map (array, callback) {
+    return array.map(callback)
   }
 
-  const favorites = (() => {
-    return frameworkEffect(() => html`
-      <div class="favorites emoji-menu ${state.message ? 'gone' : ''}"
-           role="menu"
-           aria-label="${state.i18n.favoritesLabel}"
-           style="padding-inline-end: ${state.scrollbarWidth}px"
-           data-on-click="onEmojiClick">
-        ${emojiList(state.currentFavorites, false, 'fav')}
-      </div>
-    `)
-  })
-
-  const skintoneButtons = () => {
-    return frameworkEffect(() => map(state.skinTones, (skinTone, i) => {
-      return frameworkEffect(() => html`
-        <div id="skintone-${i}"
-             class="emoji ${i === state.activeSkinTone ? 'active' : ''}"
-             aria-selected="${i === state.activeSkinTone}"
-             role="option"
-             title="${state.i18n.skinTones[i]}"
-             aria-label="${state.i18n.skinTones[i]}">
-          ${skinTone}
-        </div>
-      `)
-    }))
-  }
-
-  const searchRow = (() => {
-    return frameworkEffect(() => html`
-      <div class="search-row">
+  const section = () => {
+    return html`
+      <section
+        class="picker"
+        aria-label="${state.i18n.regionLabel}"
+        style="${state.pickerStyle}">
+        <!-- using a spacer div because this allows us to cover up the skintone picker animation -->
+        <div class="pad-top"></div>
+         <div class="search-row">
         <div class="search-wrapper">
           <!-- no need for aria-haspopup=listbox, it's the default for role=combobox
                https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/combobox/aria1.1pattern/listbox-combo.html
@@ -124,76 +80,33 @@ export function createRootDom (state, helpers, events, createEffect) {
         data-on-click="onSkinToneOptionsClick"
         data-on-keydown="onSkinToneOptionsKeydown"
         data-on-keyup="onSkinToneOptionsKeyup">
-        ${skintoneButtons()}
-      </div>
-      </div>
-    `)
-  })
-
-  const emojiTabs = (() => {
-    return frameworkEffect(() => html`
-      <div data-ref="emojiGrid">
         ${
-          map(state.currentEmojisWithCategories, (emojiWithCategory, i) => {
-            return frameworkEffect(() => html`
-        <!-- unnecessary div -->
-        <div>
-          <div
-            id="menu-label-${i}"
-            class="category ${state.currentEmojisWithCategories.length === 1 && state.currentEmojisWithCategories[0].category === '' ? 'gone' : ''}"
-            aria-hidden="true">
-            <!-- This logic is a bit complicated in order to avoid a flash of the word "Custom" while switching
-                 from a tabpanel with custom emoji to a regular group. I.e. we don't want it to suddenly flash
-                 from "Custom" to "Smileys and emoticons" when you click the second nav button. The easiest
-                 way to repro this is to add an artificial delay to the IndexedDB operations. -->
-            ${
-              state.searchMode
-                ? state.i18n.searchResultsLabel
-                : (
-                  emojiWithCategory.category
-                    ? emojiWithCategory.category
-                    : (
-                      state.currentEmojisWithCategories.length > 1
-                        ? state.i18n.categories.custom
-                        : state.i18n.categories[state.currentGroup.name]
-                    )
-                )
-            }
-          </div>
-          <div class="emoji-menu"
-               role="${state.searchMode ? 'listbox' : 'menu'}"
-               aria-labelledby="menu-label-${i}"
-               id=${state.searchMode ? 'search-results' : ''}>
-            ${emojiList(emojiWithCategory.emojis, state.searchMode, 'emo')}
-          </div>
+    map(state.skinTones, (skinTone, i) => {
+    return html`
+        <div id="skintone-${i}"
+             class="emoji ${i === state.activeSkinTone ? 'active' : ''}"
+             aria-selected="${i === state.activeSkinTone}"
+             role="option"
+             title="${state.i18n.skinTones[i]}"
+             aria-label="${state.i18n.skinTones[i]}">
+          ${skinTone}
         </div>
-      `)
-          })
+      `
+    })
         }
       </div>
-    `)
-  })
-
-  const emojiTabPanel = (() => {
-    // The tabindex=0 is so people can scroll up and down with the keyboard. The element has a role and a label, so I
-    // feel it's appropriate to have the tabindex.
-    // This on:click is a delegated click listener
-    return frameworkEffect(() => html`
-      <div data-ref="tabpanelElement" class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone' : ''}"
-           role="${state.searchMode ? 'region' : 'tabpanel'}"
-           aria-label="${state.searchMode ? state.i18n.searchResultsLabel : state.i18n.categories[state.currentGroup.name]}"
-           id="${state.searchMode ? '' : `tab-${state.currentGroup.id}`}"
-           tabindex="0"
-           data-on-click="onEmojiClick"
-      >
-        ${emojiTabs()}
       </div>
-    `)
-  })
-
-  const navButtons = () => {
-    return frameworkEffect(() => map(state.groups, (group) => {
-      return frameworkEffect(() => html`
+        <!-- this is interactive because of keydown; it doesn't really need focus -->
+        <div className="nav"
+             role="tablist"
+             style="grid-template-columns: repeat(${state.groups.length}, 1fr)"
+             aria-label="${state.i18n.categoriesLabel}"
+             data-on-keydown="onNavKeydown"
+             data-on-click="onNavClick"
+        >
+          ${
+            map(state.groups, (group) => {
+              return html`
         <button role="tab"
                 class="nav-button"
                 aria-controls="tab-${group.id}"
@@ -205,35 +118,10 @@ export function createRootDom (state, helpers, events, createEffect) {
             ${group.emoji}
           </div>
         </button>
-      `)
-    }))
-  }
-
-  const nav = (() => {
-    // this is interactive because of keydown; it doesn't really need focus
-    return frameworkEffect(() => html`
-      <div class="nav"
-           role="tablist"
-           style="grid-template-columns: repeat(${state.groups.length}, 1fr)"
-           aria-label="${state.i18n.categoriesLabel}"
-           data-on-keydown="onNavKeydown"
-           data-on-click="onNavClick"
-      >
-        ${navButtons()}
-      </div>
-    `)
-  })
-
-  const section = (() => {
-    return frameworkEffect(() => html`
-      <section
-        class="picker"
-        aria-label="${state.i18n.regionLabel}"
-        style="${state.pickerStyle}">
-        <!-- using a spacer div because this allows us to cover up the skintone picker animation -->
-        <div class="pad-top"></div>
-        ${searchRow()}
-        ${nav()}
+      `
+            })
+          }
+        </div>
         <div class="indicator-wrapper">
           <div class="indicator"
                style="transform: translateX(${(state.isRtl ? -1 : 1) * state.currentGroupIndex * 100}%)">
@@ -246,16 +134,115 @@ export function createRootDom (state, helpers, events, createEffect) {
           ${state.message}
         </div>
 
-        ${emojiTabPanel()}
+        <!--The tabindex=0 is so people can scroll up and down with the keyboard. The element has a role and a label, so I
+        feel it's appropriate to have the tabindex.
+        This on:click is a delegated click listener -->
+        <div data-ref="tabpanelElement" className="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone' : ''}"
+             role="${state.searchMode ? 'region' : 'tabpanel'}"
+             aria-label="${state.searchMode ? state.i18n.searchResultsLabel : state.i18n.categories[state.currentGroup.name]}"
+             id="${state.searchMode ? '' : `tab-${state.currentGroup.id}`}"
+             tabIndex="0"
+             data-on-click="onEmojiClick"
+        >
+          <div data-ref="emojiGrid">
+            ${
+              map(state.currentEmojisWithCategories, (emojiWithCategory, i) => {
+                return html`
+        <!-- unnecessary div -->
+        <div>
+          <div
+            id="menu-label-${i}"
+            class="category ${state.currentEmojisWithCategories.length === 1 && state.currentEmojisWithCategories[0].category === '' ? 'gone' : ''}"
+            aria-hidden="true">
+            <!-- This logic is a bit complicated in order to avoid a flash of the word "Custom" while switching
+                 from a tabpanel with custom emoji to a regular group. I.e. we don't want it to suddenly flash
+                 from "Custom" to "Smileys and emoticons" when you click the second nav button. The easiest
+                 way to repro this is to add an artificial delay to the IndexedDB operations. -->
+            ${
+                  state.searchMode
+                    ? state.i18n.searchResultsLabel
+                    : (
+                      emojiWithCategory.category
+                        ? emojiWithCategory.category
+                        : (
+                          state.currentEmojisWithCategories.length > 1
+                            ? state.i18n.categories.custom
+                            : state.i18n.categories[state.currentGroup.name]
+                        )
+                    )
+                }
+          </div>
+          <div class="emoji-menu"
+               role="${state.searchMode ? 'listbox' : 'menu'}"
+               aria-labelledby="menu-label-${i}"
+               id=${state.searchMode ? 'search-results' : ''}>
+            ${
+              (() => {
+                  const emojis = emojiWithCategory.emojis
+                  const searchMode = state.searchMode
+                  const prefix = 'emo'
+              return map(emojis, (emoji, i) => {
+                return html`
+        <button role="${searchMode ? 'option' : 'menuitem'}"
+                aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
+                aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
+                title="${titleForEmoji(emoji)}"
+                class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
+                id="${prefix + '-' + emoji.id}">
+                  ${
+                          emoji.unicode
+                            ? unicodeWithSkin(emoji, state.currentSkinTone)
+                            : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
+                }
+        </button>
+      `
+              })
+              })()
+            }
+          </div>
+        </div>
+      `
+              })
+            }
+          </div>
+        </div>
         <!-- This on:click is a delegated click listener -->
-        ${favorites()}
+        <div class="favorites emoji-menu ${state.message ? 'gone' : ''}"
+             role="menu"
+             aria-label="${state.i18n.favoritesLabel}"
+             style="padding-inline-end: ${state.scrollbarWidth}px"
+             data-on-click="onEmojiClick">
+          ${
+            (() => {
+              const emojis = state.currentFavorites
+              const searchMode = false
+              const prefix = 'fav'
+              return map(emojis, (emoji, i) => {
+                return html`
+        <button role="${searchMode ? 'option' : 'menuitem'}"
+                aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
+                aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
+                title="${titleForEmoji(emoji)}"
+                class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
+                id="${prefix + '-' + emoji.id}">
+                  ${
+                  emoji.unicode
+                    ? unicodeWithSkin(emoji, state.currentSkinTone)
+                    : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
+                }
+        </button>
+      `
+              })
+            })()
+          }
+        </div>
         <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
         <button data-ref="baselineEmoji" aria-hidden="true" tabindex="-1" class="abs-pos hidden emoji baseline-emoji">
           😀
         </button>
       </section>
-    `)
-  })
+    `
+  }
 
   const { dom: rootDom } = section()
 
