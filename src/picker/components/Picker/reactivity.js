@@ -1,5 +1,4 @@
-export function createState() {
-
+export function createState () {
   let currentObserver
 
   const propsToObservers = new Map()
@@ -18,7 +17,7 @@ export function createState() {
   }
 
   const state = new Proxy({}, {
-    get(target, prop) {
+    get (target, prop) {
       if (currentObserver) {
         let observers = propsToObservers.get(prop)
         if (!observers) {
@@ -29,7 +28,7 @@ export function createState() {
       }
       return target[prop]
     },
-    set(target, prop, newValue) {
+    set (target, prop, newValue) {
       target[prop] = newValue
       const observers = propsToObservers.get(prop)
       if (observers) {

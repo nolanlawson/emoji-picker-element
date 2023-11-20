@@ -158,6 +158,8 @@
       "Headers",
       "HTMLElement",
       "matchMedia",
+      "Node",
+      "NodeFilter",
       "performance",
       "ResizeObserver",
       "Response",

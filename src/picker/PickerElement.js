@@ -1,5 +1,4 @@
-import { createRoot } from 'svelte'
-import SveltePicker from './components/Picker/Picker.svelte'
+import { createRoot } from './components/Picker/Picker.js'
 import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
 import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY } from './constants'
 import enI18n from './i18n/en.js'
@@ -52,10 +51,7 @@ export default class PickerElement extends HTMLElement {
     // The _cmp may be defined if the component was immediately disconnected and then reconnected. In that case,
     // do nothing (preserve the state)
     if (!this._cmp) {
-      this._cmp = createRoot(SveltePicker, {
-        target: this.shadowRoot,
-        props: this._ctx
-      })
+      this._cmp = createRoot(this.shadowRoot, this._ctx)
     }
   }
 

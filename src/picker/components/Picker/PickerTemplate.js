@@ -1,7 +1,6 @@
 import { html, map } from './framework.js'
 
 export function createRootDom (state, helpers, events, createEffect) {
-
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
   const emojiList = createEffect((emojis, searchMode, prefix) => {
@@ -122,13 +121,15 @@ export function createRootDom (state, helpers, events, createEffect) {
                from "Custom" to "Smileys and emoticons" when you click the second nav button. The easiest
                way to repro this is to add an artificial delay to the IndexedDB operations. -->
           ${
-            state.searchMode ?
-              state.i18n.searchResultsLabel : (
-                emojiWithCategory.category ?
-                  emojiWithCategory.category : (
-                    state.currentEmojisWithCategories.length > 1 ?
-                      state.i18n.categories.custom :
-                      state.i18n.categories[state.currentGroup.name]
+            state.searchMode
+              ? state.i18n.searchResultsLabel
+: (
+                emojiWithCategory.category
+                  ? emojiWithCategory.category
+: (
+                    state.currentEmojisWithCategories.length > 1
+                      ? state.i18n.categories.custom
+                      : state.i18n.categories[state.currentGroup.name]
                   )
               )
           }
@@ -168,7 +169,7 @@ export function createRootDom (state, helpers, events, createEffect) {
         <button role="tab"
                 class="nav-button"
                 aria-controls="tab-${group.id}"
-                aria-label="${i18n.categories[group.name]}"
+                aria-label="${state.i18n.categories[group.name]}"
                 aria-selected="${!state.searchMode && state.currentGroup.id === group.id}"
                 title="${state.i18n.categories[group.name]}"
                 data-on-click="() => onNavClick(group)">
@@ -186,7 +187,7 @@ export function createRootDom (state, helpers, events, createEffect) {
       <div class="nav"
            role="tablist"
            style="grid-template-columns: repeat(${state.groups.length}, 1fr)"
-           aria-label="${i18n.categoriesLabel}"
+           aria-label="${state.i18n.categoriesLabel}"
            data-on-keydown="onNavKeydown">
         ${navButtons()}
       </div>

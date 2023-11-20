@@ -21,13 +21,14 @@ import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.js'
 import { createRootDom } from './PickerTemplate.js'
+import { createState } from './reactivity.js'
 
 // constants
 const EMPTY_ARRAY = []
 
 const { assign } = Object
 
-export function createRoot(target, props) {
+export function createRoot (target, props) {
   const { state, createEffect } = createState()
   const destroyCallbacks = []
 
@@ -38,7 +39,7 @@ export function createRoot(target, props) {
     database: undefined,
     customEmoji: undefined,
     customCategorySorting: undefined,
-    emojiVersion: undefined,
+    emojiVersion: undefined
   })
 
   // public props
@@ -70,25 +71,25 @@ export function createRoot(target, props) {
     currentGroupIndex: 0,
     groups: defaultGroups,
     databaseLoaded: false,
-    activeSearchItemId: undefined,
+    activeSearchItemId: undefined
   })
 
-//
-// Update the current group based on the currentGroupIndex
-//
+  //
+  // Update the current group based on the currentGroupIndex
+  //
   createEffect(() => {
     state.currentGroup = state.groups[state.currentGroupIndex]
   })
-  
-//
-// Utils/helpers
-//
+
+  //
+  // Utils/helpers
+  //
 
   const focus = id => {
     rootNode.getRootNode().getElementById(id).focus()
   }
 
-// fire a custom event that crosses the shadow boundary
+  // fire a custom event that crosses the shadow boundary
   const fireEvent = (name, detail) => {
     rootNode.dispatchEvent(new CustomEvent(name, {
       detail,
@@ -98,7 +99,7 @@ export function createRoot(target, props) {
   }
 
   // Helpers
-  
+
   const unicodeWithSkin = (emoji, currentSkinTone) => (
     (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
   )
@@ -127,32 +128,33 @@ export function createRoot(target, props) {
     onSkinToneOptionsClick,
     onSkinToneOptionsFocusOut,
     onSkinToneOptionsKeydown,
-    onSkinToneOptionsKeyup
+    onSkinToneOptionsKeyup,
+    onSearchInput
   }
 
   const {
     refs,
     rootNode
   } = createRootDom(state, helpers, events, createEffect)
-  
-//
-// Determine the emoji support level (in requestIdleCallback)
-//
+
+  //
+  // Determine the emoji support level (in requestIdleCallback)
+  //
 
   // mount logic
-    if (!state.emojiVersion) {
-      detectEmojiSupportLevel().then(level => {
-        // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
-        /* istanbul ignore next */
-        if (!level) {
-          state.message = state.i18n.emojiUnsupportedMessage
-        }
-      })
-    }
+  if (!state.emojiVersion) {
+    detectEmojiSupportLevel().then(level => {
+      // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
+      /* istanbul ignore next */
+      if (!level) {
+        state.message = state.i18n.emojiUnsupportedMessage
+      }
+    })
+  }
 
-//
-// Set or update the database object
-//
+  //
+  // Set or update the database object
+  //
 
   createEffect(() => {
     // show a Loading message if it takes a long time, or show an error if there's a network/IDB error
@@ -163,7 +165,7 @@ export function createRoot(target, props) {
         state.message = state.i18n.loadingMessage
       }, TIMEOUT_BEFORE_LOADING_MESSAGE)
       try {
-        await database.ready()
+        await state.database.ready()
         state.databaseLoaded = true // eslint-disable-line no-unused-vars
       } catch (err) {
         console.error(err)
@@ -183,9 +185,9 @@ export function createRoot(target, props) {
     }
   })
 
-//
-// Global styles for the entire picker
-//
+  //
+  // Global styles for the entire picker
+  //
 
   createEffect(() => {
     state.pickerStyle = `
@@ -194,9 +196,9 @@ export function createRoot(target, props) {
       --num-skintones: ${NUM_SKIN_TONES};`
   })
 
-//
-// Set or update the customEmoji
-//
+  //
+  // Set or update the customEmoji
+  //
 
   createEffect(() => {
     if (state.customEmoji && state.database) {
@@ -218,9 +220,9 @@ export function createRoot(target, props) {
     }
   })
 
-//
-// Set or update the preferred skin tone
-//
+  //
+  // Set or update the preferred skin tone
+  //
 
   createEffect(() => {
     async function updatePreferredSkinTone () {
@@ -236,17 +238,17 @@ export function createRoot(target, props) {
     state.skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => applySkinTone(state.skinToneEmoji, i))
   })
 
-createEffect(() => {
-  state.skinToneButtonText = state.skinTones[state.currentSkinTone]
-})
+  createEffect(() => {
+    state.skinToneButtonText = state.skinTones[state.currentSkinTone]
+  })
 
   createEffect(() => {
     state.skinToneButtonLabel = state.i18n.skinToneLabel.replace('{skinTone}', state.i18n.skinTones[state.currentSkinTone])
   })
 
-//
-// Set or update the favorites emojis
-//
+  //
+  // Set or update the favorites emojis
+  //
 
   createEffect(() => {
     async function updateDefaultFavoriteEmojis () {
@@ -277,18 +279,18 @@ createEffect(() => {
     }
   })
 
-//
-// Calculate the width of the emoji grid. This serves two purposes:
-// 1) Re-calculate the --num-columns var because it may have changed
-// 2) Re-calculate the scrollbar width because it may have changed
-//   (i.e. because the number of items changed)
-// 3) Re-calculate whether we're in RTL mode or not.
-//
-// The benefit of doing this in one place is to align with rAF/ResizeObserver
-// and do all the calculations in one go. RTL vs LTR is not strictly width-related,
-// but since we're already reading the style here, and since it's already aligned with
-// the rAF loop, this is the most appropriate place to do it perf-wise.
-//
+  //
+  // Calculate the width of the emoji grid. This serves two purposes:
+  // 1) Re-calculate the --num-columns var because it may have changed
+  // 2) Re-calculate the scrollbar width because it may have changed
+  //   (i.e. because the number of items changed)
+  // 3) Re-calculate whether we're in RTL mode or not.
+  //
+  // The benefit of doing this in one place is to align with rAF/ResizeObserver
+  // and do all the calculations in one go. RTL vs LTR is not strictly width-related,
+  // but since we're already reading the style here, and since it's already aligned with
+  // the rAF loop, this is the most appropriate place to do it perf-wise.
+  //
 
   function calculateEmojiGridStyle (node) {
     return widthCalculator.calculateWidth(node, width => {
@@ -309,16 +311,15 @@ createEffect(() => {
     })
   }
 
-    // calculate the width and clean up on destroy
-    const calculator = calculateEmojiGridStyle(refs.emojiGrid)
+  // calculate the width and clean up on destroy
+  const calculator = calculateEmojiGridStyle(refs.emojiGrid)
 
   destroyCallbacks.push(calculator.destroy)
 
-
-//
-// Set or update the currentEmojis. Check for invalid ZWJ renderings
-// (i.e. double emoji).
-//
+  //
+  // Set or update the currentEmojis. Check for invalid ZWJ renderings
+  // (i.e. double emoji).
+  //
 
   createEffect(() => {
     async function updateEmojis () {
@@ -346,9 +347,9 @@ createEffect(() => {
     /* no await */ updateEmojis()
   })
 
-// Some emojis have their ligatures rendered as two or more consecutive emojis
-// We want to treat these the same as unsupported emojis, so we compare their
-// widths against the baseline widths and remove them as necessary
+  // Some emojis have their ligatures rendered as two or more consecutive emojis
+  // We want to treat these the same as unsupported emojis, so we compare their
+  // widths against the baseline widths and remove them as necessary
   createEffect(() => {
     const zwjEmojisToCheck = state.currentEmojis
       .filter(emoji => emoji.unicode) // filter custom emoji
@@ -364,8 +365,8 @@ createEffect(() => {
   })
 
   function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
-    const rootNode = rootNode.getRootNode()
-    const emojiToDomNode = emoji => rootNode.getElementById(`emo-${emoji.id}`)
+    const shadowRootNode = rootNode.getRootNode()
+    const emojiToDomNode = emoji => shadowRootNode.getElementById(`emo-${emoji.id}`)
     checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
     // force update
     const { currentEmojis } = state
@@ -408,10 +409,10 @@ createEffect(() => {
     }
   })
 
-//
-// Derive currentEmojisWithCategories from currentEmojis. This is always done even if there
-// are no categories, because it's just easier to code the HTML this way.
-//
+  //
+  // Derive currentEmojisWithCategories from currentEmojis. This is always done even if there
+  // are no categories, because it's just easier to code the HTML this way.
+  //
 
   createEffect(() => {
     function calculateCurrentEmojisWithCategories () {
@@ -441,17 +442,17 @@ createEffect(() => {
     state.currentEmojisWithCategories = calculateCurrentEmojisWithCategories()
   })
 
-//
-// Handle active search item (i.e. pressing up or down while searching)
-//
+  //
+  // Handle active search item (i.e. pressing up or down while searching)
+  //
 
   createEffect(() => {
     state.activeSearchItemId = state.activeSearchItem !== -1 && state.currentEmojis[state.activeSearchItem].id
   })
 
-//
-// Handle user input on the search input
-//
+  //
+  // Handle user input on the search input
+  //
 
   createEffect(() => {
     const { rawSearchText } = state
@@ -486,9 +487,9 @@ createEffect(() => {
     }
   }
 
-//
-// Handle user input on nav
-//
+  //
+  // Handle user input on nav
+  //
 
   function onNavClick (group) {
     refs.searchElement.value = '' // clear search box input
@@ -520,9 +521,9 @@ createEffect(() => {
     }
   }
 
-//
-// Handle user input on an emoji
-//
+  //
+  // Handle user input on an emoji
+  //
 
   async function clickEmoji (unicodeOrName) {
     const emoji = await state.database.getEmojiByUnicodeOrName(unicodeOrName)
@@ -549,16 +550,16 @@ createEffect(() => {
     /* no await */ clickEmoji(id)
   }
 
-//
-// Handle user input on the skintone picker
-//
+  //
+  // Handle user input on the skintone picker
+  //
 
   function changeSkinTone (skinTone) {
     state.currentSkinTone = skinTone
     state.skinTonePickerExpanded = false
     focus('skintone-button')
     fireEvent('skin-tone-change', { skinTone })
-    /* no await */ database.setPreferredSkinTone(skinTone)
+    /* no await */ state.database.setPreferredSkinTone(skinTone)
   }
 
   function onSkinToneOptionsClick (event) {
@@ -581,9 +582,9 @@ createEffect(() => {
     }
   }
 
-// To make the animation nicer, change the z-index of the skintone picker button
-// *after* the animation has played. This makes it appear that the picker box
-// is expanding "below" the button
+  // To make the animation nicer, change the z-index of the skintone picker button
+  // *after* the animation has played. This makes it appear that the picker box
+  // is expanding "below" the button
   createEffect(() => {
     if (state.skinTonePickerExpanded) {
       refs.skinToneDropdown.addEventListener('transitionend', () => {
@@ -646,18 +647,18 @@ createEffect(() => {
     }
   }
 
-    function onSearchInput (event) {
-      state.rawSearchText = event.target.value
-    }
+  function onSearchInput (event) {
+    state.rawSearchText = event.target.value
+  }
 
-    target.appendChild(rootNode)
+  target.appendChild(rootNode)
 
-    return {
-      destroy () {
-        rootNode.remove()
-        for (const destroyCallback of destroyCallbacks) {
-          destroyCallback()
-        }
+  return {
+    destroy () {
+      rootNode.remove()
+      for (const destroyCallback of destroyCallbacks) {
+        destroyCallback()
       }
     }
+  }
 }

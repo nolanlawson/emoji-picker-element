@@ -1,6 +1,6 @@
 // via https://github.com/component/escape-html/blob/b42947eefa79efff01b3fe988c4c7e7b051ec8d8/index.js
-function escapeHtml(string) {
-  let str = '' + string
+function escapeHtml (string) {
+  const str = '' + string
   const match = /["'&<>]/.exec(str)
 
   if (!match) {
@@ -44,7 +44,7 @@ function escapeHtml(string) {
   return lastIndex !== index ? html + str.substring(lastIndex, index) : html
 }
 
-function toString(value) {
+function toString (value) {
   if (typeof value === 'undefined') {
     return 'undefined'
   } else if (value === null) {
@@ -53,13 +53,13 @@ function toString(value) {
   return value.toString()
 }
 
-function parseDom(htmlString) {
+function parseDom (htmlString) {
   const template = document.createElement('template')
   template.innerHTML = htmlString
   return template.content.firstChild
 }
 
-function parse(tokens) {
+function parse (tokens) {
   let htmlString = ''
 
   let withinTag = false
@@ -118,7 +118,6 @@ function parse(tokens) {
       expressionIndex: i
     })
 
-
     htmlString += (!withinTag && !withinAttribute) ? `<!--placeholder-${bindings.length - 1}-->` : ''
   }
 
@@ -173,7 +172,7 @@ const isHtmlTagTemplateExpression = Symbol('html-tag-template-expression')
 
 const parseCache = new WeakMap()
 
-function parseWithCache(tokens) {
+function parseWithCache (tokens) {
   let cached = parseCache.get(tokens)
   if (!cached) {
     cached = parse(tokens)
@@ -215,7 +214,7 @@ function traverseAndSetupBindings (tokens, dom, boundExpressions) {
   } while ((element = treeWalker.nextNode()))
 }
 
-export function html(tokens, ...expressions) {
+export function html (tokens, ...expressions) {
   const {
     dom,
     boundExpressions,
@@ -231,6 +230,6 @@ export function html(tokens, ...expressions) {
   }
 }
 
-export function map(array, callback) {
+export function map (array, callback) {
   return array.map(callback)
 }
