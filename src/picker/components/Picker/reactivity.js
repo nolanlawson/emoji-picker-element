@@ -7,11 +7,13 @@ export function createState () {
   let queued
 
   const flush = () => {
+    console.log('flush')
     try {
       for (const observer of dirtyObservers) {
         observer()
       }
     } finally {
+      dirtyObservers.clear()
       queued = false
     }
   }
@@ -44,7 +46,7 @@ export function createState () {
     }
   })
 
-  const createEffect = (callback) => {
+  const createEffect = (callback, noInit) => {
     const runnable = () => {
       currentObserver = callback
       try {
@@ -53,7 +55,9 @@ export function createState () {
         currentObserver = undefined
       }
     }
-    runnable()
+    if (!noInit) {
+      runnable()
+    }
     return runnable
   }
 

@@ -1,3 +1,5 @@
+const isHtmlTagTemplateExpression = Symbol('html-tag-template-expression')
+
 // via https://github.com/component/escape-html/blob/b42947eefa79efff01b3fe988c4c7e7b051ec8d8/index.js
 function escapeHtml (string) {
   const str = '' + string
@@ -179,8 +181,33 @@ export function createFramework () {
             element.setAttribute(attributeName, attributeValuePre + escapeHtml(toString(expression)) + attributeValuePost)
           } else { // text node / dom node replacement
             let newNode
-            if (expression && expression[isHtmlTagTemplateExpression]) { // html tag template itself
+            if (expression && Array.isArray(expression)) { // array of html tag templates
+              const { parentNode } = targetNode
+              if (binding.iteratorEndNode) { // already rendered once - clean up
+                console.log('re-render')
+                let currentSibling = targetNode.nextSibling
+                while (!(currentSibling.nodeType === Node.COMMENT_NODE && currentSibling.textContent === 'end')) {
+                  const oldSibling = currentSibling
+                  currentSibling = currentSibling.nextSibling
+                  oldSibling.remove()
+                }
+              } else { // first render of list
+                const iteratorEndNode = document.createComment('end')
+                parentNode.insertBefore(iteratorEndNode, targetNode.nextSibling)
+                binding.iteratorEndNode = iteratorEndNode
+              }
+              const { iteratorEndNode } = binding
+              for (const subExpression of expression) {
+                if (subExpression && subExpression[isHtmlTagTemplateExpression]) { // html tag template itself
+                  parentNode.insertBefore(subExpression.dom, iteratorEndNode)
+                } else { // primitive - string, number, etc
+                  const textNode = document.createTextNode(toString(subExpression))
+                  parentNode.insertBefore(textNode, iteratorEndNode)
+                }
+              }
+            } else if (expression && expression[isHtmlTagTemplateExpression]) { // html tag template itself
               newNode = expression.dom
+              targetNode.replaceWith(newNode)
             } else { // primitive - string, number, etc
               if (targetNode.nodeType === Node.TEXT_NODE) { // already transformed into a text node
                 targetNode.nodeValue = toString(expression)
@@ -190,7 +217,6 @@ export function createFramework () {
               }
             }
             if (newNode) {
-              targetNode.replaceWith(newNode)
               binding.targetNode = newNode
             }
           }
@@ -204,8 +230,6 @@ export function createFramework () {
       update
     }
   }
-
-  const isHtmlTagTemplateExpression = Symbol('html-tag-template-expression')
 
   const parseCache = new WeakMap()
 

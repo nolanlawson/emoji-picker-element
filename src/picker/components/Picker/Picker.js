@@ -252,9 +252,11 @@ export function createRoot (target, props) {
 
   createEffect(() => {
     async function updateDefaultFavoriteEmojis () {
-      state.defaultFavoriteEmojis = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
-        state.database.getEmojiByUnicodeOrName(unicode)
+      const { database } = state
+      const favs = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
+        database.getEmojiByUnicodeOrName(unicode)
       )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
+      state.defaultFavoriteEmojis = favs
     }
 
     if (state.databaseLoaded) {
@@ -654,7 +656,10 @@ export function createRoot (target, props) {
   target.appendChild(rootNode)
 
   return {
-    destroy () {
+    $set (newState) {
+      assign(state, newState)
+    },
+    $destroy () {
       rootNode.remove()
       for (const destroyCallback of destroyCallbacks) {
         destroyCallback()
