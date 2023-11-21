@@ -1,12 +1,12 @@
 import { html as frameworkHtml } from './framework.js'
 
-export function createRootDom (state, helpers, events, createEffect) {
+export function createRootDom (state, helpers, events) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
   function html (tokens, ...expressions) {
     const { update } = frameworkHtml(tokens)
     const { dom } = update(expressions)
-    return { dom, update }
+    return { dom }
   }
 
   function map (array, callback) {
@@ -16,6 +16,7 @@ export function createRootDom (state, helpers, events, createEffect) {
   const section = () => {
     return html`
       <section
+        data-ref="rootElement"
         class="picker"
         aria-label="${state.i18n.regionLabel}"
         style="${state.pickerStyle}">
@@ -97,7 +98,7 @@ export function createRootDom (state, helpers, events, createEffect) {
       </div>
       </div>
         <!-- this is interactive because of keydown; it doesn't really need focus -->
-        <div className="nav"
+        <div class="nav"
              role="tablist"
              style="grid-template-columns: repeat(${state.groups.length}, 1fr)"
              aria-label="${state.i18n.categoriesLabel}"
@@ -137,7 +138,7 @@ export function createRootDom (state, helpers, events, createEffect) {
         <!--The tabindex=0 is so people can scroll up and down with the keyboard. The element has a role and a label, so I
         feel it's appropriate to have the tabindex.
         This on:click is a delegated click listener -->
-        <div data-ref="tabpanelElement" className="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone' : ''}"
+        <div data-ref="tabpanelElement" class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone' : ''}"
              role="${state.searchMode ? 'region' : 'tabpanel'}"
              aria-label="${state.searchMode ? state.i18n.searchResultsLabel : state.i18n.categories[state.currentGroup.name]}"
              id="${state.searchMode ? '' : `tab-${state.currentGroup.id}`}"
@@ -244,7 +245,9 @@ export function createRootDom (state, helpers, events, createEffect) {
     `
   }
 
-  const { dom: rootDom } = section()
+  const {
+    dom: rootDom,
+  } = section()
 
   // bind events
   for (const eventName of ['click', 'focusout', 'input', 'keydown', 'keyup']) {
@@ -259,6 +262,10 @@ export function createRootDom (state, helpers, events, createEffect) {
   for (const element of rootDom.querySelectorAll('[data-ref]')) {
     const { ref } = element.dataset
     refs[ref] = element
+  }
+  if (rootDom.hasAttribute('data-ref')) {
+    const { ref } = rootDom.dataset
+    refs[ref] = rootDom
   }
 
   return {

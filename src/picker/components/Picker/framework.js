@@ -289,18 +289,21 @@ function html (tokens) {
     boundExpressions
   } = parseWithCache(tokens)
 
+  let doUpdate
   let updater
   let clonedDom
   let clonedBoundExpressions
 
-  const update = () => {
+  const update = (expressions) => {
     if (!updater) {
       updater = createUpdater()
       clonedDom = template.cloneNode(true).content.firstElementChild
       clonedBoundExpressions = cloneBoundExpressions(boundExpressions)
     }
 
-    updater(clonedDom, clonedBoundExpressions)
+    doUpdate = updater(clonedDom, clonedBoundExpressions)
+
+    doUpdate(expressions)
 
     return {
       dom: clonedDom

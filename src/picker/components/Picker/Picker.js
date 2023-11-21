@@ -86,12 +86,12 @@ export function createRoot (target, props) {
   //
 
   const focus = id => {
-    rootNode.getRootNode().getElementById(id).focus()
+    refs.rootElement.getRootNode().getElementById(id).focus()
   }
 
   // fire a custom event that crosses the shadow boundary
   const fireEvent = (name, detail) => {
-    rootNode.dispatchEvent(new CustomEvent(name, {
+    refs.rootElement.dispatchEvent(new CustomEvent(name, {
       detail,
       bubbles: true,
       composed: true
@@ -132,10 +132,20 @@ export function createRoot (target, props) {
     onSearchInput
   }
 
-  const {
-    refs,
-    rootNode
-  } = createRootDom(state, helpers, events, createEffect)
+  let renderedRootNode
+  let refs
+  createEffect(() => {
+    const {
+      refs: theRefs,
+      rootNode
+    } = createRootDom(state, helpers, events)
+    if (renderedRootNode) {
+      renderedRootNode.replaceWith(rootNode)
+    }
+    renderedRootNode = rootNode
+    target.appendChild(rootNode)
+    refs = theRefs
+  })
 
   //
   // Determine the emoji support level (in requestIdleCallback)
@@ -299,7 +309,7 @@ export function createRoot (target, props) {
       /* istanbul ignore next */
       if (process.env.NODE_ENV !== 'test') { // jsdom throws errors for this kind of fancy stuff
         // read all the style/layout calculations we need to make
-        const style = getComputedStyle(rootNode)
+        const style = getComputedStyle(refs.rootElement)
         const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
         const newIsRtl = style.getPropertyValue('direction') === 'rtl'
         const parentWidth = node.parentElement.getBoundingClientRect().width
@@ -314,9 +324,12 @@ export function createRoot (target, props) {
   }
 
   // calculate the width and clean up on destroy
-  const calculator = calculateEmojiGridStyle(refs.emojiGrid)
-
-  destroyCallbacks.push(calculator.destroy)
+  // createEffect(() => {
+  //   if (refs && refs.emojiGrid) {
+  //     const calculator = calculateEmojiGridStyle(refs.emojiGrid)
+  //     destroyCallbacks.push(calculator.destroy)
+  //   }
+  // })
 
   //
   // Set or update the currentEmojis. Check for invalid ZWJ renderings
@@ -367,7 +380,7 @@ export function createRoot (target, props) {
   })
 
   function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
-    const shadowRootNode = rootNode.getRootNode()
+    const shadowRootNode = refs.rootElement.getRootNode()
     const emojiToDomNode = emoji => shadowRootNode.getElementById(`emo-${emoji.id}`)
     checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
     // force update
@@ -658,14 +671,14 @@ export function createRoot (target, props) {
     state.rawSearchText = event.target.value
   }
 
-  target.appendChild(rootNode)
-
   return {
     $set (newState) {
       assign(state, newState)
     },
     $destroy () {
-      rootNode.remove()
+      if (renderedRootNode) {
+        renderedRootNode.remove()
+      }
       for (const destroyCallback of destroyCallbacks) {
         destroyCallback()
       }
