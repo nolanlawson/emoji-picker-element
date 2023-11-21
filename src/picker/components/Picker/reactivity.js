@@ -2,24 +2,25 @@ export function createState () {
   let currentObserver
 
   const propsToObservers = new Map()
-  const dirtyObservers = new Set()
+  let dirtyObservers = new Set()
 
   let queued
 
   const flush = () => {
-    console.log('flush')
     try {
-      for (const observer of dirtyObservers) {
+      const observersToRun = dirtyObservers
+      dirtyObservers = new Set() // clear before running to force any new updates to run in another tick of the loop
+      for (const observer of observersToRun) {
         observer()
       }
     } finally {
-      dirtyObservers.clear()
       queued = false
     }
   }
 
   const state = new Proxy({}, {
     get (target, prop) {
+      console.log('reactivity: get', prop)
       if (currentObserver) {
         let observers = propsToObservers.get(prop)
         if (!observers) {
@@ -31,6 +32,11 @@ export function createState () {
       return target[prop]
     },
     set (target, prop, newValue) {
+      // if (newValue === target[prop]) {
+      //   // unchanged, do nothing
+      //   return true
+      // }
+      console.log('reactivity: set', prop, newValue)
       target[prop] = newValue
       const observers = propsToObservers.get(prop)
       if (observers) {

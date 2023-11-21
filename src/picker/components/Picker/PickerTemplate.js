@@ -1,16 +1,42 @@
 import { html as frameworkHtml } from './framework.js'
 
+let domInstances = new WeakMap()
+
 export function createRootDom (state, helpers, events) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
   function html (tokens, ...expressions) {
-    const { update } = frameworkHtml(tokens)
+    let domInstance = domInstances.get(tokens)
+    if (!domInstance) {
+      console.log('creating new domInstance for tokens', tokens)
+      domInstance = frameworkHtml(tokens)
+      domInstances.set(tokens, domInstance)
+    } else {
+      console.log('using cached domInstance for tokens', tokens)
+    }
+    const { update } = domInstance
     const { dom } = update(expressions)
     return { dom }
   }
 
-  function map (array, callback) {
-    return array.map(callback)
+  function map (array, callback, keyFunction) {
+    const existingDomInstances = domInstances
+    const keysToDomInstances = new Map()
+    try {
+      return array.map((item, index) => {
+        const key = keyFunction(item)
+
+        let cached = keysToDomInstances.get(key)
+        if (!cached) {
+          cached = new WeakMap()
+          keysToDomInstances.set(key, cached)
+        }
+        domInstances = cached
+        return callback(item, index)
+      })
+    } finally {
+      domInstances = existingDomInstances
+    }
   }
 
   const section = () => {
@@ -93,7 +119,7 @@ export function createRootDom (state, helpers, events) {
           ${skinTone}
         </div>
       `
-    })
+    }, skinTone => skinTone)
         }
       </div>
       </div>
@@ -120,7 +146,7 @@ export function createRootDom (state, helpers, events) {
           </div>
         </button>
       `
-            })
+            }, group => group.id)
           }
         </div>
         <div class="indicator-wrapper">
@@ -197,13 +223,13 @@ export function createRootDom (state, helpers, events) {
                 }
         </button>
       `
-              })
+              }, emoji => emoji.id)
               })()
             }
           </div>
         </div>
       `
-              })
+              }, emojiWithCategory => emojiWithCategory.category)
             }
           </div>
         </div>
@@ -233,7 +259,7 @@ export function createRootDom (state, helpers, events) {
                 }
         </button>
       `
-              })
+              }, emoji => emoji.id)
             })()
           }
         </div>
@@ -246,7 +272,7 @@ export function createRootDom (state, helpers, events) {
   }
 
   const {
-    dom: rootDom,
+    dom: rootDom
   } = section()
 
   // bind events

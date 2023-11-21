@@ -98,7 +98,6 @@ function createUpdater () {
             if (expression && Array.isArray(expression)) { // array of html tag templates
               const { parentNode } = targetNode
               if (binding.iteratorEndNode) { // already rendered once - clean up
-                console.log('re-render')
                 let currentSibling = targetNode.nextSibling
                 while (!(currentSibling.nodeType === Node.COMMENT_NODE && currentSibling.textContent === 'end')) {
                   const oldSibling = currentSibling
@@ -277,6 +276,9 @@ function traverseAndSetupBindings (dom, boundExpressions) {
             }
           }
           binding.targetNode = foundComments.get(i)
+          if (process.env.NODE_ENV !== 'production' && !binding.targetNode) {
+            throw new Error('should not be undefined')
+          }
         }
       }
     }
@@ -290,19 +292,15 @@ function html (tokens) {
   } = parseWithCache(tokens)
 
   let doUpdate
-  let updater
   let clonedDom
-  let clonedBoundExpressions
 
   const update = (expressions) => {
-    if (!updater) {
-      updater = createUpdater()
+    if (!doUpdate) {
+      const updater = createUpdater()
       clonedDom = template.cloneNode(true).content.firstElementChild
-      clonedBoundExpressions = cloneBoundExpressions(boundExpressions)
+      const clonedBoundExpressions = cloneBoundExpressions(boundExpressions)
+      doUpdate = updater(clonedDom, clonedBoundExpressions)
     }
-
-    doUpdate = updater(clonedDom, clonedBoundExpressions)
-
     doUpdate(expressions)
 
     return {
