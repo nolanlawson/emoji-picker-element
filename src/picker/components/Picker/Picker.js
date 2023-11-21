@@ -145,6 +145,10 @@ export function createRoot (target, props) {
     renderedRootNode = rootNode
     target.appendChild(rootNode)
     refs = theRefs
+
+    // calculate the width and clean up on destroy
+    const calculator = calculateEmojiGridStyle(refs.emojiGrid)
+    destroyCallbacks.push(calculator.destroy)
   })
 
   //
@@ -322,14 +326,6 @@ export function createRoot (target, props) {
       }
     })
   }
-
-  // calculate the width and clean up on destroy
-  // createEffect(() => {
-  //   if (refs && refs.emojiGrid) {
-  //     const calculator = calculateEmojiGridStyle(refs.emojiGrid)
-  //     destroyCallbacks.push(calculator.destroy)
-  //   }
-  // })
 
   //
   // Set or update the currentEmojis. Check for invalid ZWJ renderings
