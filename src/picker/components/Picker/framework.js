@@ -83,10 +83,10 @@ function patchChildren (newChildren, binding) {
       const newChild = newChildren[++i]
       if (!(newChild && newChild.dom === oldSibling)) {
         needsRerender = true
-        oldSibling.remove()
+        parentNode.removeChild(oldSibling)
       }
     }
-    if (!hasOldChildren) {
+    if (!hasOldChildren && newChildren.length) { // old array was empty, new array is not
       needsRerender = true
     }
   } else { // first render of list
@@ -95,6 +95,7 @@ function patchChildren (newChildren, binding) {
     parentNode.insertBefore(iteratorEndNode, targetNode.nextSibling)
     binding.iteratorEndNode = iteratorEndNode
   }
+  // avoid re-rendering list if the dom nodes are exactly the same before and after
   if (needsRerender) {
     for (const subExpression of newChildren) {
       if (subExpression && subExpression.dom) { // html tag template itself
@@ -104,8 +105,6 @@ function patchChildren (newChildren, binding) {
         parentNode.insertBefore(textNode, iteratorEndNode)
       }
     }
-  } else {
-    console.log('skipping re-render of unchanged list')
   }
 }
 
@@ -143,7 +142,9 @@ function createUpdater () {
               patchChildren(expression, binding)
             } else if (expression && expression.dom) { // html tag template itself
               newNode = expression.dom
-              targetNode.replaceWith(newNode)
+              if (newNode !== targetNode) {
+                targetNode.replaceWith(newNode)
+              }
             } else { // primitive - string, number, etc
               if (targetNode.nodeType === Node.TEXT_NODE) { // already transformed into a text node
                 targetNode.nodeValue = toString(expression)

@@ -134,17 +134,22 @@ export function createRoot (target, props) {
 
   let renderedRootNode
   let refs
+  let firstRender = true
   createEffect(() => {
     const {
       refs: theRefs,
       rootNode
     } = createRootDom(state, helpers, events)
-    if (renderedRootNode) {
-      renderedRootNode.replaceWith(rootNode)
-    }
     renderedRootNode = rootNode
-    target.appendChild(rootNode)
     refs = theRefs
+    if (firstRender) {
+      firstRender = false
+      target.appendChild(rootNode)
+
+      // on first render, set up the ResizeObserver
+      const calculator = calculateEmojiGridStyle(refs.emojiGrid)
+      destroyCallbacks.push(calculator.destroy)
+    }
   })
 
   //
@@ -322,14 +327,6 @@ export function createRoot (target, props) {
       }
     })
   }
-
-  // calculate the width and clean up on destroy
-  // createEffect(() => {
-  //   if (refs && refs.emojiGrid) {
-  //     const calculator = calculateEmojiGridStyle(refs.emojiGrid)
-  //     destroyCallbacks.push(calculator.destroy)
-  //   }
-  // })
 
   //
   // Set or update the currentEmojis. Check for invalid ZWJ renderings
