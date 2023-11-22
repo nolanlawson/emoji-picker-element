@@ -20,7 +20,7 @@ export function createState () {
 
   const state = new Proxy({}, {
     get (target, prop) {
-      console.log('reactivity: get', prop)
+      // console.log('reactivity: get', prop)
       if (currentObserver) {
         let observers = propsToObservers.get(prop)
         if (!observers) {
@@ -36,7 +36,7 @@ export function createState () {
       //   // unchanged, do nothing
       //   return true
       // }
-      console.log('reactivity: set', prop, newValue)
+      // console.log('reactivity: set', prop, newValue)
       target[prop] = newValue
       const observers = propsToObservers.get(prop)
       if (observers) {

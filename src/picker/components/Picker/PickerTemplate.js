@@ -1,41 +1,44 @@
 import { html as frameworkHtml } from './framework.js'
 
-let domInstances = new WeakMap()
+const domInstancesCache = new WeakMap()
+const unkeyedSymbol = Symbol('un-keyed')
+
+function getFromMap (cache, key, func) {
+  let cached = cache.get(key)
+  if (!cached) {
+    cached = func()
+    cache.set(key, cached)
+    // console.log('creating new')
+  } else {
+    // console.log('using cached')
+  }
+  return cached
+}
 
 export function createRootDom (state, helpers, events) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
+  const domInstances = getFromMap(domInstancesCache, state, () => new WeakMap())
+  let iteratorKey = unkeyedSymbol
+
   function html (tokens, ...expressions) {
-    let domInstance = domInstances.get(tokens)
-    if (!domInstance) {
-      console.log('creating new domInstance for tokens', tokens)
-      domInstance = frameworkHtml(tokens)
-      domInstances.set(tokens, domInstance)
-    } else {
-      console.log('using cached domInstance for tokens', tokens)
-    }
+    const domInstancesForTokens = getFromMap(domInstances, tokens, () => new Map())
+    const domInstance = getFromMap(domInstancesForTokens, iteratorKey, () => frameworkHtml(tokens))
+
     const { update } = domInstance
     const { dom } = update(expressions)
     return { dom }
   }
 
   function map (array, callback, keyFunction) {
-    const existingDomInstances = domInstances
-    const keysToDomInstances = new Map()
+    const originalCacheKey = iteratorKey
     try {
       return array.map((item, index) => {
-        const key = keyFunction(item)
-
-        let cached = keysToDomInstances.get(key)
-        if (!cached) {
-          cached = new WeakMap()
-          keysToDomInstances.set(key, cached)
-        }
-        domInstances = cached
+        iteratorKey = keyFunction(item)
         return callback(item, index)
       })
     } finally {
-      domInstances = existingDomInstances
+      iteratorKey = originalCacheKey
     }
   }
 

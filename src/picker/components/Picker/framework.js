@@ -65,6 +65,50 @@ function parseTemplate (htmlString) {
   return template
 }
 
+function patchChildren (newChildren, binding) {
+  const { targetNode, iteratorEndNode } = binding
+  const { parentNode } = targetNode
+
+  let needsRerender = false
+
+  if (iteratorEndNode) { // already rendered once
+    // check if the old children and new children are the same
+    let currentSibling = targetNode.nextSibling
+    let i = -1
+    let hasOldChildren
+    while (!(currentSibling.nodeType === Node.COMMENT_NODE && currentSibling.textContent === 'end')) {
+      hasOldChildren = true
+      const oldSibling = currentSibling
+      currentSibling = currentSibling.nextSibling
+      const newChild = newChildren[++i]
+      if (!(newChild && newChild.dom === oldSibling)) {
+        needsRerender = true
+        oldSibling.remove()
+      }
+    }
+    if (!hasOldChildren) {
+      needsRerender = true
+    }
+  } else { // first render of list
+    needsRerender = true
+    const iteratorEndNode = document.createComment('end')
+    parentNode.insertBefore(iteratorEndNode, targetNode.nextSibling)
+    binding.iteratorEndNode = iteratorEndNode
+  }
+  if (needsRerender) {
+    for (const subExpression of newChildren) {
+      if (subExpression && subExpression.dom) { // html tag template itself
+        parentNode.insertBefore(subExpression.dom, iteratorEndNode)
+      } else { // primitive - string, number, etc
+        const textNode = document.createTextNode(toString(subExpression))
+        parentNode.insertBefore(textNode, iteratorEndNode)
+      }
+    }
+  } else {
+    console.log('skipping re-render of unchanged list')
+  }
+}
+
 function createUpdater () {
   return (dom, boundExpressions) => {
     traverseAndSetupBindings(dom, boundExpressions)
@@ -96,28 +140,7 @@ function createUpdater () {
           } else { // text node / dom node replacement
             let newNode
             if (expression && Array.isArray(expression)) { // array of html tag templates
-              const { parentNode } = targetNode
-              if (binding.iteratorEndNode) { // already rendered once - clean up
-                let currentSibling = targetNode.nextSibling
-                while (!(currentSibling.nodeType === Node.COMMENT_NODE && currentSibling.textContent === 'end')) {
-                  const oldSibling = currentSibling
-                  currentSibling = currentSibling.nextSibling
-                  oldSibling.remove()
-                }
-              } else { // first render of list
-                const iteratorEndNode = document.createComment('end')
-                parentNode.insertBefore(iteratorEndNode, targetNode.nextSibling)
-                binding.iteratorEndNode = iteratorEndNode
-              }
-              const { iteratorEndNode } = binding
-              for (const subExpression of expression) {
-                if (subExpression && subExpression.dom) { // html tag template itself
-                  parentNode.insertBefore(subExpression.dom, iteratorEndNode)
-                } else { // primitive - string, number, etc
-                  const textNode = document.createTextNode(toString(subExpression))
-                  parentNode.insertBefore(textNode, iteratorEndNode)
-                }
-              }
+              patchChildren(expression, binding)
             } else if (expression && expression.dom) { // html tag template itself
               newNode = expression.dom
               targetNode.replaceWith(newNode)
