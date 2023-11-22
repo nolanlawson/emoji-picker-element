@@ -72,7 +72,6 @@ function patchChildren (newChildren, binding) {
   let needsRerender = false
 
   if (iteratorEndNode) { // already rendered once
-    // check if the old children and new children are the same
     let currentSibling = targetNode.nextSibling
     let i = -1
     let hasOldChildren
@@ -81,6 +80,7 @@ function patchChildren (newChildren, binding) {
       const oldSibling = currentSibling
       currentSibling = currentSibling.nextSibling
       const newChild = newChildren[++i]
+      // check if the old children and new children are the same
       if (!(newChild && newChild.dom === oldSibling)) {
         needsRerender = true
         parentNode.removeChild(oldSibling)
