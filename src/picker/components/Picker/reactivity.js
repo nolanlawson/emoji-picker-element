@@ -15,6 +15,10 @@ export function createState () {
       }
     } finally {
       queued = false
+      // if (dirtyObservers.size) { // new updates, queue another one
+      //   queued = true
+      //   flush()
+      // }
     }
   }
 

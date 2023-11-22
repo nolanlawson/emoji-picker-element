@@ -250,10 +250,12 @@ export function createRoot (target, props) {
   })
 
   createEffect(() => {
+    console.log('setting skinTones')
     state.skinTones = Array(NUM_SKIN_TONES).fill().map((_, i) => applySkinTone(state.skinToneEmoji, i))
   })
 
   createEffect(() => {
+    console.log('setting skinToneButtonText')
     state.skinToneButtonText = state.skinTones[state.currentSkinTone]
   })
 
