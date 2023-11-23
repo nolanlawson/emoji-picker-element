@@ -42,6 +42,25 @@ export function createRootDom (state, helpers, events) {
     }
   }
 
+  function emojiList (emojis, searchMode, prefix) {
+    return map(emojis, (emoji, i) => {
+      return html`
+      <button role="${searchMode ? 'option' : 'menuitem'}"
+              aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
+              aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
+              title="${titleForEmoji(emoji)}"
+              class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
+              id="${prefix + '-' + emoji.id}">
+        ${
+        emoji.unicode
+          ? unicodeWithSkin(emoji, state.currentSkinTone)
+          : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
+      }
+      </button>
+    `
+    }, emoji => `${prefix}-${emoji.id}`) // unique by prefix so it doesn't collide with different `emojiList()`s
+  }
+
   const section = () => {
     return html`
       <section
@@ -207,27 +226,7 @@ export function createRootDom (state, helpers, events) {
                aria-labelledby="menu-label-${i}"
                id=${state.searchMode ? 'search-results' : ''}>
             ${
-              (() => {
-                  const emojis = emojiWithCategory.emojis
-                  const searchMode = state.searchMode
-                  const prefix = 'emo'
-              return map(emojis, (emoji, i) => {
-                return html`
-        <button role="${searchMode ? 'option' : 'menuitem'}"
-                aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
-                aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
-                title="${titleForEmoji(emoji)}"
-                class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
-                id="${prefix + '-' + emoji.id}">
-                  ${
-                          emoji.unicode
-                            ? unicodeWithSkin(emoji, state.currentSkinTone)
-                            : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
-                }
-        </button>
-      `
-              }, emoji => emoji.id)
-              })()
+              emojiList(emojiWithCategory.emojis, state.searchMode, /* prefix */ 'emo')
             }
           </div>
         </div>
@@ -243,27 +242,7 @@ export function createRootDom (state, helpers, events) {
              style="padding-inline-end: ${state.scrollbarWidth}px"
              data-on-click="onEmojiClick">
           ${
-            (() => {
-              const emojis = state.currentFavorites
-              const searchMode = false
-              const prefix = 'fav'
-              return map(emojis, (emoji, i) => {
-                return html`
-        <button role="${searchMode ? 'option' : 'menuitem'}"
-                aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
-                aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
-                title="${titleForEmoji(emoji)}"
-                class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
-                id="${prefix + '-' + emoji.id}">
-                  ${
-                  emoji.unicode
-                    ? unicodeWithSkin(emoji, state.currentSkinTone)
-                    : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
-                }
-        </button>
-      `
-              }, emoji => emoji.id)
-            })()
+            emojiList(state.currentFavorites, /* searchMode */ false, /* prefix */ 'fav')
           }
         </div>
         <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
