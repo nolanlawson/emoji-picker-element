@@ -15,10 +15,10 @@ export function createState () {
       }
     } finally {
       queued = false
-      // if (dirtyObservers.size) { // new updates, queue another one
-      //   queued = true
-      //   flush()
-      // }
+      if (dirtyObservers.size) { // new updates, queue another one
+        queued = true
+        Promise.resolve().then(flush)
+      }
     }
   }
 

@@ -71,7 +71,8 @@ export function createRoot (target, props) {
     currentGroupIndex: 0,
     groups: defaultGroups,
     databaseLoaded: false,
-    activeSearchItemId: undefined
+    activeSearchItemId: undefined,
+    filteredEmojis: []
   })
 
   //
@@ -365,14 +366,16 @@ export function createRoot (target, props) {
   // We want to treat these the same as unsupported emojis, so we compare their
   // widths against the baseline widths and remove them as necessary
   createEffect(() => {
-    const zwjEmojisToCheck = state.currentEmojis
+    const { currentEmojis, emojiVersion } = state
+    const zwjEmojisToCheck = currentEmojis
       .filter(emoji => emoji.unicode) // filter custom emoji
       .filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
-    if (!state.emojiVersion && zwjEmojisToCheck.length) {
+    if (!emojiVersion && zwjEmojisToCheck.length) {
       // render now, check their length later
+      state.filteredEmojis = currentEmojis
       requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
     } else {
-      state.currentEmojis = state.emojiVersion ? state.currentEmojis : state.currentEmojis.filter(isZwjSupported)
+      state.filteredEmojis = emojiVersion ? currentEmojis : currentEmojis.filter(isZwjSupported)
       // Reset scroll top to 0 when emojis change
       requestAnimationFrame(() => resetScrollTopIfPossible(refs.tabpanelElement))
     }
@@ -383,8 +386,7 @@ export function createRoot (target, props) {
     const emojiToDomNode = emoji => shadowRootNode.getElementById(`emo-${emoji.id}`)
     checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
     // force update
-    const { currentEmojis } = state
-    state.currentEmojis = currentEmojis
+    state.filteredEmojis = state.currentEmojis
   }
 
   function isZwjSupported (emoji) {
@@ -430,16 +432,17 @@ export function createRoot (target, props) {
 
   createEffect(() => {
     function calculateCurrentEmojisWithCategories () {
-      if (state.searchMode) {
+      const { searchMode, filteredEmojis } = state
+      if (searchMode) {
         return [
           {
             category: '',
-            emojis: state.currentEmojis
+            emojis: filteredEmojis
           }
         ]
       }
       const categoriesToEmoji = new Map()
-      for (const emoji of state.currentEmojis) {
+      for (const emoji of filteredEmojis) {
         const category = emoji.category || ''
         let emojis = categoriesToEmoji.get(category)
         if (!emojis) {
