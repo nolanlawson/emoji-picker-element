@@ -18,28 +18,22 @@ function getFromMap (cache, key, func) {
 export function createRootDom (state, helpers, events) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
-  const domInstances = getFromMap(domInstancesCache, state, () => new WeakMap())
-  let iteratorCache
+  let domInstances = getFromMap(domInstancesCache, state, () => new Map())
   let iteratorKey = unkeyedSymbol
 
   function html (tokens, ...expressions) {
-    let domInstance
-    if (iteratorCache) {
-      domInstance = getFromMap(iteratorCache, iteratorKey, () => parseHtml(tokens))
-    } else {
-      const domInstancesForTokens = getFromMap(domInstances, tokens, () => new Map())
-      domInstance = getFromMap(domInstancesForTokens, iteratorKey, () => parseHtml(tokens))
-    }
+    const domInstancesForKey = getFromMap(domInstances, iteratorKey, () => new WeakMap())
+    const domInstance = getFromMap(domInstancesForKey, tokens, () => parseHtml(tokens))
 
     const { update } = domInstance
     const { dom } = update(expressions)
     return { dom }
   }
 
-  function map (array, callback, keyFunction) {
+  function map (array, callback, keyFunction, mapKey) {
     const originalCacheKey = iteratorKey
-    const originalIteratorCache = iteratorCache
-    iteratorCache = new Map()
+    const originalDomInstances = domInstances
+    domInstances = getFromMap(domInstances, mapKey, () => new Map())
     try {
       return array.map((item, index) => {
         iteratorKey = keyFunction(item)
@@ -47,11 +41,11 @@ export function createRootDom (state, helpers, events) {
       })
     } finally {
       iteratorKey = originalCacheKey
-      iteratorCache = originalIteratorCache
+      domInstances = originalDomInstances
     }
   }
 
-  function emojiList (emojis, searchMode, prefix) {
+  function emojiList (emojis, searchMode, prefix, uniqueId) {
     return map(emojis, (emoji, i) => {
       return html`
       <button role="${searchMode ? 'option' : 'menuitem'}"
@@ -67,7 +61,7 @@ export function createRootDom (state, helpers, events) {
       }
       </button>
     `
-    }, emoji => emoji.id)
+    }, emoji => emoji.id, uniqueId)
   }
 
   const section = () => {
@@ -150,7 +144,7 @@ export function createRootDom (state, helpers, events) {
           ${skinTone}
         </div>
       `
-    }, skinTone => skinTone)
+    }, skinTone => skinTone, 'skintones')
         }
       </div>
       </div>
@@ -177,7 +171,7 @@ export function createRootDom (state, helpers, events) {
           </div>
         </button>
       `
-            }, group => group.id)
+            }, group => group.id, 'nav')
           }
         </div>
         <div class="indicator-wrapper">
@@ -235,12 +229,12 @@ export function createRootDom (state, helpers, events) {
                aria-labelledby="menu-label-${i}"
                id=${state.searchMode ? 'search-results' : ''}>
             ${
-              emojiList(emojiWithCategory.emojis, state.searchMode, /* prefix */ 'emo')
+              emojiList(emojiWithCategory.emojis, state.searchMode, /* prefix */ 'emo', /* uniqueId */ `emo-${emojiWithCategory.category}`)
             }
           </div>
         </div>
       `
-              }, emojiWithCategory => emojiWithCategory.category)
+              }, emojiWithCategory => emojiWithCategory.category, 'emojisWithCategories')
             }
           </div>
         </div>
@@ -251,7 +245,7 @@ export function createRootDom (state, helpers, events) {
              style="padding-inline-end: ${state.scrollbarWidth}px"
              data-on-click="onEmojiClick">
           ${
-            emojiList(state.currentFavorites, /* searchMode */ false, /* prefix */ 'fav')
+            emojiList(state.currentFavorites, /* searchMode */ false, /* prefix */ 'fav', /* uniqueId */ 'fav')
           }
         </div>
         <!-- This serves as a baseline emoji for measuring against and determining emoji support -->

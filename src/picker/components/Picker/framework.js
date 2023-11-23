@@ -75,9 +75,9 @@ function patchChildren (newChildren, binding) {
   if (iteratorEndNode) { // already rendered once
     let currentSibling = targetNode.nextSibling
     let i = -1
-    let hasOldChildren
+    let oldChildrenCount = 0
     while (!(currentSibling.nodeType === Node.COMMENT_NODE && currentSibling.textContent === 'end')) {
-      hasOldChildren = true
+      oldChildrenCount++
       const oldSibling = currentSibling
       currentSibling = currentSibling.nextSibling
       const newChild = newChildren[++i]
@@ -87,7 +87,7 @@ function patchChildren (newChildren, binding) {
         parentNode.removeChild(oldSibling)
       }
     }
-    if (!hasOldChildren && newChildren.length) { // old array was empty, new array is not
+    if (oldChildrenCount !== newChildren.length) { // new children length is different from old, force re-render
       needsRerender = true
     }
   } else { // first render of list
