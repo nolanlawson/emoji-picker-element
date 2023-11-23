@@ -64,8 +64,7 @@
     "custom",
     "element",
     "web",
-    "component",
-    "svelte"
+    "component"
   ],
   "author": "Nolan Lawson <nolan@nolanlawson.com>",
   "license": "Apache-2.0",
@@ -113,7 +112,6 @@
     "recursive-readdir": "^2.2.3",
     "rollup": "^4.3.1",
     "rollup-plugin-analyzer": "^4.0.0",
-    "rollup-plugin-svelte": "^7.1.6",
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.69.5",
     "shx": "^0.3.4",
@@ -122,9 +120,6 @@
     "stylelint": "^15.11.0",
     "stylelint-config-recommended-scss": "^13.1.0",
     "stylelint-scss": "^5.3.1",
-    "svelte": "^5.0.0-next.2",
-    "svelte-jester": "^3.0.0",
-    "svelte-preprocess": "^5.1.0",
     "svgo": "^3.0.3",
     "tachometer": "^0.7.0",
     "terser": "^5.24.0"

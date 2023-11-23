@@ -2,27 +2,12 @@ import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import strip from '@rollup/plugin-strip'
-import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
 import { minifyHTMLLiterals } from 'minify-html-literals'
 import { buildStyles } from './bin/buildStyles.js'
 
 const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
-
-const preprocessConfig = preprocess()
-
-const origMarkup = preprocessConfig.markup
-// minify the HTML by removing extra whitespace
-// TODO: this is fragile, but it also results in a lot of bundlesize savings. let's find a better solution
-preprocessConfig.markup = async function () {
-  const res = await origMarkup.apply(this, arguments)
-
-  // remove whitespace
-  res.code = res.code.replace(/([>}])\s+([<{])/sg, '$1$2')
-
-  return res
-}
 
 // Build Database.test.js and Picker.js as separate modules at build times so that they are properly tree-shakeable.
 // Most of this has to happen because customElements.define() has side effects

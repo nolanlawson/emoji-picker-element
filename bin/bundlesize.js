@@ -5,8 +5,8 @@ import { promisify } from 'node:util'
 import prettyBytes from 'pretty-bytes'
 import fs from 'node:fs/promises'
 
-const MAX_SIZE_MIN = '53 kB'
-const MAX_SIZE_MINGZ = '19 kB'
+const MAX_SIZE_MIN = '37 kB'
+const MAX_SIZE_MINGZ = '13 kB'
 
 const FILENAME = './bundle.js'
 

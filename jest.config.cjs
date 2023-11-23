@@ -3,14 +3,7 @@ module.exports = {
   testMatch: [
     '<rootDir>/test/spec/**/*.{spec,test}.{js,jsx,ts,tsx}'
   ],
-  transform: {
-    '^.+\\.svelte$': ['svelte-jester', {
-      preprocess: './config/svelte.config.js',
-      compilerOptions: {
-        dev: false
-      }
-    }]
-  },
+  transform: {},
   moduleFileExtensions: ['js', 'svelte'],
   extensionsToTreatAsEsm: ['.svelte'],
   testPathIgnorePatterns: ['node_modules'],
