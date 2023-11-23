@@ -309,7 +309,7 @@ function traverseAndSetupBindings (dom, boundExpressions) {
   } while ((element = treeWalker.nextNode()))
 }
 
-function html (tokens) {
+function parseHtml (tokens) {
   const {
     template,
     boundExpressions
@@ -338,5 +338,5 @@ function html (tokens) {
 }
 
 export {
-  html
+  parseHtml
 }

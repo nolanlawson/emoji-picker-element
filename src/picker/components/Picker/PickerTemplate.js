@@ -1,4 +1,4 @@
-import { html as frameworkHtml } from './framework.js'
+import { parseHtml } from './framework.js'
 
 const domInstancesCache = new WeakMap()
 const unkeyedSymbol = Symbol('un-keyed')
@@ -23,7 +23,7 @@ export function createRootDom (state, helpers, events) {
 
   function html (tokens, ...expressions) {
     const domInstancesForTokens = getFromMap(domInstances, tokens, () => new Map())
-    const domInstance = getFromMap(domInstancesForTokens, iteratorKey, () => frameworkHtml(tokens))
+    const domInstance = getFromMap(domInstancesForTokens, iteratorKey, () => parseHtml(tokens))
 
     const { update } = domInstance
     const { dom } = update(expressions)

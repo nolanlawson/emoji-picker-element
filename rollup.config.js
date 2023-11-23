@@ -4,6 +4,7 @@ import replace from '@rollup/plugin-replace'
 import strip from '@rollup/plugin-strip'
 import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
+import { minifyHTMLLiterals } from 'minify-html-literals'
 import { buildStyles } from './bin/buildStyles.js'
 
 const { NODE_ENV, DEBUG } = process.env
@@ -40,6 +41,16 @@ const baseConfig = {
       delimiters: ['', ''],
       preventAssignment: true
     }),
+    {
+      name: 'minify-html-in-tag-template-literals',
+      transform (content, id) {
+        if (id.includes('PickerTemplate.js')) {
+          // minify the html so that the output is smaller
+          const { code, map } = minifyHTMLLiterals(content)
+          return { code, map }
+        }
+      }
+    },
     strip({
       include: ['**/*.js'],
       functions: [
