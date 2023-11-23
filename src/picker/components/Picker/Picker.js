@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const,no-labels,no-inner-declarations */
-import { groups as defaultGroups, customGroup } from '../../groups'
+import { groups as defaultGroups, allGroups as groupsWithCustom } from '../../groups'
 import { MIN_SEARCH_TEXT_LENGTH, NUM_SKIN_TONES } from '../../../shared/constants'
 import { requestIdleCallback } from '../../utils/requestIdleCallback'
 import { hasZwj } from '../../utils/hasZwj'
@@ -79,7 +79,9 @@ export function createRoot (target, props) {
   // Update the current group based on the currentGroupIndex
   //
   createEffect(() => {
-    state.currentGroup = state.groups[state.currentGroupIndex]
+    if (state.currentGroup !== state.groups[state.currentGroupIndex]) {
+      state.currentGroup = state.groups[state.currentGroupIndex]
+    }
   })
 
   //
@@ -225,7 +227,9 @@ export function createRoot (target, props) {
 
   createEffect(() => {
     if (state.customEmoji && state.customEmoji.length) {
-      state.groups = [customGroup, ...defaultGroups]
+      if (state.groups !== groupsWithCustom) { // don't update unnecessarily
+        state.groups = groupsWithCustom
+      }
     } else if (state.groups !== defaultGroups) {
       if (state.currentGroupIndex) {
         // If the current group is anything other than "custom" (which is first), decrement.

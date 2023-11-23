@@ -6,8 +6,13 @@ export function createState () {
 
   let queued
 
+  let recursionDepth = 0
+  const MAX_RECURSION_DEPTH = 30
+
   const flush = () => {
-    // console.info('flush')
+    if (process.env.NODE_ENV !== 'production' && recursionDepth === MAX_RECURSION_DEPTH) {
+      throw new Error('max recusion depth, you probably didn\'t mean to do this')
+    }
     try {
       const observersToRun = dirtyObservers
       dirtyObservers = new Set() // clear before running to force any new updates to run in another tick of the loop
@@ -17,6 +22,7 @@ export function createState () {
     } finally {
       queued = false
       if (dirtyObservers.size) { // new updates, queue another one
+        recursionDepth++
         queued = true
         Promise.resolve().then(flush)
       }
@@ -25,7 +31,7 @@ export function createState () {
 
   const state = new Proxy({}, {
     get (target, prop) {
-      // console.info('reactivity: get', prop)
+      console.log('reactivity: get', prop)
       if (currentObserver) {
         let observers = propsToObservers.get(prop)
         if (!observers) {
@@ -37,11 +43,7 @@ export function createState () {
       return target[prop]
     },
     set (target, prop, newValue) {
-      // if (newValue === target[prop]) {
-      //   // unchanged, do nothing
-      //   return true
-      // }
-      // console.info('reactivity: set', prop, newValue)
+      console.log('reactivity: set', prop, newValue)
       target[prop] = newValue
       const observers = propsToObservers.get(prop)
       if (observers) {
@@ -49,6 +51,7 @@ export function createState () {
           dirtyObservers.add(observer)
         }
         if (!queued) {
+          recursionDepth = 0
           queued = true
           Promise.resolve().then(flush)
         }
