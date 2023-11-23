@@ -514,10 +514,11 @@ export function createRoot (target, props) {
 
   function onNavClick (event) {
     const { target } = event
-    if (!target.classList.contains('nav-emoji')) {
+    const closestTarget = target.closest('.nav-button')
+    if (!closestTarget) {
       return
     }
-    const groupId = parseInt(target.dataset.groupId, 10)
+    const groupId = parseInt(closestTarget.dataset.groupId, 10)
     refs.searchElement.value = '' // clear search box input
     state.rawSearchText = ''
     state.searchText = ''

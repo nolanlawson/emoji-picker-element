@@ -165,8 +165,9 @@ export function createRootDom (state, helpers, events) {
                 aria-label="${state.i18n.categories[group.name]}"
                 aria-selected="${!state.searchMode && state.currentGroup.id === group.id}"
                 title="${state.i18n.categories[group.name]}"
+                data-group-id=${group.id}
         >
-          <div class="nav-emoji emoji" data-group-id=${group.id}>
+          <div class="nav-emoji emoji">
             ${group.emoji}
           </div>
         </button>
