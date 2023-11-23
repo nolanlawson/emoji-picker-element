@@ -66,7 +66,8 @@ function parseTemplate (htmlString) {
 }
 
 function patchChildren (newChildren, binding) {
-  const { targetNode, iteratorEndNode } = binding
+  const { targetNode } = binding
+  let { iteratorEndNode } = binding
   const { parentNode } = targetNode
 
   let needsRerender = false
@@ -91,7 +92,7 @@ function patchChildren (newChildren, binding) {
     }
   } else { // first render of list
     needsRerender = true
-    const iteratorEndNode = document.createComment('end')
+    iteratorEndNode = document.createComment('end')
     parentNode.insertBefore(iteratorEndNode, targetNode.nextSibling)
     binding.iteratorEndNode = iteratorEndNode
   }

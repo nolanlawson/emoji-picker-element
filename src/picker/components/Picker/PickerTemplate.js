@@ -19,11 +19,17 @@ export function createRootDom (state, helpers, events) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
 
   const domInstances = getFromMap(domInstancesCache, state, () => new WeakMap())
+  let iteratorCache
   let iteratorKey = unkeyedSymbol
 
   function html (tokens, ...expressions) {
-    const domInstancesForTokens = getFromMap(domInstances, tokens, () => new Map())
-    const domInstance = getFromMap(domInstancesForTokens, iteratorKey, () => parseHtml(tokens))
+    let domInstance
+    if (iteratorCache) {
+      domInstance = getFromMap(iteratorCache, iteratorKey, () => parseHtml(tokens))
+    } else {
+      const domInstancesForTokens = getFromMap(domInstances, tokens, () => new Map())
+      domInstance = getFromMap(domInstancesForTokens, iteratorKey, () => parseHtml(tokens))
+    }
 
     const { update } = domInstance
     const { dom } = update(expressions)
@@ -32,6 +38,8 @@ export function createRootDom (state, helpers, events) {
 
   function map (array, callback, keyFunction) {
     const originalCacheKey = iteratorKey
+    const originalIteratorCache = iteratorCache
+    iteratorCache = new Map()
     try {
       return array.map((item, index) => {
         iteratorKey = keyFunction(item)
@@ -39,6 +47,7 @@ export function createRootDom (state, helpers, events) {
       })
     } finally {
       iteratorKey = originalCacheKey
+      iteratorCache = originalIteratorCache
     }
   }
 
@@ -58,7 +67,7 @@ export function createRootDom (state, helpers, events) {
       }
       </button>
     `
-    }, emoji => `${prefix}-${emoji.id}`) // unique by prefix so it doesn't collide with different `emojiList()`s
+    }, emoji => emoji.id)
   }
 
   const section = () => {
