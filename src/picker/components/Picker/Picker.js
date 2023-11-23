@@ -29,7 +29,7 @@ const EMPTY_ARRAY = []
 const { assign } = Object
 
 export function createRoot (target, props) {
-  const { state, createEffect } = createState()
+  const { state, createEffect, destroyState } = createState()
   const destroyCallbacks = []
 
   // initial state
@@ -221,7 +221,7 @@ export function createRoot (target, props) {
   createEffect(() => {
     if (state.customEmoji && state.database) {
       console.log('updating custom emoji')
-      state.database.customEmoji = state.customEmoji
+      updateCustomEmoji() // re-run whenever customEmoji change
     }
   })
 
@@ -286,9 +286,17 @@ export function createRoot (target, props) {
     }
   })
 
+  function updateCustomEmoji () {
+    // Certain effects have an implicit dependency on customEmoji since it affects the database
+    // Getting it here on the database ensures this effect re-runs when customEmoji change.
+    // Setting it on the database is pointless but prevents this code from being removed by a minifier.
+    state.database.customEmoji = state.customEmoji || EMPTY_ARRAY
+  }
+
   createEffect(() => {
     async function updateFavorites () {
       console.log('updateFavorites')
+      updateCustomEmoji() // re-run whenever customEmoji change
       const { database, defaultFavoriteEmojis, numColumns } = state
       const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
       const favorites = await summarizeEmojis(uniqBy([
@@ -343,7 +351,7 @@ export function createRoot (target, props) {
   createEffect(() => {
     async function updateEmojis () {
       console.log('updateEmojis')
-      const { searchText, currentGroup, databaseLoaded } = state
+      const { searchText, currentGroup, databaseLoaded, customEmoji } = state
       if (!databaseLoaded) {
         state.currentEmojis = []
         state.searchMode = false
@@ -355,10 +363,13 @@ export function createRoot (target, props) {
         }
       } else if (currentGroup) {
         const { id: currentGroupId } = currentGroup
-        const newEmojis = await getEmojisByGroup(currentGroupId)
-        if (state.currentGroup.id === currentGroupId) { // if the situation changes asynchronously, do not update
-          state.currentEmojis = newEmojis
-          state.searchMode = false
+        // avoid race condition where currentGroupId is -1 and customEmoji is undefined/empty
+        if (currentGroupId !== -1 || (customEmoji && customEmoji.length)) {
+          const newEmojis = await getEmojisByGroup(currentGroupId)
+          if (state.currentGroup.id === currentGroupId) { // if the situation changes asynchronously, do not update
+            state.currentEmojis = newEmojis
+            state.searchMode = false
+          }
         }
       }
     }
@@ -683,6 +694,7 @@ export function createRoot (target, props) {
       assign(state, newState)
     },
     $destroy () {
+      destroyState()
       if (renderedRootNode) {
         renderedRootNode.remove()
       }

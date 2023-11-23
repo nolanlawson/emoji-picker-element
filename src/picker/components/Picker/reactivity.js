@@ -1,4 +1,5 @@
 export function createState () {
+  let destroyed = false
   let currentObserver
 
   const propsToObservers = new Map()
@@ -10,6 +11,9 @@ export function createState () {
   const MAX_RECURSION_DEPTH = 30
 
   const flush = () => {
+    if (destroyed) {
+      return
+    }
     if (process.env.NODE_ENV !== 'production' && recursionDepth === MAX_RECURSION_DEPTH) {
       throw new Error('max recusion depth, you probably didn\'t mean to do this')
     }
@@ -79,6 +83,9 @@ export function createState () {
 
   return {
     state,
-    createEffect
+    createEffect,
+    destroyState () {
+      destroyed = true
+    }
   }
 }
