@@ -197,7 +197,7 @@ export function createRootDom (state, helpers, events) {
             ${
               map(state.currentEmojisWithCategories, (emojiWithCategory, i) => {
                 return html`
-        <!-- unnecessary div -->
+        <!-- wrapper div so there's one top level element for this loop -->
         <div>
           <div
             id="menu-label-${i}"
