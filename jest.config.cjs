@@ -3,7 +3,9 @@ module.exports = {
   testMatch: [
     '<rootDir>/test/spec/**/*.{spec,test}.{js,jsx,ts,tsx}'
   ],
-  transform: {},
+  transform: {
+    '^.*PickerTemplate.js$': './config/minifyHtmlInJest.js'
+  },
   moduleFileExtensions: ['js', 'svelte'],
   extensionsToTreatAsEsm: ['.svelte'],
   testPathIgnorePatterns: ['node_modules'],
@@ -24,12 +26,6 @@ module.exports = {
       branches: 100,
       functions: 100,
       lines: 100
-    },
-    './src/picker/components/Picker/Picker.svelte': {
-      statements: 90,
-      branches: 85,
-      functions: 90,
-      lines: 90
     }
   }
 }
