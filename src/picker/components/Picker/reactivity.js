@@ -7,6 +7,7 @@ export function createState () {
   let queued
 
   const flush = () => {
+    // console.info('flush')
     try {
       const observersToRun = dirtyObservers
       dirtyObservers = new Set() // clear before running to force any new updates to run in another tick of the loop
@@ -24,7 +25,7 @@ export function createState () {
 
   const state = new Proxy({}, {
     get (target, prop) {
-      // console.log('reactivity: get', prop)
+      // console.info('reactivity: get', prop)
       if (currentObserver) {
         let observers = propsToObservers.get(prop)
         if (!observers) {
@@ -40,7 +41,7 @@ export function createState () {
       //   // unchanged, do nothing
       //   return true
       // }
-      // console.log('reactivity: set', prop, newValue)
+      // console.info('reactivity: set', prop, newValue)
       target[prop] = newValue
       const observers = propsToObservers.get(prop)
       if (observers) {

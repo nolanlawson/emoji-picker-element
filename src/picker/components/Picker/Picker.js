@@ -533,13 +533,13 @@ export function createRoot (target, props) {
 
     switch (key) {
       case 'ArrowLeft':
-        return doFocus(target.previousSibling)
+        return doFocus(target.previousElementSibling)
       case 'ArrowRight':
-        return doFocus(target.nextSibling)
+        return doFocus(target.nextElementSibling)
       case 'Home':
-        return doFocus(target.parentElement.firstChild)
+        return doFocus(target.parentElement.firstElementChild)
       case 'End':
-        return doFocus(target.parentElement.lastChild)
+        return doFocus(target.parentElement.lastElementChild)
     }
   }
 
