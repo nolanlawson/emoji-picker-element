@@ -3,7 +3,7 @@ export function createState () {
   let currentObserver
 
   const propsToObservers = new Map()
-  let dirtyObservers = new Set()
+  const dirtyObservers = new Set()
 
   let queued
 
@@ -18,8 +18,8 @@ export function createState () {
       throw new Error('max recursion depth, you probably didn\'t mean to do this')
     }
     try {
-      const observersToRun = dirtyObservers
-      dirtyObservers = new Set() // clear before running to force any new updates to run in another tick of the loop
+      const observersToRun = [...dirtyObservers]
+      dirtyObservers.clear() // clear before running to force any new updates to run in another tick of the loop
       for (const observer of observersToRun) {
         observer()
       }
