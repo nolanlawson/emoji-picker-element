@@ -1,3 +1,12 @@
+## [1.19.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.19.1...v1.19.2) (2023-11-24)
+
+
+### Bug Fixes
+
+* avoid newer JS syntax to support old Safari ([#380](https://github.com/nolanlawson/emoji-picker-element/issues/380)) ([77e6e35](https://github.com/nolanlawson/emoji-picker-element/commit/77e6e35bd5e738e43e1f94b418e44228a3cb8c36))
+
+
+
 ## [1.19.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.19.0...v1.19.1) (2023-11-12)
 
 
