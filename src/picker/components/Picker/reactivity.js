@@ -15,7 +15,7 @@ export function createState () {
       return
     }
     if (process.env.NODE_ENV !== 'production' && recursionDepth === MAX_RECURSION_DEPTH) {
-      throw new Error('max recusion depth, you probably didn\'t mean to do this')
+      throw new Error('max recursion depth, you probably didn\'t mean to do this')
     }
     try {
       const observersToRun = dirtyObservers
