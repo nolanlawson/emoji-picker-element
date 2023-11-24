@@ -80,10 +80,12 @@ const entryPoints = [
     input: './src/picker/PickerElement.js',
     output: './picker.js',
     plugins: [
-      // Replace optional chaining in Svelte ensure_array_like function to avoid breaking iOS <13.4
+      // Replace newer syntax in Svelte v4 to avoid breaking iOS <13.4
       // https://github.com/nolanlawson/emoji-picker-element/pull/379
       replace({
         'array_like_or_iterator?.length': 'array_like_or_iterator && array_like_or_iterator.length',
+        '$$ = undefined;': '', // not necessary to initialize class prop to undefined
+        '$$set = undefined;': '', // not necessary to initialize class prop to undefined
         delimiters: ['', ''],
         preventAssignment: true
       })
