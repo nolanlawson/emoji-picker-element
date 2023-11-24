@@ -109,59 +109,57 @@ function patchChildren (newChildren, binding) {
   }
 }
 
-function createUpdater () {
-  return (dom, boundExpressions) => {
-    traverseAndSetupBindings(dom, boundExpressions)
+function patch (expressions, bindings) {
+  for (const binding of bindings) {
+    const {
+      expressionIndex,
+      withinAttribute,
+      targetNode,
+      element,
+      attributeName,
+      attributeValuePre,
+      attributeValuePost,
+      lastExpression
+    } = binding
+    const expression = expressions[expressionIndex]
 
-    return (expressions) => {
-      for (const bindings of boundExpressions.values()) {
-        for (const binding of bindings) {
-          const {
-            expressionIndex,
-            withinAttribute,
-            targetNode,
-            element,
-            attributeName,
-            attributeValuePre,
-            attributeValuePost,
-            lastExpression
-          } = binding
-          const expression = expressions[expressionIndex]
+    if (lastExpression === expression) {
+      // no need to update, same as before
+      continue
+    }
 
-          if (lastExpression === expression) {
-            // no need to update, same as before
-            continue
-          }
+    binding.lastExpression = expression
 
-          binding.lastExpression = expression
-
-          if (withinAttribute) {
-            element.setAttribute(attributeName, attributeValuePre + escapeHtml(toString(expression)) + attributeValuePost)
-          } else { // text node / dom node replacement
-            let newNode
-            if (expression && Array.isArray(expression)) { // array of html tag templates
-              patchChildren(expression, binding)
-            } else if (expression && expression.dom) { // html tag template itself
-              newNode = expression.dom
-              if (newNode !== targetNode) {
-                targetNode.replaceWith(newNode)
-              }
-            } else { // primitive - string, number, etc
-              if (targetNode.nodeType === Node.TEXT_NODE) { // already transformed into a text node
-                targetNode.nodeValue = toString(expression)
-              } else { // replace comment or whatever was there before with a text node
-                newNode = document.createTextNode(toString(expression))
-                targetNode.replaceWith(newNode)
-              }
-            }
-            if (newNode) {
-              binding.targetNode = newNode
-            }
-          }
+    if (withinAttribute) {
+      element.setAttribute(attributeName, attributeValuePre + escapeHtml(toString(expression)) + attributeValuePost)
+    } else { // text node / dom node replacement
+      let newNode
+      if (expression && Array.isArray(expression)) { // array of html tag templates
+        patchChildren(expression, binding)
+      } else if (expression && expression.dom) { // html tag template itself
+        newNode = expression.dom
+        if (newNode !== targetNode) {
+          targetNode.replaceWith(newNode)
         }
+      } else { // primitive - string, number, etc
+        if (targetNode.nodeType === Node.TEXT_NODE) { // already transformed into a text node
+          targetNode.nodeValue = toString(expression)
+        } else { // replace comment or whatever was there before with a text node
+          newNode = document.createTextNode(toString(expression))
+          targetNode.replaceWith(newNode)
+        }
+      }
+      if (newNode) {
+        binding.targetNode = newNode
       }
     }
   }
+}
+
+function createUpdater (dom, boundExpressions) {
+  traverseAndSetupBindings(dom, boundExpressions)
+  const allBindings = [...boundExpressions.values()].flat()
+  return expressions => patch(expressions, allBindings)
 }
 
 function parse (tokens) {
@@ -316,21 +314,18 @@ function parseHtml (tokens) {
     boundExpressions
   } = parseWithCache(tokens)
 
-  let doUpdate
-  let clonedDom
+  let updater
+  let dom
 
   const update = (expressions) => {
-    if (!doUpdate) {
-      const updater = createUpdater()
-      clonedDom = template.cloneNode(true).content.firstElementChild
+    if (!updater) {
+      dom = template.cloneNode(true).content.firstElementChild
       const clonedBoundExpressions = cloneBoundExpressions(boundExpressions)
-      doUpdate = updater(clonedDom, clonedBoundExpressions)
+      updater = createUpdater(dom, clonedBoundExpressions)
     }
-    doUpdate(expressions)
+    updater(expressions)
 
-    return {
-      dom: clonedDom
-    }
+    return { dom }
   }
 
   return {
