@@ -1,5 +1,3 @@
-import MagicString from 'magic-string'
-import inject from '@rollup/plugin-inject'
 import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
@@ -57,6 +55,7 @@ const baseConfig = {
       'options.context': 'undefined',
       'options.customElement': 'undefined',
       'options.hydrate': 'undefined',
+      'options.immutable': 'undefined',
       'options.intro': 'undefined',
       delimiters: ['', ''],
       preventAssignment: true
@@ -98,28 +97,6 @@ const entryPoints = [
     input: './src/picker/PickerElement.js',
     output: './svelte.js',
     external: ['svelte', 'svelte/internal'],
-    // TODO: drop Svelte v3 support
-    // ensure_array_like was added in Svelte v4 - we shim it to avoid breaking Svelte v3 users
-    plugins: [
-      {
-        name: 'svelte-v3-compat',
-        transform (source) {
-          const magicString = new MagicString(source)
-          magicString.replaceAll('ensure_array_like(', 'ensure_array_like_shim(')
-
-          return {
-            code: magicString.toString(),
-            map: magicString.generateMap()
-          }
-        }
-      },
-      inject({
-        ensure_array_like_shim: [
-          '../../../../shims/svelte-v3-shim.js',
-          'ensure_array_like_shim'
-        ]
-      })
-    ],
     onwarn (warning) {
       if (!warning.message.includes('ensure_array_like')) { // intentionally ignore warning for unused import
         console.warn(warning.message)

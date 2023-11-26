@@ -76,7 +76,6 @@
   "devDependencies": {
     "@peculiar/webcrypto": "^1.4.3",
     "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-inject": "^5.0.5",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-strip": "^3.0.4",
@@ -103,7 +102,6 @@
     "jest-environment-jsdom": "^29.7.0",
     "lint-staged": "^15.1.0",
     "lodash-es": "^4.17.15",
-    "magic-string": "^0.30.5",
     "markdown-table": "^3.0.2",
     "markdown-toc": "^1.2.0",
     "npm-run-all": "^4.1.5",
