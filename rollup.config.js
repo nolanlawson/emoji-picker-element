@@ -84,6 +84,7 @@ export default entryPoints.map(({ input, output, format = 'es', external = [], o
       exports: 'auto'
     },
     external: [...baseConfig.external, ...external],
+    plugins: baseConfig.plugins,
     onwarn
   }
 })
