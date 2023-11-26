@@ -20,7 +20,7 @@ import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
 import { uniq } from '../../../shared/uniq'
 import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.js'
-import { createRootDom } from './PickerTemplate.js'
+import { render } from './PickerTemplate.js'
 import { createState } from './reactivity.js'
 
 // constants
@@ -135,19 +135,16 @@ export function createRoot (target, props) {
     onSearchInput
   }
 
-  let renderedRootNode
+  let unmount
   let refs
   let firstRender = true
   createEffect(() => {
-    const {
-      refs: theRefs,
-      rootNode
-    } = createRootDom(state, helpers, events)
-    renderedRootNode = rootNode
-    refs = theRefs
+    const rendered = render(state, helpers, events, target, firstRender)
     if (firstRender) {
       firstRender = false
-      target.appendChild(rootNode)
+
+      unmount = rendered.unmount
+      refs = rendered.refs
 
       // on first render, set up the ResizeObserver
       const calculator = calculateEmojiGridStyle(refs.emojiGrid)
@@ -695,8 +692,8 @@ export function createRoot (target, props) {
     },
     $destroy () {
       destroyState()
-      if (renderedRootNode) {
-        renderedRootNode.remove()
+      if (unmount) {
+        unmount()
       }
       for (const destroyCallback of destroyCallbacks) {
         destroyCallback()

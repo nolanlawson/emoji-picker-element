@@ -1,6 +1,6 @@
 import { createFramework } from './framework.js'
 
-export function createRootDom (state, helpers, events) {
+export function render (state, helpers, events, container, firstRender) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
   const { html, map } = createFramework(state)
 
@@ -220,27 +220,35 @@ export function createRootDom (state, helpers, events) {
     dom: rootDom
   } = section()
 
-  // bind events
-  for (const eventName of ['click', 'focusout', 'input', 'keydown', 'keyup']) {
-    for (const element of rootDom.querySelectorAll(`[data-on-${eventName}]`)) {
-      const listenerName = element.getAttribute(`data-on-${eventName}`)
-      element.addEventListener(eventName, events[listenerName])
+  let refs
+
+  if (firstRender) { // not a re-render
+    container.appendChild(rootDom)
+
+    // we only bind events/refs once - there is no need to find them again given this component structure
+
+    // bind events
+    for (const eventName of ['click', 'focusout', 'input', 'keydown', 'keyup']) {
+      for (const element of rootDom.querySelectorAll(`[data-on-${eventName}]`)) {
+        const listenerName = element.getAttribute(`data-on-${eventName}`)
+        element.addEventListener(eventName, events[listenerName])
+      }
+    }
+
+    // find refs
+    refs = {}
+    for (const element of container.querySelectorAll('[data-ref]')) {
+      const { ref } = element.dataset
+      refs[ref] = element
     }
   }
 
-  // find refs
-  const refs = {}
-  for (const element of rootDom.querySelectorAll('[data-ref]')) {
-    const { ref } = element.dataset
-    refs[ref] = element
-  }
-  if (rootDom.hasAttribute('data-ref')) {
-    const { ref } = rootDom.dataset
-    refs[ref] = rootDom
+  function unmount () {
+    container.removeChild(rootDom)
   }
 
   return {
     refs,
-    rootNode: rootDom
+    unmount
   }
 }
