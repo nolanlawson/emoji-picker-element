@@ -37,12 +37,7 @@ function patchChildren (newChildren, binding) {
   // avoid re-rendering list if the dom nodes are exactly the same before and after
   if (needsRerender) {
     for (const subExpression of newChildren) {
-      if (subExpression && subExpression.dom) { // html tag template itself
-        parentNode.insertBefore(subExpression.dom, iteratorEndNode)
-      } else { // primitive - string, number, etc
-        const textNode = document.createTextNode(toString(subExpression))
-        parentNode.insertBefore(textNode, iteratorEndNode)
-      }
+      parentNode.insertBefore(subExpression.dom, iteratorEndNode)
     }
   }
 }

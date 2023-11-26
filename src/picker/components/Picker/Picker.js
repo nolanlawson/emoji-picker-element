@@ -523,8 +523,9 @@ export function createRoot (target, props) {
   function onNavClick (event) {
     const { target } = event
     const closestTarget = target.closest('.nav-button')
+    /* istanbul ignore if */
     if (!closestTarget) {
-      return
+      return // This should never happen, but makes me nervous not to have it
     }
     const groupId = parseInt(closestTarget.dataset.groupId, 10)
     refs.searchElement.value = '' // clear search box input
@@ -576,7 +577,9 @@ export function createRoot (target, props) {
 
   async function onEmojiClick (event) {
     const { target } = event
+    /* istanbul ignore if */
     if (!target.classList.contains('emoji')) {
+      // This should never happen, but makes me nervous not to have it
       return
     }
     halt(event)
@@ -600,8 +603,9 @@ export function createRoot (target, props) {
   function onSkinToneOptionsClick (event) {
     const { target: { id } } = event
     const match = id && id.match(/^skintone-(\d)/) // skintone option format
+    /* istanbul ignore if */
     if (!match) { // not a skintone option
-      return
+      return // This should never happen, but makes me nervous not to have it
     }
     halt(event)
     const skinTone = parseInt(match[1], 10) // remove 'skintone-' prefix
@@ -677,6 +681,8 @@ export function createRoot (target, props) {
   async function onSkinToneOptionsFocusOut (event) {
     // On blur outside of the skintone listbox, collapse the skintone picker.
     const { relatedTarget } = event
+    // The `else` should never happen, but makes me nervous not to have it
+    /* istanbul ignore else */
     if (!relatedTarget || relatedTarget.id !== 'skintone-list') {
       state.skinTonePickerExpanded = false
     }
@@ -692,9 +698,7 @@ export function createRoot (target, props) {
     },
     $destroy () {
       destroyState()
-      if (unmount) {
-        unmount()
-      }
+      unmount()
       for (const destroyCallback of destroyCallbacks) {
         destroyCallback()
       }
