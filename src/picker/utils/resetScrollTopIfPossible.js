@@ -4,7 +4,8 @@
 // https://github.com/sveltejs/svelte/issues/6521
 // Also note tabpanelElement can be null if the element is disconnected immediately after connected
 export function resetScrollTopIfPossible (element) {
-  if (element) {
+  /* istanbul ignore else */
+  if (element) { // Makes me nervous not to have this `if` guard
     element.scrollTop = 0
   }
 }
