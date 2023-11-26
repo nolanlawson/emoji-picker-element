@@ -1115,6 +1115,11 @@ acorn-jsx@^5.3.2:
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"
   integrity sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==
 
+acorn-typescript@^1.4.11:
+  version "1.4.11"
+  resolved "https://registry.yarnpkg.com/acorn-typescript/-/acorn-typescript-1.4.11.tgz#c4003ddb0e3d700e1ee41c5e843cab44a50f2a0a"
+  integrity sha512-cRGgp+4HMxMZAiMS61ZmQ3iuU/+A4g4ZYZsyLZdmvrEVN/TOwfJ40rPWcLqi3H5ut75SYAdOOJj6QGCcrkK57w==
+
 acorn-walk@^8.0.2:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-8.2.0.tgz#741210f2e2426454508853a2f44d0ab83b7f69c1"
@@ -3004,10 +3009,10 @@ esquery@^1.4.2:
   dependencies:
     estraverse "^5.1.0"
 
-esrap@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/esrap/-/esrap-1.1.1.tgz#0ecadf5f8bbb746de74f5ad9e47ffa8f4cb593e3"
-  integrity sha512-PIgHGLP8VAG4Iao4CbOc+/5tgn+TpzGhyAuVCR5qgcFgPOUk9Ds61bH7hD2lbjDuu86lagofx3lVrRFWcIF+Gg==
+esrap@^1.2.0:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/esrap/-/esrap-1.2.1.tgz#8d95bc428920b82cc1084d662c2a0ace65724b0c"
+  integrity sha512-dhkcOLfN/aDdMFI1iwPEcy/XqAZzGNfgfEJjZozy2tia6u0dQoZyXzkRshHTckuNsM+c0CYQndY+uRFe3N+AIQ==
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.4.15"
     "@types/estree" "^1.0.1"
@@ -7603,10 +7608,10 @@ svelte-jester@^3.0.0:
   resolved "https://registry.yarnpkg.com/svelte-jester/-/svelte-jester-3.0.0.tgz#7872beb559bce3c66f134d6f016f2626cf8f1d1c"
   integrity sha512-V279cL906++hn00hkL1xAr/y5OjjxPYWic1g0yTJFmqdbdWKthdcuP3XBvmmwP9AzFBT51DlPgXz56HItle1Ug==
 
-svelte-preprocess@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-5.1.0.tgz#824a1b072da118cba46ad2e5e88a568083acad4b"
-  integrity sha512-EkErPiDzHAc0k2MF5m6vBNmRUh338h2myhinUw/xaqsLs7/ZvsgREiLGj03VrSzbY/TB5ZXgBOsKraFee5yceA==
+svelte-preprocess@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-5.1.1.tgz#53d7107c2e8b307afd4418e06239177c4de12025"
+  integrity sha512-p/Dp4hmrBW5mrCCq29lEMFpIJT2FZsRlouxEc5qpbOmXRbaFs7clLs8oKPwD3xCFyZfv1bIhvOzpQkhMEVQdMw==
   dependencies:
     "@types/pug" "^2.0.6"
     detect-indent "^6.1.0"
@@ -7614,18 +7619,19 @@ svelte-preprocess@^5.1.0:
     sorcery "^0.11.0"
     strip-indent "^3.0.0"
 
-svelte@^5.0.0-next.2:
-  version "5.0.0-next.2"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.0.0-next.2.tgz#302590de1e52d8aafb1199fbb393857478ec9b5e"
-  integrity sha512-fEB9A+KbZi+a21Baw+RbBQ49Gq35tqqKeWB2xrPV7tbKZT7E1sJMq0ZDNk72L5y29+N33FPnwH8v5LBFAD/PGw==
+svelte@^5.0.0-next.13:
+  version "5.0.0-next.13"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.0.0-next.13.tgz#7437afe806ed6337025e7cb60a6e678d8f2542e6"
+  integrity sha512-q6yHF8Mf/lnBG8HyVgR/AzXXykj6r5XjWXIwipG8+Wjc8UZlzWHb9oUWhtuGVrYDqr+44RJi+E0d9Oq5UEAR8Q==
   dependencies:
     "@ampproject/remapping" "^2.2.1"
     "@jridgewell/sourcemap-codec" "^1.4.15"
     acorn "^8.10.0"
+    acorn-typescript "^1.4.11"
     aria-query "^5.3.0"
     axobject-query "^4.0.0"
     esm-env "^1.0.0"
-    esrap "^1.1.1"
+    esrap "^1.2.0"
     is-reference "^3.0.1"
     locate-character "^3.0.0"
     magic-string "^0.30.4"
