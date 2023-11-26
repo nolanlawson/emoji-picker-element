@@ -205,7 +205,7 @@ function parseWithCache (tokens) {
 function cloneBoundExpressions (boundExpressions) {
   const map = new Map()
   for (const [id, bindings] of boundExpressions.entries()) {
-    map.set(id, bindings.map(_ => structuredClone(_)))
+    map.set(id, bindings.map(binding => ({ ...binding })))
   }
   return map
 }
