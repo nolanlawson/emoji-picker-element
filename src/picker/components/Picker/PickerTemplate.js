@@ -1,49 +1,8 @@
-import { parseHtml } from './framework.js'
-
-const domInstancesCache = new WeakMap()
-const unkeyedSymbol = Symbol('un-keyed')
-
-function getFromMap (cache, key, func) {
-  let cached = cache.get(key)
-  if (!cached) {
-    cached = func()
-    cache.set(key, cached)
-    // console.log('creating new')
-  } else {
-    // console.log('using cached')
-  }
-  return cached
-}
+import { createFramework } from './framework.js'
 
 export function createRootDom (state, helpers, events) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
-
-  let domInstances = getFromMap(domInstancesCache, state, () => new Map())
-  let iteratorKey = unkeyedSymbol
-
-  function html (tokens, ...expressions) {
-    const domInstancesForKey = getFromMap(domInstances, iteratorKey, () => new WeakMap())
-    const domInstance = getFromMap(domInstancesForKey, tokens, () => parseHtml(tokens))
-
-    const { update } = domInstance
-    const { dom } = update(expressions)
-    return { dom }
-  }
-
-  function map (array, callback, keyFunction, mapKey) {
-    const originalCacheKey = iteratorKey
-    const originalDomInstances = domInstances
-    domInstances = getFromMap(domInstances, mapKey, () => new Map())
-    try {
-      return array.map((item, index) => {
-        iteratorKey = keyFunction(item)
-        return callback(item, index)
-      })
-    } finally {
-      iteratorKey = originalCacheKey
-      domInstances = originalDomInstances
-    }
-  }
+  const { html, map } = createFramework(state)
 
   function emojiList (emojis, searchMode, prefix, uniqueId) {
     return map(emojis, (emoji, i) => {
