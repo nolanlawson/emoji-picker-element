@@ -1,4 +1,4 @@
-import { escapeHtml, getFromMap, parseTemplate, toString } from './utils.js'
+import { getFromMap, parseTemplate, toString } from './utils.js'
 
 const domInstancesCache = new WeakMap()
 const unkeyedSymbol = Symbol('un-keyed')
@@ -69,7 +69,7 @@ function patch (expressions, bindings) {
     binding.lastExpression = expression
 
     if (withinAttribute) {
-      element.setAttribute(attributeName, attributeValuePre + escapeHtml(toString(expression)) + attributeValuePost)
+      element.setAttribute(attributeName, attributeValuePre + toString(expression) + attributeValuePost)
     } else { // text node / dom node replacement
       let newNode
       if (expression && Array.isArray(expression)) { // array of html tag templates
