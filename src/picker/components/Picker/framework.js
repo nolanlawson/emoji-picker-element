@@ -1,6 +1,7 @@
 import { getFromMap, parseTemplate, toString } from './utils.js'
 
-const domInstancesCache = new WeakMap()
+const parseCache = new WeakMap()
+const updatersCache = new WeakMap()
 const unkeyedSymbol = Symbol('un-keyed')
 
 function patchChildren (newChildren, binding) {
@@ -67,7 +68,7 @@ function patch (expressions, bindings) {
       element.setAttribute(attributeName, attributeValuePre + toString(expression) + attributeValuePost)
     } else { // text node / dom node replacement
       let newNode
-      if (expression && Array.isArray(expression)) { // array of html tag templates
+      if (Array.isArray(expression)) { // array of html tag templates
         patchChildren(expression, binding)
       } else if (expression && expression.dom) { // html tag template itself
         newNode = expression.dom
@@ -103,22 +104,13 @@ function parse (tokens) {
   let elementIndexCounter = -1 // depth-first traversal order
 
   const boundExpressions = new Map()
-
   const elementIndexes = []
 
-  const push = () => {
-    elementIndexes.push(++elementIndexCounter)
-  }
-
-  const pop = () => {
-    elementIndexes.pop()
-  }
-
-  for (let i = 0; i < tokens.length; i++) {
+  for (let i = 0, len = tokens.length; i < len; i++) {
     const token = tokens[i]
     htmlString += token
 
-    if (i === tokens.length - 1) {
+    if (i === len - 1) {
       break // no need to process characters
     }
 
@@ -129,10 +121,10 @@ function parse (tokens) {
           const nextChar = token.charAt(j + 1)
           if (nextChar !== '!' && nextChar !== '/') { // not a closing tag or comment
             withinTag = true
-            push()
+            elementIndexes.push(++elementIndexCounter)
           } else if (nextChar === '/') {
             // leaving an element
-            pop()
+            elementIndexes.pop()
           }
           break
         }
@@ -186,17 +178,6 @@ function parse (tokens) {
   }
 }
 
-const parseCache = new WeakMap()
-
-function parseWithCache (tokens) {
-  let cached = parseCache.get(tokens)
-  if (!cached) {
-    cached = parse(tokens)
-    parseCache.set(tokens, cached)
-  }
-  return cached
-}
-
 function cloneBoundExpressions (boundExpressions) {
   const map = new Map()
   for (const [id, bindings] of boundExpressions.entries()) {
@@ -245,12 +226,12 @@ function parseHtml (tokens) {
   const {
     template,
     boundExpressions
-  } = parseWithCache(tokens)
+  } = getFromMap(parseCache, tokens, () => parse(tokens))
 
   let updater
   let dom
 
-  const update = (expressions) => {
+  return (expressions) => {
     if (!updater) {
       dom = template.cloneNode(true).content.firstElementChild
       const clonedBoundExpressions = cloneBoundExpressions(boundExpressions)
@@ -260,29 +241,23 @@ function parseHtml (tokens) {
 
     return { dom }
   }
-
-  return {
-    update
-  }
 }
 
 export function createFramework (state) {
-  let domInstances = getFromMap(domInstancesCache, state, () => new Map())
+  let updaters = getFromMap(updatersCache, state, () => new Map())
   let iteratorKey = unkeyedSymbol
 
   function html (tokens, ...expressions) {
-    const domInstancesForKey = getFromMap(domInstances, iteratorKey, () => new WeakMap())
-    const domInstance = getFromMap(domInstancesForKey, tokens, () => parseHtml(tokens))
+    const updatersForKey = getFromMap(updaters, iteratorKey, () => new WeakMap())
+    const updater = getFromMap(updatersForKey, tokens, () => parseHtml(tokens))
 
-    const { update } = domInstance
-    const { dom } = update(expressions)
-    return { dom }
+    return updater(expressions)
   }
 
   function map (array, callback, keyFunction, mapKey) {
     const originalCacheKey = iteratorKey
-    const originalDomInstances = domInstances
-    domInstances = getFromMap(domInstances, mapKey, () => new Map())
+    const originalUpdaters = updaters
+    updaters = getFromMap(updaters, mapKey, () => new Map())
     try {
       return array.map((item, index) => {
         iteratorKey = keyFunction(item)
@@ -290,7 +265,7 @@ export function createFramework (state) {
       })
     } finally {
       iteratorKey = originalCacheKey
-      domInstances = originalDomInstances
+      updaters = originalUpdaters
     }
   }
 
