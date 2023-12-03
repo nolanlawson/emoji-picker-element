@@ -89,7 +89,7 @@
     "cross-env": "^7.0.3",
     "csso": "^5.0.2",
     "d2l-resize-aware": "github:BrightspaceUI/resize-aware#semver:^1.2.2",
-    "emoji-picker-element-data": "^1.5.0",
+    "emoji-picker-element-data": "^1.6.0",
     "emojibase-data": "^5.1.1",
     "express": "^4.18.2",
     "fake-indexeddb": "^5.0.1",
