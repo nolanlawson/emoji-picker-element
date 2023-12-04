@@ -1,3 +1,12 @@
+## [1.20.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.20.0...v1.20.1) (2023-12-04)
+
+
+### Bug Fixes
+
+* use correct "red heart" in default favorites ([#385](https://github.com/nolanlawson/emoji-picker-element/issues/385)) ([baf2908](https://github.com/nolanlawson/emoji-picker-element/commit/baf29084c1031a01a2534f3ad4c72131a9a4497f))
+
+
+
 # [1.20.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.19.2...v1.20.0) (2023-12-04)
 
 
