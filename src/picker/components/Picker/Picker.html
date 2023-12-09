@@ -1,7 +1,4 @@
-{#snippet emojiList(args)}
-  {@const emojis = args[0]}
-  {@const searchMode = args[1]}
-  {@const prefix = args[2]}
+{#snippet emojiList([emojis, searchMode, prefix])}
   {#each emojis as emoji, i (emoji.id)}
     <button role={searchMode ? 'option' : 'menuitem'}
         aria-selected={searchMode ? i == activeSearchItem : ''}
