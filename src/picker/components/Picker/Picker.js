@@ -22,11 +22,14 @@ import { uniq } from '../../../shared/uniq'
 import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.js'
 import { render } from './PickerTemplate.js'
 import { createState } from './reactivity.js'
+import { arraysAreEqualByFunction } from '../../utils/arraysAreEqualByFunction.js'
 
 // constants
 const EMPTY_ARRAY = []
 
 const { assign } = Object
+
+const areIdsEqual = (a, b) => a.id === b.id
 
 export function createRoot (target, props) {
   const { state, createEffect, destroyState } = createState()
@@ -71,8 +74,7 @@ export function createRoot (target, props) {
     currentGroupIndex: 0,
     groups: defaultGroups,
     databaseLoaded: false,
-    activeSearchItemId: undefined,
-    filteredEmojis: []
+    activeSearchItemId: undefined
   })
 
   //
@@ -384,10 +386,15 @@ export function createRoot (target, props) {
       .filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
     if (!emojiVersion && zwjEmojisToCheck.length) {
       // render now, check their length later
-      state.filteredEmojis = currentEmojis
+      if (!arraysAreEqualByFunction(state.currentEmojis, currentEmojis, areIdsEqual)) {
+        state.currentEmojis = currentEmojis
+      }
       requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
     } else {
-      state.filteredEmojis = emojiVersion ? currentEmojis : currentEmojis.filter(isZwjSupported)
+      const newEmojis = emojiVersion ? currentEmojis : currentEmojis.filter(isZwjSupported)
+      if (!arraysAreEqualByFunction(state.currentEmojis, newEmojis, areIdsEqual)) {
+        state.currentEmojis = newEmojis
+      }
       // Reset scroll top to 0 when emojis change
       requestAnimationFrame(() => resetScrollTopIfPossible(refs.tabpanelElement))
     }
@@ -398,7 +405,8 @@ export function createRoot (target, props) {
     const emojiToDomNode = emoji => shadowRootNode.getElementById(`emo-${emoji.id}`)
     checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
     // force update
-    state.filteredEmojis = state.currentEmojis
+    // eslint-disable-next-line no-self-assign
+    state.currentEmojis = state.currentEmojis
   }
 
   function isZwjSupported (emoji) {
@@ -444,17 +452,17 @@ export function createRoot (target, props) {
 
   createEffect(() => {
     function calculateCurrentEmojisWithCategories () {
-      const { searchMode, filteredEmojis } = state
+      const { searchMode, currentEmojis } = state
       if (searchMode) {
         return [
           {
             category: '',
-            emojis: filteredEmojis
+            emojis: currentEmojis
           }
         ]
       }
       const categoriesToEmoji = new Map()
-      for (const emoji of filteredEmojis) {
+      for (const emoji of currentEmojis) {
         const category = emoji.category || ''
         let emojis = categoriesToEmoji.get(category)
         if (!emojis) {
@@ -468,7 +476,19 @@ export function createRoot (target, props) {
         .sort((a, b) => state.customCategorySorting(a.category, b.category))
     }
 
-    state.currentEmojisWithCategories = calculateCurrentEmojisWithCategories()
+    const newEmojisWithCategories = calculateCurrentEmojisWithCategories()
+    if (!arraysAreEqualByFunction(newEmojisWithCategories, state.currentEmojisWithCategories, (a, b) => {
+      const { category: aCategory, emojis: aEmojis } = a
+      const { category: bCategory, emojis: bEmojis } = b
+
+      if (aCategory !== bCategory) {
+        return false
+      }
+
+      return arraysAreEqualByFunction(aEmojis, bEmojis, areIdsEqual)
+    })) {
+      state.currentEmojisWithCategories = newEmojisWithCategories
+    }
   })
 
   //
