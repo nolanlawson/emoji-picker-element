@@ -9,7 +9,7 @@ export const DEFAULT_NUM_COLUMNS = 8
 export const MOST_COMMONLY_USED_EMOJI = [
   '😊',
   '😒',
-  '♥️',
+  '❤️',
   '👍️',
   '😍',
   '😂',

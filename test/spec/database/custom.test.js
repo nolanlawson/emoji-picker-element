@@ -163,7 +163,7 @@ describe('custom emoji', () => {
       '✌️': 8,
       '🐶': 9,
       '🎉': 3,
-      '✨': 3,
+      '✨️': 3,
       CapitalLettersLikeThis: 3,
       underscores_like_this: 6,
       monkey: 5
@@ -184,7 +184,7 @@ describe('custom emoji', () => {
       { name: 'monkey', shortcodes: ['monkey'], url: 'monkey.png' },
       summaryByUnicode('🐒'),
       summaryByUnicode('🎉'),
-      summaryByUnicode('✨'),
+      summaryByUnicode('✨️'),
       { name: 'CapitalLettersLikeThis', shortcodes: ['CapitalLettersLikeThis'], url: 'caps.png' }
     ])
 
@@ -197,7 +197,7 @@ describe('custom emoji', () => {
       { name: 'monkey', shortcodes: ['monkey'], url: 'monkey.png' },
       summaryByUnicode('🐒'),
       summaryByUnicode('🎉'),
-      summaryByUnicode('✨'),
+      summaryByUnicode('✨️'),
       { name: 'CapitalLettersLikeThis', shortcodes: ['CapitalLettersLikeThis'], url: 'caps.png' },
       summaryByUnicode('🤣'),
       summaryByUnicode('🖐️')
@@ -212,7 +212,7 @@ describe('custom emoji', () => {
       summaryByUnicode('🐵'),
       summaryByUnicode('🐒'),
       summaryByUnicode('🎉'),
-      summaryByUnicode('✨'),
+      summaryByUnicode('✨️'),
       summaryByUnicode('🤣'),
       summaryByUnicode('🖐️')
     ])
