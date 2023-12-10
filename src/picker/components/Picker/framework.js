@@ -34,7 +34,6 @@ function patchChildren (newChildren, binding) {
     needsRerender = doChildrenNeedRerender(iteratorParentNode, newChildren)
   } else { // first render of list
     needsRerender = true
-    binding.renderedOnce = true
     binding.targetNode = undefined
     binding.iteratorParentNode = iteratorParentNode = targetNode.parentNode
   }
