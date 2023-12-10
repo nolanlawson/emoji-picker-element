@@ -148,6 +148,7 @@
       "Event",
       "fetch",
       "getComputedStyle",
+      "Element",
       "indexedDB",
       "IDBKeyRange",
       "Headers",

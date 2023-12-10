@@ -4,6 +4,22 @@ const parseCache = new WeakMap()
 const updatersCache = new WeakMap()
 const unkeyedSymbol = Symbol('un-keyed')
 
+// Not supported in Safari <=13
+const hasReplaceChildren = 'replaceChildren' in Element.prototype
+function replaceChildren (parentNode, newChildren) {
+  /* istanbul ignore else */
+  if (hasReplaceChildren) {
+    parentNode.replaceChildren(...newChildren)
+  } else { // polyfill Element.prototype.replaceChildren
+    while (parentNode.lastChild) {
+      parentNode.removeChild(parentNode.lastChild)
+    }
+    for (const child of newChildren) {
+      parentNode.appendChild(child)
+    }
+  }
+}
+
 function doChildrenNeedRerender (parentNode, newChildren) {
   let oldChild = parentNode.firstChild
   let oldChildrenCount = 0
@@ -40,7 +56,7 @@ function patchChildren (newChildren, binding) {
   // console.log('needsRerender?', needsRerender, 'newChildren', newChildren)
   // avoid re-rendering list if the dom nodes are exactly the same before and after
   if (needsRerender) {
-    iteratorParentNode.replaceChildren(...newChildren)
+    replaceChildren(iteratorParentNode, newChildren)
   }
 }
 
