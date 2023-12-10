@@ -29,8 +29,6 @@ const EMPTY_ARRAY = []
 
 const { assign } = Object
 
-const areIdsEqual = (a, b) => a.id === b.id
-
 export function createRoot (target, props) {
   const { state, createEffect, destroyState } = createState()
   const destroyCallbacks = []
@@ -103,7 +101,49 @@ export function createRoot (target, props) {
     }))
   }
 
-  // Helpers
+  //
+  // Comparison utils
+  //
+
+  const compareEmojiArrays = (a, b) => a.id === b.id
+
+  const compareCurrentEmojisWithCategories = (a, b) => {
+    const { category: aCategory, emojis: aEmojis } = a
+    const { category: bCategory, emojis: bEmojis } = b
+
+    if (aCategory !== bCategory) {
+      return false
+    }
+
+    return arraysAreEqualByFunction(aEmojis, bEmojis, compareEmojiArrays)
+  }
+
+  //
+  // Update utils to avoid excessive re-renders
+  //
+
+  // avoid excessive re-renders by checking the value before setting
+  const updateCurrentEmojis = (newEmojis) => {
+    if (!arraysAreEqualByFunction(state.currentEmojis, newEmojis, compareEmojiArrays)) {
+      state.currentEmojis = newEmojis
+    }
+  }
+
+  // avoid excessive re-renders
+  const updateSearchMode = (newSearchMode) => {
+    if (state.searchMode !== newSearchMode) {
+      state.searchMode = newSearchMode
+    }
+  }
+
+  // avoid excessive re-renders
+  const updateCurrentEmojisWithCategories = (newEmojisWithCategories) => {
+    if (!arraysAreEqualByFunction(state.currentEmojisWithCategories, newEmojisWithCategories, compareCurrentEmojisWithCategories)) {
+      state.currentEmojisWithCategories = newEmojisWithCategories
+    }
+  }
+
+  // Helpers used by PickerTemplate
 
   const unicodeWithSkin = (emoji, currentSkinTone) => (
     (currentSkinTone && emoji.skins && emoji.skins[currentSkinTone]) || emoji.unicode
@@ -357,8 +397,8 @@ export function createRoot (target, props) {
       } else if (searchText.length >= MIN_SEARCH_TEXT_LENGTH) {
         const newEmojis = await getEmojisBySearchQuery(searchText)
         if (state.searchText === searchText) { // if the situation changes asynchronously, do not update
-          state.currentEmojis = newEmojis
-          state.searchMode = true
+          updateCurrentEmojis(newEmojis)
+          updateSearchMode(true)
         }
       } else if (currentGroup) {
         const { id: currentGroupId } = currentGroup
@@ -366,8 +406,8 @@ export function createRoot (target, props) {
         if (currentGroupId !== -1 || (customEmoji && customEmoji.length)) {
           const newEmojis = await getEmojisByGroup(currentGroupId)
           if (state.currentGroup.id === currentGroupId) { // if the situation changes asynchronously, do not update
-            state.currentEmojis = newEmojis
-            state.searchMode = false
+            updateCurrentEmojis(newEmojis)
+            updateSearchMode(false)
           }
         }
       }
@@ -386,15 +426,11 @@ export function createRoot (target, props) {
       .filter(emoji => hasZwj(emoji) && !supportedZwjEmojis.has(emoji.unicode))
     if (!emojiVersion && zwjEmojisToCheck.length) {
       // render now, check their length later
-      if (!arraysAreEqualByFunction(state.currentEmojis, currentEmojis, areIdsEqual)) {
-        state.currentEmojis = currentEmojis
-      }
+      updateCurrentEmojis(currentEmojis)
       requestAnimationFrame(() => checkZwjSupportAndUpdate(zwjEmojisToCheck))
     } else {
       const newEmojis = emojiVersion ? currentEmojis : currentEmojis.filter(isZwjSupported)
-      if (!arraysAreEqualByFunction(state.currentEmojis, newEmojis, areIdsEqual)) {
-        state.currentEmojis = newEmojis
-      }
+      updateCurrentEmojis(newEmojis)
       // Reset scroll top to 0 when emojis change
       requestAnimationFrame(() => resetScrollTopIfPossible(refs.tabpanelElement))
     }
@@ -477,18 +513,7 @@ export function createRoot (target, props) {
     }
 
     const newEmojisWithCategories = calculateCurrentEmojisWithCategories()
-    if (!arraysAreEqualByFunction(newEmojisWithCategories, state.currentEmojisWithCategories, (a, b) => {
-      const { category: aCategory, emojis: aEmojis } = a
-      const { category: bCategory, emojis: bEmojis } = b
-
-      if (aCategory !== bCategory) {
-        return false
-      }
-
-      return arraysAreEqualByFunction(aEmojis, bEmojis, areIdsEqual)
-    })) {
-      state.currentEmojisWithCategories = newEmojisWithCategories
-    }
+    updateCurrentEmojisWithCategories(newEmojisWithCategories)
   })
 
   //
