@@ -719,9 +719,13 @@ export function createRoot (target, props) {
     $destroy () {
       destroyState()
       unmount()
+      if (process.env.NODE_ENV !== 'production') {
+        delete window.state
+      }
       for (const destroyCallback of destroyCallbacks) {
         destroyCallback()
       }
+      console.log('destroyed!')
     }
   }
 }
