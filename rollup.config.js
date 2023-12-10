@@ -66,11 +66,6 @@ const entryPoints = [
     input: './src/trimEmojiData.js',
     output: './trimEmojiData.cjs',
     format: 'cjs'
-  },
-  {
-    // for backwards compat
-    input: './src/picker/PickerElement.js',
-    output: './svelte.js'
   }
 ]
 
