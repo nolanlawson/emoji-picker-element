@@ -4,42 +4,44 @@ const parseCache = new WeakMap()
 const updatersCache = new WeakMap()
 const unkeyedSymbol = Symbol('un-keyed')
 
+function doChildrenNeedRerender (parentNode, newChildren) {
+  let oldChild = parentNode.firstChild
+  let oldChildrenCount = 0
+  // iterate using firstChild/nextSibling because browsers use a linked list under the hood
+  while (oldChild) {
+    const newChild = newChildren[oldChildrenCount]
+    // check if the old child and new child are the same
+    if (!newChild || newChild !== oldChild) {
+      return true
+    }
+    oldChild = oldChild.nextSibling
+    oldChildrenCount++
+  }
+  if (process.env.NODE_ENV !== 'production' && oldChildrenCount !== parentNode.children.length) {
+    throw new Error('parentNode.children.length is different from oldChildrenCount, it should not be')
+  }
+  // if new children length is different from old, we must re-render
+  return oldChildrenCount !== newChildren.length
+}
+
 function patchChildren (newChildren, binding) {
   const { targetNode } = binding
-  let { iteratorEndNode } = binding
-  const { parentNode } = targetNode
+  let { iteratorParentNode } = binding
 
   let needsRerender = false
 
-  if (iteratorEndNode) { // already rendered once
-    let currentSibling = targetNode.nextSibling
-    let i = -1
-    let oldChildrenCount = 0
-    while (!(currentSibling.nodeType === Node.COMMENT_NODE && currentSibling.textContent === 'end')) {
-      oldChildrenCount++
-      const oldSibling = currentSibling
-      currentSibling = currentSibling.nextSibling
-      const newChild = newChildren[++i]
-      // check if the old children and new children are the same
-      if (!(newChild && newChild === oldSibling)) {
-        needsRerender = true
-        parentNode.removeChild(oldSibling)
-      }
-    }
-    if (oldChildrenCount !== newChildren.length) { // new children length is different from old, force re-render
-      needsRerender = true
-    }
+  if (iteratorParentNode) {
+    needsRerender = doChildrenNeedRerender(iteratorParentNode, newChildren)
   } else { // first render of list
     needsRerender = true
-    iteratorEndNode = document.createComment('end')
-    parentNode.insertBefore(iteratorEndNode, targetNode.nextSibling)
-    binding.iteratorEndNode = iteratorEndNode
+    binding.renderedOnce = true
+    binding.targetNode = undefined
+    binding.iteratorParentNode = iteratorParentNode = targetNode.parentNode
   }
+  // console.log('needsRerender?', needsRerender, 'newChildren', newChildren)
   // avoid re-rendering list if the dom nodes are exactly the same before and after
   if (needsRerender) {
-    for (const subExpression of newChildren) {
-      parentNode.insertBefore(subExpression, iteratorEndNode)
-    }
+    iteratorParentNode.replaceChildren(...newChildren)
   }
 }
 
