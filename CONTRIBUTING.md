@@ -59,15 +59,10 @@ Build the GitHub Pages docs site:
 
 Some explanations of why the code is structured the way it is, in case it's confusing.
 
-### Why is it one big Svelte component?
+### Why a custom framework?
 
-When you build Svelte components with `customElement: true`, it makes _each individual component_ into a web component. This can be bad for perf reasons (lots of repetition, [constructible stylesheets](https://wicg.github.io/construct-stylesheets/) aren't a thing yet, event and prop overhead) as well as correctness reasons (e.g. I want an `<li>` inside of a `<ul>`, not a `<custom-element>` with a shadow DOM and the `<li>` inside of it).
-
-So for now: it's one big component.
-
-### Why use svelte-preprocess?
-
-Since it's one big component, it's more readable if we split up the HTML/CSS/JS. Plus, we can lint the JS more easily that way. Plus, I like SCSS.
+It was [a good learning exercise](https://nolanlawson.com/2023/12/02/lets-learn-how-modern-javascript-frameworks-work-by-building-one/), and it reduced the bundle size quite a bit to switch from Svelte to a custom framework. Plus, `emoji-picker-element` no longer needs to keep
+up with breaking changes in Svelte or the tools in the Svelte ecosystem (e.g. Rollup and Jest plugins).
 
 ### Why are the built JS files at the root of the project?
 
