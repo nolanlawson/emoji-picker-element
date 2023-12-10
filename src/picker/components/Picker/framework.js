@@ -206,8 +206,10 @@ function traverseAndSetupBindings (dom, boundExpressions) {
             // find all comments once
             foundComments = new Map()
             for (const childNode of element.childNodes) {
+              // Note that minify-html-literals has already removed all non-framework comments
+              // But just to be safe, only look for comments that contain pure integers
               let match
-              if (childNode.nodeType === Node.COMMENT_NODE && (match = /^placeholder-(\d+)/.exec(childNode.textContent))) {
+              if (childNode.nodeType === Node.COMMENT_NODE && (match = /^placeholder-(\d+)$/.exec(childNode.textContent))) {
                 foundComments.set(parseInt(match[1], 10), childNode)
               }
             }
