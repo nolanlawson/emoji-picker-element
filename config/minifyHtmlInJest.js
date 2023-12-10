@@ -1,8 +1,7 @@
-import { minifyHtml } from './minifyHtml.js'
+import { minifyHTMLLiterals } from 'minify-html-literals'
 
 export default {
   processAsync (source) {
-    const { code, map } = minifyHtml(source)
-    return { code, map }
+    return minifyHTMLLiterals(source)
   }
 }

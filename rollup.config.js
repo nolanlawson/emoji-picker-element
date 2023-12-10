@@ -4,7 +4,7 @@ import replace from '@rollup/plugin-replace'
 import strip from '@rollup/plugin-strip'
 import analyze from 'rollup-plugin-analyzer'
 import { buildStyles } from './bin/buildStyles.js'
-import { minifyHtml } from './config/minifyHtml.js'
+import { minifyHTMLLiterals } from 'minify-html-literals'
 
 const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
@@ -30,7 +30,7 @@ const baseConfig = {
       name: 'minify-html-in-tag-template-literals',
       transform (content, id) {
         if (id.includes('PickerTemplate.js')) {
-          return minifyHtml(content)
+          return minifyHTMLLiterals(content)
         }
       }
     },
