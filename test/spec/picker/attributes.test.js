@@ -85,7 +85,7 @@ describe('attributes tests', () => {
     await tick(20)
   })
 
-  test('change property while disconnected from DOM', async () => {
+  test('change attribute while disconnected from DOM', async () => {
     const picker = new Picker()
     picker.setAttribute('data-source', ALL_EMOJI)
     document.body.appendChild(picker)
