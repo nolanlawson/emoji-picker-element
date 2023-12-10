@@ -11,7 +11,7 @@ function doChildrenNeedRerender (parentNode, newChildren) {
   while (oldChild) {
     const newChild = newChildren[oldChildrenCount]
     // check if the old child and new child are the same
-    if (!newChild || newChild !== oldChild) {
+    if (newChild !== oldChild) {
       return true
     }
     oldChild = oldChild.nextSibling
