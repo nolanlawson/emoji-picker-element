@@ -30,7 +30,7 @@ function patchChildren (newChildren, binding) {
 
   let needsRerender = false
 
-  if (iteratorParentNode) {
+  if (iteratorParentNode) { // already rendered once
     needsRerender = doChildrenNeedRerender(iteratorParentNode, newChildren)
   } else { // first render of list
     needsRerender = true
