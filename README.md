@@ -838,10 +838,10 @@ import Picker from 'emoji-picker-element/svelte';
 
 The goal was to slightly reduce the bundle size by sharing common `svelte` imports.
 
-This is still supported, but it is deprecated. Instead, simply do:
+This is still supported for backwards compatibility, but it is deprecated and just re-exports the Picker. Instead, do:
 
 ```js
-import Picker from 'emoji-picker-element';
+import Picker from 'emoji-picker-element/picker';
 ```
 
 ## Data and offline
