@@ -54,7 +54,8 @@ export default class PickerElement extends HTMLElement {
     if (!this._cmp) {
       this._cmp = createRoot(SveltePicker, {
         target: this.shadowRoot,
-        props: this._ctx
+        // props must be cloned due to https://github.com/sveltejs/svelte/issues/9884
+        props: { ...this._ctx }
       })
     }
   }
