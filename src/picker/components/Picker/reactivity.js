@@ -47,7 +47,7 @@ export function createState () {
       return target[prop]
     },
     set (target, prop, newValue) {
-      console.log('reactivity: set', prop, newValue)
+      // console.log('reactivity: set', prop, newValue)
       target[prop] = newValue
       const observers = propsToObservers.get(prop)
       if (observers) {

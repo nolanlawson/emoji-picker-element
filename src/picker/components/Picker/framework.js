@@ -21,7 +21,7 @@ function patchChildren (newChildren, binding) {
       currentSibling = currentSibling.nextSibling
       const newChild = newChildren[++i]
       // check if the old children and new children are the same
-      if (!(newChild && newChild.dom === oldSibling)) {
+      if (!(newChild && newChild === oldSibling)) {
         needsRerender = true
         parentNode.removeChild(oldSibling)
       }
@@ -38,7 +38,7 @@ function patchChildren (newChildren, binding) {
   // avoid re-rendering list if the dom nodes are exactly the same before and after
   if (needsRerender) {
     for (const subExpression of newChildren) {
-      parentNode.insertBefore(subExpression.dom, iteratorEndNode)
+      parentNode.insertBefore(subExpression, iteratorEndNode)
     }
   }
 }
@@ -70,8 +70,8 @@ function patch (expressions, bindings) {
       let newNode
       if (Array.isArray(expression)) { // array of html tag templates
         patchChildren(expression, binding)
-      } else if (expression && expression.dom) { // html tag template itself
-        newNode = expression.dom
+      } else if (expression instanceof Node) { // html tag template returning a DOM node
+        newNode = expression
         if (newNode !== targetNode) {
           targetNode.replaceWith(newNode)
         }
@@ -239,7 +239,7 @@ function parseHtml (tokens) {
     }
     updater(expressions)
 
-    return { dom }
+    return dom
   }
 }
 

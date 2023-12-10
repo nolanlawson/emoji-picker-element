@@ -216,9 +216,7 @@ export function render (state, helpers, events, container, firstRender) {
     `
   }
 
-  const {
-    dom: rootDom
-  } = section()
+  const rootDom = section()
 
   let refs
 
