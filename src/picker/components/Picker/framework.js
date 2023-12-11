@@ -1,7 +1,7 @@
 import { getFromMap, parseTemplate, toString } from './utils.js'
 
 const parseCache = new WeakMap()
-const updatersCache = new WeakMap()
+const domInstancesCache = new WeakMap()
 const unkeyedSymbol = Symbol('un-keyed')
 
 // Not supported in Safari <=13
@@ -263,29 +263,28 @@ function parseHtml (tokens) {
 }
 
 export function createFramework (state) {
-  let updaters = getFromMap(updatersCache, state, () => new Map())
-  let iteratorKey = unkeyedSymbol
+  const domInstances = getFromMap(domInstancesCache, state, () => new Map())
+  let domInstanceCacheKey = unkeyedSymbol
 
   function html (tokens, ...expressions) {
-    const updatersForKey = getFromMap(updaters, iteratorKey, () => new WeakMap())
-    const updater = getFromMap(updatersForKey, tokens, () => parseHtml(tokens))
+    // Each unique lexical usage of map() is considered unique due to the html`` tagged template call it makes,
+    // which has lexically unique tokens. The unkeyed symbol is just used for html`` usage outside of a map().
+    const domInstancesForTokens = getFromMap(domInstances, tokens, () => new Map())
+    const domInstance = getFromMap(domInstancesForTokens, domInstanceCacheKey, () => parseHtml(tokens))
 
-    return updater(expressions)
+    return domInstance(expressions) // update with expressions
   }
 
-  function map (array, callback, keyFunction, mapKey) {
-    const originalCacheKey = iteratorKey
-    const originalUpdaters = updaters
-    updaters = getFromMap(updaters, mapKey, () => new Map())
-    try {
-      return array.map((item, index) => {
-        iteratorKey = keyFunction(item)
+  function map (array, callback, keyFunction) {
+    return array.map((item, index) => {
+      const originalCacheKey = domInstanceCacheKey
+      domInstanceCacheKey = keyFunction(item)
+      try {
         return callback(item, index)
-      })
-    } finally {
-      iteratorKey = originalCacheKey
-      updaters = originalUpdaters
-    }
+      } finally {
+        domInstanceCacheKey = originalCacheKey
+      }
+    })
   }
 
   return { map, html }

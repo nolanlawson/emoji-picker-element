@@ -4,7 +4,7 @@ export function render (state, helpers, events, container, firstRender) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
   const { html, map } = createFramework(state)
 
-  function emojiList (emojis, searchMode, prefix, uniqueId) {
+  function emojiList (emojis, searchMode, prefix) {
     return map(emojis, (emoji, i) => {
       return html`
       <button role="${searchMode ? 'option' : 'menuitem'}"
@@ -12,7 +12,7 @@ export function render (state, helpers, events, container, firstRender) {
               aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
               title="${titleForEmoji(emoji)}"
               class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
-              id="${prefix + '-' + emoji.id}">
+              id=${`${prefix}-${emoji.id}`}>
         ${
         emoji.unicode
           ? unicodeWithSkin(emoji, state.currentSkinTone)
@@ -20,7 +20,9 @@ export function render (state, helpers, events, container, firstRender) {
       }
       </button>
     `
-    }, emoji => emoji.id, uniqueId)
+      // It's important for the cache key to be unique based on the prefix, because the framework caches based on the
+      // unique tokens + cache key, and the same emoji may be used in the tab as well as in the fav bar
+    }, emoji => `${prefix}-${emoji.id}`)
   }
 
   const section = () => {
@@ -103,7 +105,7 @@ export function render (state, helpers, events, container, firstRender) {
           ${skinTone}
         </div>
       `
-    }, skinTone => skinTone, 'skintones')
+    }, skinTone => skinTone)
         }
       </div>
       </div>
@@ -131,7 +133,7 @@ export function render (state, helpers, events, container, firstRender) {
           </div>
         </button>
       `
-            }, group => group.id, 'nav')
+            }, group => group.id)
           }
         </div>
         <div class="indicator-wrapper">
@@ -189,12 +191,12 @@ export function render (state, helpers, events, container, firstRender) {
                aria-labelledby="menu-label-${i}"
                id=${state.searchMode ? 'search-results' : ''}>
             ${
-              emojiList(emojiWithCategory.emojis, state.searchMode, /* prefix */ 'emo', /* uniqueId */ `emo-${emojiWithCategory.category}`)
+              emojiList(emojiWithCategory.emojis, state.searchMode, /* prefix */ 'emo')
             }
           </div>
         </div>
       `
-              }, emojiWithCategory => emojiWithCategory.category, 'emojisWithCategories')
+              }, emojiWithCategory => emojiWithCategory.category)
             }
           </div>
         </div>
@@ -205,7 +207,7 @@ export function render (state, helpers, events, container, firstRender) {
              style="padding-inline-end: ${`${state.scrollbarWidth}px`}"
              data-on-click="onEmojiClick">
           ${
-            emojiList(state.currentFavorites, /* searchMode */ false, /* prefix */ 'fav', /* uniqueId */ 'fav')
+            emojiList(state.currentFavorites, /* searchMode */ false, /* prefix */ 'fav')
           }
         </div>
         <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
