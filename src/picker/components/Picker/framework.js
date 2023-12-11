@@ -107,12 +107,6 @@ function patch (expressions, bindings) {
   }
 }
 
-function createUpdater (dom, boundExpressions) {
-  traverseAndSetupBindings(dom, boundExpressions)
-  const allBindings = [...boundExpressions.values()].flat()
-  return expressions => patch(expressions, allBindings)
-}
-
 function parse (tokens) {
   let htmlString = ''
 
@@ -241,23 +235,23 @@ function traverseAndSetupBindings (dom, boundExpressions) {
   } while ((element = treeWalker.nextNode()))
 }
 
+function cloneDomAndBind (template, boundExpressions) {
+  const dom = template.cloneNode(true).content.firstElementChild
+  const clonedBoundExpressions = cloneBoundExpressions(boundExpressions)
+  traverseAndSetupBindings(dom, clonedBoundExpressions)
+  const bindings = [...clonedBoundExpressions.values()].flat()
+  return { dom, bindings }
+}
+
 function parseHtml (tokens) {
-  const {
-    template,
-    boundExpressions
-  } = getFromMap(parseCache, tokens, () => parse(tokens))
+  // All templates and bound expressions are unique per tokens array
+  const { template, boundExpressions } = getFromMap(parseCache, tokens, () => parse(tokens))
 
-  let updater
-  let dom
+  // When we parseHtml, we always return a fresh DOM instance ready to be updated
+  const { dom, bindings } = cloneDomAndBind(template, boundExpressions)
 
-  return (expressions) => {
-    if (!updater) {
-      dom = template.cloneNode(true).content.firstElementChild
-      const clonedBoundExpressions = cloneBoundExpressions(boundExpressions)
-      updater = createUpdater(dom, clonedBoundExpressions)
-    }
-    updater(expressions)
-
+  return function update (expressions) {
+    patch(expressions, bindings)
     return dom
   }
 }
