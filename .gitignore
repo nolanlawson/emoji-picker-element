@@ -131,7 +131,8 @@ dist
 /bundle.js
 /test/benchmark/node_modules
 /test/benchmark/data.json
-/test/benchmark/*.js
-!/test/benchmark/*.benchmark.js
+/test/benchmark/database.js
+/test/benchmark/index.js
+/test/benchmark/picker.js
 /test/benchmark/*.tachometer.json
 /i18n

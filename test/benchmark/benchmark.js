@@ -1,4 +1,4 @@
-function instrumentPickerLoading() {
+function instrumentPickerLoading () {
   const observer = new PerformanceObserver(entries => {
     for (const { name, startTime, duration } of entries.getEntries()) {
       if (name === 'initialLoad') {
@@ -17,7 +17,7 @@ function instrumentPickerLoading() {
   observer.observe({ entryTypes: ['measure'] })
 }
 
-function useFakeEtag() {
+function useFakeEtag () {
   // Fake an eTag on the headers for the emoji-picker data so that we actually reuse the cache.
   // Tachometer doesn't serve an eTag by default
   const nativeGet = Headers.prototype.get
@@ -29,7 +29,7 @@ function useFakeEtag() {
   }
 }
 
-const params = new URLSearchParams(location.search)
+const params = new URLSearchParams(window.location.search)
 const benchmark = params.get('benchmark') || 'first-load'
 
 if (benchmark === 'first-load') {
@@ -39,6 +39,10 @@ if (benchmark === 'first-load') {
   instrumentPickerLoading()
   useFakeEtag()
   await import('./second-load.benchmark.js')
-} else {
+} else if (benchmark === 'database-interactions') {
   await import('./database-interactions.benchmark.js')
+} else if (benchmark === 'change-tab') {
+  await import('./change-tab.benchmark.js')
+} else if (benchmark === 'search') {
+  await import('./search.benchmark.js')
 }
