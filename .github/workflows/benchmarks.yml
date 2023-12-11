@@ -40,7 +40,7 @@ jobs:
           # install the chromedriver corresponding to whatever version of chrome is installed
           yarn add --ignore-scripts chromedriver@^$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
           PERF=1 yarn build:rollup
-          ./bin/setup-benchmark.sh
+          yarn benchmark:runtime:setup
 
       # first-load
       - name: Benchmark first-load
@@ -84,5 +84,35 @@ jobs:
         with:
           report-id: emoji-picker-element-database-interactions
           path: test/benchmark/database-interactions.results.json
+          pr-bench-name: this-change
+          base-bench-name: tip-of-tree
+
+      # change-tab
+      - name: Benchmark change-tab
+        run: |
+          ./node_modules/.bin/tach \
+            --config ./test/benchmark/change-tab.tachometer.json \
+            --json-file ./test/benchmark/change-tab.results.json
+
+      - name: Report change-tab
+        uses: andrewiggins/tachometer-reporter-action@v2
+        with:
+          report-id: emoji-picker-element-change-tab
+          path: test/benchmark/change-tab.results.json
+          pr-bench-name: this-change
+          base-bench-name: tip-of-tree
+
+      # search
+      - name: Benchmark search
+        run: |
+          ./node_modules/.bin/tach \
+            --config ./test/benchmark/search.tachometer.json \
+            --json-file ./test/benchmark/search.results.json
+
+      - name: Report search
+        uses: andrewiggins/tachometer-reporter-action@v2
+        with:
+          report-id: emoji-picker-element-search
+          path: test/benchmark/search.results.json
           pr-bench-name: this-change
           base-bench-name: tip-of-tree
