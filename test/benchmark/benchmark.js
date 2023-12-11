@@ -13,6 +13,7 @@ function instrumentPickerLoading() {
         measure.call(performance, 'benchmark-total', 'initialLoad')
       }
     }
+    return measure.apply(performance, arguments)
   }
 }
 
