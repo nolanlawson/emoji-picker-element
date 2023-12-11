@@ -1,20 +1,21 @@
 function instrumentPickerLoading() {
-  // hijack the performance.measure API so we can add our own measures just for the benchmark
-  const { measure } = performance
 
-  performance.measure = function overriddenMeasure(name, start) {
-    if (name === 'initialLoad' && start === 'initialLoad') {
-      // test to make sure the picker loaded with no errors
-      const hasErrors = document.querySelector('emoji-picker') && document.querySelector('emoji-picker')
-        .shadowRoot.querySelector('.message:not(.gone)')
-      if (hasErrors) {
-        console.error('picker is showing an error message')
-      } else {
-        measure.call(performance, 'benchmark-total', 'initialLoad')
+  const observer = new PerformanceObserver(entries => {
+    for (const { name, startTime, duration } of entries.getEntries()) {
+      if (name === 'initialLoad') {
+        // test to make sure the picker loaded with no errors
+        const hasErrors = document.querySelector('emoji-picker') && document.querySelector('emoji-picker')
+          .shadowRoot.querySelector('.message:not(.gone)')
+        if (hasErrors) {
+          console.error('picker is showing an error message')
+        } else {
+          performance.measure('benchmark-total', { start: startTime, duration })
+        }
       }
     }
-    return measure.apply(performance, arguments)
-  }
+  })
+
+  observer.observe({ entryTypes: ['measure'] })
 }
 
 function useFakeEtag() {
