@@ -184,7 +184,8 @@ function parse (tokens) {
       expressionIndex: i
     })
 
-    htmlString += (!withinTag && !withinAttribute) ? `<!--placeholder-${bindings.length - 1}-->` : ''
+    // add a placeholder comment that we can find later
+    htmlString += (!withinTag && !withinAttribute) ? `<!--${bindings.length - 1}-->` : ''
   }
 
   const template = parseTemplate(htmlString)
@@ -220,14 +221,13 @@ function traverseAndSetupBindings (dom, boundExpressions) {
 
         if (!binding.withinAttribute) {
           if (!foundComments) {
-            // find all comments once
+            // find all placeholder comments once
             foundComments = new Map()
             for (const childNode of element.childNodes) {
               // Note that minify-html-literals has already removed all non-framework comments
               // But just to be safe, only look for comments that contain pure integers
-              let match
-              if (childNode.nodeType === Node.COMMENT_NODE && (match = /^placeholder-(\d+)$/.exec(childNode.textContent))) {
-                foundComments.set(parseInt(match[1], 10), childNode)
+              if (childNode.nodeType === Node.COMMENT_NODE && /^\d+$/.test(childNode.textContent)) {
+                foundComments.set(parseInt(childNode.textContent, 10), childNode)
               }
             }
           }
