@@ -1,10 +1,10 @@
 import Picker from './picker.js'
-import { waitForElementWithId, postRaf } from './utils.js'
+import { waitForElementWithId, postRaf, waitForPickerInitialLoad } from './utils.js'
 
 const picker = new Picker()
 document.body.appendChild(picker)
 
-await waitForElementWithId(picker.shadowRoot, 'emo-😀')
+await waitForPickerInitialLoad()
 await postRaf()
 const searchBox = picker.shadowRoot.querySelector('[role="combobox"]')
 
