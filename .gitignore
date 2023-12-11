@@ -133,4 +133,5 @@ dist
 /test/benchmark/data.json
 /test/benchmark/*.js
 !/test/benchmark/*.benchmark.js
+/test/benchmark/*.tachometer.json
 /i18n
