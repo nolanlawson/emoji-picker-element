@@ -1,11 +1,11 @@
 import Picker from './picker.js'
-import { raf, waitForElementWithId, postRaf } from './utils.js'
+import { waitForElementWithId, postRaf } from './utils.js'
 
 const picker = new Picker()
 document.body.appendChild(picker)
 
 await waitForElementWithId(picker.shadowRoot, 'emo-😀')
-await raf()
+await postRaf()
 const peopleTabButton = picker.shadowRoot.querySelector('[role="tab"][aria-label="People and body"]')
 
 performance.mark('start-change-tab')
