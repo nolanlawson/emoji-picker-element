@@ -5,7 +5,7 @@
   "autoSampleConditions": ["10%"],
   "benchmarks": [
     {
-      "url": "./second-load.html",
+      "url": "./index.html?benchmark=second-load",
       "browser": {
         "name": "chrome",
         "headless": true

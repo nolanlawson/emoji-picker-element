@@ -5,7 +5,7 @@
   "autoSampleConditions": ["10%"],
   "benchmarks": [
     {
-      "url": "./database-interactions.html",
+      "url": "./index.html?benchmark=database-interactions",
       "browser": {
         "name": "chrome",
         "headless": true
