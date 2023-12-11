@@ -87,7 +87,7 @@ function patch (expressions, bindings) {
       let newNode
       if (Array.isArray(expression)) { // array of html tag templates
         patchChildren(expression, binding)
-      } else if (expression instanceof Node) { // html tag template returning a DOM node
+      } else if (expression instanceof Element) { // html tag template returning a DOM element
         newNode = expression
         if (newNode !== targetNode) {
           targetNode.replaceWith(newNode)
