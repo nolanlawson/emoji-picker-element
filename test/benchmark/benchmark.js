@@ -1,20 +1,9 @@
-function instrumentPickerLoading () {
-  const observer = new PerformanceObserver(entries => {
-    for (const { name, startTime, duration } of entries.getEntries()) {
-      if (name === 'initialLoad') {
-        // test to make sure the picker loaded with no errors
-        const hasErrors = document.querySelector('emoji-picker') && document.querySelector('emoji-picker')
-          .shadowRoot.querySelector('.message:not(.gone)')
-        if (hasErrors) {
-          console.error('picker is showing an error message')
-        } else {
-          performance.measure('benchmark-total', { start: startTime, duration })
-        }
-      }
-    }
-  })
+import { waitForPickerInitialLoad } from './utils.js'
 
-  observer.observe({ entryTypes: ['measure'] })
+function instrumentPickerLoading () {
+  waitForPickerInitialLoad().then(entry => {
+    performance.measure('benchmark-total', { start: entry.startTime, duration: entry.duration })
+  })
 }
 
 function useFakeEtag () {
