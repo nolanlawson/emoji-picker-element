@@ -1,5 +1,4 @@
 function instrumentPickerLoading() {
-
   const observer = new PerformanceObserver(entries => {
     for (const { name, startTime, duration } of entries.getEntries()) {
       if (name === 'initialLoad') {
