@@ -244,17 +244,13 @@ export function render (container, state, helpers, events, actions, refs, abortS
       refs[ref] = element
     })
 
-    // set up actions and destroy/abort logic
-    const destroyCallbacks = []
+    // set up actions
     forElementWithAttribute('data-action', (element, action) => {
-      const { destroy } = actions[action](element)
-      destroyCallbacks.push(destroy)
+      actions[action](element)
     })
 
+    // destroy/abort logic
     abortSignal.addEventListener('abort', () => {
-      for (const destroyCallback of destroyCallbacks) {
-        destroyCallback()
-      }
       container.removeChild(rootDom)
     })
   }

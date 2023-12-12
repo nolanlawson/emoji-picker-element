@@ -14,7 +14,7 @@ import {
 } from '../../constants'
 import { uniqBy } from '../../../shared/uniqBy'
 import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
-import * as widthCalculator from '../../utils/widthCalculator'
+import { calculateWidth } from '../../utils/widthCalculator'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
@@ -32,7 +32,8 @@ const { assign } = Object
 export function createRoot (target, props) {
   const refs = {}
   const abortController = new AbortController()
-  const { state, createEffect } = createState(abortController.signal)
+  const abortSignal = abortController.signal
+  const { state, createEffect } = createState(abortSignal)
 
   // initial state
   assign(state, {
@@ -182,7 +183,7 @@ export function createRoot (target, props) {
   }
 
   createEffect(() => {
-    render(target, state, helpers, events, actions, refs, abortController.signal)
+    render(target, state, helpers, events, actions, refs, abortSignal)
   })
 
   //
@@ -355,7 +356,7 @@ export function createRoot (target, props) {
   //
 
   function calculateEmojiGridStyle (node) {
-    return widthCalculator.calculateWidth(node, width => {
+    calculateWidth(node, abortSignal, width => {
       /* istanbul ignore next */
       if (process.env.NODE_ENV !== 'test') { // jsdom throws errors for this kind of fancy stuff
         // read all the style/layout calculations we need to make
@@ -734,7 +735,7 @@ export function createRoot (target, props) {
     },
     $destroy () {
       abortController.abort()
-      console.log('destroyed!')
+      console.log('Component destroyed')
     }
   }
 }
