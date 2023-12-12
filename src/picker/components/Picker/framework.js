@@ -196,7 +196,7 @@ function parse (tokens) {
   }
 }
 
-function findBindingIdsToPlaceholderComments (element) {
+function findPlaceholderComments (element) {
   const result = new Map()
   for (const childNode of element.childNodes) {
     // Note that minify-html-literals has already removed all non-framework comments
@@ -218,7 +218,7 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
   do {
     const bindings = elementsToBindings.get(++elementIndex)
     if (bindings) {
-      let bindingIdsToPlaceholderComments
+      let placeholderComments
       for (let i = 0; i < bindings.length; i++) {
         const binding = bindings[i]
 
@@ -226,10 +226,10 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
         if (binding.attributeName) { // attribute binding
           targetNode = element
         } else { // not an attribute binding, so has a placeholder comment
-          if (!bindingIdsToPlaceholderComments) { // find all placeholder comments once
-            bindingIdsToPlaceholderComments = findBindingIdsToPlaceholderComments(element)
+          if (!placeholderComments) { // find all placeholder comments once
+            placeholderComments = findPlaceholderComments(element)
           }
-          targetNode = bindingIdsToPlaceholderComments.get(i)
+          targetNode = placeholderComments.get(i)
           if (process.env.NODE_ENV !== 'production' && !targetNode) {
             throw new Error('targetNode should not be undefined')
           }
