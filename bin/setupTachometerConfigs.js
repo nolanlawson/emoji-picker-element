@@ -26,10 +26,10 @@ for (const benchmark of benchmarks) {
         ],
         expand: [
           {
-            name: 'this-change'
+            name: `${benchmarkShortName}-this-change`
           },
           {
-            name: 'tip-of-tree',
+            name: `${benchmarkShortName}-tip-of-tree`,
             packageVersions: {
               label: 'tip-of-tree',
               dependencies: {
