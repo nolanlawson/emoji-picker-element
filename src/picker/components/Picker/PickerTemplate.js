@@ -1,6 +1,6 @@
 import { createFramework } from './framework.js'
 
-export function render (state, helpers, events, container, firstRender) {
+export function render (container, state, helpers, events, actions, refs, abortSignal) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
   const { html, map } = createFramework(state)
 
@@ -158,7 +158,7 @@ export function render (state, helpers, events, container, firstRender) {
              tabIndex="0"
              data-on-click="onEmojiClick"
         >
-          <div data-ref="emojiGrid">
+          <div data-action="calculateEmojiGridStyle">
             ${
               map(state.currentEmojisWithCategories, (emojiWithCategory, i) => {
                 return html`
@@ -220,35 +220,42 @@ export function render (state, helpers, events, container, firstRender) {
 
   const rootDom = section()
 
-  let refs
-
-  if (firstRender) { // not a re-render
+  if (rootDom.parentNode !== container) { // not a re-render
     container.appendChild(rootDom)
 
-    // we only bind events/refs once - there is no need to find them again given this component structure
+    // we only bind events/refs/actions once - there is no need to find them again given this component structure
 
-    // bind events
-    for (const eventName of ['click', 'focusout', 'input', 'keydown', 'keyup']) {
-      for (const element of rootDom.querySelectorAll(`[data-on-${eventName}]`)) {
-        const listenerName = element.getAttribute(`data-on-${eventName}`)
-        element.addEventListener(eventName, events[listenerName])
+    // helper for traversing the dom, finding elements by an attribute, and getting the attribute value
+    const forElementWithAttribute = (attributeName, callback) => {
+      for (const element of container.querySelectorAll(`[${attributeName}]`)) {
+        callback(element, element.getAttribute(attributeName))
       }
     }
 
-    // find refs
-    refs = {}
-    for (const element of container.querySelectorAll('[data-ref]')) {
-      const { ref } = element.dataset
-      refs[ref] = element
+    // bind events
+    for (const eventName of ['click', 'focusout', 'input', 'keydown', 'keyup']) {
+      forElementWithAttribute(`data-on-${eventName}`, (element, listenerName) => {
+        element.addEventListener(eventName, events[listenerName])
+      })
     }
-  }
 
-  function unmount () {
-    container.removeChild(rootDom)
-  }
+    // find refs
+    forElementWithAttribute('data-ref', (element, ref) => {
+      refs[ref] = element
+    })
 
-  return {
-    refs,
-    unmount
+    // set up actions and destroy/abort logic
+    const destroyCallbacks = []
+    forElementWithAttribute('data-action', (element, action) => {
+      const { destroy } = actions[action](element)
+      destroyCallbacks.push(destroy)
+    })
+
+    abortSignal.addEventListener('abort', () => {
+      for (const destroyCallback of destroyCallbacks) {
+        destroyCallback()
+      }
+      container.removeChild(rootDom)
+    })
   }
 }

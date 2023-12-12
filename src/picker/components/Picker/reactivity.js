@@ -1,4 +1,4 @@
-export function createState () {
+export function createState (abortSignal) {
   let destroyed = false
   let currentObserver
 
@@ -77,15 +77,22 @@ export function createState () {
     return runnable()
   }
 
+  // for debugging
   if (process.env.NODE_ENV !== 'production') {
     window.state = state
   }
 
+  // destroy logic
+  abortSignal.addEventListener('abort', () => {
+    destroyed = true
+
+    if (process.env.NODE_ENV !== 'production') {
+      delete window.state
+    }
+  })
+
   return {
     state,
-    createEffect,
-    destroyState () {
-      destroyed = true
-    }
+    createEffect
   }
 }

@@ -30,8 +30,9 @@ const EMPTY_ARRAY = []
 const { assign } = Object
 
 export function createRoot (target, props) {
-  const { state, createEffect, destroyState } = createState()
-  const destroyCallbacks = []
+  const refs = {}
+  const abortController = new AbortController()
+  const { state, createEffect } = createState(abortController.signal)
 
   // initial state
   assign(state, {
@@ -176,22 +177,12 @@ export function createRoot (target, props) {
     onSkinToneOptionsKeyup,
     onSearchInput
   }
+  const actions = {
+    calculateEmojiGridStyle
+  }
 
-  let unmount
-  let refs
-  let firstRender = true
   createEffect(() => {
-    const rendered = render(state, helpers, events, target, firstRender)
-    if (firstRender) {
-      firstRender = false
-
-      unmount = rendered.unmount
-      refs = rendered.refs
-
-      // on first render, set up the ResizeObserver
-      const calculator = calculateEmojiGridStyle(refs.emojiGrid)
-      destroyCallbacks.push(calculator.destroy)
-    }
+    render(target, state, helpers, events, actions, refs, abortController.signal)
   })
 
   //
@@ -742,14 +733,7 @@ export function createRoot (target, props) {
       assign(state, newState)
     },
     $destroy () {
-      destroyState()
-      unmount()
-      if (process.env.NODE_ENV !== 'production') {
-        delete window.state
-      }
-      for (const destroyCallback of destroyCallbacks) {
-        destroyCallback()
-      }
+      abortController.abort()
       console.log('destroyed!')
     }
   }
