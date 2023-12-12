@@ -196,16 +196,19 @@ function parse (tokens) {
   }
 }
 
-function findPlaceholderComments (element) {
-  const result = new Map()
-  for (const childNode of element.childNodes) {
+function findPlaceholderComment (element, bindingId) {
+  // If we had a lot of placeholder comments to find, it would make more sense to build up a map once
+  // rather than search the DOM every time. But it turns out that we always only have one child,
+  // and it's the comment node, so searching every time is actually faster.
+  let childNode = element.firstChild
+  while (childNode) {
     // Note that minify-html-literals has already removed all non-framework comments
-    // But just to be safe, only look for comments that contain pure integers
-    if (childNode.nodeType === Node.COMMENT_NODE && /^\d+$/.test(childNode.textContent)) {
-      result.set(parseInt(childNode.textContent, 10), childNode)
+    // So we just need to look for comments that have exactly the bindingId as its text content
+    if (childNode.nodeType === Node.COMMENT_NODE && childNode.textContent === toString(bindingId)) {
+      return childNode
     }
+    childNode = childNode.nextSibling
   }
-  return result
 }
 
 function traverseAndSetupBindings (dom, elementsToBindings) {
@@ -218,19 +221,12 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
   do {
     const bindings = elementsToBindings.get(++elementIndex)
     if (bindings) {
-      let placeholderComments
       for (let i = 0; i < bindings.length; i++) {
         const binding = bindings[i]
 
-        let targetNode
-        if (binding.attributeName) { // attribute binding
-          targetNode = element
-        } else { // not an attribute binding, so has a placeholder comment
-          if (!placeholderComments) { // find all placeholder comments once
-            placeholderComments = findPlaceholderComments(element)
-          }
-          targetNode = placeholderComments.get(i)
-        }
+        const targetNode = binding.attributeName
+          ? element // attribute binding, just use the element itself
+          : findPlaceholderComment(element, i) // not an attribute binding, so has a placeholder comment
 
         if (process.env.NODE_ENV !== 'production' && !targetNode) {
           throw new Error('targetNode should not be undefined')
