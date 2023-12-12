@@ -40,53 +40,55 @@ function doChildrenNeedRerender (parentNode, newChildren) {
   return oldChildrenCount !== newChildren.length
 }
 
-function patchChildren (newChildren, binding) {
-  const { targetNode } = binding
-  let { iteratorParentNode } = binding
+function patchChildren (newChildren, instanceBinding) {
+  const { targetNode } = instanceBinding
+  let { targetParentNode } = instanceBinding
 
   let needsRerender = false
 
-  if (iteratorParentNode) { // already rendered once
-    needsRerender = doChildrenNeedRerender(iteratorParentNode, newChildren)
+  if (targetParentNode) { // already rendered once
+    needsRerender = doChildrenNeedRerender(targetParentNode, newChildren)
   } else { // first render of list
     needsRerender = true
-    binding.targetNode = undefined
-    binding.iteratorParentNode = iteratorParentNode = targetNode.parentNode
+    instanceBinding.targetNode = undefined // placeholder comment not needed anymore, free memory
+    instanceBinding.targetParentNode = targetParentNode = targetNode.parentNode
   }
   // console.log('needsRerender?', needsRerender, 'newChildren', newChildren)
   // avoid re-rendering list if the dom nodes are exactly the same before and after
   if (needsRerender) {
-    replaceChildren(iteratorParentNode, newChildren)
+    replaceChildren(targetParentNode, newChildren)
   }
 }
 
-function patch (expressions, bindings) {
-  for (const binding of bindings) {
+function patch (expressions, instanceBindings) {
+  for (const instanceBinding of instanceBindings) {
     const {
-      expressionIndex,
-      withinAttribute,
       targetNode,
-      element,
-      attributeName,
-      attributeValuePre,
-      attributeValuePost,
-      lastExpression
-    } = binding
+      currentExpression,
+      binding: {
+        expressionIndex,
+        withinAttribute,
+        attributeName,
+        attributeValuePre,
+        attributeValuePost
+      }
+    } = instanceBinding
+
     const expression = expressions[expressionIndex]
 
-    if (lastExpression === expression) {
+    if (currentExpression === expression) {
       // no need to update, same as before
       continue
     }
 
-    binding.lastExpression = expression
+    instanceBinding.currentExpression = expression
 
     if (withinAttribute) {
-      element.setAttribute(attributeName, attributeValuePre + toString(expression) + attributeValuePost)
-    } else { // text node / dom node replacement
+      targetNode.setAttribute(attributeName, attributeValuePre + toString(expression) + attributeValuePost)
+    } else { // text node / child element / children replacement
       let newNode
       if (Array.isArray(expression)) { // array of html tag templates
-        patchChildren(expression, binding)
+        patchChildren(expression, instanceBinding)
       } else if (expression instanceof Element) { // html tag template returning a DOM element
         newNode = expression
         if (newNode !== targetNode) {
@@ -101,7 +103,7 @@ function patch (expressions, bindings) {
         }
       }
       if (newNode) {
-        binding.targetNode = newNode
+        instanceBinding.targetNode = newNode
       }
     }
   }
@@ -114,7 +116,7 @@ function parse (tokens) {
   let withinAttribute = false
   let elementIndexCounter = -1 // depth-first traversal order
 
-  const boundExpressions = new Map()
+  const elementsToBindings = new Map()
   const elementIndexes = []
 
   for (let i = 0, len = tokens.length; i < len; i++) {
@@ -154,10 +156,10 @@ function parse (tokens) {
     }
 
     const elementIndex = elementIndexes[elementIndexes.length - 1]
-    let bindings = boundExpressions.get(elementIndex)
+    let bindings = elementsToBindings.get(elementIndex)
     if (!bindings) {
       bindings = []
-      boundExpressions.set(elementIndex, bindings)
+      elementsToBindings.set(elementIndex, bindings)
     }
 
     let attributeName
@@ -169,14 +171,21 @@ function parse (tokens) {
       attributeValuePost = /^([^">]*)/.exec(tokens[i + 1])[1]
     }
 
-    bindings.push({
+    const binding = {
       withinTag,
       withinAttribute,
       attributeName,
       attributeValuePre,
       attributeValuePost,
       expressionIndex: i
-    })
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      // remind myself that this object is supposed to be immutable
+      Object.freeze(binding)
+    }
+
+    bindings.push(binding)
 
     // add a placeholder comment that we can find later
     htmlString += (!withinTag && !withinAttribute) ? `<!--${bindings.length - 1}-->` : ''
@@ -186,72 +195,84 @@ function parse (tokens) {
 
   return {
     template,
-    boundExpressions
+    elementsToBindings
   }
 }
 
-function cloneBoundExpressions (boundExpressions) {
-  const map = new Map()
-  for (const [id, bindings] of boundExpressions.entries()) {
-    map.set(id, bindings.map(binding => ({ ...binding })))
+function findBindingIdsToPlaceholderComments (element) {
+  const result = new Map()
+  for (const childNode of element.childNodes) {
+    // Note that minify-html-literals has already removed all non-framework comments
+    // But just to be safe, only look for comments that contain pure integers
+    if (childNode.nodeType === Node.COMMENT_NODE && /^\d+$/.test(childNode.textContent)) {
+      result.set(parseInt(childNode.textContent, 10), childNode)
+    }
   }
-  return map
+  return result
 }
 
-function traverseAndSetupBindings (dom, boundExpressions) {
+function traverseAndSetupBindings (dom, elementsToBindings) {
+  const instanceBindings = []
   // traverse dom
   const treeWalker = document.createTreeWalker(dom, NodeFilter.SHOW_ELEMENT)
 
   let element = dom
   let elementIndex = -1
   do {
-    const bindings = boundExpressions.get(++elementIndex)
+    const bindings = elementsToBindings.get(++elementIndex)
     if (bindings) {
-      let foundComments
+      let bindingIdsToPlaceholderComments
       for (let i = 0; i < bindings.length; i++) {
         const binding = bindings[i]
 
-        binding.element = element
-
-        if (!binding.withinAttribute) {
-          if (!foundComments) {
-            // find all placeholder comments once
-            foundComments = new Map()
-            for (const childNode of element.childNodes) {
-              // Note that minify-html-literals has already removed all non-framework comments
-              // But just to be safe, only look for comments that contain pure integers
-              if (childNode.nodeType === Node.COMMENT_NODE && /^\d+$/.test(childNode.textContent)) {
-                foundComments.set(parseInt(childNode.textContent, 10), childNode)
-              }
-            }
+        let targetNode
+        if (binding.withinAttribute) {
+          targetNode = element
+        } else { // not within an attribute, so has a placeholder comment
+          if (!bindingIdsToPlaceholderComments) { // find all placeholder comments once
+            bindingIdsToPlaceholderComments = findBindingIdsToPlaceholderComments(element)
           }
-          binding.targetNode = foundComments.get(i)
-          if (process.env.NODE_ENV !== 'production' && !binding.targetNode) {
-            throw new Error('should not be undefined')
+          targetNode = bindingIdsToPlaceholderComments.get(i)
+          if (process.env.NODE_ENV !== 'production' && !targetNode) {
+            throw new Error('targetNode should not be undefined')
           }
         }
+
+        const instanceBinding = {
+          binding,
+          targetNode,
+          targetParentNode: undefined,
+          currentExpression: undefined
+        }
+
+        if (process.env.NODE_ENV !== 'production') {
+          // remind myself that this object is supposed to be monomorphic (for better JS engine perf)
+          Object.seal(instanceBinding)
+        }
+
+        instanceBindings.push(instanceBinding)
       }
     }
   } while ((element = treeWalker.nextNode()))
+
+  return instanceBindings
 }
 
-function cloneDomAndBind (template, boundExpressions) {
+function cloneDomAndBind (template, elementsToBindings) {
   const dom = template.cloneNode(true).content.firstElementChild
-  const clonedBoundExpressions = cloneBoundExpressions(boundExpressions)
-  traverseAndSetupBindings(dom, clonedBoundExpressions)
-  const bindings = [...clonedBoundExpressions.values()].flat()
-  return { dom, bindings }
+  const instanceBindings = traverseAndSetupBindings(dom, elementsToBindings)
+  return { dom, instanceBindings }
 }
 
 function parseHtml (tokens) {
   // All templates and bound expressions are unique per tokens array
-  const { template, boundExpressions } = getFromMap(parseCache, tokens, () => parse(tokens))
+  const { template, elementsToBindings } = getFromMap(parseCache, tokens, () => parse(tokens))
 
   // When we parseHtml, we always return a fresh DOM instance ready to be updated
-  const { dom, bindings } = cloneDomAndBind(template, boundExpressions)
+  const { dom, instanceBindings } = cloneDomAndBind(template, elementsToBindings)
 
   return function update (expressions) {
-    patch(expressions, bindings)
+    patch(expressions, instanceBindings)
     return dom
   }
 }
