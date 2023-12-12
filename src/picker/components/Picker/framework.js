@@ -67,7 +67,6 @@ function patch (expressions, instanceBindings) {
       currentExpression,
       binding: {
         expressionIndex,
-        withinAttribute,
         attributeName,
         attributeValuePre,
         attributeValuePost
@@ -83,7 +82,7 @@ function patch (expressions, instanceBindings) {
 
     instanceBinding.currentExpression = expression
 
-    if (withinAttribute) {
+    if (attributeName) { // attribute replacement
       targetNode.setAttribute(attributeName, attributeValuePre + toString(expression) + attributeValuePost)
     } else { // text node / child element / children replacement
       let newNode
@@ -172,8 +171,6 @@ function parse (tokens) {
     }
 
     const binding = {
-      withinTag,
-      withinAttribute,
       attributeName,
       attributeValuePre,
       attributeValuePost,
@@ -226,9 +223,9 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
         const binding = bindings[i]
 
         let targetNode
-        if (binding.withinAttribute) {
+        if (binding.attributeName) { // attribute binding
           targetNode = element
-        } else { // not within an attribute, so has a placeholder comment
+        } else { // not an attribute binding, so has a placeholder comment
           if (!bindingIdsToPlaceholderComments) { // find all placeholder comments once
             bindingIdsToPlaceholderComments = findBindingIdsToPlaceholderComments(element)
           }
