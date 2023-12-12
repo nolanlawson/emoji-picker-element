@@ -230,9 +230,10 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
             placeholderComments = findPlaceholderComments(element)
           }
           targetNode = placeholderComments.get(i)
-          if (process.env.NODE_ENV !== 'production' && !targetNode) {
-            throw new Error('targetNode should not be undefined')
-          }
+        }
+
+        if (process.env.NODE_ENV !== 'production' && !targetNode) {
+          throw new Error('targetNode should not be undefined')
         }
 
         const instanceBinding = {
