@@ -674,6 +674,11 @@ export function createRoot (target, props) {
   })
 
   function onSkinToneOptionsKeydown (event) {
+    // this should never happen, but makes me nervous not to have it
+    /* istanbul ignore if */
+    if (!state.skinTonePickerExpanded) {
+      return
+    }
     const changeActiveSkinTone = async nextSkinTone => {
       halt(event)
       state.activeSkinTone = nextSkinTone
@@ -701,6 +706,11 @@ export function createRoot (target, props) {
   }
 
   function onSkinToneOptionsKeyup (event) {
+    // this should never happen, but makes me nervous not to have it
+    /* istanbul ignore if */
+    if (!state.skinTonePickerExpanded) {
+      return
+    }
     switch (event.key) {
       case ' ':
         // enter on keydown, space on keyup. this is just how browsers work for buttons
