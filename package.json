@@ -118,9 +118,9 @@
     "stylelint": "^15.11.0",
     "stylelint-config-recommended-scss": "^13.1.0",
     "stylelint-scss": "^5.3.1",
-    "svelte": "^5.0.0-next.22",
+    "svelte": "^5.0.0-next.25",
     "svelte-jester": "^3.0.0",
-    "svelte-preprocess": "^5.1.1",
+    "svelte-preprocess": "^5.1.2",
     "svgo": "^3.0.5",
     "tachometer": "^0.7.0",
     "terser": "^5.26.0"

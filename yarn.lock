@@ -7639,10 +7639,10 @@ svelte-jester@^3.0.0:
   resolved "https://registry.yarnpkg.com/svelte-jester/-/svelte-jester-3.0.0.tgz#7872beb559bce3c66f134d6f016f2626cf8f1d1c"
   integrity sha512-V279cL906++hn00hkL1xAr/y5OjjxPYWic1g0yTJFmqdbdWKthdcuP3XBvmmwP9AzFBT51DlPgXz56HItle1Ug==
 
-svelte-preprocess@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-5.1.1.tgz#53d7107c2e8b307afd4418e06239177c4de12025"
-  integrity sha512-p/Dp4hmrBW5mrCCq29lEMFpIJT2FZsRlouxEc5qpbOmXRbaFs7clLs8oKPwD3xCFyZfv1bIhvOzpQkhMEVQdMw==
+svelte-preprocess@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-5.1.2.tgz#f5edb71bb0cb662cd8342bd5c092834a99ab85f7"
+  integrity sha512-XF0aliMAcYnP4hLETvB6HRAMnaL09ASYT1Z2I1Gwu0nz6xbdg/dSgAEthtFZJA4AKrNhFDFdmUDO+H9d/6xg5g==
   dependencies:
     "@types/pug" "^2.0.6"
     detect-indent "^6.1.0"
@@ -7650,10 +7650,10 @@ svelte-preprocess@^5.1.1:
     sorcery "^0.11.0"
     strip-indent "^3.0.0"
 
-svelte@^5.0.0-next.22:
-  version "5.0.0-next.22"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.0.0-next.22.tgz#a4c6a872128a5e6f0e244f906b1d953573d01ebb"
-  integrity sha512-N2ss/7v2mP9Ru95Caj2+9bAL8I7DUdqCpymBG9MVAVb8nJPQIsQsS87Wd5VCeyyzni1gDzcK5ogoLJ5nkwDJfg==
+svelte@^5.0.0-next.25:
+  version "5.0.0-next.25"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.0.0-next.25.tgz#be7a8b9bcd3c6618a1562181c067aa35edf775f8"
+  integrity sha512-D/1XO/bcoy2yw3Okc5ebScX4gGTy4b666lN4GmGifNlee8/vMcQ7D2WdlLqV2CeBSzvTuPauDi+w/NX3JoUKsA==
   dependencies:
     "@ampproject/remapping" "^2.2.1"
     "@jridgewell/sourcemap-codec" "^1.4.15"
