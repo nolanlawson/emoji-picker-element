@@ -30,7 +30,9 @@ const baseConfig = {
       name: 'minify-html-in-tag-template-literals',
       transform (content, id) {
         if (id.includes('PickerTemplate.js')) {
-          return minifyHTMLLiterals(content)
+          return minifyHTMLLiterals(content, {
+            fileName: id
+          })
         }
       }
     },

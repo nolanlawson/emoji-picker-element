@@ -1,7 +1,9 @@
 import { minifyHTMLLiterals } from 'minify-html-literals'
 
 export default {
-  processAsync (source) {
-    return minifyHTMLLiterals(source)
+  processAsync (source, fileName) {
+    return minifyHTMLLiterals(source, {
+      fileName
+    })
   }
 }
