@@ -91,9 +91,13 @@ function patch (expressions, instanceBindings) {
         patchChildren(expression, instanceBinding)
       } else if (expression instanceof Element) { // html tag template returning a DOM element
         newNode = expression
-        if (newNode !== targetNode) {
-          targetNode.replaceWith(newNode)
+        /* istanbul ignore if */
+        if (process.env.NODE_ENV !== 'production' && newNode === targetNode) {
+          // it seems impossible for the framework to get into this state, may as well assert on it
+          // worst case scenario is we lose focus if we call replaceWith on the same node
+          throw new Error('the newNode and targetNode are the same, this should never happen')
         }
+        targetNode.replaceWith(newNode)
       } else { // primitive - string, number, etc
         if (targetNode.nodeType === Node.TEXT_NODE) { // already transformed into a text node
           targetNode.nodeValue = toString(expression)
@@ -178,6 +182,7 @@ function parse (tokens) {
       expressionIndex: i
     }
 
+    /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
       // remind myself that this object is supposed to be immutable
       Object.freeze(binding)
@@ -240,6 +245,7 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
           currentExpression: undefined
         }
 
+        /* istanbul ignore else */
         if (process.env.NODE_ENV !== 'production') {
           // remind myself that this object is supposed to be monomorphic (for better JS engine perf)
           Object.seal(instanceBinding)
