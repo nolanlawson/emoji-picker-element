@@ -187,9 +187,10 @@ function parse (tokens) {
     let attributeValuePre
     let attributeValuePost
     if (withinAttribute) {
-      attributeName = /(\S+)="?(?:[^"]+)?$/.exec(token)[1]
-      attributeValuePre = /="?([^"=]*)$/.exec(token)[1]
-      attributeValuePost = /^([^">]*)/.exec(tokens[i + 1])[1]
+      const match = /(\S+)="?([^"=]*)$/.exec(token)
+      attributeName = match[1]
+      attributeValuePre = match[2]
+      attributeValuePost = /^[^">]*/.exec(tokens[i + 1])[0]
     }
 
     const binding = {
