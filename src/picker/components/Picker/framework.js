@@ -4,6 +4,13 @@ const parseCache = new WeakMap()
 const domInstancesCache = new WeakMap()
 const unkeyedSymbol = Symbol('un-keyed')
 
+// for debugging
+/* istanbul ignore else */
+if (process.env.NODE_ENV !== 'production') {
+  window.parseCache = parseCache
+  window.domInstancesCache = domInstancesCache
+}
+
 // Not supported in Safari <=13
 const hasReplaceChildren = 'replaceChildren' in Element.prototype
 function replaceChildren (parentNode, newChildren) {
