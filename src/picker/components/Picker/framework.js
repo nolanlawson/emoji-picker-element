@@ -278,18 +278,13 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
   return instanceBindings
 }
 
-function cloneDomAndBind (template, elementsToBindings) {
-  const dom = template.cloneNode(true).content.firstElementChild
-  const instanceBindings = traverseAndSetupBindings(dom, elementsToBindings)
-  return { dom, instanceBindings }
-}
-
 function parseHtml (tokens) {
   // All templates and bound expressions are unique per tokens array
   const { template, elementsToBindings } = getFromMap(parseCache, tokens, () => parse(tokens))
 
   // When we parseHtml, we always return a fresh DOM instance ready to be updated
-  const { dom, instanceBindings } = cloneDomAndBind(template, elementsToBindings)
+  const dom = template.cloneNode(true).content.firstElementChild
+  const instanceBindings = traverseAndSetupBindings(dom, elementsToBindings)
 
   return function update (expressions) {
     patch(expressions, instanceBindings)
