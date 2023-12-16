@@ -286,7 +286,7 @@ function parseHtml (tokens) {
   const dom = template.cloneNode(true).content.firstElementChild
   const instanceBindings = traverseAndSetupBindings(dom, elementsToBindings)
 
-  return function update (expressions) {
+  return function updateDomInstance (expressions) {
     patch(expressions, instanceBindings)
     return dom
   }
@@ -300,9 +300,9 @@ export function createFramework (state) {
     // Each unique lexical usage of map() is considered unique due to the html`` tagged template call it makes,
     // which has lexically unique tokens. The unkeyed symbol is just used for html`` usage outside of a map().
     const domInstancesForTokens = getFromMap(domInstances, tokens, () => new Map())
-    const domInstance = getFromMap(domInstancesForTokens, domInstanceCacheKey, () => parseHtml(tokens))
+    const updateDomInstance = getFromMap(domInstancesForTokens, domInstanceCacheKey, () => parseHtml(tokens))
 
-    return domInstance(expressions) // update with expressions
+    return updateDomInstance(expressions) // update with expressions
   }
 
   function map (array, callback, keyFunction) {
