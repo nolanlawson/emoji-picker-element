@@ -33,6 +33,7 @@ function doChildrenNeedRerender (parentNode, newChildren) {
     oldChild = oldChild.nextSibling
     oldChildrenCount++
   }
+  /* istanbul ignore if */
   if (process.env.NODE_ENV !== 'production' && oldChildrenCount !== parentNode.children.length) {
     throw new Error('parentNode.children.length is different from oldChildrenCount, it should not be')
   }

@@ -392,7 +392,7 @@ export function createRoot (target, props) {
           updateCurrentEmojis(newEmojis)
           updateSearchMode(true)
         }
-      } else if (currentGroup) {
+      } else {
         const { id: currentGroupId } = currentGroup
         // avoid race condition where currentGroupId is -1 and customEmoji is undefined/empty
         if (currentGroupId !== -1 || (customEmoji && customEmoji.length)) {
@@ -544,11 +544,12 @@ export function createRoot (target, props) {
       case 'ArrowUp':
         return goToNextOrPrevious(true)
       case 'Enter':
-        if (state.activeSearchItem !== -1) {
+        if (state.activeSearchItem === -1) {
+          // focus the first option in the list since the list must be non-empty at this point (it's verified above)
+          state.activeSearchItem = 0
+        } else { // there is already an active search item
           halt(event)
           return clickEmoji(state.currentEmojis[state.activeSearchItem].id)
-        } else if (state.currentEmojis.length) {
-          state.activeSearchItem = 0
         }
     }
   }
@@ -652,6 +653,7 @@ export function createRoot (target, props) {
   function onClickSkinToneButton (event) {
     state.skinTonePickerExpanded = !state.skinTonePickerExpanded
     state.activeSkinTone = state.currentSkinTone
+    // this should always be true, since the button is obscured by the listbox, so this `if` is just to be sure
     if (state.skinTonePickerExpanded) {
       halt(event)
       requestAnimationFrame(() => focus('skintone-list'))
@@ -672,10 +674,6 @@ export function createRoot (target, props) {
   })
 
   function onSkinToneOptionsKeydown (event) {
-    if (!state.skinTonePickerExpanded) {
-      return
-    }
-
     const changeActiveSkinTone = async nextSkinTone => {
       halt(event)
       state.activeSkinTone = nextSkinTone
@@ -703,9 +701,6 @@ export function createRoot (target, props) {
   }
 
   function onSkinToneOptionsKeyup (event) {
-    if (!state.skinTonePickerExpanded) {
-      return
-    }
     switch (event.key) {
       case ' ':
         // enter on keydown, space on keyup. this is just how browsers work for buttons

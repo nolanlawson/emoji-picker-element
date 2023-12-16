@@ -178,6 +178,16 @@ describe('Picker tests', () => {
     await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
   })
 
+  test('Click skintone button while picker is open', async () => {
+    // this should not be possible since the picker covers the button when it's open,
+    // but this is for test coverage, and just to be safe
+    await openSkintoneListbox(container)
+    await fireEvent.click(getByRole('button', { name: /Choose a skin tone/ }))
+
+    // listbox closes
+    await waitFor(() => expect(queryAllByRole('listbox', { name: 'Skin tones' })).toHaveLength(0))
+  })
+
   test('nav keyboard test', async () => {
     getByRole('tab', { name: 'Smileys and emoticons', selected: true }).focus()
 
@@ -337,6 +347,19 @@ describe('Picker tests', () => {
       expect(getByRole('combobox').getAttribute('aria-activedescendant'))
         .toBe(getByRole('option', { name: /🐵/ }).getAttribute('id'))
     ), { timeout: 5000 })
+  }, 10000)
+
+  test('press enter on an empty search list', async () => {
+    await tick(120)
+    type(getByRole('combobox'), 'xxxyyyzzzhahaha')
+    await waitFor(() => expect(queryAllByRole('option')).toHaveLength(0))
+    expect(getByRole('combobox').getAttribute('aria-activedescendant')).toBeFalsy()
+    await tick(120)
+    fireEvent.keyDown(getByRole('combobox'), { key: 'Enter', code: 'Enter' })
+    await tick(120)
+    // should do nothing basically since there's nothing to search for
+    expect(queryAllByRole('option')).toHaveLength(0)
+    expect(getByRole('combobox').getAttribute('aria-activedescendant')).toBeFalsy()
   }, 10000)
 
   test('press enter to make first search item active - custom emoji', async () => {
