@@ -14,6 +14,7 @@ export function createState (abortSignal) {
     if (destroyed) {
       return
     }
+    /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && recursionDepth === MAX_RECURSION_DEPTH) {
       throw new Error('max recursion depth, you probably didn\'t mean to do this')
     }
@@ -78,6 +79,7 @@ export function createState (abortSignal) {
   }
 
   // for debugging
+  /* istanbul ignore else */
   if (process.env.NODE_ENV !== 'production') {
     window.state = state
   }
@@ -86,6 +88,7 @@ export function createState (abortSignal) {
   abortSignal.addEventListener('abort', () => {
     destroyed = true
 
+    /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
       delete window.state
     }

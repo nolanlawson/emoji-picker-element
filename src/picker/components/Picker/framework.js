@@ -136,12 +136,18 @@ function parse (tokens) {
       switch (char) {
         case '<': {
           const nextChar = token.charAt(j + 1)
-          if (nextChar !== '!' && nextChar !== '/') { // not a closing tag or comment
-            withinTag = true
-            elementIndexes.push(++elementIndexCounter)
-          } else if (nextChar === '/') {
+          /* istanbul ignore if */
+          if (process.env.NODE_ENV !== 'production' && !/[/a-z]/.test(nextChar)) {
+            // we don't need to support comments ('<!') because we always use html-minify-literals
+            // also we don't support '<' inside tags, e.g. '<div> 2 < 3 </div>'
+            throw new Error('framework currently only supports a < followed by / or a-z')
+          }
+          if (nextChar === '/') { // closing tag
             // leaving an element
             elementIndexes.pop()
+          } else { // not a closing tag
+            withinTag = true
+            elementIndexes.push(++elementIndexCounter)
           }
           break
         }
@@ -151,9 +157,13 @@ function parse (tokens) {
           break
         }
         case '=': {
-          if (withinTag) {
-            withinAttribute = true
+          /* istanbul ignore if */
+          if (process.env.NODE_ENV !== 'production' && !withinTag) {
+            // we don't currently support '=' anywhere but inside a tag, e.g.
+            // we don't support '<div>2 + 2 = 4</div>'
+            throw new Error('framework currently does not support = anywhere but inside a tag')
           }
+          withinAttribute = true
           break
         }
       }
@@ -234,6 +244,7 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
           ? element // attribute binding, just use the element itself
           : findPlaceholderComment(element, i) // not an attribute binding, so has a placeholder comment
 
+        /* istanbul ignore if */
         if (process.env.NODE_ENV !== 'production' && !targetNode) {
           throw new Error('targetNode should not be undefined')
         }

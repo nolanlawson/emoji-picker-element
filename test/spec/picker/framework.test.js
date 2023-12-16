@@ -57,4 +57,42 @@ describe('framework', () => {
     render()
     expect(node.outerHTML).toBe('<div><span>foo</span></div>')
   })
+
+  test('render two dynamic expressions inside the same element', () => {
+    const state = { name1: 'foo', name2: 'bar' }
+
+    const { html } = createFramework(state)
+
+    let node
+    const render = () => {
+      node = html`<div>${state.name1}${state.name2}</div>`
+    }
+
+    render()
+    expect(node.outerHTML).toBe('<div>foobar</div>')
+
+    state.name1 = 'baz'
+    state.name2 = 'quux'
+    render()
+    expect(node.outerHTML).toBe('<div>bazquux</div>')
+  })
+
+  test('render a mix of dynamic and static text nodes in the same element', () => {
+    const state = { name1: 'foo', name2: 'bar' }
+
+    const { html } = createFramework(state)
+
+    let node
+    const render = () => {
+      node = html`<div>1${state.name1}2${state.name2}3</div>`
+    }
+
+    render()
+    expect(node.outerHTML).toBe('<div>1foo2bar3</div>')
+
+    state.name1 = 'baz'
+    state.name2 = 'quux'
+    render()
+    expect(node.outerHTML).toBe('<div>1baz2quux3</div>')
+  })
 })
