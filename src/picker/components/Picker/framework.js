@@ -61,7 +61,6 @@ function patchChildren (newChildren, instanceBinding) {
     instanceBinding.targetNode = undefined // placeholder comment not needed anymore, free memory
     instanceBinding.targetParentNode = targetParentNode = targetNode.parentNode
   }
-  // console.log('needsRerender?', needsRerender, 'newChildren', newChildren)
   // avoid re-rendering list if the dom nodes are exactly the same before and after
   if (needsRerender) {
     replaceChildren(targetParentNode, newChildren)
@@ -94,7 +93,7 @@ function patch (expressions, instanceBindings) {
       targetNode.setAttribute(attributeName, attributeValuePre + toString(expression) + attributeValuePost)
     } else { // text node / child element / children replacement
       let newNode
-      if (Array.isArray(expression)) { // array of html tag templates
+      if (Array.isArray(expression)) { // array of DOM elements produced by tag template literals
         patchChildren(expression, instanceBinding)
       } else if (expression instanceof Element) { // html tag template returning a DOM element
         newNode = expression
@@ -107,7 +106,7 @@ function patch (expressions, instanceBindings) {
         targetNode.replaceWith(newNode)
       } else { // primitive - string, number, etc
         if (targetNode.nodeType === Node.TEXT_NODE) { // already transformed into a text node
-          targetNode.nodeValue = toString(expression)
+          targetNode.nodeValue = toString(expression) // nodeValue is faster than textContent supposedly
         } else { // replace comment or whatever was there before with a text node
           newNode = document.createTextNode(toString(expression))
           targetNode.replaceWith(newNode)
@@ -135,7 +134,7 @@ function parse (tokens) {
     htmlString += token
 
     if (i === len - 1) {
-      break // no need to process characters
+      break // no need to process characters - no more expressions to be found
     }
 
     for (let j = 0; j < token.length; j++) {
@@ -177,11 +176,7 @@ function parse (tokens) {
     }
 
     const elementIndex = elementIndexes[elementIndexes.length - 1]
-    let bindings = elementsToBindings.get(elementIndex)
-    if (!bindings) {
-      bindings = []
-      elementsToBindings.set(elementIndex, bindings)
-    }
+    const bindings = getFromMap(elementsToBindings, elementIndex, () => [])
 
     let attributeName
     let attributeValuePre
