@@ -106,7 +106,8 @@ function patch (expressions, instanceBindings) {
         targetNode.replaceWith(newNode)
       } else { // primitive - string, number, etc
         if (targetNode.nodeType === Node.TEXT_NODE) { // already transformed into a text node
-          targetNode.nodeValue = toString(expression) // nodeValue is faster than textContent supposedly
+          // nodeValue is faster than textContent supposedly https://www.youtube.com/watch?v=LY6y3HbDVmg
+          targetNode.nodeValue = toString(expression)
         } else { // replace comment or whatever was there before with a text node
           newNode = document.createTextNode(toString(expression))
           targetNode.replaceWith(newNode)
