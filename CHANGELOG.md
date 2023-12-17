@@ -1,3 +1,15 @@
+# [1.21.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.20.1...v1.21.0) (2023-12-17)
+
+
+### Performance Improvements
+
+* add more benchmarks ([#389](https://github.com/nolanlawson/emoji-picker-element/issues/389)) ([6eb3089](https://github.com/nolanlawson/emoji-picker-element/commit/6eb3089dc666124a96d2bf7c1039672bdde77593))
+* replace Svelte with vanilla JS ([#381](https://github.com/nolanlawson/emoji-picker-element/issues/381)) ([5699285](https://github.com/nolanlawson/emoji-picker-element/commit/56992858c00513f5ee95025a55a20cea8c4b5f72))
+* run all benchmark tests locally ([#391](https://github.com/nolanlawson/emoji-picker-element/issues/391)) ([750e849](https://github.com/nolanlawson/emoji-picker-element/commit/750e8493e33a67ecd81424fa6307787b1468acba))
+* wait for initial load in benchmarks ([#390](https://github.com/nolanlawson/emoji-picker-element/issues/390)) ([8a4e4d6](https://github.com/nolanlawson/emoji-picker-element/commit/8a4e4d658686f24bd50b561dd755f2a64980593a))
+
+
+
 ## [1.20.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.20.0...v1.20.1) (2023-12-04)
 
 
