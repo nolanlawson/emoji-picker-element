@@ -1,30 +1,13 @@
-import MagicString from 'magic-string'
-import inject from '@rollup/plugin-inject'
 import cjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import strip from '@rollup/plugin-strip'
-import svelte from 'rollup-plugin-svelte'
-import preprocess from 'svelte-preprocess'
 import analyze from 'rollup-plugin-analyzer'
 import { buildStyles } from './bin/buildStyles.js'
+import { minifyHTMLLiterals } from 'minify-html-literals'
 
 const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
-
-const preprocessConfig = preprocess()
-
-const origMarkup = preprocessConfig.markup
-// minify the HTML by removing extra whitespace
-// TODO: this is fragile, but it also results in a lot of bundlesize savings. let's find a better solution
-preprocessConfig.markup = async function () {
-  const res = await origMarkup.apply(this, arguments)
-
-  // remove whitespace
-  res.code = res.code.replace(/([>}])\s+([<{])/sg, '$1$2')
-
-  return res
-}
 
 // Build Database.test.js and Picker.js as separate modules at build times so that they are properly tree-shakeable.
 // Most of this has to happen because customElements.define() has side effects
@@ -43,25 +26,18 @@ const baseConfig = {
       delimiters: ['', ''],
       preventAssignment: true
     }),
-    svelte({
-      compilerOptions: {
-        dev,
-        discloseVersion: false
-      },
-      preprocess: preprocessConfig
-    }),
-    // make the svelte output slightly smaller
-    replace({
-      'options.anchor': 'undefined',
-      'options.context': 'undefined',
-      'options.customElement': 'undefined',
-      'options.hydrate': 'undefined',
-      'options.intro': 'undefined',
-      delimiters: ['', ''],
-      preventAssignment: true
-    }),
+    {
+      name: 'minify-html-in-tag-template-literals',
+      transform (content, id) {
+        if (id.includes('PickerTemplate.js')) {
+          return minifyHTMLLiterals(content, {
+            fileName: id
+          })
+        }
+      }
+    },
     strip({
-      include: ['**/*.js', '**/*.svelte'],
+      include: ['**/*.js'],
       functions: [
         (!dev && !process.env.PERF) && 'performance.*',
         !dev && 'console.log'
@@ -78,18 +54,7 @@ const baseConfig = {
 const entryPoints = [
   {
     input: './src/picker/PickerElement.js',
-    output: './picker.js',
-    plugins: [
-      // Replace newer syntax in Svelte v4 to avoid breaking iOS <13.4
-      // https://github.com/nolanlawson/emoji-picker-element/pull/379
-      replace({
-        'array_like_or_iterator?.length': 'array_like_or_iterator && array_like_or_iterator.length',
-        '$$ = undefined;': '', // not necessary to initialize class prop to undefined
-        '$$set = undefined;': '', // not necessary to initialize class prop to undefined
-        delimiters: ['', ''],
-        preventAssignment: true
-      })
-    ]
+    output: './picker.js'
   },
   {
     input: './src/database/Database.js',
@@ -103,42 +68,10 @@ const entryPoints = [
     input: './src/trimEmojiData.js',
     output: './trimEmojiData.cjs',
     format: 'cjs'
-  },
-  {
-    input: './src/picker/PickerElement.js',
-    output: './svelte.js',
-    external: ['svelte', 'svelte/internal'],
-    // TODO: drop Svelte v3 support
-    // ensure_array_like was added in Svelte v4 - we shim it to avoid breaking Svelte v3 users
-    plugins: [
-      {
-        name: 'svelte-v3-compat',
-        transform (source) {
-          const magicString = new MagicString(source)
-          magicString.replaceAll('ensure_array_like(', 'ensure_array_like_shim(')
-
-          return {
-            code: magicString.toString(),
-            map: magicString.generateMap()
-          }
-        }
-      },
-      inject({
-        ensure_array_like_shim: [
-          '../../../../shims/svelte-v3-shim.js',
-          'ensure_array_like_shim'
-        ]
-      })
-    ],
-    onwarn (warning) {
-      if (!warning.message.includes('ensure_array_like')) { // intentionally ignore warning for unused import
-        console.warn(warning.message)
-      }
-    }
   }
 ]
 
-export default entryPoints.map(({ input, output, format = 'es', external = [], plugins = [], onwarn }) => {
+export default entryPoints.map(({ input, output, format = 'es', external = [], onwarn }) => {
   return {
     input,
     output: {
@@ -148,7 +81,7 @@ export default entryPoints.map(({ input, output, format = 'es', external = [], p
       exports: 'auto'
     },
     external: [...baseConfig.external, ...external],
-    plugins: [...baseConfig.plugins, ...plugins],
+    plugins: baseConfig.plugins,
     onwarn
   }
 })

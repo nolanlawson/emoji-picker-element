@@ -4,15 +4,9 @@ module.exports = {
     '<rootDir>/test/spec/**/*.{spec,test}.{js,jsx,ts,tsx}'
   ],
   transform: {
-    '^.+\\.svelte$': ['svelte-jester', {
-      preprocess: './config/svelte.config.js',
-      compilerOptions: {
-        dev: false
-      }
-    }]
+    '^.*PickerTemplate.js$': './config/minifyHtmlInJest.js'
   },
-  moduleFileExtensions: ['js', 'svelte'],
-  extensionsToTreatAsEsm: ['.svelte'],
+  moduleFileExtensions: ['js'],
   testPathIgnorePatterns: ['node_modules'],
   bail: true,
   verbose: true,
@@ -31,12 +25,6 @@ module.exports = {
       branches: 100,
       functions: 100,
       lines: 100
-    },
-    './src/picker/components/Picker/Picker.svelte': {
-      statements: 90,
-      branches: 85,
-      functions: 90,
-      lines: 90
     }
   }
 }

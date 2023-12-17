@@ -827,17 +827,22 @@ The reason for this is that `Picker` automatically registers itself as a custom 
 
 ### Within a Svelte project
 
-`emoji-picker-element` is explicitly designed as a custom element, and won't work
-as a direct Svelte component. However, if you're already using Svelte 3, then you
-can avoid importing Svelte twice by using:
+> [!WARNING]  
+> `emoji-picker-element` is no longer based on Svelte, so importing from `emoji-picker-element/svelte` is now deprecated.
+
+Previously, `emoji-picker-element` was based on Svelte v3/v4, and you could do:
 
 ```js
 import Picker from 'emoji-picker-element/svelte';
 ```
 
-`svelte.js` is the same as `picker.js`, except it `import`s Svelte rather than bundling it.
+The goal was to slightly reduce the bundle size by sharing common `svelte` imports.
 
-While this option can reduce your bundle size, note that it only works with compatible Svelte versions. Currently Svelte v3 and v4 are supported.
+This is still supported for backwards compatibility, but it is deprecated and just re-exports the Picker. Instead, do:
+
+```js
+import Picker from 'emoji-picker-element/picker';
+```
 
 ## Data and offline
 

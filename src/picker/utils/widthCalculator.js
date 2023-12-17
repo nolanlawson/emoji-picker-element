@@ -11,7 +11,7 @@ export const resetResizeObserverSupported = () => {
   resizeObserverSupported = typeof ResizeObserver === 'function'
 }
 
-export function calculateWidth (node, onUpdate) {
+export function calculateWidth (node, abortSignal, onUpdate) {
   let resizeObserver
   if (resizeObserverSupported) {
     resizeObserver = new ResizeObserver(entries => (
@@ -25,11 +25,10 @@ export function calculateWidth (node, onUpdate) {
   }
 
   // cleanup function (called on destroy)
-  return {
-    destroy () {
-      if (resizeObserver) {
-        resizeObserver.disconnect()
-      }
+  abortSignal.addEventListener('abort', () => {
+    if (resizeObserver) {
+      console.log('ResizeObserver destroyed')
+      resizeObserver.disconnect()
     }
-  }
+  })
 }
