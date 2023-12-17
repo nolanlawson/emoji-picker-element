@@ -17,13 +17,9 @@ function replaceChildren (parentNode, newChildren) {
   /* istanbul ignore else */
   if (hasReplaceChildren) {
     parentNode.replaceChildren(...newChildren)
-  } else { // polyfill Element.prototype.replaceChildren
-    while (parentNode.lastChild) {
-      parentNode.removeChild(parentNode.lastChild)
-    }
-    for (const child of newChildren) {
-      parentNode.appendChild(child)
-    }
+  } else { // minimal polyfill for Element.prototype.replaceChildren
+    parentNode.innerHTML = ''
+    parentNode.append(...newChildren)
   }
 }
 
