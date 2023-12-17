@@ -95,4 +95,33 @@ describe('framework', () => {
     render()
     expect(node.outerHTML).toBe('<div>1baz2quux3</div>')
   })
+
+  test('attributes', () => {
+    const state = {}
+
+    const { html } = createFramework(state)
+
+    const expectRender = (render, expected1, expected2) => {
+      state.name = 'foo'
+      expect(render().outerHTML).toBe(expected1)
+
+      state.name = 'bar'
+      expect(render().outerHTML).toBe(expected2)
+    }
+
+    expectRender(() => html`<div class="${state.name}"></div>`, '<div class="foo"></div>', '<div class="bar"></div>')
+    expectRender(() => html`<div class=${state.name}></div>`, '<div class="foo"></div>', '<div class="bar"></div>')
+
+    // pre
+    expectRender(() => html`<div class="a${state.name}"></div>`, '<div class="afoo"></div>', '<div class="abar"></div>')
+    expectRender(() => html`<div class=a${state.name}></div>`, '<div class="afoo"></div>', '<div class="abar"></div>')
+
+    // post
+    expectRender(() => html`<div class="${state.name}z"></div>`, '<div class="fooz"></div>', '<div class="barz"></div>')
+    expectRender(() => html`<div class=${state.name}z></div>`, '<div class="fooz"></div>', '<div class="barz"></div>')
+
+    // pre+post
+    expectRender(() => html`<div class="a${state.name}z"></div>`, '<div class="afooz"></div>', '<div class="abarz"></div>')
+    expectRender(() => html`<div class=a${state.name}z></div>`, '<div class="afooz"></div>', '<div class="abarz"></div>')
+  })
 })

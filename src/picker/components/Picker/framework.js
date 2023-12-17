@@ -187,6 +187,7 @@ function parse (tokens) {
     let attributeValuePre
     let attributeValuePost
     if (withinAttribute) {
+      // I never use single-quotes for attribute values in HTML, so just support double-quotes or no-quotes
       const match = /(\S+)="?([^"=]*)$/.exec(token)
       attributeName = match[1]
       attributeValuePre = match[2]
