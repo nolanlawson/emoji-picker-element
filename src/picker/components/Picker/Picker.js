@@ -394,7 +394,7 @@ export function createRoot (target, props) {
           updateCurrentEmojis(newEmojis)
           updateSearchMode(true)
         }
-      } else {
+      } else { // database is loaded and we're not in search mode, so we're in normal category mode
         const { id: currentGroupId } = currentGroup
         // avoid race condition where currentGroupId is -1 and customEmoji is undefined/empty
         if (currentGroupId !== -1 || (customEmoji && customEmoji.length)) {
