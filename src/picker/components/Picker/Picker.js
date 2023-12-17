@@ -182,8 +182,10 @@ export function createRoot (target, props) {
     calculateEmojiGridStyle
   }
 
+  let firstRender = true
   createEffect(() => {
-    render(target, state, helpers, events, actions, refs, abortSignal)
+    render(target, state, helpers, events, actions, refs, abortSignal, firstRender)
+    firstRender = false
   })
 
   //

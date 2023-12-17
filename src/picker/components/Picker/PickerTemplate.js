@@ -1,6 +1,6 @@
 import { createFramework } from './framework.js'
 
-export function render (container, state, helpers, events, actions, refs, abortSignal) {
+export function render (container, state, helpers, events, actions, refs, abortSignal, firstRender) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
   const { html, map } = createFramework(state)
 
@@ -221,7 +221,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
 
   const rootDom = section()
 
-  if (rootDom.parentNode !== container) { // not a re-render
+  if (firstRender) { // not a re-render
     container.appendChild(rootDom)
 
     // we only bind events/refs/actions once - there is no need to find them again given this component structure
