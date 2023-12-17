@@ -321,7 +321,7 @@ export function createRoot (target, props) {
 
   function updateCustomEmoji () {
     // Certain effects have an implicit dependency on customEmoji since it affects the database
-    // Getting it here on the database ensures this effect re-runs when customEmoji change.
+    // Getting it here on the state ensures this effect re-runs when customEmoji change.
     // Setting it on the database is pointless but prevents this code from being removed by a minifier.
     state.database.customEmoji = state.customEmoji || EMPTY_ARRAY
   }
