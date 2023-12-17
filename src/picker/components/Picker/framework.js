@@ -224,7 +224,7 @@ function findPlaceholderComment (element, bindingId) {
   while (childNode) {
     // Note that minify-html-literals has already removed all non-framework comments
     // So we just need to look for comments that have exactly the bindingId as its text content
-    if (childNode.nodeType === Node.COMMENT_NODE && childNode.textContent === toString(bindingId)) {
+    if (childNode.nodeType === Node.COMMENT_NODE && childNode.nodeValue === toString(bindingId)) {
       return childNode
     }
     childNode = childNode.nextSibling
