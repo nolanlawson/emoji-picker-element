@@ -3,6 +3,7 @@ import { DEFAULT_DATA_SOURCE, DEFAULT_LOCALE } from '../database/constants'
 import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY } from './constants'
 import enI18n from './i18n/en.js'
 import Database from './ImportedDatabase'
+import { queueMicrotask } from './utils/queueMicrotask.js'
 
 const PROPS = [
   'customEmoji',
@@ -58,7 +59,7 @@ export default class PickerElement extends HTMLElement {
   disconnectedCallback () {
     // Check in a microtask if the element is still connected. If so, treat this as a "move" rather than a disconnect
     // Inspired by Vue: https://vuejs.org/guide/extras/web-components.html#building-custom-elements-with-vue
-    Promise.resolve().then(() => {
+    queueMicrotask(() => {
       // this._cmp may be defined if connect-disconnect-connect-disconnect occurs synchronously
       if (!this.isConnected && this._cmp) {
         this._cmp.$destroy()
@@ -107,7 +108,7 @@ export default class PickerElement extends HTMLElement {
   // Update the Database in one microtask if the locale/dataSource change. We do one microtask
   // so we don't create two Databases if e.g. both the locale and the dataSource change
   _dbFlush () {
-    Promise.resolve().then(() => (
+    queueMicrotask(() => (
       this._dbCreate()
     ))
   }

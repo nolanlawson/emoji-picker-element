@@ -1,3 +1,5 @@
+import { queueMicrotask } from '../../utils/queueMicrotask.js'
+
 export function createState (abortSignal) {
   let destroyed = false
   let currentObserver
@@ -29,7 +31,7 @@ export function createState (abortSignal) {
       if (dirtyObservers.size) { // new updates, queue another one
         recursionDepth++
         queued = true
-        Promise.resolve().then(flush)
+        queueMicrotask(flush)
       }
     }
   }
@@ -58,7 +60,7 @@ export function createState (abortSignal) {
         if (!queued) {
           recursionDepth = 0
           queued = true
-          Promise.resolve().then(flush)
+          queueMicrotask(flush)
         }
       }
       return true
