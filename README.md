@@ -62,6 +62,7 @@ A lightweight emoji picker, distributed as a web component.
         * [setPreferredSkinTone](#setpreferredskintone)
     + [Custom emoji](#custom-emoji)
     + [Tree-shaking](#tree-shaking)
+    + [Within a meta-framework (Next.js, SvelteKit, etc.)](#within-a-meta-framework-nextjs-sveltekit-etc)
     + [Within a Svelte project](#within-a-svelte-project)
   * [Data and offline](#data-and-offline)
     + [Data source and JSON format](#data-source-and-json-format)
@@ -824,6 +825,14 @@ import Database from 'emoji-picker-element/database';
 ```
 
 The reason for this is that `Picker` automatically registers itself as a custom element, following [web component best practices](https://justinfagnani.com/2019/11/01/how-to-publish-web-components-to-npm/). But this adds side effects, so bundlers like Webpack and Rollup do not tree-shake as well, unless the modules are imported from completely separate files.
+
+### Within a meta-framework (Next.js, SvelteKit, etc.)
+
+Some meta-frameworks will attempt to server-side render (SSR) any dependencies you `import`. However, `emoji-picker-element` only supports client-side rendering – it does not work on the server side. If you attempt to import it on the server side, you will see an error like `requestAnimationFrame is not defined`.
+
+To load `emoji-picker-element` only on the client side, use your meta-framework's technique for client-side-only imports. For example, you can use [dynamic `import()`s](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import) with [`next/dynamic` in Next.js](https://stackoverflow.com/a/61881528/680742) or [`onMount()` in SvelteKit](https://www.banjocode.com/post/svelte/client-side-library).
+
+`emoji-picker-element` is not designed for SSR. In most apps, an emoji picker should be lazy-loaded upon user interaction (for example, when the user clicks a button).
 
 ### Within a Svelte project
 
