@@ -1,3 +1,12 @@
+## [1.21.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.21.0...v1.21.1) (2024-02-17)
+
+
+### Bug Fixes
+
+* avoid calling getRootNode ([#399](https://github.com/nolanlawson/emoji-picker-element/issues/399)) ([19331c6](https://github.com/nolanlawson/emoji-picker-element/commit/19331c6be6de9da9199a43c6aa13e48fd310a952))
+
+
+
 # [1.21.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.20.1...v1.21.0) (2023-12-17)
 
 
