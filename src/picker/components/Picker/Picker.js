@@ -29,7 +29,7 @@ const EMPTY_ARRAY = []
 
 const { assign } = Object
 
-export function createRoot (target, props) {
+export function createRoot (shadowRoot, props) {
   const refs = {}
   const abortController = new AbortController()
   const abortSignal = abortController.signal
@@ -91,8 +91,10 @@ export function createRoot (target, props) {
   //
 
   const focus = id => {
-    refs.rootElement.getRootNode().getElementById(id).focus()
+    shadowRoot.getElementById(id).focus()
   }
+
+  const emojiToDomNode = emoji => shadowRoot.getElementById(`emo-${emoji.id}`)
 
   // fire a custom event that crosses the shadow boundary
   const fireEvent = (name, detail) => {
@@ -184,7 +186,7 @@ export function createRoot (target, props) {
 
   let firstRender = true
   createEffect(() => {
-    render(target, state, helpers, events, actions, refs, abortSignal, firstRender)
+    render(shadowRoot, state, helpers, events, actions, refs, abortSignal, firstRender)
     firstRender = false
   })
 
@@ -431,8 +433,6 @@ export function createRoot (target, props) {
   })
 
   function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
-    const shadowRootNode = refs.rootElement.getRootNode()
-    const emojiToDomNode = emoji => shadowRootNode.getElementById(`emo-${emoji.id}`)
     checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
     // force update
     // eslint-disable-next-line no-self-assign
