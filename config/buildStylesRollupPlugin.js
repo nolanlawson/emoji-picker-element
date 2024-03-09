@@ -7,7 +7,11 @@ export function buildStylesRollupPlugin () {
     transform (content, id) {
       if (id.includes('picker.scss')) {
         const css = sass.compile(id, { style: 'compressed' }).css
-        return `export default ${JSON.stringify(minify(css).css)}`
+        const code = `export default ${JSON.stringify(minify(css).css)}`
+        return {
+          code,
+          map: null
+        }
       }
     }
   }
