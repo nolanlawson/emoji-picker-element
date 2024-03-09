@@ -38,7 +38,6 @@ export function createState (abortSignal) {
 
   const state = new Proxy({}, {
     get (target, prop) {
-      // console.log('reactivity: get', prop)
       if (currentObserver) {
         let observers = propsToObservers.get(prop)
         if (!observers) {
@@ -50,7 +49,6 @@ export function createState (abortSignal) {
       return target[prop]
     },
     set (target, prop, newValue) {
-      // console.log('reactivity: set', prop, newValue)
       target[prop] = newValue
       const observers = propsToObservers.get(prop)
       if (observers) {

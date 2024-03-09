@@ -2,6 +2,7 @@ import { getFromMap, parseTemplate, toString } from './utils.js'
 
 const parseCache = new WeakMap()
 const domInstancesCache = new WeakMap()
+// This needs to be a symbol because it needs to be different from any possible output of a key function
 const unkeyedSymbol = Symbol('un-keyed')
 
 // for debugging
@@ -201,8 +202,10 @@ function parse (tokens) {
 
     bindings.push(binding)
 
-    // add a placeholder comment that we can find later
-    htmlString += (!withinTag && !withinAttribute) ? `<!--${bindings.length - 1}-->` : ''
+    if (!withinTag && !withinAttribute) {
+      // add a placeholder comment that we can find later
+      htmlString += `<!--${bindings.length - 1}-->`
+    }
   }
 
   const template = parseTemplate(htmlString)
