@@ -16,7 +16,6 @@ export default defineConfig({
     testTimeout: 60000,
     coverage: {
       provider: 'istanbul',
-      reporter: ['text', 'html', 'clover', 'json', 'lcov'],
       include: [
         'src/'
       ],
