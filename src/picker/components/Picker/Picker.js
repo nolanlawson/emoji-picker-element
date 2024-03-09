@@ -362,7 +362,7 @@ export function createRoot (shadowRoot, props) {
   function calculateEmojiGridStyle (node) {
     calculateWidth(node, abortSignal, width => {
       /* istanbul ignore next */
-      if (process.env.NODE_ENV !== 'test') { // jsdom throws errors for this kind of fancy stuff
+      if (import.meta.env.MODE !== 'test') { // jsdom throws errors for this kind of fancy stuff
         // read all the style/layout calculations we need to make
         const style = getComputedStyle(refs.rootElement)
         const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
@@ -467,7 +467,7 @@ export function createRoot (shadowRoot, props) {
   createEffect(() => {
     // consider initialLoad to be complete when the first tabpanel and favorites are rendered
     /* istanbul ignore next */
-    if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
+    if (import.meta.env.MODE !== 'production' || import.meta.env.PERF) {
       if (state.currentEmojis.length && state.currentFavorites.length && state.initialLoad) {
         state.initialLoad = false
         requestPostAnimationFrame(() => performance.measure('initialLoad', 'initialLoad'))

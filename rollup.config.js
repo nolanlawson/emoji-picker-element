@@ -6,7 +6,7 @@ import analyze from 'rollup-plugin-analyzer'
 import { minifyHtmlLiteralsRollupPlugin } from './config/minifyHtmlLiteralsRollupPlugin.js'
 import { buildStylesRollupPlugin } from './config/buildStylesRollupPlugin.js'
 
-const { NODE_ENV, DEBUG } = process.env
+const { NODE_ENV, DEBUG, PERF } = process.env
 const dev = NODE_ENV !== 'production'
 
 // Build Database.test.js and Picker.js as separate modules at build times so that they are properly tree-shakeable.
@@ -16,8 +16,8 @@ const baseConfig = {
     resolve(),
     cjs(),
     replace({
-      'process.env.NODE_ENV': dev ? '"development"' : '"production"',
-      'process.env.PERF': !!process.env.PERF,
+      'import.meta.env.MODE': dev ? '"development"' : '"production"',
+      'import.meta.env.PERF': !!PERF,
       preventAssignment: true
     }),
     replace({
@@ -30,7 +30,7 @@ const baseConfig = {
     strip({
       include: ['**/*.js'],
       functions: [
-        (!dev && !process.env.PERF) && 'performance.*',
+        (!dev && !PERF) && 'performance.*',
         !dev && 'console.log'
       ].filter(Boolean)
     }),

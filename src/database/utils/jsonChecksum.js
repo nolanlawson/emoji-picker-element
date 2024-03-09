@@ -6,7 +6,7 @@ export async function jsonChecksum (object) {
   const inString = JSON.stringify(object)
   let inBuffer = binaryStringToArrayBuffer(inString)
   /* istanbul ignore else */
-  if (process.env.NODE_ENV === 'test') {
+  if (import.meta.env.MODE === 'test') {
     // For whatever reason Node's built-in crypto throws an error for ArrayBuffers
     inBuffer = Buffer.from(new Uint8Array(inBuffer))
   }

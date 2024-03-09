@@ -42,7 +42,7 @@ const compareFeatures = (feature1, feature2) => {
 }
 
 export function testColorEmojiSupported (text) {
-  if (process.env.NODE_ENV === 'test') {
+  if (import.meta.env.MODE === 'test') {
     if (simulateCanvasError) {
       throw new Error('canvas error')
     } else if (simulateOldBrowser) {

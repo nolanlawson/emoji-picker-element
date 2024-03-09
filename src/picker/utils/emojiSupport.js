@@ -15,7 +15,7 @@ export const detectEmojiSupportLevel = () => {
     ))
 
     /* istanbul ignore else */
-    if (process.env.NODE_ENV !== 'production') {
+    if (import.meta.env.MODE !== 'production') {
       promise.then(emojiSupportLevel => {
         console.log('emoji support level', emojiSupportLevel)
       })

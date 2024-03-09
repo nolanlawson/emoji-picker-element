@@ -16,7 +16,7 @@ export function parseTemplate (htmlString) {
   template.innerHTML = htmlString
 
   /* istanbul ignore next */
-  if (process.env.NODE_ENV !== 'production') {
+  if (import.meta.env.MODE !== 'production') {
     if (template.content.children.length !== 1) {
       throw new Error('only 1 child allowed for now')
     }
