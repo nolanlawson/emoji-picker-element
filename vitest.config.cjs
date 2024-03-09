@@ -1,23 +1,30 @@
 import { defineConfig } from 'vitest/config'
+import { minifyHtmlLiteralsRollupPlugin } from './config/minifyHtmlLiteralsRollupPlugin.js'
 
 export default defineConfig({
+  plugins: [
+    minifyHtmlLiteralsRollupPlugin()
+  ],
   test: {
     globals: true,
     environment: 'jsdom',
-    transform: {
-      '^.*PickerTemplate.js$': './config/minifyHtmlInJest.js'
-    },
     setupFiles: [
       './config/jest.setup.js'
     ],
     testTimeout: 60000,
-    coverageReporters: ['json', 'lcov', 'text', 'html'],
-    coveragePathIgnorePatterns: [
-      'bin/',
-      'test/'
-    ],
-    coverageThreshold: {
-      global: {
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['json', 'lcov', 'text', 'html'],
+      include: [
+        'src/'
+      ],
+      exclude: [
+        'bin/',
+        'test/',
+        'i18n/',
+        'src/picker/i18n/'
+      ],
+      thresholds: {
         statements: 100,
         branches: 100,
         functions: 100,

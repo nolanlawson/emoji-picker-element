@@ -31,8 +31,9 @@ describe('attributes tests', () => {
     document.body.appendChild(picker)
     await tick(20)
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(FR_EMOJI)
+    expect(fetch.lastOptions()).toBe(undefined)
 
     expect(picker.locale).toEqual('fr')
     expect(picker.dataSource).toEqual(FR_EMOJI)
@@ -169,8 +170,9 @@ describe('attributes tests', () => {
     expect(getByRole(picker.shadowRoot, 'button', { name: /Choose a skin tone/ }).innerHTML)
       .toContain('✌')
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(ALL_EMOJI)
+    expect(fetch.lastOptions()).toBe(undefined)
 
     document.body.removeChild(div)
     await tick(20)

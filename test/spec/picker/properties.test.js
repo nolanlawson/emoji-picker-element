@@ -23,8 +23,9 @@ describe('properties', () => {
 
     await tick(40)
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(FR_EMOJI)
+    expect(fetch.lastOptions()).toBe(undefined)
 
     expect(picker.locale).toEqual('fr')
     expect(picker.dataSource).toEqual(FR_EMOJI)
@@ -43,8 +44,9 @@ describe('properties', () => {
 
     await tick(40)
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(FR_EMOJI)
+    expect(fetch.lastOptions()).toBe(undefined)
 
     expect(picker.locale).toEqual('en')
     expect(picker.dataSource).toEqual(FR_EMOJI)
@@ -63,8 +65,9 @@ describe('properties', () => {
 
     await tick(40)
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastOptions()).toBe(undefined)
 
     expect(picker.locale).toEqual('fr')
     expect(picker.dataSource).toEqual(DEFAULT_DATA_SOURCE)

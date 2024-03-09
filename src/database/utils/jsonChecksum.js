@@ -4,7 +4,13 @@ import { binaryStringToArrayBuffer, arrayBufferToBinaryString } from 'blob-util'
 export async function jsonChecksum (object) {
   performance.mark('jsonChecksum')
   const inString = JSON.stringify(object)
-  const inBuffer = binaryStringToArrayBuffer(inString)
+  let inBuffer = binaryStringToArrayBuffer(inString)
+  /* istanbul ignore else */
+  if (process.env.NODE_ENV === 'test') {
+    // For whatever reason Node's built-in crypto throws an error for ArrayBuffers
+    inBuffer = Buffer.from(new Uint8Array(inBuffer))
+  }
+
   // this does not need to be cryptographically secure, SHA-1 is fine
   const outBuffer = await crypto.subtle.digest('SHA-1', inBuffer)
   const outBinString = arrayBufferToBinaryString(outBuffer)

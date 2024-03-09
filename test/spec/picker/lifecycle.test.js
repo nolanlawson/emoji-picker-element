@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { vi } from 'vitest'
 import { basicAfterEach, basicBeforeEach, tick } from '../shared'
 import Picker from '../../../src/picker/PickerElement'
 import { getByRole, waitFor } from '@testing-library/dom'
@@ -20,8 +20,9 @@ describe('lifecycle', () => {
 
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastOptions()).toBe(undefined)
 
     document.body.removeChild(picker)
     await tick(40)
@@ -30,8 +31,9 @@ describe('lifecycle', () => {
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
     // fetch is called once again after re-insertion
-    expect(fetch).toHaveBeenCalledTimes(2)
-    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, { method: 'HEAD' })
+    expect(fetch.calls().length).toBe(2)
+    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastOptions()).toEqual({ method: 'HEAD' })
 
     document.body.removeChild(picker)
     await tick(60)
@@ -45,7 +47,7 @@ describe('lifecycle', () => {
 
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
-    const spy = jest.spyOn(picker.database, 'close')
+    const spy = vi.spyOn(picker.database, 'close')
 
     document.body.removeChild(picker)
     await tick(60)
@@ -64,8 +66,9 @@ describe('lifecycle', () => {
 
     await tick(60)
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastOptions()).toBe(undefined)
     expect(Object.keys(openIndexedDBRequests).length).toBe(0) // no open IDB connections
   })
 
@@ -78,8 +81,9 @@ describe('lifecycle', () => {
 
     await tick(120)
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastOptions()).toBe(undefined)
     expect(Object.keys(openIndexedDBRequests).length).toBe(0) // no open IDB connections
   })
 
@@ -105,8 +109,9 @@ describe('lifecycle', () => {
     document.body.appendChild(picker)
     await tick(40)
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastOptions()).toBe(undefined)
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
@@ -116,7 +121,7 @@ describe('lifecycle', () => {
 
     await tick(40)
 
-    expect(fetch).toHaveBeenCalledTimes(1) // fetch is not called again because no re-render
+    expect(fetch.calls().length).toBe(1) // fetch is not called again because no re-render
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
@@ -132,8 +137,9 @@ describe('lifecycle', () => {
     document.body.appendChild(picker)
     await tick(40)
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastOptions()).toBe(undefined)
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
@@ -144,8 +150,9 @@ describe('lifecycle', () => {
 
     await tick(40)
 
-    expect(fetch).toHaveBeenCalledTimes(2) // fetch is called again due to re-render
-    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, { method: 'HEAD' }) // cached, so does a HEAD
+    expect(fetch.calls().length).toBe(2) // fetch is called again due to re-render
+    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastOptions()).toEqual({ method: 'HEAD' }) // cached, so does a HEAD
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
@@ -166,8 +173,9 @@ describe('lifecycle', () => {
 
     await tick(40)
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(DEFAULT_DATA_SOURCE, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastOptions()).toBe(undefined)
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))

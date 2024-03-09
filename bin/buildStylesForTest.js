@@ -4,7 +4,7 @@ import path from 'node:path'
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
-// Build a file containing the CSS just for Jest, because I can't figure out any better way to do this
+// Build a file containing the CSS just for Jest/Vitest, because I can't figure out any better way to do this
 async function main () {
   const styles = buildStyles()
   const targetDir = path.join(__dirname, '../node_modules/.cache/emoji-picker-element')
