@@ -10,6 +10,11 @@ async function main () {
   const targetDir = path.join(__dirname, '../node_modules/.cache/emoji-picker-element')
   await mkdirp(targetDir)
   await writeFile(
+    path.join(targetDir, 'package.json'),
+    '{ "type": "module" }',
+    'utf8'
+  )
+  await writeFile(
     path.join(targetDir, 'styles.js'),
     `export default ${JSON.stringify(styles)};`,
     'utf8'

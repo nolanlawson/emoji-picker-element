@@ -4,7 +4,12 @@ import { Crypto } from '@peculiar/webcrypto'
 import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js'
 import { deleteDatabase } from '../src/database/databaseLifecycle'
 import styles from '../node_modules/.cache/emoji-picker-element/styles.js'
-import * as fetchMockJest from 'fetch-mock-jest'
+import createFetchMock from 'vitest-fetch-mock'
+
+const fetchMocker = createFetchMock(vi)
+
+// sets globalThis.fetch and globalThis.fetchMock to our mocked version
+fetchMocker.enableMocks()
 
 const { IDBFactory, IDBKeyRange } = FakeIndexedDB
 
@@ -36,10 +41,6 @@ globalThis.structuredClone = globalThis.structuredClone ?? (_ => JSON.parse(JSON
 beforeAll(() => {
   vi.spyOn(globalThis.console, 'log').mockImplementation()
   vi.spyOn(globalThis.console, 'warn').mockImplementation()
-
-  const fetch = fetchMockJest.default.sandbox()
-  globalThis.fetch = fetch
-  globalThis.Response = fetch.Response
 })
 
 afterEach(async () => {
