@@ -1,5 +1,4 @@
-import '@testing-library/jest-dom/jest-globals'
-import { jest } from '@jest/globals'
+import { vi } from 'vitest'
 import * as FakeIndexedDB from 'fake-indexeddb'
 import { Crypto } from '@peculiar/webcrypto'
 import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js'
@@ -22,8 +21,6 @@ if (!globalThis.performance.measure) {
   globalThis.performance.measure = () => {}
 }
 
-jest.setTimeout(60000)
-
 globalThis.ResizeObserver = ResizeObserver
 
 process.env.NODE_ENV = 'test'
@@ -37,8 +34,8 @@ globalThis.indexedDB = new IDBFactory()
 globalThis.structuredClone = globalThis.structuredClone ?? (_ => JSON.parse(JSON.stringify(_)))
 
 beforeAll(() => {
-  jest.spyOn(globalThis.console, 'log').mockImplementation()
-  jest.spyOn(globalThis.console, 'warn').mockImplementation()
+  vi.spyOn(globalThis.console, 'log').mockImplementation()
+  vi.spyOn(globalThis.console, 'warn').mockImplementation()
 
   const fetch = fetchMockJest.default.sandbox()
   globalThis.fetch = fetch
