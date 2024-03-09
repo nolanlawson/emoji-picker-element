@@ -7,7 +7,7 @@ export async function jsonChecksum (object) {
   let inBuffer = binaryStringToArrayBuffer(inString)
   /* istanbul ignore else */
   if (import.meta.env.MODE === 'test') {
-    // For whatever reason crypto throws an error for ArrayBuffers in Vitest
+    // Issue with ArrayBuffer in jsdom https://github.com/vitest-dev/vitest/issues/5365
     inBuffer = Buffer.from(new Uint8Array(inBuffer))
   }
 
