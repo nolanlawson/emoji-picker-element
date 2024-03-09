@@ -20,12 +20,6 @@ export default defineConfig({
       include: [
         'src/'
       ],
-      exclude: [
-        'bin/',
-        'test/',
-        'i18n/',
-        'src/picker/i18n/'
-      ],
       thresholds: {
         statements: 100,
         branches: 100,
