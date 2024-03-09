@@ -3,8 +3,8 @@ import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import strip from '@rollup/plugin-strip'
 import analyze from 'rollup-plugin-analyzer'
-import { buildStyles } from './bin/buildStyles.js'
 import { minifyHtmlLiteralsRollupPlugin } from './config/minifyHtmlLiteralsRollupPlugin.js'
+import { buildStylesRollupPlugin } from './config/buildStylesRollupPlugin.js'
 
 const { NODE_ENV, DEBUG } = process.env
 const dev = NODE_ENV !== 'production'
@@ -18,7 +18,6 @@ const baseConfig = {
     replace({
       'process.env.NODE_ENV': dev ? '"development"' : '"production"',
       'process.env.PERF': !!process.env.PERF,
-      'process.env.STYLES': JSON.stringify(buildStyles()),
       preventAssignment: true
     }),
     replace({
@@ -27,6 +26,7 @@ const baseConfig = {
       preventAssignment: true
     }),
     minifyHtmlLiteralsRollupPlugin(),
+    buildStylesRollupPlugin(),
     strip({
       include: ['**/*.js'],
       functions: [

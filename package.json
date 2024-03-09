@@ -44,9 +44,9 @@
     "dev:server": "node ./test/adhoc/server.js",
     "lint": "standard && stylelint '**/*.scss'",
     "lint:fix": "standard --fix && stylelint --fix '**/*.scss'",
-    "test": "node ./bin/buildStylesForTest.js && vitest",
+    "test": "vitest",
     "test:adhoc": "node ./test/adhoc/server.js",
-    "cover": "node ./bin/buildStylesForTest.js && vitest --coverage",
+    "cover": "vitest --coverage",
     "docs": "node bin/processCustomEmoji.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "version": "run-s changelog docs && git add CHANGELOG.md docs"

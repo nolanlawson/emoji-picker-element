@@ -1,9 +1,11 @@
 import { defineConfig } from 'vitest/config'
 import { minifyHtmlLiteralsRollupPlugin } from './config/minifyHtmlLiteralsRollupPlugin.js'
+import { buildStylesRollupPlugin } from './config/buildStylesRollupPlugin.js'
 
 export default defineConfig({
   plugins: [
-    minifyHtmlLiteralsRollupPlugin()
+    minifyHtmlLiteralsRollupPlugin(),
+    buildStylesRollupPlugin()
   ],
   test: {
     globals: true,

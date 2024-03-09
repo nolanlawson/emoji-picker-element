@@ -4,6 +4,7 @@ import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY } from '
 import enI18n from './i18n/en.js'
 import Database from './ImportedDatabase'
 import { queueMicrotask } from './utils/queueMicrotask.js'
+import baseStyles from './styles/picker.scss'
 
 const PROPS = [
   'customEmoji',
@@ -25,7 +26,7 @@ export default class PickerElement extends HTMLElement {
     super()
     this.attachShadow({ mode: 'open' })
     const style = document.createElement('style')
-    style.textContent = process.env.STYLES + EXTRA_STYLES
+    style.textContent = baseStyles + EXTRA_STYLES
     this.shadowRoot.appendChild(style)
     this._ctx = {
       // Set defaults
