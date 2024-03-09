@@ -1,6 +1,5 @@
 import { vi } from 'vitest'
 import * as FakeIndexedDB from 'fake-indexeddb'
-import { Crypto } from '@peculiar/webcrypto'
 import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js'
 import { deleteDatabase } from '../src/database/databaseLifecycle'
 import styles from '../node_modules/.cache/emoji-picker-element/styles.js'
@@ -12,9 +11,6 @@ const fetchMocker = createFetchMock(vi)
 fetchMocker.enableMocks()
 
 const { IDBFactory, IDBKeyRange } = FakeIndexedDB
-
-// See https://github.com/jsdom/jsdom/issues/3455#issuecomment-1333567714
-globalThis.crypto.subtle = new Crypto().subtle
 
 if (!globalThis.performance) {
   globalThis.performance = {}
