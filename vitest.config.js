@@ -9,12 +9,13 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: [
-      './config/jest.setup.js'
+      './config/vitest.setup.js'
     ],
     testTimeout: 60000,
     coverage: {
+      enabled: true,
       provider: 'istanbul',
-      reporter: ['json', 'lcov', 'text', 'html'],
+      reporter: ['text', 'html', 'clover', 'json', 'lcov'],
       include: [
         'src/'
       ],
