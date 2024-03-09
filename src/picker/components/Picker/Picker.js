@@ -197,7 +197,7 @@ export function createRoot (shadowRoot, props) {
   // mount logic
   if (!state.emojiVersion) {
     detectEmojiSupportLevel().then(level => {
-      // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
+      // Can't actually test emoji support in Jest/Vitest/JSDom, emoji never render in color in Cairo
       /* istanbul ignore next */
       if (!level) {
         state.message = state.i18n.emojiUnsupportedMessage
@@ -312,7 +312,7 @@ export function createRoot (shadowRoot, props) {
       const { database } = state
       const favs = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
         database.getEmojiByUnicodeOrName(unicode)
-      )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
+      )))).filter(Boolean) // filter because in Jest/Vitest tests we don't have all the emoji in the DB
       state.defaultFavoriteEmojis = favs
     }
 
