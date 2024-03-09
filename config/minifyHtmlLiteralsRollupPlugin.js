@@ -1,0 +1,14 @@
+import { minifyHTMLLiterals } from 'minify-html-literals'
+
+export function minifyHtmlLiteralsRollupPlugin () {
+  return {
+    name: 'minify-html-in-tag-template-literals',
+    transform (content, id) {
+      if (id.includes('PickerTemplate.js')) {
+        return minifyHTMLLiterals(content, {
+          fileName: id
+        })
+      }
+    }
+  }
+}

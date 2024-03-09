@@ -1,18 +1,17 @@
-import { jest } from '@jest/globals'
+import { vi } from 'vitest'
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach } from '../shared'
 import Database from '../../../src/database/Database'
 
 describe('offline first', () => {
   beforeEach(() => {
     basicBeforeEach()
-    jest.spyOn(console, 'warn').mockImplementation(() => {})
+    vi.spyOn(console, 'warn').mockImplementation(() => undefined)
   })
   afterEach(basicAfterEach)
 
   test('basic offline first test', async () => {
     let db = new Database({ dataSource: ALL_EMOJI })
     await db.close()
-    fetch.mockClear()
     fetch.reset()
 
     fetch.get(ALL_EMOJI, { body: null, status: 500 })

@@ -29,7 +29,7 @@ describe('upgrade tests', () => {
 
     await tick(20)
 
-    expect(fetch).not.toHaveBeenCalled()
+    expect(fetch.calls().length).toBe(0)
 
     await import('../../../src/picker/PickerElement')
 
@@ -37,8 +37,9 @@ describe('upgrade tests', () => {
 
     const container = picker.shadowRoot
 
-    expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
+    expect(fetch.calls().length).toBe(1)
+    expect(fetch.lastUrl()).toBe(FR_EMOJI)
+    expect(fetch.lastOptions()).toBe(undefined)
 
     expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('👍')
 

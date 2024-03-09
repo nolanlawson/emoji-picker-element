@@ -8,7 +8,7 @@
 import { FONT_FAMILY } from '../constants'
 import { versionsAndTestEmoji } from '../../../bin/versionsAndTestEmoji'
 
-// only used in jest tests
+// only used in jest/vitest tests
 let simulateCanvasError = false
 export function setSimulateCanvasError (value) {
   simulateCanvasError = value
@@ -42,7 +42,7 @@ const compareFeatures = (feature1, feature2) => {
 }
 
 export function testColorEmojiSupported (text) {
-  if (process.env.NODE_ENV === 'test') {
+  if (import.meta.env.MODE === 'test') {
     if (simulateCanvasError) {
       throw new Error('canvas error')
     } else if (simulateOldBrowser) {
@@ -51,7 +51,7 @@ export function testColorEmojiSupported (text) {
         .map(([emoji]) => emoji)
         .includes(text)
     }
-    return true // avoid using canvas in jest
+    return true // avoid using canvas in jest/vitest
   }
   // Render white and black and then compare them to each other and ensure they're the same
   // color, and neither one is black. This shows that the emoji was rendered in color.

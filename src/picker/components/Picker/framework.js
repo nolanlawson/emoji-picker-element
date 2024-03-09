@@ -6,7 +6,7 @@ const unkeyedSymbol = Symbol('un-keyed')
 
 // for debugging
 /* istanbul ignore else */
-if (process.env.NODE_ENV !== 'production') {
+if (import.meta.env.MODE !== 'production') {
   window.parseCache = parseCache
   window.domInstancesCache = domInstancesCache
 }
@@ -37,7 +37,7 @@ function doChildrenNeedRerender (parentNode, newChildren) {
     oldChildrenCount++
   }
   /* istanbul ignore if */
-  if (process.env.NODE_ENV !== 'production' && oldChildrenCount !== parentNode.children.length) {
+  if (import.meta.env.MODE !== 'production' && oldChildrenCount !== parentNode.children.length) {
     throw new Error('parentNode.children.length is different from oldChildrenCount, it should not be')
   }
   // if new children length is different from old, we must re-render
@@ -94,7 +94,7 @@ function patch (expressions, instanceBindings) {
       } else if (expression instanceof Element) { // html tag template returning a DOM element
         newNode = expression
         /* istanbul ignore if */
-        if (process.env.NODE_ENV !== 'production' && newNode === targetNode) {
+        if (import.meta.env.MODE !== 'production' && newNode === targetNode) {
           // it seems impossible for the framework to get into this state, may as well assert on it
           // worst case scenario is we lose focus if we call replaceWith on the same node
           throw new Error('the newNode and targetNode are the same, this should never happen')
@@ -140,7 +140,7 @@ function parse (tokens) {
         case '<': {
           const nextChar = token.charAt(j + 1)
           /* istanbul ignore if */
-          if (process.env.NODE_ENV !== 'production' && !/[/a-z]/.test(nextChar)) {
+          if (import.meta.env.MODE !== 'production' && !/[/a-z]/.test(nextChar)) {
             // we don't need to support comments ('<!') because we always use html-minify-literals
             // also we don't support '<' inside tags, e.g. '<div> 2 < 3 </div>'
             throw new Error('framework currently only supports a < followed by / or a-z')
@@ -161,7 +161,7 @@ function parse (tokens) {
         }
         case '=': {
           /* istanbul ignore if */
-          if (process.env.NODE_ENV !== 'production' && !withinTag) {
+          if (import.meta.env.MODE !== 'production' && !withinTag) {
             // we don't currently support '=' anywhere but inside a tag, e.g.
             // we don't support '<div>2 + 2 = 4</div>'
             throw new Error('framework currently does not support = anywhere but inside a tag')
@@ -194,7 +194,7 @@ function parse (tokens) {
     }
 
     /* istanbul ignore else */
-    if (process.env.NODE_ENV !== 'production') {
+    if (import.meta.env.MODE !== 'production') {
       // remind myself that this object is supposed to be immutable
       Object.freeze(binding)
     }
@@ -246,7 +246,7 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
           : findPlaceholderComment(element, i) // not an attribute binding, so has a placeholder comment
 
         /* istanbul ignore if */
-        if (process.env.NODE_ENV !== 'production' && !targetNode) {
+        if (import.meta.env.MODE !== 'production' && !targetNode) {
           throw new Error('targetNode should not be undefined')
         }
 
@@ -258,7 +258,7 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
         }
 
         /* istanbul ignore else */
-        if (process.env.NODE_ENV !== 'production') {
+        if (import.meta.env.MODE !== 'production') {
           // remind myself that this object is supposed to be monomorphic (for better JS engine perf)
           Object.seal(instanceBinding)
         }

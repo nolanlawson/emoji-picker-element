@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { vi } from 'vitest'
 import Picker from '../../../src/picker/PickerElement'
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Database from '../../../src/database/Database'
@@ -9,7 +9,7 @@ describe('errors', () => {
 
   beforeEach(async () => {
     await basicBeforeEach()
-    errorSpy = jest.spyOn(global.console, 'error').mockImplementation()
+    errorSpy = vi.spyOn(global.console, 'error').mockImplementation(() => undefined)
     await tick(40)
   })
   afterEach(async () => {
@@ -19,7 +19,6 @@ describe('errors', () => {
     await tick(40)
   })
 
-  // seems not possible to do
   test('throws error when setting the database', async () => {
     const picker = new Picker({ dataSource: ALL_EMOJI, locale: 'en' })
     document.body.appendChild(picker)
@@ -32,7 +31,6 @@ describe('errors', () => {
     await tick(20)
   })
 
-  // can't seem to get jest to ignore these expected errors
   test('offline shows an error', async () => {
     const dataSource = 'error.json'
 

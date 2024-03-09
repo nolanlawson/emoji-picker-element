@@ -6,7 +6,7 @@ import { requestAnimationFrame } from './requestAnimationFrame'
 
 export let resizeObserverSupported = typeof ResizeObserver === 'function'
 
-// only used in jest tests
+// only used in jest/vitest tests
 export const resetResizeObserverSupported = () => {
   resizeObserverSupported = typeof ResizeObserver === 'function'
 }

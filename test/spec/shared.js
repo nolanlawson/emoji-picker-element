@@ -54,7 +54,6 @@ export function basicBeforeEach () {
 }
 
 export async function basicAfterEach () {
-  fetch.mockClear()
   fetch.reset()
   await tick(20)
 }

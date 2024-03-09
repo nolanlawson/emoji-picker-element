@@ -197,7 +197,7 @@ export function createRoot (shadowRoot, props) {
   // mount logic
   if (!state.emojiVersion) {
     detectEmojiSupportLevel().then(level => {
-      // Can't actually test emoji support in Jest/JSDom, emoji never render in color in Cairo
+      // Can't actually test emoji support in Jest/Vitest/JSDom, emoji never render in color in Cairo
       /* istanbul ignore next */
       if (!level) {
         state.message = state.i18n.emojiUnsupportedMessage
@@ -312,7 +312,7 @@ export function createRoot (shadowRoot, props) {
       const { database } = state
       const favs = (await Promise.all(MOST_COMMONLY_USED_EMOJI.map(unicode => (
         database.getEmojiByUnicodeOrName(unicode)
-      )))).filter(Boolean) // filter because in Jest tests we don't have all the emoji in the DB
+      )))).filter(Boolean) // filter because in Jest/Vitest tests we don't have all the emoji in the DB
       state.defaultFavoriteEmojis = favs
     }
 
@@ -362,7 +362,7 @@ export function createRoot (shadowRoot, props) {
   function calculateEmojiGridStyle (node) {
     calculateWidth(node, abortSignal, width => {
       /* istanbul ignore next */
-      if (process.env.NODE_ENV !== 'test') { // jsdom throws errors for this kind of fancy stuff
+      if (import.meta.env.MODE !== 'test') { // jsdom throws errors for this kind of fancy stuff
         // read all the style/layout calculations we need to make
         const style = getComputedStyle(refs.rootElement)
         const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
@@ -467,7 +467,7 @@ export function createRoot (shadowRoot, props) {
   createEffect(() => {
     // consider initialLoad to be complete when the first tabpanel and favorites are rendered
     /* istanbul ignore next */
-    if (process.env.NODE_ENV !== 'production' || process.env.PERF) {
+    if (import.meta.env.MODE !== 'production' || import.meta.env.PERF) {
       if (state.currentEmojis.length && state.currentFavorites.length && state.initialLoad) {
         state.initialLoad = false
         requestPostAnimationFrame(() => performance.measure('initialLoad', 'initialLoad'))

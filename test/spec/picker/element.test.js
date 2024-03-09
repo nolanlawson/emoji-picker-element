@@ -53,8 +53,9 @@ describe('element tests', () => {
 
     test('changing locale/dataSource prop causes only one network request', async () => {
       await tick(120)
-      expect(fetch).toHaveBeenCalledTimes(1)
-      expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI, undefined)
+      expect(fetch.calls().length).toBe(1)
+      expect(fetch.lastUrl()).toBe(ALL_EMOJI)
+      expect(fetch.lastOptions()).toBe(undefined)
       await type(getByRole(container, 'combobox'), 'monkey face')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1), {
         timeout: 2000
@@ -64,8 +65,9 @@ describe('element tests', () => {
       picker.locale = 'fr'
       picker.dataSource = FR_EMOJI
       await tick(120)
-      expect(fetch).toHaveBeenCalledTimes(2)
-      expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
+      expect(fetch.calls().length).toBe(2)
+      expect(fetch.lastUrl()).toBe(FR_EMOJI)
+      expect(fetch.lastOptions()).toBe(undefined)
       await clear(getByRole(container, 'combobox'))
       await type(getByRole(container, 'combobox'), 'singe tête')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1))
@@ -74,8 +76,9 @@ describe('element tests', () => {
 
     test('changing locale/dataSource attr causes only one network request', async () => {
       await tick(120)
-      expect(fetch).toHaveBeenCalledTimes(1)
-      expect(fetch).toHaveBeenLastCalledWith(ALL_EMOJI, undefined)
+      expect(fetch.calls().length).toBe(1)
+      expect(fetch.lastUrl()).toBe(ALL_EMOJI)
+      expect(fetch.lastOptions()).toBe(undefined)
       await type(getByRole(container, 'combobox'), 'monkey face')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1), {
         timeout: 2000
@@ -85,8 +88,9 @@ describe('element tests', () => {
       picker.setAttribute('locale', 'fr')
       picker.setAttribute('data-source', FR_EMOJI)
       await tick(120)
-      expect(fetch).toHaveBeenCalledTimes(2)
-      expect(fetch).toHaveBeenLastCalledWith(FR_EMOJI, undefined)
+      expect(fetch.calls().length).toBe(2)
+      expect(fetch.lastUrl()).toBe(FR_EMOJI)
+      expect(fetch.lastOptions()).toBe(undefined)
       await clear(getByRole(container, 'combobox'))
       await type(getByRole(container, 'combobox'), 'singe tête')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1))

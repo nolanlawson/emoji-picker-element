@@ -3,10 +3,10 @@ import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import strip from '@rollup/plugin-strip'
 import analyze from 'rollup-plugin-analyzer'
-import { buildStyles } from './bin/buildStyles.js'
-import { minifyHTMLLiterals } from 'minify-html-literals'
+import { minifyHtmlLiteralsRollupPlugin } from './config/minifyHtmlLiteralsRollupPlugin.js'
+import { buildStylesRollupPlugin } from './config/buildStylesRollupPlugin.js'
 
-const { NODE_ENV, DEBUG } = process.env
+const { NODE_ENV, DEBUG, PERF } = process.env
 const dev = NODE_ENV !== 'production'
 
 // Build Database.test.js and Picker.js as separate modules at build times so that they are properly tree-shakeable.
@@ -16,9 +16,8 @@ const baseConfig = {
     resolve(),
     cjs(),
     replace({
-      'process.env.NODE_ENV': dev ? '"development"' : '"production"',
-      'process.env.PERF': !!process.env.PERF,
-      'process.env.STYLES': JSON.stringify(buildStyles()),
+      'import.meta.env.MODE': dev ? '"development"' : '"production"',
+      'import.meta.env.PERF': !!PERF,
       preventAssignment: true
     }),
     replace({
@@ -26,20 +25,12 @@ const baseConfig = {
       delimiters: ['', ''],
       preventAssignment: true
     }),
-    {
-      name: 'minify-html-in-tag-template-literals',
-      transform (content, id) {
-        if (id.includes('PickerTemplate.js')) {
-          return minifyHTMLLiterals(content, {
-            fileName: id
-          })
-        }
-      }
-    },
+    minifyHtmlLiteralsRollupPlugin(),
+    buildStylesRollupPlugin(),
     strip({
       include: ['**/*.js'],
       functions: [
-        (!dev && !process.env.PERF) && 'performance.*',
+        (!dev && !PERF) && 'performance.*',
         !dev && 'console.log'
       ].filter(Boolean)
     }),
