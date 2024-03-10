@@ -243,12 +243,13 @@ describe('database second load and update', () => {
     await db.close()
     mockEmoji(otherSource, truncatedEmoji, 'W/xxx')
 
+    await tick(40)
+    expect(fetch.calls().length).toBe(0)
+
     db = new Database({ dataSource: otherSource })
     await db.ready()
-    await tick(5) // the request is done asynchronously, so wait for it
-    expect(fetch.calls().length).toBe(2)
-    expect(fetch.calls().at(-2)[0]).toBe(otherSource)
-    expect(fetch.calls().at(-2)[1]).toEqual({ method: 'HEAD' })
+    await tick(40) // the request is done asynchronously, so wait for it
+    expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(otherSource)
     expect(fetch.lastOptions()).toBe(undefined)
     await db.delete()

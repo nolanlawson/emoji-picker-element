@@ -39,18 +39,18 @@ export function basicBeforeEach () {
   fetch
     .get(ALL_EMOJI, () => new Response(JSON.stringify(truncatedEmoji), {
       headers: { ETag: 'W/xxx' }
-    }))
+    }), { delay: 2 })
     .head(ALL_EMOJI, () => new Response(null, {
       headers: { ETag: 'W/xxx' }
-    }))
-    .get(ALL_EMOJI_NO_ETAG, truncatedEmoji)
-    .head(ALL_EMOJI_NO_ETAG, () => new Response(null))
+    }), { delay: 2 })
+    .get(ALL_EMOJI_NO_ETAG, truncatedEmoji, { delay: 2 })
+    .head(ALL_EMOJI_NO_ETAG, () => new Response(null), { delay: 2 })
     .get(ALL_EMOJI_MISCONFIGURED_ETAG, () => new Response(JSON.stringify(truncatedEmoji), {
       headers: { ETag: 'W/xxx' }
-    }))
-    .head(ALL_EMOJI_MISCONFIGURED_ETAG, () => new Response(null))
-    .get(DEFAULT_DATA_SOURCE, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/def' } }))
-    .head(DEFAULT_DATA_SOURCE, () => new Response(null, { headers: { ETag: 'W/def' } }))
+    }), { delay: 2 })
+    .head(ALL_EMOJI_MISCONFIGURED_ETAG, () => new Response(null), { delay: 2 })
+    .get(DEFAULT_DATA_SOURCE, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/def' } }), { delay: 2 })
+    .head(DEFAULT_DATA_SOURCE, () => new Response(null, { headers: { ETag: 'W/def' } }), { delay: 2 })
 }
 
 export async function basicAfterEach () {

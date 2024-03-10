@@ -66,9 +66,7 @@ describe('lifecycle', () => {
 
     await tick(60)
 
-    expect(fetch.calls().length).toBe(1)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.calls().length).toBe(0)
     expect(Object.keys(openIndexedDBRequests).length).toBe(0) // no open IDB connections
   })
 
@@ -81,9 +79,7 @@ describe('lifecycle', () => {
 
     await tick(120)
 
-    expect(fetch.calls().length).toBe(1)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.calls().length).toBe(0)
     expect(Object.keys(openIndexedDBRequests).length).toBe(0) // no open IDB connections
   })
 

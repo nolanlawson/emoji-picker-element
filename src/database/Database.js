@@ -36,16 +36,24 @@ export default class Database {
   }
 
   async _init () {
+    const controller = this._controller = new AbortController() // used to cancel ongoing requests if necessary
+    const { signal } = controller
     const db = this._db = await openDatabase(this._dbName)
-
     addOnCloseListener(this._dbName, this._clear)
+    if (signal.aborted) {
+      return
+    }
+
     const dataSource = this.dataSource
     const empty = await isEmpty(db)
+    if (signal.aborted) {
+      return
+    }
 
     if (empty) {
-      await loadDataForFirstTime(db, dataSource)
+      await loadDataForFirstTime(db, dataSource, signal)
     } else { // offline-first - do an update asynchronously
-      this._lazyUpdate = checkForUpdates(db, dataSource)
+      this._lazyUpdate = checkForUpdates(db, dataSource, signal)
     }
   }
 
@@ -134,6 +142,9 @@ export default class Database {
   }
 
   async _shutdown () {
+    if (this._controller) {
+      this._controller.abort()
+    }
     await this.ready() // reopen if we've already been closed/deleted
     try {
       await this._lazyUpdate // allow any lazy updates to process before closing/deleting
@@ -147,7 +158,7 @@ export default class Database {
     // The memory leak tests prove this is unnecessary. It's because:
     // 1) IDBDatabases that can no longer fire "close" automatically have listeners GCed
     // 2) we clear the manual close listeners in databaseLifecycle.js.
-    this._db = this._ready = this._lazyUpdate = undefined
+    this._controller = this._db = this._ready = this._lazyUpdate = undefined
   }
 
   async close () {

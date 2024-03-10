@@ -11,6 +11,7 @@ describe('offline first', () => {
 
   test('basic offline first test', async () => {
     let db = new Database({ dataSource: ALL_EMOJI })
+    await db.ready()
     await db.close()
     fetch.reset()
 
