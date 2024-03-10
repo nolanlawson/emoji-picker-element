@@ -152,6 +152,7 @@ describe('database tests', () => {
     await db1.ready()
     const db2 = new Database({ dataSource: ALL_EMOJI })
     await db2.ready()
+    await db2._lazyUpdate // TODO: should this be necessary?
     await db1.close()
     expect((await db1.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await db2.close()
