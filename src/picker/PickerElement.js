@@ -46,7 +46,7 @@ export default class PickerElement extends HTMLElement {
         delete this[prop]
       }
     }
-    this._dbFlush() // wait for a flush before creating the db, in case the user calls e.g. a setter or setAttribute
+    this._dbCreate()
   }
 
   connectedCallback () {
@@ -94,7 +94,7 @@ export default class PickerElement extends HTMLElement {
       this._cmp.$set({ [prop]: newValue })
     }
     if (['locale', 'dataSource'].includes(prop)) {
-      this._dbFlush()
+      this._dbCreate()
     }
   }
 
@@ -102,16 +102,11 @@ export default class PickerElement extends HTMLElement {
     const { locale, dataSource, database } = this._ctx
     // only create a new database if we really need to
     if (!database || database.locale !== locale || database.dataSource !== dataSource) {
+      if (database) {
+        database.close()
+      }
       this._set('database', new Database({ locale, dataSource }))
     }
-  }
-
-  // Update the Database in one microtask if the locale/dataSource change. We do one microtask
-  // so we don't create two Databases if e.g. both the locale and the dataSource change
-  _dbFlush () {
-    queueMicrotask(() => (
-      this._dbCreate()
-    ))
   }
 }
 
