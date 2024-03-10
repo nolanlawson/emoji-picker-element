@@ -11,8 +11,11 @@ export async function checkForUpdates (db, dataSource, signal) {
   }
 
   if (!eTag) { // work around lack of ETag/Access-Control-Expose-Headers
+    console.info('A get etag, aborted=', signal.aborted)
     const eTagAndData = await getETagAndData(dataSource)
+    console.info('A got etag, aborted=', signal.aborted)
     if (signal.aborted) {
+      console.info('A returning early')
       return
     }
 
@@ -35,8 +38,11 @@ export async function checkForUpdates (db, dataSource, signal) {
   } else {
     console.log('Database update available')
     if (!emojiData) {
+      console.info('B get etag, aborted=', signal.aborted)
       const eTagAndData = await getETagAndData(dataSource)
+      console.info('B got etag, aborted=', signal.aborted)
       if (signal.aborted) {
+        console.info('B returning early')
         return
       }
 

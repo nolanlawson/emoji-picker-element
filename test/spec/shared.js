@@ -24,7 +24,7 @@ export function truncateEmoji (allEmoji) {
 }
 
 export const truncatedEmoji = truncateEmoji(allEmoji)
-const truncatedFrEmoji = truncateEmoji(frEmoji)
+export const truncatedFrEmoji = truncateEmoji(frEmoji)
 const emojibaseV5Emoji = truncateEmoji(allEmojibaseV5Emoji)
 
 export const ALL_EMOJI = 'http://localhost/emoji.json'
