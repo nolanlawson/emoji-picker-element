@@ -1,5 +1,6 @@
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, truncatedEmoji } from '../shared'
 import Database from '../../../src/database/Database'
+import { mockGetAndHead } from '../mockFetch.js'
 
 describe('getEmojiByShortcode', () => {
   beforeEach(basicBeforeEach)
@@ -63,9 +64,7 @@ describe('getEmojiByShortcode', () => {
       }
     }
 
-    fetch
-      .get(dataSource, () => new Response(JSON.stringify(emojis), { headers: { ETag: 'W/optional' } }))
-      .head(dataSource, () => new Response(null, { headers: { ETag: 'W/optional' } }))
+    mockGetAndHead(dataSource, emojis, { headers: { ETag: 'W/optional' } })
 
     const db = new Database({ dataSource })
 

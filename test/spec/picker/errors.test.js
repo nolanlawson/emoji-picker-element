@@ -3,6 +3,7 @@ import Picker from '../../../src/picker/PickerElement'
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Database from '../../../src/database/Database'
 import { getByRole, waitFor } from '@testing-library/dom'
+import { mock500GetAndHead, mockGetAndHead } from '../mockFetch.js'
 
 describe('errors', () => {
   let errorSpy
@@ -34,8 +35,7 @@ describe('errors', () => {
   test('offline shows an error', async () => {
     const dataSource = 'error.json'
 
-    fetch.get(dataSource, { body: null, status: 500 })
-    fetch.head(dataSource, { body: null, status: 500 })
+    mock500GetAndHead(dataSource)
 
     const picker = new Picker({ dataSource })
     const container = picker.shadowRoot
@@ -55,10 +55,7 @@ describe('errors', () => {
   test('slow networks show "Loading"', async () => {
     const dataSource = 'slow.json'
 
-    fetch.get(dataSource, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/slow' } }),
-      { delay: 1500 })
-    fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/slow' } }),
-      { delay: 1500 })
+    mockGetAndHead(dataSource, truncatedEmoji, { headers: { ETag: 'W/slow' }, delay: 1500 })
 
     const picker = new Picker({ dataSource })
     const container = picker.shadowRoot

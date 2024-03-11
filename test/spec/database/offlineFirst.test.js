@@ -1,6 +1,7 @@
 import { vi } from 'vitest'
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach } from '../shared'
 import Database from '../../../src/database/Database'
+import { mock500GetAndHead } from '../mockFetch.js'
 
 describe('offline first', () => {
   beforeEach(() => {
@@ -14,8 +15,7 @@ describe('offline first', () => {
     await db.close()
     fetch.reset()
 
-    fetch.get(ALL_EMOJI, { body: null, status: 500 })
-    fetch.head(ALL_EMOJI, { body: null, status: 500 })
+    mock500GetAndHead(ALL_EMOJI)
 
     db = new Database({ dataSource: ALL_EMOJI })
     await db.ready()
@@ -27,8 +27,7 @@ describe('offline first', () => {
 
   test('basic error test', async () => {
     const ERROR = 'error.json'
-    fetch.get(ERROR, { body: null, status: 500 })
-    fetch.head(ERROR, { body: null, status: 500 })
+    mock500GetAndHead(ERROR)
 
     const db = new Database({ dataSource: ERROR })
     await (expect(() => db.ready())).rejects.toThrow()

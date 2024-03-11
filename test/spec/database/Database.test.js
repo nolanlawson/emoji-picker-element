@@ -4,6 +4,7 @@ import {
   ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI, truncatedEmoji, NO_SHORTCODES, mockDataSourceWithNoShortcodes
 } from '../shared'
 import trimEmojiData from '../../../src/trimEmojiData'
+import { mockFetch, mockGetAndHead } from '../mockFetch.js'
 
 describe('database tests', () => {
   beforeEach(basicBeforeEach)
@@ -89,11 +90,11 @@ describe('database tests', () => {
     const EMPTY = 'empty.json'
     const NULL_ARRAY = 'null-array.json'
     const BAD_OBJECT = 'bad-object.json'
-    fetch.get(NULL, () => new Response('null'))
-    fetch.get(NOT_ARRAY, () => new Response('{}'))
-    fetch.get(EMPTY, () => new Response('[]'))
-    fetch.get(NULL_ARRAY, () => new Response('[null]'))
-    fetch.get(BAD_OBJECT, () => new Response('[{"missing": true}]'))
+    mockFetch('get', NULL, 'null')
+    mockFetch('get', NOT_ARRAY, '{}')
+    mockFetch('get', EMPTY, '[]')
+    mockFetch('get', NULL_ARRAY, '[null]')
+    mockFetch('get', BAD_OBJECT, '[{"missing": true}]')
 
     const makeDB = async (dataSource) => {
       const db = new Database({ dataSource })
@@ -152,6 +153,7 @@ describe('database tests', () => {
     await db1.ready()
     const db2 = new Database({ dataSource: ALL_EMOJI })
     await db2.ready()
+    await db2._lazyUpdate // TODO [#407] Skipping this causes an InvalidStateError in IDB
     await db1.close()
     expect((await db1.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await db2.close()
@@ -195,8 +197,7 @@ describe('database tests', () => {
   test('basic trimEmojiData test', async () => {
     const trimmed = trimEmojiData(truncatedEmoji)
     const dataSource = 'trimmed.js'
-    fetch.get(dataSource, () => new Response(JSON.stringify(trimmed), { headers: { ETag: 'W/trim' } }))
-    fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/trim' } }))
+    mockGetAndHead(dataSource, trimmed, { headers: { ETag: 'W/trim' } })
 
     const db = new Database({ dataSource })
     const emojis = await db.getEmojiBySearchQuery('face')
