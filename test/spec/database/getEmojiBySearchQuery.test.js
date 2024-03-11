@@ -2,6 +2,7 @@ import allEmoji from 'emoji-picker-element-data/en/emojibase/data.json'
 import Database from '../../../src/database/Database'
 import { pick, omit } from 'lodash-es'
 import { basicAfterEach, basicBeforeEach, ALL_EMOJI, truncatedEmoji } from '../shared'
+import { mockGetAndHead } from '../mockFetch.js'
 
 // order can change from version to version
 const expectToBeSorted = results => {
@@ -128,10 +129,7 @@ describe('getEmojiBySearchQuery', () => {
 
     const EMOJI_WITH_APOS = 'http://localhost/apos.json'
 
-    fetch.get(EMOJI_WITH_APOS, () => new Response(JSON.stringify(emojiWithTwelveOclock), {
-      headers: { ETag: 'W/apos' }
-    }))
-    fetch.head(EMOJI_WITH_APOS, () => new Response(null, { headers: { ETag: 'W/apos' } }))
+    mockGetAndHead(EMOJI_WITH_APOS, emojiWithTwelveOclock, { headers: { ETag: 'W/apos' } })
 
     const db = new Database({ dataSource: EMOJI_WITH_APOS })
 
@@ -159,10 +157,7 @@ describe('getEmojiBySearchQuery', () => {
 
     const EMOJI = 'http://localhost/apos.json'
 
-    fetch.get(EMOJI, () => new Response(JSON.stringify(emoji), {
-      headers: { ETag: 'W/blond' }
-    }))
-    fetch.head(EMOJI, () => new Response(null, { headers: { ETag: 'W/blond' } }))
+    mockGetAndHead(EMOJI, emoji, { headers: { ETag: 'W/blond' } })
 
     const db = new Database({ dataSource: EMOJI })
 
