@@ -31,7 +31,31 @@ describe('database timing tests', () => {
       ]
       scenarios.forEach(({ testName, dataSource }) => {
         describe(testName, () => {
-          new Array(10).fill().forEach((_, count) => {
+
+          let descriptor
+          let onSignalAbortedCalled = new EventTarget()
+          beforeEach(() => {
+            descriptor = Object.getOwnPropertyDescriptor(AbortSignal.prototype, 'aborted')
+            Object.defineProperty(AbortSignal.prototype, 'aborted', {
+              get() {
+                console.info('signal dot aborted called')
+                onSignalAbortedCalled.dispatchEvent(new CustomEvent('signal-dot-aborted'))
+                return descriptor.get.apply(this)
+              },
+              set(val) {
+                return descriptor.set.apply(this, val)
+              }
+            })
+          })
+
+          afterEach(() => {
+            Object.defineProperty(AbortSignal.prototype, 'aborted', descriptor)
+          })
+
+          // Number of times somebody called the getter on `signal.aborted` which
+          // we are using as an easy way to get full code coverage here
+          const signalAbortedCheckCounts = new Array(5).fill().map((_, i) => i)
+          signalAbortedCheckCounts.forEach(count => {
             test(`throws no errors when DB is canceled after ${count} ticks`, async () => {
               // first load
               const db = new Database({ dataSource })
