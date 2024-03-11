@@ -2,6 +2,7 @@ import allEmoji from 'emoji-picker-element-data/en/emojibase/data.json'
 import frEmoji from 'emoji-picker-element-data/fr/cldr/data.json'
 import allEmojibaseV5Emoji from 'emojibase-data/en/data.json'
 import { DEFAULT_DATA_SOURCE } from '../../src/database/constants'
+import { mockFetch, mockGetAndHead } from './mockFetch.js'
 
 export function truncateEmoji (allEmoji) {
   // just take the first few emoji from each category, or else it takes forever to insert
@@ -36,21 +37,11 @@ export const EMOJIBASE_V5 = 'http://localhost/emojibase'
 export const WITH_ARRAY_SKIN_TONES = 'http://localhost/with-array-skin-tones'
 
 export function basicBeforeEach () {
-  fetch
-    .get(ALL_EMOJI, () => new Response(JSON.stringify(truncatedEmoji), {
-      headers: { ETag: 'W/xxx' }
-    }), { delay: 2 })
-    .head(ALL_EMOJI, () => new Response(null, {
-      headers: { ETag: 'W/xxx' }
-    }), { delay: 2 })
-    .get(ALL_EMOJI_NO_ETAG, truncatedEmoji, { delay: 2 })
-    .head(ALL_EMOJI_NO_ETAG, () => new Response(null), { delay: 2 })
-    .get(ALL_EMOJI_MISCONFIGURED_ETAG, () => new Response(JSON.stringify(truncatedEmoji), {
-      headers: { ETag: 'W/xxx' }
-    }), { delay: 2 })
-    .head(ALL_EMOJI_MISCONFIGURED_ETAG, () => new Response(null), { delay: 2 })
-    .get(DEFAULT_DATA_SOURCE, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/def' } }), { delay: 2 })
-    .head(DEFAULT_DATA_SOURCE, () => new Response(null, { headers: { ETag: 'W/def' } }), { delay: 2 })
+  mockGetAndHead(ALL_EMOJI, truncatedEmoji, { headers: { ETag: 'W/xxx' } })
+  mockGetAndHead(ALL_EMOJI_NO_ETAG, truncatedEmoji)
+  mockGetAndHead(DEFAULT_DATA_SOURCE, truncatedEmoji, { headers: { ETag: 'W/def' } })
+  mockFetch('get', ALL_EMOJI_MISCONFIGURED_ETAG, truncatedEmoji, { headers: { ETag: 'W/xxx' } })
+  mockFetch('head', ALL_EMOJI_MISCONFIGURED_ETAG, null)
 }
 
 export async function basicAfterEach () {
@@ -65,8 +56,7 @@ export async function tick (times = 1) {
 }
 
 export function mockFrenchDataSource () {
-  fetch.get(FR_EMOJI, () => new Response(JSON.stringify(truncatedFrEmoji), { headers: { ETag: 'W/zzz' } }))
-  fetch.head(FR_EMOJI, () => new Response(null, { headers: { ETag: 'W/zzz' } }))
+  mockGetAndHead(FR_EMOJI, truncatedFrEmoji, { headers: { ETag: 'W/zzz' } })
 }
 
 export function mockDataSourceWithNoShortcodes () {
@@ -75,22 +65,16 @@ export function mockDataSourceWithNoShortcodes () {
     delete res.shortcodes
     return res
   })
-  fetch.get(NO_SHORTCODES, () => new Response(JSON.stringify(noShortcodeEmoji), { headers: { ETag: 'W/noshort' } }))
-  fetch.head(NO_SHORTCODES, () => new Response(null, { headers: { ETag: 'W/noshort' } }))
+  mockGetAndHead(NO_SHORTCODES, noShortcodeEmoji, { headers: { ETag: 'W/noshort' } })
 }
 
 export function mockEmojibaseV5DataSource () {
-  fetch.get(EMOJIBASE_V5, () => new Response(JSON.stringify(emojibaseV5Emoji), { headers: { ETag: 'W/emojibase' } }))
-  fetch.head(EMOJIBASE_V5, () => new Response(null, { headers: { ETag: 'W/emojibase' } }))
+  mockGetAndHead(EMOJIBASE_V5, emojibaseV5Emoji, { headers: { ETag: 'W/emojibase' } })
 }
 
 export function mockDataSourceWithArraySkinTones () {
   const emojis = JSON.parse(JSON.stringify(truncatedEmoji))
   emojis.push(allEmoji.find(_ => _.annotation === 'people holding hands')) // has two skin tones, one for each person
 
-  fetch
-    .get(WITH_ARRAY_SKIN_TONES, () => (
-      new Response(JSON.stringify(emojis), { headers: { ETag: 'W/noshort' } }))
-    )
-    .head(WITH_ARRAY_SKIN_TONES, () => new Response(null, { headers: { ETag: 'W/noshort' } }))
+  mockGetAndHead(WITH_ARRAY_SKIN_TONES, emojis, { headers: { ETag: 'W/noshort' } })
 }

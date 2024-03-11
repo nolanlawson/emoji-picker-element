@@ -1,6 +1,7 @@
 import allEmoji from 'emoji-picker-element-data/en/emojibase/data.json'
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, truncatedEmoji } from '../shared'
 import Database from '../../../src/database/Database'
+import { mockGetAndHead } from '../mockFetch.js'
 
 describe('getEmojiByUnicode', () => {
   beforeEach(basicBeforeEach)
@@ -14,10 +15,7 @@ describe('getEmojiByUnicode', () => {
     ]
     const EMOJI_WITH_PIRATES = 'http://localhost/pirate.json'
 
-    fetch.get(EMOJI_WITH_PIRATES, () => new Response(JSON.stringify(emojiPlusPirateFlag), {
-      headers: { ETag: 'W/yarrr' }
-    }))
-    fetch.head(EMOJI_WITH_PIRATES, () => new Response(null, { headers: { ETag: 'W/yarrr' } }))
+    mockGetAndHead(EMOJI_WITH_PIRATES, emojiPlusPirateFlag, { headers: { ETag: 'W/yarrr' } })
 
     const db = new Database({ dataSource: EMOJI_WITH_PIRATES })
 

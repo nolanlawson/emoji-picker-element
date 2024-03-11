@@ -8,6 +8,7 @@ import allData from 'emoji-picker-element-data/en/emojibase/data.json'
 import { MOST_COMMONLY_USED_EMOJI } from '../../../src/picker/constants'
 import { uniqBy } from '../../../src/shared/uniqBy'
 import { groups } from '../../../src/picker/groups'
+import { mockGetAndHead } from '../mockFetch.js'
 
 const dataSource = 'with-favs.json'
 
@@ -23,8 +24,7 @@ describe('Favorites UI', () => {
       ...allData.filter(_ => MOST_COMMONLY_USED_EMOJI.includes(_.emoji))
     ], _ => _.emoji)
 
-    fetch.get(dataSource, () => new Response(JSON.stringify(dataWithFavorites), { headers: { ETag: 'W/favs' } }))
-    fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/favs' } }))
+    mockGetAndHead(dataSource, dataWithFavorites, { headers: { ETag: 'W/favs' } })
 
     picker = new Picker({ dataSource, locale: 'en' })
     document.body.appendChild(picker)

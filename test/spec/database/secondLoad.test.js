@@ -1,11 +1,11 @@
 import { ALL_EMOJI, ALL_EMOJI_NO_ETAG, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Database from '../../../src/database/Database'
 import allEmoji from 'emoji-picker-element-data/en/emojibase/data.json'
+import { mockGetAndHead } from '../mockFetch.js'
 
 function mockEmoji (dataSource, data, etag) {
   fetch.reset()
-  fetch.get(dataSource, () => new Response(JSON.stringify(data), etag && { headers: { ETag: etag } }))
-  fetch.head(dataSource, () => new Response(null, etag && { headers: { ETag: etag } }))
+  mockGetAndHead(dataSource, data, etag && { headers: { ETag: etag } })
 }
 
 async function testDataChange (firstData, secondData, firstCallback, secondCallback, thirdCallback) {
@@ -185,8 +185,7 @@ describe('database second load and update', () => {
     const dataSource2 = 'http://localhost/will-change2.json'
 
     // first time - data is v1
-    fetch.get(dataSource, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/xxx' } }))
-    fetch.head(dataSource, () => new Response(null, { headers: { ETag: 'W/xxx' } }))
+    mockGetAndHead(dataSource, truncatedEmoji, { headers: { ETag: 'W/xxx' } })
 
     let db = new Database({ dataSource })
     await db.ready()
@@ -205,8 +204,7 @@ describe('database second load and update', () => {
 
     // second time - update, data is v2
     fetch.reset()
-    fetch.get(dataSource2, () => new Response(JSON.stringify(changedEmoji), { headers: { ETag: 'W/yyy' } }))
-    fetch.head(dataSource2, () => new Response(null, { headers: { ETag: 'W/yyy' } }))
+    mockGetAndHead(dataSource2, changedEmoji, { headers: { ETag: 'W/yyy' } })
 
     db = new Database({ dataSource: dataSource2 })
     await db.ready()
@@ -221,8 +219,7 @@ describe('database second load and update', () => {
 
     // third time - no update, data is v2
     fetch.reset()
-    fetch.get(dataSource2, () => new Response(JSON.stringify(changedEmoji), { headers: { ETag: 'W/yyy' } }))
-    fetch.head(dataSource2, () => new Response(null, { headers: { ETag: 'W/yyy' } }))
+    mockGetAndHead(dataSource2, changedEmoji, { headers: { ETag: 'W/yyy' } })
 
     db = new Database({ dataSource: dataSource2 })
     await db.ready()
@@ -265,8 +262,7 @@ describe('database second load and update', () => {
 
     // second time - update, data is v2
     fetch.reset()
-    fetch.get(ALL_EMOJI, () => new Response(JSON.stringify(changedEmoji), { headers: { ETag: 'W/yyy' } }))
-    fetch.head(ALL_EMOJI, () => new Response(null, { headers: { ETag: 'W/yyy' } }))
+    mockGetAndHead(ALL_EMOJI, changedEmoji, { headers: { ETag: 'W/yyy' } })
 
     // open two at once
     const dbs = [

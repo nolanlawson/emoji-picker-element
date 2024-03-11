@@ -13,6 +13,7 @@ import enI18n from '../../../src/picker/i18n/en'
 import Database from '../../../src/database/Database'
 import { DEFAULT_SKIN_TONE_EMOJI } from '../../../src/picker/constants'
 import { DEFAULT_DATA_SOURCE } from '../../../src/database/constants'
+import { mockGetAndHead } from '../mockFetch.js'
 const { type } = userEvent
 
 // Workaround for clear() not working in shadow roots: https://github.com/testing-library/user-event/issues/1143
@@ -123,8 +124,7 @@ describe('element tests', () => {
 
   describe('defaults test', () => {
     beforeEach(() => {
-      fetch.get(DEFAULT_DATA_SOURCE, () => new Response(JSON.stringify(truncatedEmoji), { headers: { ETag: 'W/aaa' } }))
-      fetch.head(DEFAULT_DATA_SOURCE, () => new Response(null, { headers: { ETag: 'W/aaa' } }))
+      mockGetAndHead(DEFAULT_DATA_SOURCE, truncatedEmoji, { headers: { ETag: 'W/aaa' } })
     })
 
     afterEach(basicAfterEach)
