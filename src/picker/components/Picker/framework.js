@@ -199,7 +199,7 @@ function parse (tokens) {
     bindings.push(binding)
 
     if (!withinTag && !withinAttribute) {
-      // Add a placeholder text node, so we can find it later. Note we only support one dynamic text node ever
+      // Add a placeholder text node, so we can find it later. Note we only support one dynamic child text node
       htmlString += ' '
     }
   }
