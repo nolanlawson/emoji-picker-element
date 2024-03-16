@@ -1,8 +1,5 @@
 import { getFromMap, parseTemplate, toString } from './utils.js'
 
-const TEXT_NODE = 3 // Node.TEXT_NODE
-const SHOW_ELEMENT = 1 // NodeFilter.SHOW_ELEMENT
-
 const parseCache = new WeakMap()
 const domInstancesCache = new WeakMap()
 // This needs to be a symbol because it needs to be different from any possible output of a key function
@@ -199,14 +196,12 @@ function parse (tokens) {
       Object.freeze(binding)
     }
 
-    if (!withinTag && !withinAttribute) {
-      // Add the index as a text node, so we can find it later.
-      // Using a text node rather than a comment node means this can be a simple `node.nodeValue` update rather than
-      // replacing the whole node when we need to patch later.
-      htmlString += bindings.length
-    }
-
     bindings.push(binding)
+
+    if (!withinTag && !withinAttribute) {
+      // Add a placeholder text node, so we can find it later. Note we only support one dynamic text node ever
+      htmlString += ' '
+    }
   }
 
   const template = parseTemplate(htmlString)
@@ -217,26 +212,24 @@ function parse (tokens) {
   }
 }
 
-function findPlaceholderTextNode (element, bindingId) {
-  // This can technically conflict with user markup, but we just don't support numeric literals in tags, e.g.
-  // `<div>123</div>`
-  const bindingIdAsNodeValue = toString(bindingId)
+function findPlaceholderTextNode (element) {
   // If we had a lot of placeholder nodes to find, it would make more sense to build up a map once
   // rather than search the DOM every time. But it turns out that we always only have one child,
-  // and it's the placeholder node, so searching every time is actually faster.
-  let childNode = element.firstChild
-  while (childNode) {
-    if (childNode.nodeType === TEXT_NODE && childNode.nodeValue === bindingIdAsNodeValue) {
-      return childNode
-    }
-    childNode = childNode.nextSibling
+  // and it's always the placeholder node, so "searching" every time is actually faster.
+  /* istanbul ignore if */
+  if (
+    import.meta.env.MODE !== 'production' &&
+    !(element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE)
+  ) {
+    throw new Error('framework only supports exactly one dynamic child text node')
   }
+  return element.firstChild
 }
 
 function traverseAndSetupBindings (dom, elementsToBindings) {
   const instanceBindings = []
   // traverse dom
-  const treeWalker = document.createTreeWalker(dom, SHOW_ELEMENT)
+  const treeWalker = document.createTreeWalker(dom, NodeFilter.SHOW_ELEMENT)
 
   let element = dom
   let elementIndex = -1
@@ -248,7 +241,7 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
 
         const targetNode = binding.attributeName
           ? element // attribute binding, just use the element itself
-          : findPlaceholderTextNode(element, i) // not an attribute binding, so has a placeholder text node
+          : findPlaceholderTextNode(element) // not an attribute binding, so has a placeholder text node
 
         /* istanbul ignore if */
         if (import.meta.env.MODE !== 'production' && !targetNode) {
