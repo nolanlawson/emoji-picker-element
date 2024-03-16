@@ -199,12 +199,12 @@ function parse (tokens) {
       Object.freeze(binding)
     }
 
-    bindings.push(binding)
-
     if (!withinTag && !withinAttribute) {
-      // add a text node that we can find later
-      htmlString += `{${bindings.length - 1}}`
+      // add the index as a text node, so we can find it later
+      htmlString += bindings.length
     }
+
+    bindings.push(binding)
   }
 
   const template = parseTemplate(htmlString)
@@ -216,7 +216,9 @@ function parse (tokens) {
 }
 
 function findPlaceholderTextNode (element, bindingId) {
-  const bindingIdAsNodeValue = `{${bindingId}}`
+  // This can technically conflict with user markup, but we just don't support numeric literals in tags, e.g.
+  // `<div>123</div>`
+  const bindingIdAsNodeValue = '' + bindingId
   // If we had a lot of placeholder nodes to find, it would make more sense to build up a map once
   // rather than search the DOM every time. But it turns out that we always only have one child,
   // and it's the placeholder node, so searching every time is actually faster.
