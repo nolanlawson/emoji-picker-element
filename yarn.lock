@@ -4623,7 +4623,7 @@ magic-string@^0.25.0:
   dependencies:
     sourcemap-codec "^1.4.8"
 
-magic-string@^0.30.3, magic-string@^0.30.5:
+magic-string@^0.30.3, magic-string@^0.30.5, magic-string@^0.30.8:
   version "0.30.8"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.8.tgz#14e8624246d2bedba70d5462aa99ac9681844613"
   integrity sha512-ISQTe55T2ao7XtlAStud6qwYPZjE4GK1S/BeVPus4jrq6JuOnQ00YKQC581RWhR122W7msZV263KzVeLoqidyQ==

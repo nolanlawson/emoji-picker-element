@@ -1,4 +1,7 @@
 import { createFramework } from '../../../src/picker/components/Picker/framework.js'
+import {
+  concatenateAdjacentExpressionsRollupPlugin
+} from '../../../config/concatenateAdjacentExpressionsRollupPlugin.js'
 
 describe('framework', () => {
   test('patches a node', () => {
@@ -123,5 +126,19 @@ describe('framework', () => {
     // pre+post
     expectRender(() => html`<div class="a${state.name}z"></div>`, '<div class="afooz"></div>', '<div class="abarz"></div>')
     expectRender(() => html`<div class=a${state.name}z></div>`, '<div class="afooz"></div>', '<div class="abarz"></div>')
+  })
+
+  test('transform-adjacent-expressions', () => {
+    /* eslint-disable no-template-curly-in-string */
+    const HTML = 'html' // avoid plugin activating on this very file
+    const plugin = concatenateAdjacentExpressionsRollupPlugin()
+    expect(plugin.transform(HTML+'`<div>yolo</div>`').code).toBe(HTML+'`<div>${"yolo"}</div>`')
+    expect(plugin.transform(HTML+'`<div>${a}</div>`').code).toBe(HTML+'`<div>${a}</div>`')
+    expect(plugin.transform(HTML+'`<div>1${a}</div>`').code).toBe(HTML+'`<div>${"1" + a}</div>`')
+    expect(plugin.transform(HTML+'`<div>1${a}2</div>`').code).toBe(HTML+'`<div>${"1" + a + "2"}</div>`')
+    expect(plugin.transform(HTML+'`<div>123${a}456</div>`').code).toBe(HTML+'`<div>${"123" + a + "456"}</div>`')
+    expect(plugin.transform(HTML+'`<div>123${a}456${b}</div>`').code).toBe(HTML+'`<div>${"123" + a + "456" + b}</div>`')
+    expect(plugin.transform(HTML+'`<div>123${a}456${b}789</div>`').code).toBe(HTML+'`<div>${"123" + a + "456" + b + "789"}</div>`')
+    /* eslint-enable no-template-curly-in-string */
   })
 })

@@ -1,5 +1,8 @@
 import { getFromMap, parseTemplate, toString } from './utils.js'
 
+const TEXT_NODE = 3 // Node.TEXT_NODE
+const SHOW_ELEMENT = 1 // NodeFilter.SHOW_ELEMENT
+
 const parseCache = new WeakMap()
 const domInstancesCache = new WeakMap()
 // This needs to be a symbol because it needs to be different from any possible output of a key function
@@ -55,7 +58,7 @@ function patchChildren (newChildren, instanceBinding) {
     needsRerender = doChildrenNeedRerender(targetParentNode, newChildren)
   } else { // first render of list
     needsRerender = true
-    instanceBinding.targetNode = undefined // placeholder comment not needed anymore, free memory
+    instanceBinding.targetNode = undefined // placeholder node not needed anymore, free memory
     instanceBinding.targetParentNode = targetParentNode = targetNode.parentNode
   }
   // avoid re-rendering list if the dom nodes are exactly the same before and after
@@ -102,13 +105,9 @@ function patch (expressions, instanceBindings) {
         }
         targetNode.replaceWith(newNode)
       } else { // primitive - string, number, etc
-        if (targetNode.nodeType === Node.TEXT_NODE) { // already transformed into a text node
-          // nodeValue is faster than textContent supposedly https://www.youtube.com/watch?v=LY6y3HbDVmg
-          targetNode.nodeValue = toString(expression)
-        } else { // replace comment or whatever was there before with a text node
-          newNode = document.createTextNode(toString(expression))
-          targetNode.replaceWith(newNode)
-        }
+        // nodeValue is faster than textContent supposedly https://www.youtube.com/watch?v=LY6y3HbDVmg
+        // note we may be replacing the value in a placeholder text node
+        targetNode.nodeValue = toString(expression)
       }
       if (newNode) {
         instanceBinding.targetNode = newNode
@@ -203,8 +202,8 @@ function parse (tokens) {
     bindings.push(binding)
 
     if (!withinTag && !withinAttribute) {
-      // add a placeholder comment that we can find later
-      htmlString += `<!--${bindings.length - 1}-->`
+      // add a text node that we can find later
+      htmlString += `{${bindings.length - 1}}`
     }
   }
 
@@ -216,15 +215,14 @@ function parse (tokens) {
   }
 }
 
-function findPlaceholderComment (element, bindingId) {
-  // If we had a lot of placeholder comments to find, it would make more sense to build up a map once
+function findPlaceholderTextNode (element, bindingId) {
+  const bindingIdAsNodeValue = `{${bindingId}}`
+  // If we had a lot of placeholder nodes to find, it would make more sense to build up a map once
   // rather than search the DOM every time. But it turns out that we always only have one child,
-  // and it's the comment node, so searching every time is actually faster.
+  // and it's the placeholder node, so searching every time is actually faster.
   let childNode = element.firstChild
   while (childNode) {
-    // Note that minify-html-literals has already removed all non-framework comments
-    // So we just need to look for comments that have exactly the bindingId as its text content
-    if (childNode.nodeType === Node.COMMENT_NODE && childNode.nodeValue === toString(bindingId)) {
+    if (childNode.nodeType === TEXT_NODE && childNode.nodeValue === bindingIdAsNodeValue) {
       return childNode
     }
     childNode = childNode.nextSibling
@@ -234,7 +232,7 @@ function findPlaceholderComment (element, bindingId) {
 function traverseAndSetupBindings (dom, elementsToBindings) {
   const instanceBindings = []
   // traverse dom
-  const treeWalker = document.createTreeWalker(dom, NodeFilter.SHOW_ELEMENT)
+  const treeWalker = document.createTreeWalker(dom, SHOW_ELEMENT)
 
   let element = dom
   let elementIndex = -1
@@ -246,7 +244,7 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
 
         const targetNode = binding.attributeName
           ? element // attribute binding, just use the element itself
-          : findPlaceholderComment(element, i) // not an attribute binding, so has a placeholder comment
+          : findPlaceholderTextNode(element, i) // not an attribute binding, so has a placeholder text node
 
         /* istanbul ignore if */
         if (import.meta.env.MODE !== 'production' && !targetNode) {

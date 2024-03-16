@@ -5,6 +5,7 @@ import strip from '@rollup/plugin-strip'
 import analyze from 'rollup-plugin-analyzer'
 import { minifyHtmlLiteralsRollupPlugin } from './config/minifyHtmlLiteralsRollupPlugin.js'
 import { buildStylesRollupPlugin } from './config/buildStylesRollupPlugin.js'
+import { concatenateAdjacentExpressionsRollupPlugin } from './config/concatenateAdjacentExpressionsRollupPlugin.js'
 
 const { NODE_ENV, DEBUG, PERF } = process.env
 const dev = NODE_ENV !== 'production'
@@ -26,6 +27,7 @@ const baseConfig = {
       preventAssignment: true
     }),
     minifyHtmlLiteralsRollupPlugin(),
+    concatenateAdjacentExpressionsRollupPlugin(),
     buildStylesRollupPlugin(),
     strip({
       include: ['**/*.js'],
