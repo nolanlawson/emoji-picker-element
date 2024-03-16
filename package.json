@@ -100,7 +100,6 @@
     "jsdom": "^24.0.0",
     "lint-staged": "^15.2.2",
     "lodash-es": "^4.17.15",
-    "magic-string": "^0.30.8",
     "markdown-table": "^3.0.2",
     "markdown-toc": "^1.2.0",
     "minify-html-literals": "^1.3.5",
