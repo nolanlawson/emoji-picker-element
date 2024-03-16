@@ -200,7 +200,9 @@ function parse (tokens) {
     }
 
     if (!withinTag && !withinAttribute) {
-      // add the index as a text node, so we can find it later
+      // Add the index as a text node, so we can find it later.
+      // Using a text node rather than a comment node means this can be a simple `node.nodeValue` update rather than
+      // replacing the whole node when we need to patch later.
       htmlString += bindings.length
     }
 
@@ -218,7 +220,7 @@ function parse (tokens) {
 function findPlaceholderTextNode (element, bindingId) {
   // This can technically conflict with user markup, but we just don't support numeric literals in tags, e.g.
   // `<div>123</div>`
-  const bindingIdAsNodeValue = '' + bindingId
+  const bindingIdAsNodeValue = toString(bindingId)
   // If we had a lot of placeholder nodes to find, it would make more sense to build up a map once
   // rather than search the DOM every time. But it turns out that we always only have one child,
   // and it's the placeholder node, so searching every time is actually faster.
