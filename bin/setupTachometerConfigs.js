@@ -8,16 +8,15 @@ for (const benchmark of benchmarks) {
 
   const content = {
     $schema: 'https://raw.githubusercontent.com/Polymer/tachometer/master/config.schema.json',
-    sampleSize: 200,
-    timeout: 15,
-    autoSampleConditions: ['1%'],
+    sampleSize: 50,
+    timeout: 5,
+    autoSampleConditions: ['10%'],
     benchmarks: [
       {
         url: `./index.html?benchmark=${benchmarkShortName}`,
         browser: {
           name: 'chrome',
-          headless: true,
-          cpuThrottlingRate: 4
+          headless: true
         },
         measurement: [
           {
