@@ -30,6 +30,6 @@ describe('basic fetch tests', () => {
     expect(resp.headers.get('etag')).toBe('W/xxx')
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(ALL_EMOJI)
-    expect(fetch.lastOptions()).toEqual({ method: 'HEAD' })
+    expect(fetch.lastOptions().method).toBe('HEAD')
   })
 })

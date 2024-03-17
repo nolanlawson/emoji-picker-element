@@ -25,7 +25,7 @@ describe('properties', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(FR_EMOJI)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
 
     expect(picker.locale).toEqual('fr')
     expect(picker.dataSource).toEqual(FR_EMOJI)
@@ -46,7 +46,7 @@ describe('properties', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(FR_EMOJI)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
 
     expect(picker.locale).toEqual('en')
     expect(picker.dataSource).toEqual(FR_EMOJI)
@@ -67,7 +67,7 @@ describe('properties', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
 
     expect(picker.locale).toEqual('fr')
     expect(picker.dataSource).toEqual(DEFAULT_DATA_SOURCE)

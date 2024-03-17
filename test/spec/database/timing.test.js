@@ -46,7 +46,15 @@ function runTest ({ secondLoad, dataChanged, dataSource, signalAbortedCallCount 
 
     const db2 = new Database({ dataSource })
     await waitForSignalAbortCalledNTimes(signalAbortedCallCount)
-    await db2.close()
+    const doClose = async () => {
+      await db2.close()
+    }
+    if (!secondLoad && signalAbortedCallCount === 2) {
+      // this happens to cancel an inflight fetch request
+      await expect(doClose).rejects.toThrow(/The operation was aborted/)
+    } else {
+      await doClose()
+    }
     await tick(40)
   })
 }
@@ -79,12 +87,11 @@ describe('database timing tests', () => {
             }
           ]
           scenarios.forEach(({ testName, dataSource, maxExpectedSignalAbortedCallCount }) => {
-            // Number of times somebody called the getter on `signal.aborted` which
-            // we are using as an easy way to get full code coverage here
-            const signalAbortedCallCounts = new Array(maxExpectedSignalAbortedCallCount).fill().map((_, i) => i)
-
-            signalAbortedCallCounts.forEach(signalAbortedCallCount => {
-              describe(testName, () => {
+            describe(testName, () => {
+              // Number of times somebody called the getter on `signal.aborted` which
+              // we are using as an easy way to get full code coverage here
+              const signalAbortedCallCounts = new Array(maxExpectedSignalAbortedCallCount).fill().map((_, i) => i)
+              signalAbortedCallCounts.forEach(signalAbortedCallCount => {
                 runTest({ secondLoad, dataChanged, dataSource, signalAbortedCallCount })
               })
             })

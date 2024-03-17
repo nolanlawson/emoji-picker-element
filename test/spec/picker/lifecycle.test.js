@@ -22,7 +22,7 @@ describe('lifecycle', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
 
     document.body.removeChild(picker)
     await tick(40)
@@ -33,7 +33,7 @@ describe('lifecycle', () => {
     // fetch is called once again after re-insertion
     expect(fetch.calls().length).toBe(2)
     expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
-    expect(fetch.lastOptions()).toEqual({ method: 'HEAD' })
+    expect(fetch.lastOptions().method).toBe('HEAD')
 
     document.body.removeChild(picker)
     await tick(60)
@@ -107,7 +107,7 @@ describe('lifecycle', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
@@ -135,7 +135,7 @@ describe('lifecycle', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
@@ -148,7 +148,7 @@ describe('lifecycle', () => {
 
     expect(fetch.calls().length).toBe(2) // fetch is called again due to re-render
     expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
-    expect(fetch.lastOptions()).toEqual({ method: 'HEAD' }) // cached, so does a HEAD
+    expect(fetch.lastOptions().method).toBe('HEAD') // cached, so does a HEAD
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))
@@ -171,7 +171,7 @@ describe('lifecycle', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
     ))

@@ -39,7 +39,7 @@ describe('upgrade tests', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(FR_EMOJI)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
 
     expect(getByRole(container, 'button', { name: /Choose a skin tone/ }).innerHTML).toContain('👍')
 

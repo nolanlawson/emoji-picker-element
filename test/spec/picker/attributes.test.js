@@ -33,7 +33,7 @@ describe('attributes tests', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(FR_EMOJI)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
 
     expect(picker.locale).toEqual('fr')
     expect(picker.dataSource).toEqual(FR_EMOJI)
@@ -172,7 +172,7 @@ describe('attributes tests', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(ALL_EMOJI)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
 
     document.body.removeChild(div)
     await tick(20)

@@ -6,13 +6,13 @@ import { isSignalAborted } from './utils/isSignalAborted.js'
 export async function checkForUpdates (db, dataSource, signal) {
   // just do a simple HEAD request first to see if the eTags match
   let emojiData
-  let eTag = await getETag(dataSource)
+  let eTag = await getETag(dataSource, signal)
   if (isSignalAborted(signal)) {
     return
   }
 
   if (!eTag) { // work around lack of ETag/Access-Control-Expose-Headers
-    const eTagAndData = await getETagAndData(dataSource)
+    const eTagAndData = await getETagAndData(dataSource, signal)
     if (isSignalAborted(signal)) {
       return
     }
@@ -36,7 +36,7 @@ export async function checkForUpdates (db, dataSource, signal) {
   } else {
     console.log('Database update available')
     if (!emojiData) {
-      const eTagAndData = await getETagAndData(dataSource)
+      const eTagAndData = await getETagAndData(dataSource, signal)
       if (isSignalAborted(signal)) {
         return
       }
@@ -48,7 +48,7 @@ export async function checkForUpdates (db, dataSource, signal) {
 }
 
 export async function loadDataForFirstTime (db, dataSource, signal) {
-  let [eTag, emojiData] = await getETagAndData(dataSource)
+  let [eTag, emojiData] = await getETagAndData(dataSource, signal)
   if (isSignalAborted(signal)) {
     return
   }

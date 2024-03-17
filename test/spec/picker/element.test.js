@@ -56,7 +56,7 @@ describe('element tests', () => {
       await tick(120)
       expect(fetch.calls().length).toBe(1)
       expect(fetch.lastUrl()).toBe(ALL_EMOJI)
-      expect(fetch.lastOptions()).toBe(undefined)
+      expect(fetch.lastOptions().method).toBe(undefined)
       await type(getByRole(container, 'combobox'), 'monkey face')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1), {
         timeout: 2000
@@ -68,7 +68,7 @@ describe('element tests', () => {
       await tick(120)
       expect(fetch.calls().length).toBe(2)
       expect(fetch.lastUrl()).toBe(FR_EMOJI)
-      expect(fetch.lastOptions()).toBe(undefined)
+      expect(fetch.lastOptions().method).toBe(undefined)
       await clear(getByRole(container, 'combobox'))
       await type(getByRole(container, 'combobox'), 'singe tête')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1))
@@ -79,7 +79,7 @@ describe('element tests', () => {
       await tick(120)
       expect(fetch.calls().length).toBe(1)
       expect(fetch.lastUrl()).toBe(ALL_EMOJI)
-      expect(fetch.lastOptions()).toBe(undefined)
+      expect(fetch.lastOptions().method).toBe(undefined)
       await type(getByRole(container, 'combobox'), 'monkey face')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1), {
         timeout: 2000
@@ -91,7 +91,7 @@ describe('element tests', () => {
       await tick(120)
       expect(fetch.calls().length).toBe(2)
       expect(fetch.lastUrl()).toBe(FR_EMOJI)
-      expect(fetch.lastOptions()).toBe(undefined)
+      expect(fetch.lastOptions().method).toBe(undefined)
       await clear(getByRole(container, 'combobox'))
       await type(getByRole(container, 'combobox'), 'singe tête')
       await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(1))

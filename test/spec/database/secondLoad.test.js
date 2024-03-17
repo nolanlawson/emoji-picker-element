@@ -52,23 +52,23 @@ describe('database second load and update', () => {
       // first load
       expect(fetch.calls().length).toBe(1)
       expect(fetch.lastUrl()).toBe(dataSource)
-      expect(fetch.lastOptions()).toBe(undefined)
+      expect(fetch.lastOptions().method).toBe(undefined)
       expect((await db.getEmojiByShortcode('rofl')).annotation).toBe('rolling on the floor laughing')
       expect(await db.getEmojiByShortcode('weary_cat')).toBeFalsy()
     }, async (db, dataSource) => {
       // second load
       expect(fetch.calls().length).toBe(2)
       expect(fetch.lastUrl()).toBe(dataSource)
-      expect(fetch.lastOptions()).toBe(undefined)
+      expect(fetch.lastOptions().method).toBe(undefined)
       expect(fetch.calls().at(-2)[0]).toBe(dataSource)
-      expect(fetch.calls().at(-2)[1]).toEqual({ method: 'HEAD' })
+      expect(fetch.calls().at(-2)[1].method).toBe('HEAD')
       expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
       expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
     }, async (db, dataSource) => {
       // third load
       expect(fetch.calls().length).toBe(1)
       expect(fetch.lastUrl()).toBe(dataSource)
-      expect(fetch.lastOptions()).toEqual({ method: 'HEAD' })
+      expect(fetch.lastOptions().method).toBe('HEAD')
       expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
       expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
     })
@@ -138,7 +138,7 @@ describe('database second load and update', () => {
     await db.ready()
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(dataSource)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
 
     expect((await db.getEmojiByShortcode('rofl')).annotation).toBe('rolling on the floor laughing')
     expect(await db.getEmojiByShortcode('weary_cat')).toBeFalsy()
@@ -157,9 +157,9 @@ describe('database second load and update', () => {
     await db._lazyUpdate
     expect(fetch.calls().length).toBe(2)
     expect(fetch.lastUrl()).toBe(dataSource)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
     expect(fetch.calls().at(-2)[0]).toBe(dataSource)
-    expect(fetch.calls().at(-2)[1]).toEqual({ method: 'HEAD' })
+    expect(fetch.calls().at(-2)[1].method).toBe('HEAD')
     expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
     expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
     await db.close()
@@ -172,9 +172,9 @@ describe('database second load and update', () => {
     await db._lazyUpdate
     expect(fetch.calls().length).toBe(2)
     expect(fetch.lastUrl()).toBe(dataSource)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
     expect(fetch.calls().at(-2)[0]).toBe(dataSource)
-    expect(fetch.calls().at(-2)[1]).toEqual({ method: 'HEAD' })
+    expect(fetch.calls().at(-2)[1].method).toBe('HEAD')
     expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
     expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
     await db.delete()
@@ -191,7 +191,7 @@ describe('database second load and update', () => {
     await db.ready()
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(dataSource)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
 
     expect((await db.getEmojiByShortcode('rofl')).annotation).toBe('rolling on the floor laughing')
     expect(await db.getEmojiByShortcode('weary_cat')).toBeFalsy()
@@ -211,9 +211,9 @@ describe('database second load and update', () => {
     await db._lazyUpdate
     expect(fetch.calls().length).toBe(2)
     expect(fetch.lastUrl()).toBe(dataSource2)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
     expect(fetch.calls().at(-2)[0]).toBe(dataSource2)
-    expect(fetch.calls().at(-2)[1]).toEqual({ method: 'HEAD' })
+    expect(fetch.calls().at(-2)[1].method).toBe('HEAD')
     expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
     expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
 
@@ -226,7 +226,7 @@ describe('database second load and update', () => {
     await db._lazyUpdate
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(dataSource2)
-    expect(fetch.lastOptions()).toEqual({ method: 'HEAD' })
+    expect(fetch.lastOptions().method).toBe('HEAD')
     expect((await db.getEmojiByShortcode('rofl'))).toBeFalsy()
     expect((await db.getEmojiByShortcode('pineapple')).annotation).toBe('pineapple')
 
@@ -248,7 +248,7 @@ describe('database second load and update', () => {
     await tick(40) // the request is done asynchronously, so wait for it
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(otherSource)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
     await db.delete()
   })
 
