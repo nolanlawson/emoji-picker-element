@@ -149,13 +149,17 @@ describe('database tests', () => {
   })
 
   test('multiple databases on same source, close both', async () => {
+    // TODO [#407] Skipping all these `tick(40)`s causes an InvalidStateError in IDB
     const db1 = new Database({ dataSource: ALL_EMOJI })
     await db1.ready()
+    await tick(40)
     const db2 = new Database({ dataSource: ALL_EMOJI })
     await db2.ready()
-    await db2._lazyUpdate // TODO [#407] Skipping this causes an InvalidStateError in IDB
+    await tick(40)
     await db1.close()
+    await tick(40)
     expect((await db1.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
+    await tick(40)
     await db2.close()
     expect((await db2.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     const db3 = new Database({ dataSource: ALL_EMOJI })
