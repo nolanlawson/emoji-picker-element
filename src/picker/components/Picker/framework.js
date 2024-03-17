@@ -212,20 +212,6 @@ function parse (tokens) {
   }
 }
 
-function findPlaceholderTextNode (element) {
-  // If we had a lot of placeholder nodes to find, it would make more sense to build up a map once
-  // rather than search the DOM every time. But it turns out that we always only have one child,
-  // and it's always the placeholder node, so "searching" every time is actually faster.
-  /* istanbul ignore if */
-  if (
-    import.meta.env.MODE !== 'production' &&
-    !(element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE)
-  ) {
-    throw new Error('framework only supports exactly one dynamic child text node')
-  }
-  return element.firstChild
-}
-
 function traverseAndSetupBindings (dom, elementsToBindings) {
   const instanceBindings = []
   // traverse dom
@@ -241,11 +227,23 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
 
         const targetNode = binding.attributeName
           ? element // attribute binding, just use the element itself
-          : findPlaceholderTextNode(element) // not an attribute binding, so has a placeholder text node
+          : element.firstChild // not an attribute binding, so has a placeholder text node
 
         /* istanbul ignore if */
-        if (import.meta.env.MODE !== 'production' && !targetNode) {
-          throw new Error('targetNode should not be undefined')
+        if (import.meta.env.MODE !== 'production') {
+          // We only support exactly one placeholder text node inside an element, which simplifies
+          // the implementation a lot. Also, minify-html-literals should handle any whitespace
+          // around the expression, so we should only ever see e.g. `<div>${expr}</div>`
+          if (
+            !binding.attributeName &&
+            !(element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE)
+          ) {
+            throw new Error('framework only supports exactly one dynamic child text node')
+          }
+
+          if (!targetNode) {
+            throw new Error('targetNode should not be undefined')
+          }
         }
 
         const instanceBinding = {
