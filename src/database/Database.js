@@ -21,6 +21,7 @@ import {
 import { customEmojiIndex } from './customEmojiIndex'
 import { cleanEmoji } from './utils/cleanEmoji'
 import { loadDataForFirstTime, checkForUpdates } from './dataLoading'
+import { isSignalAborted } from './utils/isSignalAborted.js'
 
 export default class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE, customEmoji = [] } = {}) {
@@ -36,17 +37,17 @@ export default class Database {
   }
 
   async _init () {
-    const controller = this._controller = new AbortController() // used to cancel ongoing requests if necessary
+    const controller = this._controller = new AbortController() // used to cancel inflight requests if necessary
     const { signal } = controller
     const db = this._db = await openDatabase(this._dbName)
     addOnCloseListener(this._dbName, this._clear)
-    if (signal.aborted) {
+    if (isSignalAborted(signal)) {
       return
     }
 
     const dataSource = this.dataSource
     const empty = await isEmpty(db)
-    if (signal.aborted) {
+    if (isSignalAborted(signal)) {
       return
     }
 
