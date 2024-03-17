@@ -7,22 +7,22 @@ import {
   tick, truncatedFrEmoji
 } from '../shared.js'
 import Database from '../../../src/database/Database.js'
-import { signalAbortedEventTarget } from '../../../src/database/utils/isSignalAborted.js'
+import { abortOpportunityEventTarget } from '../../../src/database/utils/abortSignalUtils.js'
 import { mockFetch, mockGetAndHead } from '../mockFetch.js'
 
 const waitForSignalAbortCalledNTimes = async (n) => {
   for (let i = 0; i < n; i++) {
     await Promise.race([
       new Promise(resolve => {
-        signalAbortedEventTarget.addEventListener('called', resolve, { once: true })
+        abortOpportunityEventTarget.addEventListener('called', resolve, { once: true })
       }),
-      new Promise((resolve, reject) => setTimeout(() => reject(new Error('timed out waiting for signal.aborted call')), 1000))
+      new Promise((resolve, reject) => setTimeout(() => reject(new Error('timed out waiting for abort opportunity')), 500))
     ])
   }
 }
 
-function runTest ({ secondLoad, dataChanged, dataSource, signalAbortedCallCount }) {
-  test(`throws no errors when DB is closed after ${signalAbortedCallCount} signal.aborted calls`, async () => {
+function runTest ({ secondLoad, dataChanged, dataSource, abortOpportunityCount }) {
+  test(`throws no errors when DB is closed after ${abortOpportunityCount} signal.aborted calls`, async () => {
     if (secondLoad) {
       // do a throwaway first load
       const db = new Database({ dataSource })
@@ -37,24 +37,19 @@ function runTest ({ secondLoad, dataChanged, dataSource, signalAbortedCallCount 
       if (dataSource === ALL_EMOJI_NO_ETAG) {
         mockGetAndHead(dataSource, truncatedFrEmoji)
       } else if (dataSource === ALL_EMOJI_MISCONFIGURED_ETAG) {
-        mockFetch('get', dataSource, truncatedFrEmoji, { headers: { ETag: 'W/yyy' } })
+        mockFetch('get', dataSource, truncatedFrEmoji, { headers: { ETag: 'W/updated' } })
         mockFetch('head', dataSource, null)
       } else {
-        mockGetAndHead(dataSource, truncatedFrEmoji, { headers: { ETag: 'W/yyy' } })
+        mockGetAndHead(dataSource, truncatedFrEmoji, { headers: { ETag: 'W/updated' } })
       }
     }
 
-    const db2 = new Database({ dataSource })
-    await waitForSignalAbortCalledNTimes(signalAbortedCallCount)
+    const db = new Database({ dataSource })
+    await waitForSignalAbortCalledNTimes(abortOpportunityCount)
     const doClose = async () => {
-      await db2.close()
+      await db.close()
     }
-    if (!secondLoad && signalAbortedCallCount === 2) {
-      // this happens to cancel an inflight fetch request
-      await expect(doClose).rejects.toThrow(/The operation was aborted/)
-    } else {
-      await doClose()
-    }
+    await doClose()
     await tick(40)
   })
 }
@@ -73,26 +68,26 @@ describe('database timing tests', () => {
             {
               testName: 'basic',
               dataSource: ALL_EMOJI,
-              maxExpectedSignalAbortedCallCount: secondLoad ? (dataChanged ? 6 : 5) : 4
+              maxExpectedAbortOpportunityCount: secondLoad ? 4 : 3
             },
             {
               testName: 'misconfigured etag',
               dataSource: ALL_EMOJI_MISCONFIGURED_ETAG,
-              maxExpectedSignalAbortedCallCount: secondLoad ? 6 : 4
+              maxExpectedAbortOpportunityCount: secondLoad ? 4 : 3
             },
             {
               testName: 'no etag',
               dataSource: ALL_EMOJI_NO_ETAG,
-              maxExpectedSignalAbortedCallCount: secondLoad ? 7 : 5
+              maxExpectedAbortOpportunityCount: secondLoad ? 5 : 3
             }
           ]
-          scenarios.forEach(({ testName, dataSource, maxExpectedSignalAbortedCallCount }) => {
+          scenarios.forEach(({ testName, dataSource, maxExpectedAbortOpportunityCount }) => {
             describe(testName, () => {
               // Number of times somebody called the getter on `signal.aborted` which
               // we are using as an easy way to get full code coverage here
-              const signalAbortedCallCounts = new Array(maxExpectedSignalAbortedCallCount).fill().map((_, i) => i)
-              signalAbortedCallCounts.forEach(signalAbortedCallCount => {
-                runTest({ secondLoad, dataChanged, dataSource, signalAbortedCallCount })
+              const abortOpportunityCounts = new Array(maxExpectedAbortOpportunityCount).fill().map((_, i) => i)
+              abortOpportunityCounts.forEach(abortOpportunityCount => {
+                runTest({ secondLoad, dataChanged, dataSource, abortOpportunityCount })
               })
             })
           })

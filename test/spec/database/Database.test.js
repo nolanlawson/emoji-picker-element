@@ -161,10 +161,15 @@ describe('database tests', () => {
     expect((await db1.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
     await tick(40)
     await db2.close()
+    await tick(40)
     expect((await db2.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
+    await tick(40)
     const db3 = new Database({ dataSource: ALL_EMOJI })
+    await tick(40)
     await db3.ready()
+    await tick(40)
     await db3.delete()
+    await tick(40)
   })
 
   test('multiple databases in multiple locales', async () => {

@@ -9,10 +9,6 @@ function assertStatus (response, dataSource) {
 
 export async function getETag (dataSource, signal) {
   performance.mark('getETag')
-  /* istanbul ignore if */
-  if (import.meta.env.MODE !== 'production' && !signal) {
-    throw new Error('signal must be defined')
-  }
   const response = await fetch(dataSource, { method: 'HEAD', signal })
   assertStatus(response, dataSource)
   const eTag = response.headers.get('etag')
@@ -23,10 +19,6 @@ export async function getETag (dataSource, signal) {
 
 export async function getETagAndData (dataSource, signal) {
   performance.mark('getETagAndData')
-  /* istanbul ignore if */
-  if (import.meta.env.MODE !== 'production' && !signal) {
-    throw new Error('signal must be defined')
-  }
   const response = await fetch(dataSource, { signal })
   assertStatus(response, dataSource)
   const eTag = response.headers.get('etag')
