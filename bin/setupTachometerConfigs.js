@@ -16,7 +16,8 @@ for (const benchmark of benchmarks) {
         url: `./index.html?benchmark=${benchmarkShortName}`,
         browser: {
           name: 'chrome',
-          headless: true
+          headless: true,
+          cpuThrottlingRate: 4
         },
         measurement: [
           {
