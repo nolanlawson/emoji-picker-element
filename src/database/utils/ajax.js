@@ -14,6 +14,7 @@ export async function getETag (dataSource, signal) {
   if (import.meta.env.MODE === 'test') {
     await abortOpportunity() // the fetch will error if the signal is aborted
   }
+  console.info('fetch', dataSource, 'HEAD')
   const response = await fetch(dataSource, { method: 'HEAD', signal })
   assertStatus(response, dataSource)
   const eTag = response.headers.get('etag')
@@ -28,6 +29,7 @@ export async function getETagAndData (dataSource, signal) {
   if (import.meta.env.MODE === 'test') {
     await abortOpportunity() // the fetch will error if the signal is aborted
   }
+  console.info('fetch', dataSource, 'GET')
   const response = await fetch(dataSource, { signal })
   assertStatus(response, dataSource)
   const eTag = response.headers.get('etag')

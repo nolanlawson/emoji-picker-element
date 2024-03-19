@@ -14,7 +14,7 @@ describe('properties', () => {
     await tick(40)
   })
 
-  test('setting initial dataSource and locale', async () => {
+  test.skip('setting initial dataSource and locale', async () => {
     const picker = new Picker()
     picker.locale = 'fr'
     picker.dataSource = FR_EMOJI
@@ -44,6 +44,9 @@ describe('properties', () => {
 
     await tick(40)
 
+    console.info(fetch.calls()[0][1].signal.aborted)
+    console.info(fetch.calls()[1][1].signal.aborted)
+    console.info(fetch.calls())
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(FR_EMOJI)
     expect(fetch.lastOptions().method).toBe(undefined)

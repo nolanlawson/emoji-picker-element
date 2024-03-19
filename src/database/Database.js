@@ -45,10 +45,11 @@ export default class Database {
       this._db = db
       this._lazyUpdate = lazyUpdate
     } catch (err) {
-      if (err.name !== 'AbortError') {
+      if (err.name !== 'AbortError' && err.name !== 'InvalidStateError') {
         throw err
       }
-      // ignore AbortErrors - we were canceled
+      console.info('aborted', this._dbName, this.dataSource, err.name)
+      // Ignore AbortErrors - we were canceled. Ignore InvalidStateErrors thrown by IDB due to database closing.
     }
   }
 
