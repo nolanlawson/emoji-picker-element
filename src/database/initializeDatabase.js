@@ -25,5 +25,5 @@ export async function initializeDatabase (dbName, dataSource, onClear, signal) {
   } else { // offline-first - do an update asynchronously
     lazyUpdate = checkForUpdates(db, dataSource, signal)
   }
-  return { db, lazyUpdate }
+  return [db, lazyUpdate]
 }

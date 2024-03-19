@@ -36,7 +36,7 @@ export default class Database {
   async _init () {
     try {
       this._controller = new AbortController() // used to cancel inflight requests if necessary
-      const { db, lazyUpdate } = await initializeDatabase(
+      const [db, lazyUpdate] = await initializeDatabase(
         this._dbName,
         this.dataSource,
         this._clear,
