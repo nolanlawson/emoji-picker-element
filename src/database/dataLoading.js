@@ -43,10 +43,6 @@ export async function checkForUpdates (db, dataSource, signal) {
 }
 
 export async function loadDataForFirstTime (db, dataSource, signal) {
-  /* istanbul ignore else */
-  if (import.meta.env.MODE === 'test') {
-    await abortOpportunity() // the fetch will error if the signal is aborted
-  }
   let [eTag, emojiData] = await getETagAndData(dataSource, signal)
 
   if (!eTag) {

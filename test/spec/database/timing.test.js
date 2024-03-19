@@ -68,17 +68,17 @@ describe('database timing tests', () => {
             {
               testName: 'basic',
               dataSource: ALL_EMOJI,
-              maxExpectedAbortOpportunityCount: secondLoad ? (dataChanged ? 6 : 5) : 5
+              maxExpectedAbortOpportunityCount: secondLoad ? (dataChanged ? 6 : 5) : 4
             },
             {
               testName: 'misconfigured etag',
               dataSource: ALL_EMOJI_MISCONFIGURED_ETAG,
-              maxExpectedAbortOpportunityCount: secondLoad ? 5 : 5
+              maxExpectedAbortOpportunityCount: secondLoad ? 5 : 4
             },
             {
               testName: 'no etag',
               dataSource: ALL_EMOJI_NO_ETAG,
-              maxExpectedAbortOpportunityCount: secondLoad ? 6 : 6
+              maxExpectedAbortOpportunityCount: secondLoad ? 6 : 5
             }
           ]
           scenarios.forEach(({ testName, dataSource, maxExpectedAbortOpportunityCount }) => {
