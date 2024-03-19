@@ -1,8 +1,5 @@
 import { initialMigration } from './migrations'
-import { DB_VERSION_INITIAL, DB_VERSION_CURRENT } from './constants'
-import { AbortError, abortOpportunity } from './utils/abortSignalUtils.js'
-import { isEmpty } from './idbInterface.js'
-import { checkForUpdates, loadDataForFirstTime } from './dataLoading.js'
+import { DB_VERSION_CURRENT, DB_VERSION_INITIAL } from './constants'
 
 export const openIndexedDBRequests = {}
 const databaseCache = {}
@@ -107,33 +104,4 @@ export function addOnCloseListener (dbName, listener) {
     listeners = onCloseListeners[dbName] = []
   }
   listeners.push(listener)
-}
-
-export async function initializeDatabase (dbName, dataSource, onClear, signal) {
-  const db = await openDatabase(dbName)
-  addOnCloseListener(dbName, onClear)
-  /* istanbul ignore else */
-  if (import.meta.env.MODE === 'test') {
-    await abortOpportunity()
-  }
-  if (signal.aborted) {
-    throw new AbortError()
-  }
-
-  const empty = await isEmpty(db)
-  /* istanbul ignore else */
-  if (import.meta.env.MODE === 'test') {
-    await abortOpportunity()
-  }
-  if (signal.aborted) {
-    throw new AbortError()
-  }
-
-  let lazyUpdate
-  if (empty) {
-    await loadDataForFirstTime(db, dataSource, signal)
-  } else { // offline-first - do an update asynchronously
-    lazyUpdate = checkForUpdates(db, dataSource, signal)
-  }
-  return { db, lazyUpdate }
 }

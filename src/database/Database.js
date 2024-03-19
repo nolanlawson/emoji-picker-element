@@ -9,8 +9,7 @@ import {
 import { uniqEmoji } from './utils/uniqEmoji'
 import {
   closeDatabase,
-  deleteDatabase,
-  initializeDatabase
+  deleteDatabase
 } from './databaseLifecycle'
 import {
   getEmojiByGroup,
@@ -19,6 +18,7 @@ import {
 } from './idbInterface'
 import { customEmojiIndex } from './customEmojiIndex'
 import { cleanEmoji } from './utils/cleanEmoji'
+import { initializeDatabase } from './initializeDatabase.js'
 
 export default class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE, customEmoji = [] } = {}) {
