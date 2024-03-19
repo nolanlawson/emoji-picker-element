@@ -1,7 +1,7 @@
 import { getETag, getETagAndData } from './utils/ajax'
 import { jsonChecksum } from './utils/jsonChecksum'
 import { hasData, loadData } from './idbInterface'
-import { AbortError, abortOpportunity } from './utils/abortSignalUtils.js'
+import { abortOpportunity, throwIfAborted } from './utils/abortSignalUtils.js'
 
 export async function checkForUpdates (db, dataSource, signal) {
   // just do a simple HEAD request first to see if the eTags match
@@ -19,9 +19,7 @@ export async function checkForUpdates (db, dataSource, signal) {
       if (import.meta.env.MODE === 'test') {
         await abortOpportunity()
       }
-      if (signal.aborted) {
-        throw new AbortError()
-      }
+      throwIfAborted(signal)
     }
   }
   const doesHaveData = await hasData(db, dataSource, eTag)
@@ -29,9 +27,7 @@ export async function checkForUpdates (db, dataSource, signal) {
   if (import.meta.env.MODE === 'test') {
     await abortOpportunity()
   }
-  if (signal.aborted) {
-    throw new AbortError()
-  }
+  throwIfAborted(signal)
 
   if (doesHaveData) {
     console.log('Database already populated')

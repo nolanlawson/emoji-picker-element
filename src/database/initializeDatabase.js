@@ -1,4 +1,4 @@
-import { AbortError, abortOpportunity } from './utils/abortSignalUtils.js'
+import { abortOpportunity, throwIfAborted } from './utils/abortSignalUtils.js'
 import { isEmpty } from './idbInterface.js'
 import { checkForUpdates, loadDataForFirstTime } from './dataLoading.js'
 import { addOnCloseListener, openDatabase } from './databaseLifecycle.js'
@@ -10,18 +10,14 @@ export async function initializeDatabase (dbName, dataSource, onClear, signal) {
   if (import.meta.env.MODE === 'test') {
     await abortOpportunity()
   }
-  if (signal.aborted) {
-    throw new AbortError()
-  }
+  throwIfAborted(signal)
 
   const empty = await isEmpty(db)
   /* istanbul ignore else */
   if (import.meta.env.MODE === 'test') {
     await abortOpportunity()
   }
-  if (signal.aborted) {
-    throw new AbortError()
-  }
+  throwIfAborted(signal)
 
   let lazyUpdate
   if (empty) {
