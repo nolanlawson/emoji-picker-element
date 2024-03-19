@@ -14,7 +14,7 @@ export async function checkForUpdates (db, dataSource, signal) {
     eTag = eTagAndData[0]
     emojiData = eTagAndData[1]
     if (!eTag) {
-      eTag = await jsonChecksum(emojiData, signal)
+      eTag = await jsonChecksum(emojiData)
       /* istanbul ignore else */
       if (import.meta.env.MODE === 'test') {
         await abortOpportunity()
@@ -48,7 +48,7 @@ export async function loadDataForFirstTime (db, dataSource, signal) {
   if (!eTag) {
     // Handle lack of support for ETag or Access-Control-Expose-Headers
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#Browser_compatibility
-    eTag = await jsonChecksum(emojiData, signal)
+    eTag = await jsonChecksum(emojiData)
     /* istanbul ignore else */
     if (import.meta.env.MODE === 'test') {
       await abortOpportunity()
