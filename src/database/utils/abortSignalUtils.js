@@ -8,15 +8,8 @@ export async function abortOpportunity () {
   await Promise.resolve()
 }
 
-class AbortError extends Error {
-  constructor () {
-    super('The operation was aborted')
-    this.name = 'AbortError'
-  }
-}
-
 export function throwIfAborted (signal) {
   if (signal.aborted) {
-    throw new AbortError()
+    throw new DOMException('The operation was aborted', 'AbortError')
   }
 }
