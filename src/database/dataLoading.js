@@ -1,7 +1,7 @@
 import { getETag, getETagAndData } from './utils/ajax'
 import { jsonChecksum } from './utils/jsonChecksum'
 import { hasData, loadData } from './idbInterface'
-import { abortOpportunity } from './utils/abortSignalUtils.js'
+import { AbortError, abortOpportunity } from './utils/abortSignalUtils.js'
 
 export async function checkForUpdates (db, dataSource, signal) {
   // just do a simple HEAD request first to see if the eTags match
@@ -10,13 +10,6 @@ export async function checkForUpdates (db, dataSource, signal) {
 
   if (!eTag) { // work around lack of ETag/Access-Control-Expose-Headers
     const eTagAndData = await getETagAndData(dataSource, signal)
-    /* istanbul ignore else */
-    if (import.meta.env.MODE === 'test') {
-      await abortOpportunity()
-    }
-    if (signal.aborted) {
-      return
-    }
 
     eTag = eTagAndData[0]
     emojiData = eTagAndData[1]
@@ -27,7 +20,7 @@ export async function checkForUpdates (db, dataSource, signal) {
         await abortOpportunity()
       }
       if (signal.aborted) {
-        return
+        throw new AbortError()
       }
     }
   }
@@ -37,7 +30,7 @@ export async function checkForUpdates (db, dataSource, signal) {
     await abortOpportunity()
   }
   if (signal.aborted) {
-    return
+    throw new AbortError()
   }
 
   if (doesHaveData) {
@@ -46,13 +39,6 @@ export async function checkForUpdates (db, dataSource, signal) {
     console.log('Database update available')
     if (!emojiData) {
       const eTagAndData = await getETagAndData(dataSource, signal)
-      /* istanbul ignore else */
-      if (import.meta.env.MODE === 'test') {
-        await abortOpportunity()
-      }
-      if (signal.aborted) {
-        return
-      }
 
       emojiData = eTagAndData[1]
     }
@@ -61,6 +47,10 @@ export async function checkForUpdates (db, dataSource, signal) {
 }
 
 export async function loadDataForFirstTime (db, dataSource, signal) {
+  /* istanbul ignore else */
+  if (import.meta.env.MODE === 'test') {
+    await abortOpportunity() // the fetch will error if the signal is aborted
+  }
   let [eTag, emojiData] = await getETagAndData(dataSource, signal)
 
   if (!eTag) {

@@ -10,18 +10,15 @@ import { uniqEmoji } from './utils/uniqEmoji'
 import {
   closeDatabase,
   deleteDatabase,
-  addOnCloseListener,
-  openDatabase
+  initializeDatabase
 } from './databaseLifecycle'
 import {
-  isEmpty, getEmojiByGroup,
+  getEmojiByGroup,
   getEmojiBySearchQuery, getEmojiByShortcode, getEmojiByUnicode,
   get, set, getTopFavoriteEmoji, incrementFavoriteEmojiCount
 } from './idbInterface'
 import { customEmojiIndex } from './customEmojiIndex'
 import { cleanEmoji } from './utils/cleanEmoji'
-import { loadDataForFirstTime, checkForUpdates } from './dataLoading'
-import { abortOpportunity } from './utils/abortSignalUtils.js'
 
 export default class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE, customEmoji = [] } = {}) {
@@ -37,32 +34,21 @@ export default class Database {
   }
 
   async _init () {
-    const controller = this._controller = new AbortController() // used to cancel inflight requests if necessary
-    const { signal } = controller
-    const db = this._db = await openDatabase(this._dbName)
-    addOnCloseListener(this._dbName, this._clear)
-    /* istanbul ignore else */
-    if (import.meta.env.MODE === 'test') {
-      await abortOpportunity()
-    }
-    if (signal.aborted) {
-      return
-    }
-
-    const dataSource = this.dataSource
-    const empty = await isEmpty(db)
-    /* istanbul ignore else */
-    if (import.meta.env.MODE === 'test') {
-      await abortOpportunity()
-    }
-    if (signal.aborted) {
-      return
-    }
-
-    if (empty) {
-      await loadDataForFirstTime(db, dataSource, signal)
-    } else { // offline-first - do an update asynchronously
-      this._lazyUpdate = checkForUpdates(db, dataSource, signal)
+    try {
+      this._controller = new AbortController() // used to cancel inflight requests if necessary
+      const { db, lazyUpdate } = await initializeDatabase(
+        this._dbName,
+        this.dataSource,
+        this._clear,
+        this._controller.signal
+      )
+      this._db = db
+      this._lazyUpdate = lazyUpdate
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        throw err
+      }
+      // ignore AbortErrors - we were canceled
     }
   }
 

@@ -7,3 +7,10 @@ export async function abortOpportunity () {
   await Promise.resolve()
   await Promise.resolve()
 }
+
+export class AbortError extends Error {
+  constructor () {
+    super('The operation was aborted')
+    this.name = 'AbortError'
+  }
+}

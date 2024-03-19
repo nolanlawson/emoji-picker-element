@@ -1,5 +1,6 @@
 import { warnETag } from './warnETag'
 import { assertEmojiData } from './assertEmojiData'
+import { abortOpportunity } from './abortSignalUtils.js'
 
 function assertStatus (response, dataSource) {
   if (Math.floor(response.status / 100) !== 2) {
@@ -9,6 +10,10 @@ function assertStatus (response, dataSource) {
 
 export async function getETag (dataSource, signal) {
   performance.mark('getETag')
+  /* istanbul ignore else */
+  if (import.meta.env.MODE === 'test') {
+    await abortOpportunity() // the fetch will error if the signal is aborted
+  }
   const response = await fetch(dataSource, { method: 'HEAD', signal })
   assertStatus(response, dataSource)
   const eTag = response.headers.get('etag')
@@ -19,6 +24,10 @@ export async function getETag (dataSource, signal) {
 
 export async function getETagAndData (dataSource, signal) {
   performance.mark('getETagAndData')
+  /* istanbul ignore else */
+  if (import.meta.env.MODE === 'test') {
+    await abortOpportunity() // the fetch will error if the signal is aborted
+  }
   const response = await fetch(dataSource, { signal })
   assertStatus(response, dataSource)
   const eTag = response.headers.get('etag')
