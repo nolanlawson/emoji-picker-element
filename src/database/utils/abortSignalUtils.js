@@ -10,6 +10,8 @@ export async function abortOpportunity () {
 
 export function throwIfAborted (signal) {
   if (signal.aborted) {
+    // This is what is thrown by fetch() if the signal is aborted
+    // https://developer.mozilla.org/en-US/docs/Web/API/DOMException#aborterror
     throw new DOMException('The operation was aborted', 'AbortError')
   }
 }
