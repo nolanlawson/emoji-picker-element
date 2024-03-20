@@ -1,9 +1,8 @@
 import { initialMigration } from './migrations'
 import { DB_VERSION_INITIAL, DB_VERSION_CURRENT } from './constants'
 
-export const openIndexedDBRequests = {}
-const databaseCache = {}
-const onCloseListeners = {}
+export const openIndexedDBs = []
+const onCloseListeners = new WeakMap()
 
 function handleOpenOrDeleteReq (resolve, reject, req) {
   // These things are almost impossible to test with fakeIndexedDB sadly
@@ -14,11 +13,11 @@ function handleOpenOrDeleteReq (resolve, reject, req) {
   req.onsuccess = () => resolve(req.result)
 }
 
-async function createDatabase (dbName) {
-  performance.mark('createDatabase')
+export async function openDatabase (dbName) {
+  performance.mark('openDatabase')
   const db = await new Promise((resolve, reject) => {
     const req = indexedDB.open(dbName, DB_VERSION_CURRENT)
-    openIndexedDBRequests[dbName] = req
+
     req.onupgradeneeded = e => {
       // Technically there is only one version, so we don't need this `if` check
       // But if an old version of the JS is in another browser tab
@@ -31,21 +30,17 @@ async function createDatabase (dbName) {
     }
     handleOpenOrDeleteReq(resolve, reject, req)
   })
+  if (import.meta.env.MODE === 'test') {
+    openIndexedDBs.push(db)
+  }
   // Handle abnormal closes, e.g. "delete database" in chrome dev tools.
   // No need for removeEventListener, because once the DB can no longer
   // fire "close" events, it will auto-GC.
   // Unfortunately cannot test in fakeIndexedDB: https://github.com/dumbmatter/fakeIndexedDB/issues/50
   /* istanbul ignore next */
   db.onclose = () => closeDatabase(dbName)
-  performance.measure('createDatabase', 'createDatabase')
+  performance.measure('openDatabase', 'openDatabase')
   return db
-}
-
-export function openDatabase (dbName) {
-  if (!databaseCache[dbName]) {
-    databaseCache[dbName] = createDatabase(dbName)
-  }
-  return databaseCache[dbName]
 }
 
 export function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
@@ -67,29 +62,21 @@ export function dbPromise (db, storeName, readOnlyOrReadWrite, cb) {
   })
 }
 
-export function closeDatabase (dbName) {
-  // close any open requests
-  const req = openIndexedDBRequests[dbName]
-  const db = req && req.result
-  if (db) {
-    db.close()
-    const listeners = onCloseListeners[dbName]
-    /* istanbul ignore else */
-    if (listeners) {
-      for (const listener of listeners) {
-        listener()
-      }
-    }
+export function closeDatabase (db) {
+  db.close()
+  const listener = onCloseListeners.get(db)
+  if (listener) {
+    listener()
   }
-  delete openIndexedDBRequests[dbName]
-  delete databaseCache[dbName]
-  delete onCloseListeners[dbName]
+  onCloseListeners.delete(db)
+  if (import.meta.env.MODE === 'test') {
+    openIndexedDBs.splice(openIndexedDBs.indexOf(db), 1)
+  }
 }
 
 export function deleteDatabase (dbName) {
   return new Promise((resolve, reject) => {
     // close any open requests
-    closeDatabase(dbName)
     const req = indexedDB.deleteDatabase(dbName)
     handleOpenOrDeleteReq(resolve, reject, req)
   })
@@ -98,10 +85,6 @@ export function deleteDatabase (dbName) {
 // The "close" event occurs during an abnormal shutdown, e.g. a user clearing their browser data.
 // However, it doesn't occur with the normal "close" event, so we handle that separately.
 // https://www.w3.org/TR/IndexedDB/#close-a-database-connection
-export function addOnCloseListener (dbName, listener) {
-  let listeners = onCloseListeners[dbName]
-  if (!listeners) {
-    listeners = onCloseListeners[dbName] = []
-  }
-  listeners.push(listener)
+export function setOnCloseListener (db, listener) {
+  onCloseListeners.set(db, listener)
 }

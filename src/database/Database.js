@@ -10,7 +10,7 @@ import { uniqEmoji } from './utils/uniqEmoji'
 import {
   closeDatabase,
   deleteDatabase,
-  addOnCloseListener,
+  setOnCloseListener,
   openDatabase
 } from './databaseLifecycle'
 import {
@@ -38,7 +38,7 @@ export default class Database {
   async _init () {
     const db = this._db = await openDatabase(this._dbName)
 
-    addOnCloseListener(this._dbName, this._clear)
+    setOnCloseListener(db, this._clear)
     const dataSource = this.dataSource
     const empty = await isEmpty(db)
 
@@ -152,7 +152,7 @@ export default class Database {
 
   async close () {
     await this._shutdown()
-    await closeDatabase(this._dbName)
+    await closeDatabase(this._db)
   }
 
   async delete () {
