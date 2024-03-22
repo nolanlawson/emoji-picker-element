@@ -58,7 +58,26 @@ describe('framework', () => {
     expect(node.outerHTML).toBe('<div><span>foo</span></div>')
   })
 
-  test('render two dynamic expressions inside the same element', () => {
+  test('dynamic expression with whitespace around it - minifier should be working', () => {
+    const state = { name: 'foo' }
+
+    const { html } = createFramework(state)
+
+    let node
+    const render = () => {
+      node = html`<div>  ${state.name}\t\n</div>`
+    }
+
+    render()
+    expect(node.outerHTML).toBe('<div>foo</div>')
+
+    state.name = 'baz'
+    render()
+    expect(node.outerHTML).toBe('<div>baz</div>')
+  })
+
+  // Framework no longer supports this since we switched from HTML comments to text nodes
+  test.skip('render two dynamic expressions inside the same element', () => {
     const state = { name1: 'foo', name2: 'bar' }
 
     const { html } = createFramework(state)
@@ -77,7 +96,8 @@ describe('framework', () => {
     expect(node.outerHTML).toBe('<div>bazquux</div>')
   })
 
-  test('render a mix of dynamic and static text nodes in the same element', () => {
+  // Framework no longer supports this since we switched from HTML comments to text nodes
+  test.skip('render a mix of dynamic and static text nodes in the same element', () => {
     const state = { name1: 'foo', name2: 'bar' }
 
     const { html } = createFramework(state)

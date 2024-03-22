@@ -55,7 +55,7 @@ function patchChildren (newChildren, instanceBinding) {
     needsRerender = doChildrenNeedRerender(targetParentNode, newChildren)
   } else { // first render of list
     needsRerender = true
-    instanceBinding.targetNode = undefined // placeholder comment not needed anymore, free memory
+    instanceBinding.targetNode = undefined // placeholder node not needed anymore, free memory
     instanceBinding.targetParentNode = targetParentNode = targetNode.parentNode
   }
   // avoid re-rendering list if the dom nodes are exactly the same before and after
@@ -102,13 +102,9 @@ function patch (expressions, instanceBindings) {
         }
         targetNode.replaceWith(newNode)
       } else { // primitive - string, number, etc
-        if (targetNode.nodeType === Node.TEXT_NODE) { // already transformed into a text node
-          // nodeValue is faster than textContent supposedly https://www.youtube.com/watch?v=LY6y3HbDVmg
-          targetNode.nodeValue = toString(expression)
-        } else { // replace comment or whatever was there before with a text node
-          newNode = document.createTextNode(toString(expression))
-          targetNode.replaceWith(newNode)
-        }
+        // nodeValue is faster than textContent supposedly https://www.youtube.com/watch?v=LY6y3HbDVmg
+        // note we may be replacing the value in a placeholder text node
+        targetNode.nodeValue = toString(expression)
       }
       if (newNode) {
         instanceBinding.targetNode = newNode
@@ -203,8 +199,8 @@ function parse (tokens) {
     bindings.push(binding)
 
     if (!withinTag && !withinAttribute) {
-      // add a placeholder comment that we can find later
-      htmlString += `<!--${bindings.length - 1}-->`
+      // Add a placeholder text node, so we can find it later. Note we only support one dynamic child text node
+      htmlString += ' '
     }
   }
 
@@ -213,21 +209,6 @@ function parse (tokens) {
   return {
     template,
     elementsToBindings
-  }
-}
-
-function findPlaceholderComment (element, bindingId) {
-  // If we had a lot of placeholder comments to find, it would make more sense to build up a map once
-  // rather than search the DOM every time. But it turns out that we always only have one child,
-  // and it's the comment node, so searching every time is actually faster.
-  let childNode = element.firstChild
-  while (childNode) {
-    // Note that minify-html-literals has already removed all non-framework comments
-    // So we just need to look for comments that have exactly the bindingId as its text content
-    if (childNode.nodeType === Node.COMMENT_NODE && childNode.nodeValue === toString(bindingId)) {
-      return childNode
-    }
-    childNode = childNode.nextSibling
   }
 }
 
@@ -246,11 +227,23 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
 
         const targetNode = binding.attributeName
           ? element // attribute binding, just use the element itself
-          : findPlaceholderComment(element, i) // not an attribute binding, so has a placeholder comment
+          : element.firstChild // not an attribute binding, so has a placeholder text node
 
         /* istanbul ignore if */
-        if (import.meta.env.MODE !== 'production' && !targetNode) {
-          throw new Error('targetNode should not be undefined')
+        if (import.meta.env.MODE !== 'production') {
+          // We only support exactly one placeholder text node inside an element, which simplifies
+          // the implementation a lot. Also, minify-html-literals should handle any whitespace
+          // around the expression, so we should only ever see e.g. `<div>${expr}</div>`
+          if (
+            !binding.attributeName &&
+            !(element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE)
+          ) {
+            throw new Error('framework only supports exactly one dynamic child text node')
+          }
+
+          if (!targetNode) {
+            throw new Error('targetNode should not be undefined')
+          }
         }
 
         const instanceBinding = {
