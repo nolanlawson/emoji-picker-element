@@ -58,6 +58,24 @@ describe('framework', () => {
     expect(node.outerHTML).toBe('<div><span>foo</span></div>')
   })
 
+  test('dynamic expression with whitespace around it - minifier should be working', () => {
+    const state = { name: 'foo' }
+
+    const { html } = createFramework(state)
+
+    let node
+    const render = () => {
+      node = html`<div>  ${state.name}\t\n</div>`
+    }
+
+    render()
+    expect(node.outerHTML).toBe('<div>foo</div>')
+
+    state.name = 'baz'
+    render()
+    expect(node.outerHTML).toBe('<div>baz</div>')
+  })
+
   // Framework no longer supports this since we switched from HTML comments to text nodes
   test.skip('render two dynamic expressions inside the same element', () => {
     const state = { name1: 'foo', name2: 'bar' }
