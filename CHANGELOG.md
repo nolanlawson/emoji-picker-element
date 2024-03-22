@@ -1,3 +1,13 @@
+## [1.21.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.21.1...v1.21.2) (2024-03-22)
+
+
+### Bug Fixes
+
+* avoid HTML comments, simplify replacement logic ([#409](https://github.com/nolanlawson/emoji-picker-element/issues/409)) ([ce950ff](https://github.com/nolanlawson/emoji-picker-element/commit/ce950ff740292e6914ed0744b5587db2f3dcc1f7))
+* minor refactor to reduce code size ([#406](https://github.com/nolanlawson/emoji-picker-element/issues/406)) ([55872ba](https://github.com/nolanlawson/emoji-picker-element/commit/55872ba99647425008b5b047960893cca9f88713))
+
+
+
 ## [1.21.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.21.0...v1.21.1) (2024-02-17)
 
 
