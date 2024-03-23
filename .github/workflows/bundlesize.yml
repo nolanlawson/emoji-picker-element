@@ -15,6 +15,7 @@ jobs:
           node-version: '20'
           cache: 'yarn'
       - run: yarn install --immutable
+      - run: yarn build
       - uses: preactjs/compressed-size-action@v2
         with:
           build-script: benchmark:bundle

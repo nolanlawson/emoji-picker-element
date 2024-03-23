@@ -15,6 +15,7 @@ jobs:
           node-version: '20'
           cache: 'yarn'
       - run: yarn install --immutable
+      - run: yarn build
       - run: sudo apt-get install fonts-noto-color-emoji
       - run: yarn lint
       - run: yarn benchmark:bundlesize
