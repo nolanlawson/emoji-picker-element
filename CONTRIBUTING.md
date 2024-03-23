@@ -2,58 +2,57 @@
 
 ## Basic dev workflow
 
-
 Install
 
-    yarn
+    pnpm i
 
 Run a local dev server on `localhost:3000`:
 
-    yarn dev
+    pnpm dev
     
 ## Testing
 
 Lint:
 
-    yarn lint
+    pnpm lint
 
 Fix most lint issues:
 
-    yarn lint:fix
+    pnpm lint:fix
 
 Run the tests:
 
-    yarn test
+    pnpm test
 
 Check code coverage:
 
-    yarn cover
+    pnpm cover
 
 ## Other
 
 Benchmark runtime performance:
 
-    yarn benchmark:runtime
+    pnpm benchmark:runtime
 
 Benchmark memory usage:
 
-    yarn benchmark:memory
+    pnpm benchmark:memory
 
 Benchmark bundle size:
 
-    yarn benchmark:bundlesize
+    pnpm benchmark:bundlesize
 
 Benchmark storage size:
 
-    yarn benchmark:storage
+    pnpm benchmark:storage
 
 Run memory leak test:
 
-    yarn test:leak
+    pnpm test:leak
 
 Build the GitHub Pages docs site:
 
-    yarn docs
+    pnpm docs
 
 ## FAQs
 
