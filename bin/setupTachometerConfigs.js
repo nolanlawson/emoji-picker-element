@@ -38,7 +38,7 @@ for (const benchmark of benchmarks) {
                   repo: 'https://github.com/nolanlawson/emoji-picker-element.git',
                   ref: 'master',
                   setupCommands: [
-                    'pnpm --frozen-lockfile',
+                    'pnpm i --frozen-lockfile',
                     'PERF=1 pnpm build:rollup'
                   ]
                 }
