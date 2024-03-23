@@ -38,8 +38,9 @@ for (const benchmark of benchmarks) {
                   repo: 'https://github.com/nolanlawson/emoji-picker-element.git',
                   ref: 'master',
                   setupCommands: [
-                    'pnpm i --frozen-lockfile',
-                    'PERF=1 pnpm build:rollup'
+                    // we're comparing against historical branches, so support yarn as well as pnpm since we switched
+                    'if [ -f yarn.lock ]; then yarn --frozen-lockfile; else pnpm i --frozen-lockfile; fi',
+                    'PERF=1 npm run build:rollup'
                   ]
                 }
               }
