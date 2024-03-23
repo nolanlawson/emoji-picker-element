@@ -21,9 +21,8 @@ jobs:
           node-version: '20'
           cache: 'yarn'
 
-      - name: yarn install
+      - name: install chromedriver
         run: |
-          yarn --immutable
           # install the chromedriver corresponding to whatever version of chrome is installed
           yarn add --ignore-scripts chromedriver@^$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
           PERF=1 yarn build:rollup
