@@ -9,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Enable Corepack
-        run: corepack enable
+      - run: corepack enable
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'yarn'
+      - run: yarn install --immutable
       - run: sudo apt-get install fonts-noto-color-emoji
       - run: yarn lint
       - run: yarn benchmark:bundlesize
