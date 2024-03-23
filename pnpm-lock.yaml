@@ -116,6 +116,9 @@ devDependencies:
   playwright:
     specifier: ^1.42.1
     version: 1.42.1
+  postcss:
+    specifier: ^8.4.38
+    version: 8.4.38
   pretty-bytes:
     specifier: ^6.1.1
     version: 6.1.1
