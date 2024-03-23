@@ -13,11 +13,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'yarn'
-      - run: yarn install --immutable
-      - run: yarn build
+          cache: 'pnpm'
+      - run: pnpm i --frozen-lockfile
       - run: sudo apt-get install fonts-noto-color-emoji
-      - run: yarn lint
-      - run: yarn benchmark:bundlesize
-      - run: yarn cover
-      - run: yarn test:leak
+      - run: pnpm lint
+      - run: pnpm benchmark:bundlesize
+      - run: pnpm cover
+      - run: pnpm test:leak

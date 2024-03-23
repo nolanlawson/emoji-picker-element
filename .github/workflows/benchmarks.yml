@@ -19,16 +19,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'yarn'
-      - run: yarn install --immutable
-      - run: yarn build
+          cache: 'pnpm'
+      - run: pnpm i --frozen-lockfile
 
       - name: install chromedriver
         run: |
           # install the chromedriver corresponding to whatever version of chrome is installed
-          npm i -g chromedriver@^$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
-          PERF=1 yarn build:rollup
-          yarn benchmark:runtime:setup
+          pnpm i chromedriver@^$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
+          PERF=1 pnpm build:rollup
+          pnpm benchmark:runtime:setup
 
       # first-load
       - name: Benchmark first-load

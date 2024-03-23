@@ -29,7 +29,7 @@ async function doFullDatabaseScanForSingleResult (db, predicate) {
   //
   // Mini-benchmark for determining the best batch size:
   //
-  // PERF=1 yarn build:rollup && yarn test:adhoc
+  // PERF=1 pnpm build:rollup && pnpm test:adhoc
   //
   // (async () => {
   //   performance.mark('start')

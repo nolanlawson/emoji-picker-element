@@ -38,8 +38,8 @@ for (const benchmark of benchmarks) {
                   repo: 'https://github.com/nolanlawson/emoji-picker-element.git',
                   ref: 'master',
                   setupCommands: [
-                    'yarn --immutable --ignore-scripts',
-                    'PERF=1 yarn build:rollup'
+                    'pnpm --frozen-lockfile',
+                    'PERF=1 pnpm build:rollup'
                   ]
                 }
               }

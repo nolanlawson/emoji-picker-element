@@ -127,12 +127,3 @@ dist
 /test/benchmark/picker.js
 /test/benchmark/*.tachometer.json
 /i18n
-
-# yarn v2+
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
