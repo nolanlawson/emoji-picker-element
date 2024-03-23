@@ -19,4 +19,5 @@ jobs:
       - run: pnpm lint
       - run: pnpm benchmark:bundlesize
       - run: pnpm cover
+      - run: npx puppeteer browsers install chrome
       - run: pnpm test:leak
