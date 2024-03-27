@@ -1,5 +1,5 @@
 import { initialMigration } from './migrations'
-import { DB_VERSION_INITIAL, DB_VERSION_CURRENT } from './constants'
+import { DB_VERSION_CURRENT, DB_VERSION_INITIAL } from './constants'
 
 export const openIndexedDBRequests = {}
 const databaseCache = {}

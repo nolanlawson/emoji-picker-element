@@ -18,7 +18,7 @@ describe('constructor', () => {
 
     expect(fetch.calls().length).toBe(1)
     expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
-    expect(fetch.lastOptions()).toBe(undefined)
+    expect(fetch.lastOptions().method).toBe(undefined)
 
     document.body.removeChild(picker)
     await tick(20)

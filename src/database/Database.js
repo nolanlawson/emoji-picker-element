@@ -9,18 +9,16 @@ import {
 import { uniqEmoji } from './utils/uniqEmoji'
 import {
   closeDatabase,
-  deleteDatabase,
-  addOnCloseListener,
-  openDatabase
+  deleteDatabase
 } from './databaseLifecycle'
 import {
-  isEmpty, getEmojiByGroup,
+  getEmojiByGroup,
   getEmojiBySearchQuery, getEmojiByShortcode, getEmojiByUnicode,
   get, set, getTopFavoriteEmoji, incrementFavoriteEmojiCount
 } from './idbInterface'
 import { customEmojiIndex } from './customEmojiIndex'
 import { cleanEmoji } from './utils/cleanEmoji'
-import { loadDataForFirstTime, checkForUpdates } from './dataLoading'
+import { initializeDatabase } from './initializeDatabase.js'
 
 export default class Database {
   constructor ({ dataSource = DEFAULT_DATA_SOURCE, locale = DEFAULT_LOCALE, customEmoji = [] } = {}) {
@@ -36,16 +34,21 @@ export default class Database {
   }
 
   async _init () {
-    const db = this._db = await openDatabase(this._dbName)
-
-    addOnCloseListener(this._dbName, this._clear)
-    const dataSource = this.dataSource
-    const empty = await isEmpty(db)
-
-    if (empty) {
-      await loadDataForFirstTime(db, dataSource)
-    } else { // offline-first - do an update asynchronously
-      this._lazyUpdate = checkForUpdates(db, dataSource)
+    try {
+      this._controller = new AbortController() // used to cancel inflight requests if necessary
+      const [db, lazyUpdate] = await initializeDatabase(
+        this._dbName,
+        this.dataSource,
+        this._clear,
+        this._controller.signal
+      )
+      this._db = db
+      this._lazyUpdate = lazyUpdate
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        throw err
+      }
+      // ignore AbortErrors - we were canceled
     }
   }
 
@@ -134,6 +137,9 @@ export default class Database {
   }
 
   async _shutdown () {
+    if (this._controller) {
+      this._controller.abort()
+    }
     await this.ready() // reopen if we've already been closed/deleted
     try {
       await this._lazyUpdate // allow any lazy updates to process before closing/deleting
@@ -147,7 +153,7 @@ export default class Database {
     // The memory leak tests prove this is unnecessary. It's because:
     // 1) IDBDatabases that can no longer fire "close" automatically have listeners GCed
     // 2) we clear the manual close listeners in databaseLifecycle.js.
-    this._db = this._ready = this._lazyUpdate = undefined
+    this._controller = this._db = this._ready = this._lazyUpdate = undefined
   }
 
   async close () {

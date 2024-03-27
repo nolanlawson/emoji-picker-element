@@ -30,19 +30,19 @@ describe('Picker tests', () => {
     picker = new Picker({ dataSource: ALL_EMOJI, locale: 'en' })
     document.body.appendChild(picker)
     container = picker.shadowRoot.querySelector('.picker')
-    await tick(20)
+    await tick(40)
     await waitFor(() => expect(
       testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup1),
     { timeout: 2000 }
     )
-    await tick(20)
+    await tick(40)
   })
   afterEach(async () => {
-    await tick(20)
+    await tick(40)
     document.body.removeChild(picker)
-    await tick(20)
+    await tick(40)
     await new Database({ dataSource: ALL_EMOJI, locale: 'en' }).delete()
-    await tick(20)
+    await tick(40)
     await basicAfterEach()
   })
 
@@ -225,7 +225,7 @@ describe('Picker tests', () => {
 
   test('measures zwj emoji', async () => {
     getByRole('tab', { name: 'Flags' }).click()
-    await tick(20)
+    await tick(40)
     await waitFor(() => expect(testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem'))
       .toHaveLength(truncatedEmoji.filter(_ => _.group === 9).length))
   })
