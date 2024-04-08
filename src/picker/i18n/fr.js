@@ -1,18 +1,18 @@
 export default {
   categoriesLabel: 'Catégories',
-  emojiUnsupportedMessage: 'Votre navigateur ne soutient pas les emojis en couleur.',
+  emojiUnsupportedMessage: 'Votre navigateur ne supporte pas les emojis en couleur.',
   favoritesLabel: 'Favoris',
   loadingMessage: 'Chargement en cours…',
   networkErrorMessage: 'Impossible de charger les emojis.',
   regionLabel: 'Choisir un emoji',
-  searchDescription: 'Quand les résultats sont disponisbles, appuyez la fleche vers le haut ou le bas et la touche entrée pour choisir.',
+  searchDescription: 'Lorsque les résultats sont affichés, utilisez les flèches haut/bas pour naviguer et la touche entrée pour sélectionner.',
   searchLabel: 'Rechercher',
   searchResultsLabel: 'Résultats',
-  skinToneDescription: 'Quand disponible, appuyez la fleche vers le haut ou le bas et la touch entrée pour choisir.',
+  skinToneDescription: 'Quand disponible, utilisez les flèches haut/bas pour naviguer et la touche entrée pour sélectionner.',
   skinToneLabel: 'Choisir une couleur de peau (actuellement {skinTone})',
   skinTonesLabel: 'Couleurs de peau',
   skinTones: [
-    'Défaut',
+    'Par défaut',
     'Clair',
     'Moyennement clair',
     'Moyen',
@@ -20,15 +20,15 @@ export default {
     'Sombre'
   ],
   categories: {
-    custom: 'Customisé',
-    'smileys-emotion': 'Les smileyes et les émoticônes',
-    'people-body': 'Les gens et le corps',
-    'animals-nature': 'Les animaux et la nature',
-    'food-drink': 'La nourriture et les boissons',
-    'travel-places': 'Les voyages et les endroits',
-    activities: 'Les activités',
-    objects: 'Les objets',
-    symbols: 'Les symbols',
-    flags: 'Les drapeaux'
+    custom: 'Personnalisé',
+    'smileys-emotion': 'Émoticônes',
+    'people-body': 'Corps et métiers',
+    'animals-nature': 'Animaux et nature',
+    'food-drink': 'Nourriture et boissons',
+    'travel-places': 'Voyages et lieux',
+    activities: 'Activités',
+    objects: 'Objets',
+    symbols: 'Symboles',
+    flags: 'Drapeaux'
   }
 }
