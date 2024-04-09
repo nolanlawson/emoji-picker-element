@@ -1,3 +1,12 @@
+## [1.21.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.21.2...v1.21.3) (2024-04-09)
+
+
+### Bug Fixes
+
+* improved French translations ([#417](https://github.com/nolanlawson/emoji-picker-element/issues/417)) ([e528676](https://github.com/nolanlawson/emoji-picker-element/commit/e52867681ab07f9eca575e7899f453b9fcd2070a))
+
+
+
 ## [1.21.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.21.1...v1.21.2) (2024-03-22)
 
 
