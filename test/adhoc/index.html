@@ -47,7 +47,6 @@
 </head>
 <body>
 <button class="delete">Delete database</button>
-<script src="/node_modules/focus-visible/dist/focus-visible.js"></script>
 <script type="module">
   import { Picker, Database } from '/index.js'
   (async () => {
@@ -89,7 +88,6 @@
     }
     const picker = new Picker(opts)
     picker.addEventListener('emoji-click', e => console.log(e))
-    applyFocusVisiblePolyfill(picker.shadowRoot)
     document.body.appendChild(picker)
   })()
 </script>

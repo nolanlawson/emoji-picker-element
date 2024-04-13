@@ -80,9 +80,6 @@ devDependencies:
   flat-color-icons:
     specifier: ^1.1.0
     version: 1.1.0
-  focus-visible:
-    specifier: ^5.2.0
-    version: 5.2.0
   get-folder-size:
     specifier: ^4.0.0
     version: 4.0.0
@@ -3413,10 +3410,6 @@ packages:
 
   /flatted@3.3.1:
     resolution: {integrity: sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==}
-    dev: true
-
-  /focus-visible@5.2.0:
-    resolution: {integrity: sha512-Rwix9pBtC1Nuy5wysTmKy+UjbDJpIfg8eHjw0rjZ1mX4GNLz1Bmd16uDpI3Gk1i70Fgcs8Csg2lPm8HULFg9DQ==}
     dev: true
 
   /for-each@0.3.3:
