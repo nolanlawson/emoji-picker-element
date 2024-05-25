@@ -18,7 +18,7 @@
     "/i18n/*"
   ],
   "scripts": {
-    "prepare": "husky",
+    "prepare": "run-s build && husky",
     "build": "run-s build:rollup build:i18n build:css-docs build:i18n-docs build:toc",
     "build:rollup": "cross-env NODE_ENV=production rollup -c",
     "build:css-docs": "node ./bin/generateCssDocs",
