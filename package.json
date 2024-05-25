@@ -123,7 +123,7 @@
     "vitest": "^1.6.0"
   },
   "//": {
-    "jsonwebtoken": "comes from tachometer, tachometer is pinned for now due to breaking change, but jsonwebtoken 8 has a vuln"
+    "jsonwebtoken": "comes from tachometer, jsonwebtoken 8 has a vuln"
   },
   "resolutions": {
     "jsonwebtoken": "^9.0.0"
