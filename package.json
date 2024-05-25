@@ -178,7 +178,8 @@
             "emoji-picker"
           ]
         }
-      ]
+      ],
+      "no-descending-specificity": null
     }
   },
   "lint-staged": {
