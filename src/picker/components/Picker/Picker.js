@@ -8,11 +8,13 @@ import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
+  DEFAULT_NUM_COLUMNS,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
 import { uniqBy } from '../../../shared/uniqBy'
 import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
+import { resizeListener } from '../../utils/resizeListener.js'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
@@ -66,6 +68,7 @@ export function createRoot (shadowRoot, props) {
     skinTones: [],
     currentFavorites: [],
     defaultFavoriteEmojis: undefined,
+    numColumns: DEFAULT_NUM_COLUMNS,
     currentGroupIndex: 0,
     groups: defaultGroups,
     databaseLoaded: false,
@@ -175,10 +178,13 @@ export function createRoot (shadowRoot, props) {
     onSkinToneOptionsKeyup,
     onSearchInput
   }
+  const actions = {
+    emojiGridResizeListener
+  }
 
   let firstRender = true
   createEffect(() => {
-    render(shadowRoot, state, helpers, events, refs, abortSignal, firstRender)
+    render(shadowRoot, state, helpers, events, actions, refs, abortSignal, firstRender)
     firstRender = false
   })
 
@@ -323,9 +329,8 @@ export function createRoot (shadowRoot, props) {
   createEffect(() => {
     async function updateFavorites () {
       console.log('updateFavorites')
-      updateCustomEmoji() // re-run whenever customEmoji change
-      const { database, defaultFavoriteEmojis } = state
-      const numColumns = parseInt(getComputedStyle(refs.rootElement).getPropertyValue('--num-columns'), 10)
+      updateCustomEmoji() // re-run whenever customEmoji/numColumns change
+      const { database, defaultFavoriteEmojis, numColumns } = state
       const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
       const favorites = await summarizeEmojis(uniqBy([
         ...dbFavorites,
@@ -338,6 +343,24 @@ export function createRoot (shadowRoot, props) {
       /* no await */ updateFavorites()
     }
   })
+
+  //
+  // Run a function whenever the emoji grid changes size. This is to:
+  // 1) Re-calculate the --num-columns var because it may have changed
+  //
+  // The benefit of doing this in one place is to align with rAF/ResizeObserver
+  // and do all the calculations in one go.
+  //
+
+  function emojiGridResizeListener (node) {
+    resizeListener(node, abortSignal, width => {
+      // read all the style/layout calculations we need to make
+      const style = getComputedStyle(refs.rootElement)
+
+      // write to state variables
+      state.numColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
+    })
+  }
 
   //
   // Set or update the currentEmojis. Check for invalid ZWJ renderings
