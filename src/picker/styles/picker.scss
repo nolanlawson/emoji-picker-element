@@ -154,6 +154,13 @@ button.emoji,
   background-color: var(--indicator-color);
   will-change: transform, opacity;
   transition: opacity #{$opacityAnim} linear, transform #{$transformAnim} ease-in-out;
+  --group-index: 0;
+  --dir-factor: 1;
+  transform: translateX(calc(100% * var(--dir-factor) * var(--group-index)));
+
+  &:dir(rtl) {
+    --dir-factor: -1;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     will-change: opacity;

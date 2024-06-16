@@ -137,9 +137,7 @@ export function render (container, state, helpers, events, refs, abortSignal, fi
           }
         </div>
         <div class="indicator-wrapper">
-          <!-- Note we cannot test RTL in Jest because of lack of getComputedStyle() -->
-          <div class="indicator"
-               style="transform: translateX(${(/* istanbul ignore next */ (state.isRtl ? -1 : 1)) * state.currentGroupIndex * 100}%)">
+          <div class="indicator" style="--group-index: ${state.currentGroupIndex};">
           </div>
         </div>
 

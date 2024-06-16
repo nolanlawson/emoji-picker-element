@@ -8,7 +8,6 @@ import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
-  DEFAULT_NUM_COLUMNS,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
@@ -67,8 +66,6 @@ export function createRoot (shadowRoot, props) {
     skinTones: [],
     currentFavorites: [],
     defaultFavoriteEmojis: undefined,
-    numColumns: DEFAULT_NUM_COLUMNS,
-    isRtl: false,
     currentGroupIndex: 0,
     groups: defaultGroups,
     databaseLoaded: false,
@@ -327,7 +324,8 @@ export function createRoot (shadowRoot, props) {
     async function updateFavorites () {
       console.log('updateFavorites')
       updateCustomEmoji() // re-run whenever customEmoji change
-      const { database, defaultFavoriteEmojis, numColumns } = state
+      const { database, defaultFavoriteEmojis } = state
+      const numColumns = parseInt(getComputedStyle(refs.rootElement).getPropertyValue('--num-columns'), 10)
       const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
       const favorites = await summarizeEmojis(uniqBy([
         ...dbFavorites,

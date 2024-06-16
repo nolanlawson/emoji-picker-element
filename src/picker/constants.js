@@ -1,6 +1,5 @@
 export const TIMEOUT_BEFORE_LOADING_MESSAGE = 1000 // 1 second
 export const DEFAULT_SKIN_TONE_EMOJI = '🖐️'
-export const DEFAULT_NUM_COLUMNS = 8
 
 // Based on https://fivethirtyeight.com/features/the-100-most-used-emojis/ and
 // https://blog.emojipedia.org/facebook-reveals-most-and-least-used-emojis/ with
