@@ -8,6 +8,7 @@ import { applySkinTone } from '../../utils/applySkinTone'
 import { halt } from '../../utils/halt'
 import { incrementOrDecrement } from '../../utils/incrementOrDecrement'
 import {
+  DEFAULT_NUM_COLUMNS,
   MOST_COMMONLY_USED_EMOJI,
   TIMEOUT_BEFORE_LOADING_MESSAGE
 } from '../../constants'
@@ -325,7 +326,11 @@ export function createRoot (shadowRoot, props) {
       console.log('updateFavorites')
       updateCustomEmoji() // re-run whenever customEmoji change
       const { database, defaultFavoriteEmojis } = state
-      const numColumns = parseInt(getComputedStyle(refs.rootElement).getPropertyValue('--num-columns'), 10)
+      // JSDOM can't handle this kind of fancy CSS calculation
+      /* istanbul ignore next */
+      const numColumns = import.meta.env.MODE === 'test'
+        ? DEFAULT_NUM_COLUMNS
+        : parseInt(getComputedStyle(refs.rootElement).getPropertyValue('--num-columns'), 10)
       const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
       const favorites = await summarizeEmojis(uniqBy([
         ...dbFavorites,
