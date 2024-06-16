@@ -1,6 +1,6 @@
 import { createFramework } from './framework.js'
 
-export function render (container, state, helpers, events, actions, refs, abortSignal, firstRender) {
+export function render (container, state, helpers, events, refs, abortSignal, firstRender) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
   const { html, map } = createFramework(state)
 
@@ -159,7 +159,6 @@ export function render (container, state, helpers, events, actions, refs, abortS
              tabIndex="0"
              data-on-click="onEmojiClick"
         >
-          <div data-action="calculateEmojiGridStyle">
             ${
               map(state.currentEmojisWithCategories, (emojiWithCategory, i) => {
                 return html`
@@ -199,13 +198,11 @@ export function render (container, state, helpers, events, actions, refs, abortS
       `
               }, emojiWithCategory => emojiWithCategory.category)
             }
-          </div>
         </div>
         <!-- This on:click is a delegated click listener -->
         <div class="favorites emoji-menu ${state.message ? 'gone' : ''}"
              role="menu"
              aria-label="${state.i18n.favoritesLabel}"
-             style="padding-inline-end: ${`${state.scrollbarWidth}px`}"
              data-on-click="onEmojiClick">
           ${
             emojiList(state.currentFavorites, /* searchMode */ false, /* prefix */ 'fav')
@@ -224,7 +221,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
   if (firstRender) { // not a re-render
     container.appendChild(rootDom)
 
-    // we only bind events/refs/actions once - there is no need to find them again given this component structure
+    // we only bind events/refs once - there is no need to find them again given this component structure
 
     // helper for traversing the dom, finding elements by an attribute, and getting the attribute value
     const forElementWithAttribute = (attributeName, callback) => {
@@ -243,11 +240,6 @@ export function render (container, state, helpers, events, actions, refs, abortS
     // find refs
     forElementWithAttribute('data-ref', (element, ref) => {
       refs[ref] = element
-    })
-
-    // set up actions
-    forElementWithAttribute('data-action', (element, action) => {
-      actions[action](element)
     })
 
     // destroy/abort logic

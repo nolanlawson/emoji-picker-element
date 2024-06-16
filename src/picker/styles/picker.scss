@@ -54,12 +54,13 @@ $skintoneZIndex3: 3;
 // tab panel
 
 .tabpanel {
-  overflow-y: auto;
   -webkit-overflow-scrolling: touch; // fix iOS scrolling
   will-change: transform; // fix "repaints on scroll" warning in Chrome https://crbug.com/514303
   min-height: 0;
   flex: 1;
   contain: content;
+  overflow-y: auto;
+  scrollbar-gutter: stable; // ensure that searching does not cause the scrollbar gutter width to change
 }
 
 .emoji-menu {
@@ -204,6 +205,8 @@ input.search {
   flex-direction: row;
   border-top: var(--border-size) solid var(--border-color);
   contain: content;
+  overflow-y: auto; // required to get `scrollbar-gutter: stable` to work
+  scrollbar-gutter: stable; // line up the favorites emoji with the tabpanel emoji
 }
 
 // unsupported warning
