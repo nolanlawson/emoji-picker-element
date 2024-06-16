@@ -7,19 +7,20 @@ import fetchMock from 'fetch-mock'
 // Minimal resize observer "polyfill" for test coverage
 class ResizeObserver {
   #callback
-  #element
+
   constructor (callback) {
     this.#callback = callback
   }
 
   observe (element) {
-    this.#element = element
     requestAnimationFrame(() => {
       this.#callback([
-        { contentRect: this.#element.getBoundingClientRect() }
+        { contentRect: element.getBoundingClientRect() }
       ])
     })
   }
+
+  disconnect () {}
 }
 
 beforeAll(() => {
