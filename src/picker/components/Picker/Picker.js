@@ -62,7 +62,6 @@ export function createRoot (shadowRoot, props) {
     currentSkinTone: 0,
     activeSkinTone: 0,
     skinToneButtonText: undefined,
-    pickerStyle: undefined,
     skinToneButtonLabel: '',
     skinTones: [],
     currentFavorites: [],
@@ -232,16 +231,24 @@ export function createRoot (shadowRoot, props) {
   })
 
   //
-  // Global styles for the entire picker
+  // Global styles for the entire picker, managed by CSS custom properties.
+  // We subscribe to changes in JS state and push these to global CSS custom properties.
   //
 
-  createEffect(() => {
-    state.pickerStyle = `
-      --num-groups: ${state.groups.length};
-      --group-index: ${state.currentGroupIndex};
-      --indicator-opacity: ${state.searchMode ? 0 : 1}; 
-      --num-skintones: ${NUM_SKIN_TONES};`
-  })
+  const createCssPropertyEffect = (cssPropName, propName, jsValueToCssValue) => {
+    createEffect(() => {
+      refs.rootElement.style.setProperty(cssPropName, jsValueToCssValue(state[propName]))
+    })
+  }
+
+  createCssPropertyEffect('--num-groups', 'groups', groups => groups.length)
+  createCssPropertyEffect('--group-index', 'currentGroupIndex', index => index)
+  createCssPropertyEffect('--indicator-opacity', 'searchMode', searchMode => searchMode ? 0 : 1)
+  createCssPropertyEffect(
+    '--dropdown-transform',
+    'skinTonePickerExpanded',
+    expanded => `translateY(${expanded ? 0 : `calc(-1 * ${NUM_SKIN_TONES} * var(--total-emoji-size))`})`
+  )
 
   //
   // Set or update the customEmoji

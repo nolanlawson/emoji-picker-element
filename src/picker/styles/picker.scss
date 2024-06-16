@@ -29,6 +29,7 @@ $skintoneZIndex3: 3;
   will-change: transform;
   transition: transform 0.2s ease-in-out;
   transform-origin: center 0;
+  transform: var(--dropdown-transform);
 
   @media (prefers-reduced-motion: reduce) {
     // We still want the transition event to fire, so we can listen for the transitionend event
@@ -124,6 +125,7 @@ button.emoji,
   justify-content: space-between;
   align-items: center;
   contain: content;
+  grid-template-columns: repeat(var(--num-groups), 1fr);
 }
 
 .nav-button {

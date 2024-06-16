@@ -30,8 +30,7 @@ export function render (container, state, helpers, events, refs, abortSignal, fi
       <section
         data-ref="rootElement"
         class="picker"
-        aria-label="${state.i18n.regionLabel}"
-        style="${state.pickerStyle}">
+        aria-label="${state.i18n.regionLabel}">
         <!-- using a spacer div because this allows us to cover up the skintone picker animation -->
         <div class="pad-top"></div>
          <div class="search-row">
@@ -83,7 +82,6 @@ export function render (container, state, helpers, events, refs, abortSignal, fi
         data-ref="skinToneDropdown"
         id="skintone-list"
         class="skintone-list hide-focus ${state.skinTonePickerExpanded ? '' : 'hidden no-animate'}"
-        style="transform:translateY(${state.skinTonePickerExpanded ? 0 : 'calc(-1 * var(--num-skintones) * var(--total-emoji-size))'})"
         role="listbox"
         aria-label="${state.i18n.skinTonesLabel}"
         aria-activedescendant="skintone-${state.activeSkinTone}"
@@ -112,7 +110,6 @@ export function render (container, state, helpers, events, refs, abortSignal, fi
         <!-- this is interactive because of keydown; it doesn't really need focus -->
         <div class="nav"
              role="tablist"
-             style="grid-template-columns: repeat(${state.groups.length}, 1fr)"
              aria-label="${state.i18n.categoriesLabel}"
              data-on-keydown="onNavKeydown"
              data-on-click="onNavClick"
