@@ -1,9 +1,26 @@
 import { vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb'
-import ResizeObserver from 'resize-observer-polyfill'
 import { deleteDatabase } from '../src/database/databaseLifecycle'
 import fetchMock from 'fetch-mock'
+
+// Minimal resize observer "polyfill" for test coverage
+class ResizeObserver {
+  #callback
+  #element
+  constructor (callback) {
+    this.#callback = callback
+  }
+
+  observe (element) {
+    this.#element = element
+    requestAnimationFrame(() => {
+      this.#callback([
+        { contentRect: this.#element.getBoundingClientRect() }
+      ])
+    })
+  }
+}
 
 beforeAll(() => {
   globalThis.ResizeObserver = ResizeObserver
