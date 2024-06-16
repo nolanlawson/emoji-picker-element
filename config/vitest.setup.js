@@ -1,7 +1,7 @@
 import { vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb'
-import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js'
+import ResizeObserver from 'resize-observer-polyfill'
 import { deleteDatabase } from '../src/database/databaseLifecycle'
 import fetchMock from 'fetch-mock'
 
