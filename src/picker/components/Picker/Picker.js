@@ -237,7 +237,8 @@ export function createRoot (shadowRoot, props) {
 
   createEffect(() => {
     state.pickerStyle = `
-      --num-groups: ${state.groups.length}; 
+      --num-groups: ${state.groups.length};
+      --group-index: ${state.currentGroupIndex};
       --indicator-opacity: ${state.searchMode ? 0 : 1}; 
       --num-skintones: ${NUM_SKIN_TONES};`
   })

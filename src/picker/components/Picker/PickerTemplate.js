@@ -137,7 +137,7 @@ export function render (container, state, helpers, events, refs, abortSignal, fi
           }
         </div>
         <div class="indicator-wrapper">
-          <div class="indicator" style="--group-index: ${state.currentGroupIndex};">
+          <div class="indicator">
           </div>
         </div>
 
