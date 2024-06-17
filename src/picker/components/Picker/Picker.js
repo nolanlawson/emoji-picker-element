@@ -14,6 +14,7 @@ import {
 } from '../../constants'
 import { uniqBy } from '../../../shared/uniqBy'
 import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
+import { resizeListener } from '../../utils/resizeListener.js'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
@@ -66,6 +67,7 @@ export function createRoot (shadowRoot, props) {
     skinTones: [],
     currentFavorites: [],
     defaultFavoriteEmojis: undefined,
+    numColumns: DEFAULT_NUM_COLUMNS,
     currentGroupIndex: 0,
     groups: defaultGroups,
     databaseLoaded: false,
@@ -175,10 +177,13 @@ export function createRoot (shadowRoot, props) {
     onSkinToneOptionsKeyup,
     onSearchInput
   }
+  const actions = {
+    emojiGridResizeListener
+  }
 
   let firstRender = true
   createEffect(() => {
-    render(shadowRoot, state, helpers, events, refs, abortSignal, firstRender)
+    render(shadowRoot, state, helpers, events, actions, refs, abortSignal, firstRender)
     firstRender = false
   })
 
@@ -333,12 +338,7 @@ export function createRoot (shadowRoot, props) {
     async function updateFavorites () {
       console.log('updateFavorites')
       updateCustomEmoji() // re-run whenever customEmoji change
-      const { database, defaultFavoriteEmojis } = state
-      // JSDOM can't handle this kind of fancy CSS calculation
-      /* istanbul ignore next */
-      const numColumns = import.meta.env.MODE === 'test'
-        ? DEFAULT_NUM_COLUMNS
-        : parseInt(getComputedStyle(refs.rootElement).getPropertyValue('--num-columns'), 10)
+      const { database, defaultFavoriteEmojis, numColumns } = state
       const dbFavorites = await database.getTopFavoriteEmoji(numColumns)
       const favorites = await summarizeEmojis(uniqBy([
         ...dbFavorites,
@@ -351,6 +351,26 @@ export function createRoot (shadowRoot, props) {
       /* no await */ updateFavorites()
     }
   })
+
+  //
+  // Update whenever the size of the emoji grid changes. This relies implicitly
+  // on the fact that `--num-columns` tends to correlate to the size, because
+  // it is usually set by a media query.
+  //
+
+  function emojiGridResizeListener (node) {
+    resizeListener(node, abortSignal, width => {
+      /* istanbul ignore next */
+      if (import.meta.env.MODE !== 'test') { // jsdom throws errors for this kind of fancy stuff
+        // read all the style/layout calculations we need to make
+        const style = getComputedStyle(refs.rootElement)
+        const numColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
+
+        // write to state variables
+        state.numColumns = numColumns
+      }
+    })
+  }
 
   //
   // Set or update the currentEmojis. Check for invalid ZWJ renderings
