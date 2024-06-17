@@ -247,7 +247,7 @@ export function createRoot (shadowRoot, props) {
   createCssPropertyEffect(
     '--dropdown-transform',
     'skinTonePickerExpanded',
-    expanded => `translateY(${expanded ? 0 : `calc(-1 * ${NUM_SKIN_TONES} * var(--total-emoji-size))`})`
+    expanded => `translateY(${expanded ? 0 : `calc(${-NUM_SKIN_TONES} * var(--total-emoji-size))`})`
   )
 
   //
