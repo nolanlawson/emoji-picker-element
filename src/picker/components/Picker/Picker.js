@@ -362,12 +362,9 @@ export function createRoot (shadowRoot, props) {
     resizeListener(node, abortSignal, width => {
       /* istanbul ignore next */
       if (import.meta.env.MODE !== 'test') { // jsdom throws errors for this kind of fancy stuff
-        // read all the style/layout calculations we need to make
-        const style = getComputedStyle(refs.rootElement)
-        const numColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
-
+        // read all the style/layout calculations we need to make, then
         // write to state variables
-        state.numColumns = numColumns
+        state.numColumns = parseInt(getComputedStyle(refs.rootElement).getPropertyValue('--num-columns'), 10)
       }
     })
   }

@@ -13,14 +13,10 @@ export const resetResizeObserverSupported = () => {
 export function resizeListener (node, abortSignal, onUpdate) {
   let resizeObserver
   if (resizeObserverSupported) {
-    resizeObserver = new ResizeObserver(entries => (
-      onUpdate(entries[0].contentRect.width)
-    ))
+    resizeObserver = new ResizeObserver(onUpdate)
     resizeObserver.observe(node)
   } else { // just set the width once, don't bother trying to track it
-    requestAnimationFrame(() => (
-      onUpdate(node.getBoundingClientRect().width)
-    ))
+    requestAnimationFrame(onUpdate)
   }
 
   // cleanup function (called on destroy)
