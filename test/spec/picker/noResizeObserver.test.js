@@ -60,6 +60,6 @@ describe('ResizeObserver unsupported', () => {
     await waitFor(() => expect(
       testingLibrary.getAllByRole(getByRole(container, 'tabpanel'), 'menuitem')).toHaveLength(numInGroup2))
 
-    expect(getByRole(container, 'tab', { name: 'People and body', selected: true })).toBeVisible()
+    await waitFor(() => expect(getByRole(container, 'tab', { name: 'People and body', selected: true })).toBeVisible())
   })
 })
