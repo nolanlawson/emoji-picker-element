@@ -359,7 +359,7 @@ export function createRoot (shadowRoot, props) {
   //
 
   function emojiGridResizeListener (node) {
-    resizeListener(node, abortSignal, width => {
+    resizeListener(node, abortSignal, () => {
       /* istanbul ignore next */
       if (import.meta.env.MODE !== 'test') { // jsdom throws errors for this kind of fancy stuff
         // read all the style/layout calculations we need to make, then
