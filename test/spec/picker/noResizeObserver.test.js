@@ -7,7 +7,7 @@ import {
 import { ALL_EMOJI, basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Picker from '../../../src/picker/PickerElement'
 import Database from '../../../src/database/Database'
-import { resetResizeObserverSupported } from '../../../src/picker/utils/widthCalculator'
+import { resetResizeObserverSupported } from '../../../src/picker/utils/resizeListener.js'
 
 // TODO: we can remove these tests when/if we stop supporting browsers without ResizeObserver
 // https://caniuse.com/resizeobserver
@@ -60,6 +60,6 @@ describe('ResizeObserver unsupported', () => {
     await waitFor(() => expect(
       testingLibrary.getAllByRole(getByRole(container, 'tabpanel'), 'menuitem')).toHaveLength(numInGroup2))
 
-    expect(getByRole(container, 'tab', { name: 'People and body', selected: true })).toBeVisible()
+    await waitFor(() => expect(getByRole(container, 'tab', { name: 'People and body', selected: true })).toBeVisible())
   })
 })

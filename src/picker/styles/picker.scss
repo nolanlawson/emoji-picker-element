@@ -29,6 +29,7 @@ $skintoneZIndex3: 3;
   will-change: transform;
   transition: transform 0.2s ease-in-out;
   transform-origin: center 0;
+  transform: var(--dropdown-transform);
 
   @media (prefers-reduced-motion: reduce) {
     // We still want the transition event to fire, so we can listen for the transitionend event
@@ -54,12 +55,13 @@ $skintoneZIndex3: 3;
 // tab panel
 
 .tabpanel {
-  overflow-y: auto;
   -webkit-overflow-scrolling: touch; // fix iOS scrolling
   will-change: transform; // fix "repaints on scroll" warning in Chrome https://crbug.com/514303
   min-height: 0;
   flex: 1;
   contain: content;
+  overflow-y: auto;
+  scrollbar-gutter: stable; // ensure that searching does not cause the scrollbar gutter width to change
 }
 
 .emoji-menu {
@@ -123,6 +125,7 @@ button.emoji,
   justify-content: space-between;
   align-items: center;
   contain: content;
+  grid-template-columns: repeat(var(--num-groups), 1fr);
 }
 
 .nav-button {
@@ -153,6 +156,12 @@ button.emoji,
   background-color: var(--indicator-color);
   will-change: transform, opacity;
   transition: opacity #{$opacityAnim} linear, transform #{$transformAnim} ease-in-out;
+  --dir-factor: 1;
+  transform: translateX(calc(100% * var(--dir-factor) * var(--group-index)));
+
+  &:dir(rtl) {
+    --dir-factor: -1;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     will-change: opacity;
@@ -204,6 +213,8 @@ input.search {
   flex-direction: row;
   border-top: var(--border-size) solid var(--border-color);
   contain: content;
+  overflow-y: auto; // required to get `scrollbar-gutter: stable` to work
+  scrollbar-gutter: stable; // line up the favorites emoji with the tabpanel emoji
 }
 
 // unsupported warning

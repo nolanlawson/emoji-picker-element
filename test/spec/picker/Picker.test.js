@@ -64,7 +64,7 @@ describe('Picker tests', () => {
     await waitFor(() => expect(
       testingLibrary.getAllByRole(getByRole('tabpanel'), 'menuitem')).toHaveLength(numInGroup2))
 
-    expect(getByRole('tab', { name: 'People and body', selected: true })).toBeVisible()
+    await waitFor(() => expect(getByRole('tab', { name: 'People and body', selected: true })).toBeVisible())
   })
 
   test('basic search test', async () => {

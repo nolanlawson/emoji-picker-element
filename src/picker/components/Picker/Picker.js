@@ -14,7 +14,7 @@ import {
 } from '../../constants'
 import { uniqBy } from '../../../shared/uniqBy'
 import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
-import { calculateWidth } from '../../utils/widthCalculator'
+import { resizeListener } from '../../utils/resizeListener.js'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
@@ -63,14 +63,11 @@ export function createRoot (shadowRoot, props) {
     currentSkinTone: 0,
     activeSkinTone: 0,
     skinToneButtonText: undefined,
-    pickerStyle: undefined,
     skinToneButtonLabel: '',
     skinTones: [],
     currentFavorites: [],
     defaultFavoriteEmojis: undefined,
     numColumns: DEFAULT_NUM_COLUMNS,
-    isRtl: false,
-    scrollbarWidth: 0,
     currentGroupIndex: 0,
     groups: defaultGroups,
     databaseLoaded: false,
@@ -181,7 +178,7 @@ export function createRoot (shadowRoot, props) {
     onSearchInput
   }
   const actions = {
-    calculateEmojiGridStyle
+    emojiGridResizeListener
   }
 
   let firstRender = true
@@ -239,15 +236,24 @@ export function createRoot (shadowRoot, props) {
   })
 
   //
-  // Global styles for the entire picker
+  // Global styles for the entire picker, managed by CSS custom properties.
+  // We subscribe to changes in JS state and push these to global CSS custom properties.
   //
 
-  createEffect(() => {
-    state.pickerStyle = `
-      --num-groups: ${state.groups.length}; 
-      --indicator-opacity: ${state.searchMode ? 0 : 1}; 
-      --num-skintones: ${NUM_SKIN_TONES};`
-  })
+  const createCssPropertyEffect = (cssPropName, propName, jsValueToCssValue) => {
+    createEffect(() => {
+      refs.rootElement.style.setProperty(cssPropName, jsValueToCssValue(state[propName]))
+    })
+  }
+
+  createCssPropertyEffect('--num-groups', 'groups', groups => groups.length)
+  createCssPropertyEffect('--group-index', 'currentGroupIndex', index => index)
+  createCssPropertyEffect('--indicator-opacity', 'searchMode', searchMode => searchMode ? 0 : 1)
+  createCssPropertyEffect(
+    '--dropdown-transform',
+    'skinTonePickerExpanded',
+    expanded => `translateY(${expanded ? 0 : `calc(${-NUM_SKIN_TONES} * var(--total-emoji-size))`})`
+  )
 
   //
   // Set or update the customEmoji
@@ -347,33 +353,18 @@ export function createRoot (shadowRoot, props) {
   })
 
   //
-  // Calculate the width of the emoji grid. This serves two purposes:
-  // 1) Re-calculate the --num-columns var because it may have changed
-  // 2) Re-calculate the scrollbar width because it may have changed
-  //   (i.e. because the number of items changed)
-  // 3) Re-calculate whether we're in RTL mode or not.
-  //
-  // The benefit of doing this in one place is to align with rAF/ResizeObserver
-  // and do all the calculations in one go. RTL vs LTR is not strictly width-related,
-  // but since we're already reading the style here, and since it's already aligned with
-  // the rAF loop, this is the most appropriate place to do it perf-wise.
+  // Update whenever the size of the emoji grid changes. This relies implicitly
+  // on the fact that `--num-columns` tends to correlate to the size, because
+  // it is usually set by a media query.
   //
 
-  function calculateEmojiGridStyle (node) {
-    calculateWidth(node, abortSignal, width => {
+  function emojiGridResizeListener (node) {
+    resizeListener(node, abortSignal, () => {
       /* istanbul ignore next */
       if (import.meta.env.MODE !== 'test') { // jsdom throws errors for this kind of fancy stuff
-        // read all the style/layout calculations we need to make
-        const style = getComputedStyle(refs.rootElement)
-        const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
-        const newIsRtl = style.getPropertyValue('direction') === 'rtl'
-        const parentWidth = node.parentElement.getBoundingClientRect().width
-        const newScrollbarWidth = parentWidth - width
-
+        // read all the style/layout calculations we need to make, then
         // write to state variables
-        state.numColumns = newNumColumns
-        state.scrollbarWidth = newScrollbarWidth // eslint-disable-line no-unused-vars
-        state.isRtl = newIsRtl // eslint-disable-line no-unused-vars
+        state.numColumns = parseInt(getComputedStyle(refs.rootElement).getPropertyValue('--num-columns'), 10)
       }
     })
   }

@@ -30,8 +30,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
       <section
         data-ref="rootElement"
         class="picker"
-        aria-label="${state.i18n.regionLabel}"
-        style="${state.pickerStyle}">
+        aria-label="${state.i18n.regionLabel}">
         <!-- using a spacer div because this allows us to cover up the skintone picker animation -->
         <div class="pad-top"></div>
          <div class="search-row">
@@ -83,7 +82,6 @@ export function render (container, state, helpers, events, actions, refs, abortS
         data-ref="skinToneDropdown"
         id="skintone-list"
         class="skintone-list hide-focus ${state.skinTonePickerExpanded ? '' : 'hidden no-animate'}"
-        style="transform:translateY(${state.skinTonePickerExpanded ? 0 : 'calc(-1 * var(--num-skintones) * var(--total-emoji-size))'})"
         role="listbox"
         aria-label="${state.i18n.skinTonesLabel}"
         aria-activedescendant="skintone-${state.activeSkinTone}"
@@ -112,7 +110,6 @@ export function render (container, state, helpers, events, actions, refs, abortS
         <!-- this is interactive because of keydown; it doesn't really need focus -->
         <div class="nav"
              role="tablist"
-             style="grid-template-columns: repeat(${state.groups.length}, 1fr)"
              aria-label="${state.i18n.categoriesLabel}"
              data-on-keydown="onNavKeydown"
              data-on-click="onNavClick"
@@ -137,9 +134,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
           }
         </div>
         <div class="indicator-wrapper">
-          <!-- Note we cannot test RTL in Jest because of lack of getComputedStyle() -->
-          <div class="indicator"
-               style="transform: translateX(${(/* istanbul ignore next */ (state.isRtl ? -1 : 1)) * state.currentGroupIndex * 100}%)">
+          <div class="indicator">
           </div>
         </div>
 
@@ -159,7 +154,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
              tabIndex="0"
              data-on-click="onEmojiClick"
         >
-          <div data-action="calculateEmojiGridStyle">
+          <div data-action="emojiGridResizeListener">
             ${
               map(state.currentEmojisWithCategories, (emojiWithCategory, i) => {
                 return html`
@@ -205,7 +200,6 @@ export function render (container, state, helpers, events, actions, refs, abortS
         <div class="favorites emoji-menu ${state.message ? 'gone' : ''}"
              role="menu"
              aria-label="${state.i18n.favoritesLabel}"
-             style="padding-inline-end: ${`${state.scrollbarWidth}px`}"
              data-on-click="onEmojiClick">
           ${
             emojiList(state.currentFavorites, /* searchMode */ false, /* prefix */ 'fav')
