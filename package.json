@@ -80,6 +80,7 @@
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/user-event": "^14.5.2",
+    "@vitest/browser": "^1.6.0",
     "@vitest/coverage-istanbul": "^1.6.0",
     "@vitest/ui": "^1.6.0",
     "blob-util": "^2.0.2",
@@ -118,7 +119,8 @@
     "svgo": "^3.3.2",
     "tachometer": "^0.7.0",
     "terser": "^5.31.1",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.0",
+    "webdriverio": "^8.39.0"
   },
   "//": {
     "jsonwebtoken": "comes from tachometer, jsonwebtoken 8 has a vuln"

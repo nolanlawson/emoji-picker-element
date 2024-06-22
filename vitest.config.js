@@ -8,6 +8,7 @@ export default defineConfig({
     buildStylesRollupPlugin()
   ],
   test: {
+    browser: { enabled: true, name: 'chrome' },
     globals: true,
     environment: 'jsdom',
     setupFiles: [

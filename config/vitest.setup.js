@@ -24,9 +24,9 @@ class ResizeObserver {
 }
 
 beforeAll(() => {
-  globalThis.ResizeObserver = ResizeObserver
-  globalThis.IDBKeyRange = IDBKeyRange
-  globalThis.indexedDB = new IDBFactory()
+  // globalThis.ResizeObserver = ResizeObserver
+  // globalThis.IDBKeyRange = IDBKeyRange
+  // globalThis.indexedDB = new IDBFactory()
 
   vi.spyOn(globalThis.console, 'log').mockImplementation(() => undefined)
   vi.spyOn(globalThis.console, 'warn').mockImplementation(() => undefined)
