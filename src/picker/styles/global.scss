@@ -12,6 +12,7 @@
   flex-direction: column;
   background: var(--background);
   border: var(--border-size) solid var(--border-color);
+  border-radius: var(--picker-border-radius);
   width: 100%;
   height: 100%;
   overflow: hidden;
