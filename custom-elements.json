@@ -103,6 +103,11 @@
               "default": "\"#e0e0e0\""
             },
             {
+              "name": "--border-radius",
+              "description": "Border radius of the entire picker (default: `0`)",
+              "default": "\"0\""
+            },
+            {
               "name": "--border-size",
               "description": "Width of border used in most of the picker (default: `1px`)",
               "default": "\"1px\""
