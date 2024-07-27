@@ -77,11 +77,11 @@
     "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-strip": "^3.0.4",
     "@rollup/plugin-terser": "^0.4.4",
-    "@testing-library/dom": "^10.1.0",
-    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/user-event": "^14.5.2",
-    "@vitest/coverage-istanbul": "^1.6.0",
-    "@vitest/ui": "^1.6.0",
+    "@vitest/coverage-istanbul": "^2.0.4",
+    "@vitest/ui": "^2.0.4",
     "blob-util": "^2.0.2",
     "compression": "^1.7.4",
     "conventional-changelog-cli": "^5.0.0",
@@ -92,39 +92,33 @@
     "express": "^4.19.2",
     "fake-indexeddb": "^6.0.0",
     "fast-glob": "^3.3.2",
-    "fetch-mock": "^10.0.5",
+    "fetch-mock": "^10.1.1",
     "flat-color-icons": "^1.1.0",
-    "get-folder-size": "^4.0.0",
-    "husky": "^9.0.11",
-    "jsdom": "^24.1.0",
+    "get-folder-size": "^5.0.0",
+    "husky": "^9.1.3",
+    "jsdom": "^24.1.1",
     "lint-staged": "^15.2.7",
     "lodash-es": "^4.17.21",
     "markdown-table": "^3.0.3",
     "markdown-toc": "^1.2.0",
     "minify-html-literals": "^1.3.5",
     "npm-run-all": "^4.1.5",
-    "playwright": "^1.44.1",
-    "postcss": "^8.4.38",
+    "playwright": "^1.45.3",
+    "postcss": "^8.4.40",
     "pretty-bytes": "^6.1.1",
-    "puppeteer": "^22.11.0",
+    "puppeteer": "^22.14.0",
     "recursive-readdir": "^2.2.3",
-    "rollup": "^4.18.0",
+    "rollup": "^4.19.1",
     "rollup-plugin-analyzer": "^4.0.0",
-    "sass": "^1.77.5",
+    "sass": "^1.77.8",
     "standard": "^17.1.0",
-    "stylelint": "^16.6.1",
-    "stylelint-config-recommended-scss": "^14.0.0",
-    "stylelint-scss": "^6.3.1",
+    "stylelint": "^16.7.0",
+    "stylelint-config-recommended-scss": "^14.1.0",
+    "stylelint-scss": "^6.4.1",
     "svgo": "^3.3.2",
-    "tachometer": "^0.7.0",
-    "terser": "^5.31.1",
-    "vitest": "^1.6.0"
-  },
-  "//": {
-    "jsonwebtoken": "comes from tachometer, jsonwebtoken 8 has a vuln"
-  },
-  "resolutions": {
-    "jsonwebtoken": "^9.0.0"
+    "tachometer": "^0.7.1",
+    "terser": "^5.31.3",
+    "vitest": "^2.0.4"
   },
   "standard": {
     "ignore": [
@@ -184,5 +178,5 @@
     "*.js": "standard --fix",
     "*.(css|scss)": "stylelint --fix '**/*.scss'"
   },
-  "packageManager": "pnpm@9.1.2+sha512.127dc83b9ea10c32be65d22a8efb4a65fb952e8fefbdfded39bdc3c97efc32d31b48b00420df2c1187ace28c921c902f0cb5a134a4d032b8b5295cbfa2c681e2"
+  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
 }
