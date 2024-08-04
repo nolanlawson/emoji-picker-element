@@ -1,0 +1,4 @@
+@mixin scrollbar-gutter-stable {
+  overflow-y: auto; // required to get `scrollbar-gutter: stable` to work
+  scrollbar-gutter: stable;
+}

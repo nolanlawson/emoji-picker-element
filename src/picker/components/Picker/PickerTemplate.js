@@ -205,7 +205,6 @@ export function render (container, state, helpers, events, actions, refs, abortS
         <div class="favorites emoji-menu ${state.message ? 'gone' : ''}"
              role="menu"
              aria-label="${state.i18n.favoritesLabel}"
-             style="padding-inline-end: ${`${state.scrollbarWidth}px`}"
              data-on-click="onEmojiClick">
           ${
             emojiList(state.currentFavorites, /* searchMode */ false, /* prefix */ 'fav')

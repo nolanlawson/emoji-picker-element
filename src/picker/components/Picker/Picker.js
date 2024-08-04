@@ -14,7 +14,7 @@ import {
 } from '../../constants'
 import { uniqBy } from '../../../shared/uniqBy'
 import { summarizeEmojisForUI } from '../../utils/summarizeEmojisForUI'
-import { calculateWidth } from '../../utils/widthCalculator'
+import { resizeObserverAction } from '../../utils/resizeObserverAction.js'
 import { checkZwjSupport } from '../../utils/checkZwjSupport'
 import { requestPostAnimationFrame } from '../../utils/requestPostAnimationFrame'
 import { requestAnimationFrame } from '../../utils/requestAnimationFrame'
@@ -70,7 +70,6 @@ export function createRoot (shadowRoot, props) {
     defaultFavoriteEmojis: undefined,
     numColumns: DEFAULT_NUM_COLUMNS,
     isRtl: false,
-    scrollbarWidth: 0,
     currentGroupIndex: 0,
     groups: defaultGroups,
     databaseLoaded: false,
@@ -347,33 +346,28 @@ export function createRoot (shadowRoot, props) {
   })
 
   //
-  // Calculate the width of the emoji grid. This serves two purposes:
+  // Re-run whenever the emoji grid changes size, and re-calc style/layout-related state variables:
   // 1) Re-calculate the --num-columns var because it may have changed
-  // 2) Re-calculate the scrollbar width because it may have changed
-  //   (i.e. because the number of items changed)
-  // 3) Re-calculate whether we're in RTL mode or not.
+  // 2) Re-calculate whether we're in RTL mode or not.
   //
   // The benefit of doing this in one place is to align with rAF/ResizeObserver
-  // and do all the calculations in one go. RTL vs LTR is not strictly width-related,
+  // and do all the calculations in one go. RTL vs LTR is not strictly layout-related,
   // but since we're already reading the style here, and since it's already aligned with
   // the rAF loop, this is the most appropriate place to do it perf-wise.
   //
 
   function calculateEmojiGridStyle (node) {
-    calculateWidth(node, abortSignal, width => {
+    resizeObserverAction(node, abortSignal, () => {
       /* istanbul ignore next */
       if (import.meta.env.MODE !== 'test') { // jsdom throws errors for this kind of fancy stuff
         // read all the style/layout calculations we need to make
         const style = getComputedStyle(refs.rootElement)
         const newNumColumns = parseInt(style.getPropertyValue('--num-columns'), 10)
         const newIsRtl = style.getPropertyValue('direction') === 'rtl'
-        const parentWidth = node.parentElement.getBoundingClientRect().width
-        const newScrollbarWidth = parentWidth - width
 
         // write to state variables
         state.numColumns = newNumColumns
-        state.scrollbarWidth = newScrollbarWidth // eslint-disable-line no-unused-vars
-        state.isRtl = newIsRtl // eslint-disable-line no-unused-vars
+        state.isRtl = newIsRtl
       }
     })
   }
