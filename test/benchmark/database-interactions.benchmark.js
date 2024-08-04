@@ -1,7 +1,7 @@
-import Database from './database.js'
+import Database from '../../database.js'
+import { dataSource } from './utils.js'
 
 performance.mark('start-db-interactions')
-const dataSource = './data.json'
 const database = new Database({ dataSource })
 await database.ready()
 

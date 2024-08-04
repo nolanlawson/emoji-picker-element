@@ -26,7 +26,7 @@
     "build:toc": "node ./bin/generateTOC",
     "build:i18n": "node ./bin/buildI18n",
     "benchmark:runtime": "cross-env PERF=1 run-s build:rollup benchmark:runtime:setup benchmark:runtime:test",
-    "benchmark:runtime:setup": "./bin/setup-benchmark.sh && node ./bin/setupTachometerConfigs.js",
+    "benchmark:runtime:setup": "node ./bin/setupTachometerConfigs.js",
     "benchmark:runtime:test": "for config in ./test/benchmark/*.tachometer.json; do echo \"${config}\"; tach --config \"${config}\"; done",
     "benchmark:bundlesize": "run-s build:rollup benchmark:bundle benchmark:run-bundlesize",
     "benchmark:bundle": "rollup -c ./test/bundlesize/rollup.config.js",

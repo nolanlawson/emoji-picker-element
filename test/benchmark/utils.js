@@ -29,3 +29,5 @@ export const waitForPickerInitialLoad = () => {
     observer.observe({ entryTypes: ['measure'] })
   })
 }
+
+export const dataSource = '/node_modules/emoji-picker-element-data/en/emojibase/data.json'
