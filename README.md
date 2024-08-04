@@ -135,7 +135,7 @@ This will log:
 - [Button with tooltip/popover](https://nolanlawson.github.io/emoji-picker-element/demos/tooltip/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/tooltip/index.html))
 - [Inserting emoji into a text input](https://nolanlawson.github.io/emoji-picker-element/demos/input/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/input/index.html))
 - [In a React app](https://nolanlawson.github.io/emoji-picker-element/demos/react/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/react/index.html))
-- [Custom emoji font](https://nolanlawson.github.io/emoji-picker-element/demos/twemoji-mozilla/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/twemoji-mozilla/index.html)) 
+- [Custom emoji font](https://nolanlawson.github.io/emoji-picker-element/demos/custom-font/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/custom-font/index.html))
 - [Fallback for missing flag emoji on Windows](https://nolanlawson.github.io/emoji-picker-element/demos/flags/index.html) ([source](https://github.com/nolanlawson/emoji-picker-element/blob/master/docs/demos/flags/index.html))
 
 ### Emoji support
@@ -154,7 +154,7 @@ emoji-picker {
 }
 ```
 
-Then, specify the maximum emoji version supported by the font (see [Emojipedia](https://emojipedia.org/emoji-versions/) for a list of versions).
+Then, specify the maximum emoji version supported by the font. (See [Emojipedia](https://emojipedia.org/emoji-versions/) for a list of versions.)
 
 In HTML:
 

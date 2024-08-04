@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang=en>
+<head>
+  <title>emoji-picker-element: using Noto Color Emoji font</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji" rel="stylesheet">
+  <style>
+      emoji-picker {
+          --emoji-font-family: "Noto Color Emoji";
+      }
+  </style>
+</head>
+<body>
+<h1>emoji-picker-element: using Noto Color Emoji font</h1>
+<p>
+  This demo shows how to use emoji-picker-element with <a href="https://fonts.google.com/noto/specimen/Noto+Color+Emoji">Google Noto Color Emoji</a> as a custom emoji font.
+</p>
+<p>
+  Note that this carries a performance cost due to downloading the additional font file. Also note that alignment may be off in Safari due to <a href="https://bugs.webkit.org/show_bug.cgi?id=249943">a WebKit bug</a>, and
+  that <a href="https://caniuse.com/?search=colr">not all browsers support COLR fonts</a>.
+  Use this approach with care.
+</p>
+<p>
+  Also note that the emoji version is pinned to 15.1 because this is the latest version supported by Google Noto Color Emoji as of this writing (August 2024).
+</p>
+<emoji-picker emoji-version="15.1"></emoji-picker>
+<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+</body>
+</html>
