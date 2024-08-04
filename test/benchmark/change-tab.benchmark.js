@@ -1,4 +1,4 @@
-import Picker from './picker.js'
+import Picker from '../../picker.js'
 import { waitForElementWithId, postRaf, waitForPickerInitialLoad } from './utils.js'
 
 const picker = new Picker()

@@ -1,4 +1,4 @@
-import Database from './database.js'
+import Database from '../../database.js'
 
 performance.mark('start-db-interactions')
 const dataSource = './data.json'

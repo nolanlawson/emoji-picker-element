@@ -1,5 +1,5 @@
-import Picker from './picker.js'
+import Picker from '../../picker.js'
 
-const dataSource = './data.json'
+const dataSource = '../../data.json'
 
 document.body.appendChild(new Picker({ dataSource }))

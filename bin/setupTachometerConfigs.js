@@ -11,6 +11,7 @@ for (const benchmark of benchmarks) {
     sampleSize: 50,
     timeout: 5,
     autoSampleConditions: ['10%'],
+    root: '../..',
     benchmarks: [
       {
         url: `./index.html?benchmark=${benchmarkShortName}`,

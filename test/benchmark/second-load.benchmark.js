@@ -1,6 +1,6 @@
-import Database from './database.js'
+import Database from '../../database.js'
 
-const dataSource = './data.json'
+const dataSource = '/node_modules/emoji-picker-element-data/en/emojibase/data.json'
 
 // populate IndexedDB so the Picker is just reading from the local store
 const db = new Database({ dataSource })
