@@ -1,3 +1,12 @@
+## [1.22.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.0...v1.22.1) (2024-08-05)
+
+
+### Bug Fixes
+
+* use `scrollbar-gutter: stable` ([#433](https://github.com/nolanlawson/emoji-picker-element/issues/433)) ([c3cd0b8](https://github.com/nolanlawson/emoji-picker-element/commit/c3cd0b89ed1a9bc4b75d24a81727a6ac6bc64da5))
+
+
+
 # [1.22.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.21.3...v1.22.0) (2024-07-27)
 
 
