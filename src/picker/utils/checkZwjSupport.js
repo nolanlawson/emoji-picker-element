@@ -5,11 +5,12 @@ let baselineEmojiWidth
 
 export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode) {
   performance.mark('checkZwjSupport')
+  const range = document.createRange() // reuse the range for perf - avoid re-creating it for every emoji
   for (const emoji of zwjEmojisToCheck) {
     const domNode = emojiToDomNode(emoji)
-    const emojiWidth = calculateTextWidth(domNode)
+    const emojiWidth = calculateTextWidth(domNode, range)
     if (typeof baselineEmojiWidth === 'undefined') { // calculate the baseline emoji width only once
-      baselineEmojiWidth = calculateTextWidth(baselineEmoji)
+      baselineEmojiWidth = calculateTextWidth(baselineEmoji, range)
     }
     // On Windows, some supported emoji are ~50% bigger than the baseline emoji, but what we really want to guard
     // against are the ones that are 2x the size, because those are truly broken (person with red hair = person with
