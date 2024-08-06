@@ -8,7 +8,7 @@ export function transformEmojiData (emojiData) {
     const tokens = [...new Set(
       normalizeTokens([
         ...(shortcodes || []).map(extractTokens).flat(),
-        ...tags.map(extractTokens).flat(),
+        ...(tags || []).map(extractTokens).flat(),
         ...extractTokens(annotation),
         emoticon
       ])

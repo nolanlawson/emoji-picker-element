@@ -1,7 +1,17 @@
 import Database from '../../../src/database/Database'
 import {
-  basicAfterEach, basicBeforeEach, ALL_EMOJI, ALL_EMOJI_MISCONFIGURED_ETAG,
-  ALL_EMOJI_NO_ETAG, tick, mockFrenchDataSource, FR_EMOJI, truncatedEmoji, NO_SHORTCODES, mockDataSourceWithNoShortcodes
+  basicAfterEach,
+  basicBeforeEach,
+  ALL_EMOJI,
+  ALL_EMOJI_MISCONFIGURED_ETAG,
+  ALL_EMOJI_NO_ETAG,
+  tick,
+  mockFrenchDataSource,
+  FR_EMOJI,
+  truncatedEmoji,
+  NO_SHORTCODES,
+  mockDataSourceWithNoShortcodes,
+  mockDataSourceWithNoTags, NO_TAGS
 } from '../shared'
 import trimEmojiData from '../../../src/trimEmojiData'
 import { mockFetch, mockGetAndHead } from '../mockFetch.js'
@@ -270,6 +280,18 @@ describe('database tests', () => {
   test('emoji with no shortcodes still work', async () => {
     const dataSource = NO_SHORTCODES
     mockDataSourceWithNoShortcodes()
+
+    const db = new Database({ dataSource })
+    await db.ready()
+
+    expect((await db.getEmojiBySearchQuery('monkey'))[0].unicode).toBe('🐵')
+
+    await db.delete()
+  })
+
+  test('emoji with no tags still work', async () => {
+    const dataSource = NO_TAGS
+    mockDataSourceWithNoTags()
 
     const db = new Database({ dataSource })
     await db.ready()
