@@ -33,6 +33,7 @@ export const ALL_EMOJI_NO_ETAG = 'http://localhost/emoji-no-etag.json'
 export const ALL_EMOJI_MISCONFIGURED_ETAG = 'http://localhost/emoji-misconfigured-etag.json'
 export const FR_EMOJI = 'http://localhost/fr.json'
 export const NO_SHORTCODES = 'http://localhost/no-shortcodes'
+export const NO_TAGS = 'http://localhost/no-tags'
 export const EMOJIBASE_V5 = 'http://localhost/emojibase'
 export const WITH_ARRAY_SKIN_TONES = 'http://localhost/with-array-skin-tones'
 
@@ -61,11 +62,20 @@ export function mockFrenchDataSource () {
 
 export function mockDataSourceWithNoShortcodes () {
   const noShortcodeEmoji = truncatedEmoji.map(emoji => {
-    const res = JSON.parse(JSON.stringify(emoji))
+    const res = structuredClone(emoji)
     delete res.shortcodes
     return res
   })
   mockGetAndHead(NO_SHORTCODES, noShortcodeEmoji, { headers: { ETag: 'W/noshort' } })
+}
+
+export function mockDataSourceWithNoTags () {
+  const noTagEmoji = truncatedEmoji.map(emoji => {
+    const res = structuredClone(emoji)
+    delete res.tags
+    return res
+  })
+  mockGetAndHead(NO_TAGS, noTagEmoji, { headers: { ETag: 'W/notag' } })
 }
 
 export function mockEmojibaseV5DataSource () {
