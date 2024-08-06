@@ -1,3 +1,12 @@
+## [1.22.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.1...v1.22.2) (2024-08-06)
+
+
+### Bug Fixes
+
+* allow for emoji with no tags ([#434](https://github.com/nolanlawson/emoji-picker-element/issues/434)) ([e91717b](https://github.com/nolanlawson/emoji-picker-element/commit/e91717b3d2f7d8f0fc7d7f1d53803fdde7412104))
+
+
+
 ## [1.22.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.0...v1.22.1) (2024-08-05)
 
 
