@@ -23,6 +23,7 @@ import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.j
 import { render } from './PickerTemplate.js'
 import { createState } from './reactivity.js'
 import { arraysAreEqualByFunction } from '../../utils/arraysAreEqualByFunction.js'
+import { setCurrentFrameworkDomCache, createFrameworkDomCache } from './framework.js'
 
 // constants
 const EMPTY_ARRAY = []
@@ -34,6 +35,7 @@ export function createRoot (shadowRoot, props) {
   const abortController = new AbortController()
   const abortSignal = abortController.signal
   const { state, createEffect } = createState(abortSignal)
+  const frameworkCache = createFrameworkDomCache()
 
   // initial state
   assign(state, {
@@ -185,7 +187,12 @@ export function createRoot (shadowRoot, props) {
 
   let firstRender = true
   createEffect(() => {
-    render(shadowRoot, state, helpers, events, actions, refs, abortSignal, firstRender)
+    setCurrentFrameworkDomCache(frameworkCache)
+    try {
+      render(shadowRoot, state, helpers, events, actions, refs, abortSignal, firstRender)
+    } finally {
+      setCurrentFrameworkDomCache(undefined)
+    }
     firstRender = false
   })
 

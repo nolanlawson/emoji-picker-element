@@ -1,10 +1,16 @@
-import { createFramework } from '../../../src/picker/components/Picker/framework.js'
+import { createFrameworkDomCache, html, map, setCurrentFrameworkDomCache } from '../../../src/picker/components/Picker/framework.js'
 
 describe('framework', () => {
+  beforeEach(() => {
+    setCurrentFrameworkDomCache(createFrameworkDomCache())
+  })
+
+  afterEach(() => {
+    setCurrentFrameworkDomCache(undefined)
+  })
+
   test('patches a node', () => {
     const state = { name: 'foo' }
-
-    const { html } = createFramework(state)
 
     let node
     const render = () => {
@@ -21,8 +27,6 @@ describe('framework', () => {
 
   test('replaces one node with a totally different one', () => {
     const state = { name: 'foo' }
-
-    const { html } = createFramework(state)
 
     let node
     const render = () => {
@@ -42,8 +46,6 @@ describe('framework', () => {
   test('return the same exact node after a re-render', () => {
     const state = { name: 'foo' }
 
-    const { html } = createFramework(state)
-
     let node
     let cached
     const render = () => {
@@ -61,8 +63,6 @@ describe('framework', () => {
   test('dynamic expression with whitespace around it - minifier should be working', () => {
     const state = { name: 'foo' }
 
-    const { html } = createFramework(state)
-
     let node
     const render = () => {
       node = html`<div>  ${state.name}\t\n</div>`
@@ -79,8 +79,6 @@ describe('framework', () => {
   // Framework no longer supports this since we switched from HTML comments to text nodes
   test.skip('render two dynamic expressions inside the same element', () => {
     const state = { name1: 'foo', name2: 'bar' }
-
-    const { html } = createFramework(state)
 
     let node
     const render = () => {
@@ -100,8 +98,6 @@ describe('framework', () => {
   test.skip('render a mix of dynamic and static text nodes in the same element', () => {
     const state = { name1: 'foo', name2: 'bar' }
 
-    const { html } = createFramework(state)
-
     let node
     const render = () => {
       node = html`<div>1${state.name1}2${state.name2}3</div>`
@@ -118,8 +114,6 @@ describe('framework', () => {
 
   test('attributes', () => {
     const state = {}
-
-    const { html } = createFramework(state)
 
     const expectRender = (render, expected1, expected2) => {
       state.name = 'foo'
@@ -143,5 +137,26 @@ describe('framework', () => {
     // pre+post
     expectRender(() => html`<div class="a${state.name}z"></div>`, '<div class="afooz"></div>', '<div class="abarz"></div>')
     expectRender(() => html`<div class=a${state.name}z></div>`, '<div class="afooz"></div>', '<div class="abarz"></div>')
+  })
+
+  test('map', () => {
+    const items = [{ id: 2 }, { id: 1 }, { id: 3 }]
+
+    const expectRender = expected => {
+      const rendered = map(items, (item) => html`<div>${item.id}</div>`, item => item.id)
+
+      expect(rendered.map(_ => _.outerHTML)).toEqual(expected)
+    }
+
+    expectRender(['<div>2</div>', '<div>1</div>', '<div>3</div>'])
+
+    items.sort((a, b) => a.id - b.id)
+    expectRender(['<div>1</div>', '<div>2</div>', '<div>3</div>'])
+
+    items.sort((a, b) => b.id - a.id)
+    expectRender(['<div>3</div>', '<div>2</div>', '<div>1</div>'])
+
+    items.push({ id: 4 })
+    expectRender(['<div>3</div>', '<div>2</div>', '<div>1</div>', '<div>4</div>'])
   })
 })

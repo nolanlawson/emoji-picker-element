@@ -1,15 +1,19 @@
 import { getFromMap, parseTemplate, toString } from './utils.js'
 
 const parseCache = new WeakMap()
-const domInstancesCache = new WeakMap()
 // This needs to be a symbol because it needs to be different from any possible output of a key function
 const unkeyedSymbol = Symbol('un-keyed')
+
+// Weak map of unique token arrays (`string[]`) to `Map`s
+let frameworkDomCache
+// Key used for `map()` functions
+let domInstanceCacheKey = unkeyedSymbol
 
 // for debugging
 /* istanbul ignore else */
 if (import.meta.env.MODE !== 'production') {
   window.parseCache = parseCache
-  window.domInstancesCache = domInstancesCache
+  window.frameworkDomCache = frameworkDomCache
 }
 
 // Not supported in Safari <=13
@@ -281,30 +285,35 @@ function parseHtml (tokens) {
   }
 }
 
-export function createFramework (state) {
-  const domInstances = getFromMap(domInstancesCache, state, () => new Map())
-  let domInstanceCacheKey = unkeyedSymbol
+function html (tokens, ...expressions) {
+  // Each unique lexical usage of map() is considered unique due to the html`` tagged template call it makes,
+  // which has lexically unique tokens. The unkeyed symbol is just used for html`` usage outside of a map().
+  const domInstancesForTokens = getFromMap(frameworkDomCache, tokens, () => new Map())
+  const updateDomInstance = getFromMap(domInstancesForTokens, domInstanceCacheKey, () => parseHtml(tokens))
 
-  function html (tokens, ...expressions) {
-    // Each unique lexical usage of map() is considered unique due to the html`` tagged template call it makes,
-    // which has lexically unique tokens. The unkeyed symbol is just used for html`` usage outside of a map().
-    const domInstancesForTokens = getFromMap(domInstances, tokens, () => new Map())
-    const updateDomInstance = getFromMap(domInstancesForTokens, domInstanceCacheKey, () => parseHtml(tokens))
-
-    return updateDomInstance(expressions) // update with expressions
-  }
-
-  function map (array, callback, keyFunction) {
-    return array.map((item, index) => {
-      const originalCacheKey = domInstanceCacheKey
-      domInstanceCacheKey = keyFunction(item)
-      try {
-        return callback(item, index)
-      } finally {
-        domInstanceCacheKey = originalCacheKey
-      }
-    })
-  }
-
-  return { map, html }
+  return updateDomInstance(expressions) // update with expressions
 }
+
+function map (array, callback, keyFunction) {
+  return array.map((item, index) => {
+    const originalCacheKey = domInstanceCacheKey
+    domInstanceCacheKey = keyFunction(item)
+    try {
+      return callback(item, index)
+    } finally {
+      domInstanceCacheKey = originalCacheKey
+    }
+  })
+}
+
+// The framework cache should be unique per emoji-picker element instance so that their states don't collide
+function setCurrentFrameworkDomCache (newFrameworkDomCache) {
+  frameworkDomCache = newFrameworkDomCache
+}
+
+// Create a new framework cache - this should be unique per emoji-picker element instance
+function createFrameworkDomCache () {
+  return new WeakMap()
+}
+
+export { map, html, setCurrentFrameworkDomCache, createFrameworkDomCache }
