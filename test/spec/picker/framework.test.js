@@ -144,4 +144,28 @@ describe('framework', () => {
     expectRender(() => html`<div class="a${state.name}z"></div>`, '<div class="afooz"></div>', '<div class="abarz"></div>')
     expectRender(() => html`<div class=a${state.name}z></div>`, '<div class="afooz"></div>', '<div class="abarz"></div>')
   })
+
+  test('map', () => {
+    const state = {}
+    const { html, map } = createFramework(state)
+
+    const items = [{ id: 2 }, { id: 1 }, { id: 3 }]
+
+    const expectRender = expected => {
+      const rendered = map(items, (item) => html`<div>${item.id}</div>`, item => item.id)
+
+      expect(rendered.map(_ => _.outerHTML)).toEqual(expected)
+    }
+
+    expectRender(['<div>2</div>', '<div>1</div>', '<div>3</div>'])
+
+    items.sort((a, b) => a.id - b.id)
+    expectRender(['<div>1</div>', '<div>2</div>', '<div>3</div>'])
+
+    items.sort((a, b) => b.id - a.id)
+    expectRender(['<div>3</div>', '<div>2</div>', '<div>1</div>'])
+
+    items.push({ id: 4 })
+    expectRender(['<div>3</div>', '<div>2</div>', '<div>1</div>', '<div>4</div>'])
+  })
 })
