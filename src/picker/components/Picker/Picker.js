@@ -428,7 +428,6 @@ export function createRoot (shadowRoot, props) {
 
   function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
     const allSupported = checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
-    /* istanbul ignore if */
     if (!allSupported) {
       console.log('Not all ZWJ emoji are supported, forcing re-render')
       // Force update. We only do this if there are any unsupported ZWJ characters since otherwise,
