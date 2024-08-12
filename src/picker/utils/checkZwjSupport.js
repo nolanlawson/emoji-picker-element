@@ -3,8 +3,16 @@ import { supportedZwjEmojis } from './emojiSupport'
 
 let baselineEmojiWidth
 
+/**
+ * Check if the given emojis containing ZWJ characters are supported by the current browser (don't render
+ * as double characters) and return true if all are supported.
+ * @param zwjEmojisToCheck
+ * @param baselineEmoji
+ * @param emojiToDomNode
+ */
 export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode) {
   performance.mark('checkZwjSupport')
+  let allSupported = true
   for (const emoji of zwjEmojisToCheck) {
     const domNode = emojiToDomNode(emoji)
     const emojiWidth = calculateTextWidth(domNode)
@@ -19,10 +27,12 @@ export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode
     supportedZwjEmojis.set(emoji.unicode, supported)
     /* istanbul ignore next */
     if (!supported) {
-      console.log('Filtered unsupported emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
+      allSupported = false
+      console.log('Filtered unsupported ZWJ emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
     } else if (emojiWidth !== baselineEmojiWidth) {
-      console.log('Allowed borderline emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
+      console.log('Allowed borderline ZWJ emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
     }
   }
   performance.measure('checkZwjSupport', 'checkZwjSupport')
+  return allSupported
 }

@@ -427,10 +427,14 @@ export function createRoot (shadowRoot, props) {
   })
 
   function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
-    checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
-    // force update
-    // eslint-disable-next-line no-self-assign
-    state.currentEmojis = state.currentEmojis
+    const allSupported = checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
+    /* istanbul ignore if */
+    if (!allSupported) {
+      console.log('Not all ZWJ emoji are supported, forcing re-render')
+      // Force update. We only do this if there are any unsupported ZWJ characters since otherwise,
+      // for browsers that support all emoji, it would be an unnecessary extra re-render.
+      state.currentEmojis = [...state.currentEmojis]
+    }
   }
 
   function isZwjSupported (emoji) {
