@@ -31,11 +31,14 @@ export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode
     // So here we set the threshold at 1.8 times the size of the baseline emoji.
     const supported = !simulateBrowserNotSupportingZWJEmoji && emojiWidth / 1.8 < baselineEmojiWidth
     supportedZwjEmojis.set(emoji.unicode, supported)
-    /* istanbul ignore next */
+
     if (!supported) {
       allSupported = false
       console.log('Filtered unsupported ZWJ emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
-    } else if (emojiWidth !== baselineEmojiWidth) {
+    }
+
+    /* istanbul ignore next */
+    if (supported && emojiWidth !== baselineEmojiWidth) {
       console.log('Allowed borderline ZWJ emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
     }
   }
