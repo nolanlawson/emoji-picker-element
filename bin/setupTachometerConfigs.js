@@ -34,7 +34,7 @@ for (const benchmark of benchmarks) {
             packageVersions: {
               label: 'tip-of-tree',
               dependencies: {
-                'emoji-picker-element': {
+                '@nolanlawson/emoji-picker-element-for-tachometer': {
                   kind: 'git',
                   repo: 'https://github.com/nolanlawson/emoji-picker-element.git',
                   ref: 'master',

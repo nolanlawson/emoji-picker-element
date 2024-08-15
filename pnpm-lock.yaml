@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@nolanlawson/emoji-picker-element-for-tachometer':
+        specifier: file:.
+        version: 'emoji-picker-element@file:'
       '@rollup/plugin-commonjs':
         specifier: ^26.0.1
         version: 26.0.1(rollup@4.19.1)
@@ -1511,6 +1514,9 @@ packages:
 
   emoji-picker-element-data@1.6.1:
     resolution: {integrity: sha512-VYXjjqWYy12/uUA3q5X6Di0zROXp8TGwPiikXkhs97n3d3q3OaRV2sxGtUUColoSMPp5lfASZB9E4W+yN40qUg==}
+
+  'emoji-picker-element@file:':
+    resolution: {directory: '', type: directory}
 
   emoji-regex@10.3.0:
     resolution: {integrity: sha512-QpLs9D9v9kArv4lfDEgg1X/gN5XLnf/A6l9cs8SPZLRZR3ZkY9+kwIQTxm+fsSej5UMYGE8fdoaZVIBlqG0XTw==}
@@ -5588,6 +5594,8 @@ snapshots:
   electron-to-chromium@1.4.715: {}
 
   emoji-picker-element-data@1.6.1: {}
+
+  'emoji-picker-element@file:': {}
 
   emoji-regex@10.3.0: {}
 

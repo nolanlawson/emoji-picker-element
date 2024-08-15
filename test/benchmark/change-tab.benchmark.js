@@ -1,4 +1,4 @@
-import Picker from '../../picker.js'
+import { Picker } from '@nolanlawson/emoji-picker-element-for-tachometer'
 import { waitForElementWithId, postRaf, waitForPickerInitialLoad, dataSource } from './utils.js'
 
 const picker = new Picker({ dataSource })
