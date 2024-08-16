@@ -70,7 +70,14 @@
     "url": "https://github.com/nolanlawson/emoji-picker-element/issues"
   },
   "homepage": "https://github.com/nolanlawson/emoji-picker-element#readme",
+  "//": {
+    "@nolanlawson/emoji-picker-element-for-tachometer": [
+      "Placeholder package for Tachometer to swap correctly, see https://github.com/nolanlawson/emoji-picker-element/pull/439/",
+      "Note the @nolanlawson scope to avoid any accidental dependency confusion vulnerability"
+    ]
+  },
   "devDependencies": {
+    "@nolanlawson/emoji-picker-element-for-tachometer": "file:.",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-inject": "^5.0.5",
     "@rollup/plugin-node-resolve": "^15.2.3",
