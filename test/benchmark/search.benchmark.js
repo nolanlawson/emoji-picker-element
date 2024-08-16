@@ -1,10 +1,10 @@
 import { Picker } from '@nolanlawson/emoji-picker-element-for-tachometer'
-import { waitForElementWithId, postRaf, waitForPickerInitialLoad, dataSource } from './utils.js'
+import { waitForElementWithId, postRaf, dataSource } from './utils.js'
 
 const picker = new Picker({ dataSource })
 document.body.appendChild(picker)
 
-await waitForPickerInitialLoad()
+await waitForElementWithId(picker.shadowRoot, 'emo-🥰')
 await postRaf()
 const searchBox = picker.shadowRoot.querySelector('[role="combobox"]')
 

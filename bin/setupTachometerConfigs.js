@@ -40,8 +40,7 @@ for (const benchmark of benchmarks) {
                   ref: 'master',
                   setupCommands: [
                     // we're comparing against historical branches, so support yarn as well as pnpm since we switched
-                    'if [ -f yarn.lock ]; then yarn --frozen-lockfile; else pnpm i --frozen-lockfile; fi',
-                    'PERF=1 npm run build:rollup'
+                    'if [ -f yarn.lock ]; then yarn --frozen-lockfile; else pnpm i --frozen-lockfile; fi'
                   ]
                 }
               }
