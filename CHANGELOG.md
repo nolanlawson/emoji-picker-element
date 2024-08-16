@@ -1,3 +1,12 @@
+## [1.22.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.2...v1.22.3) (2024-08-16)
+
+
+### Performance Improvements
+
+* avoid unnecessary re-renders ([#437](https://github.com/nolanlawson/emoji-picker-element/issues/437)) ([586ba43](https://github.com/nolanlawson/emoji-picker-element/commit/586ba4375bda30b2f7aca195e50d88d5fc244654))
+
+
+
 ## [1.22.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.1...v1.22.2) (2024-08-06)
 
 
