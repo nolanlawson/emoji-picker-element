@@ -49,16 +49,18 @@ export function createState (abortSignal) {
       return target[prop]
     },
     set (target, prop, newValue) {
-      target[prop] = newValue
-      const observers = propsToObservers.get(prop)
-      if (observers) {
-        for (const observer of observers) {
-          dirtyObservers.add(observer)
-        }
-        if (!queued) {
-          recursionDepth = 0
-          queued = true
-          queueMicrotask(flush)
+      if (target[prop] !== newValue) {
+        target[prop] = newValue
+        const observers = propsToObservers.get(prop)
+        if (observers) {
+          for (const observer of observers) {
+            dirtyObservers.add(observer)
+          }
+          if (!queued) {
+            recursionDepth = 0
+            queued = true
+            queueMicrotask(flush)
+          }
         }
       }
       return true
