@@ -26,7 +26,6 @@ jobs:
         run: |
           # install the chromedriver corresponding to whatever version of chrome is installed
           pnpm i chromedriver@^$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
-          PERF=1 pnpm build:rollup
           pnpm benchmark:runtime:setup
 
       # first-load
