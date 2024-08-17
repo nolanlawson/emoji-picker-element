@@ -1,3 +1,12 @@
+## [1.22.4](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.3...v1.22.4) (2024-08-17)
+
+
+### Performance Improvements
+
+* use `willReadFrequently` ([#442](https://github.com/nolanlawson/emoji-picker-element/issues/442)) ([d5bbdf7](https://github.com/nolanlawson/emoji-picker-element/commit/d5bbdf7bd80162af1c4a14d15b45f1f9fcfbe71d))
+
+
+
 ## [1.22.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.2...v1.22.3) (2024-08-16)
 
 
