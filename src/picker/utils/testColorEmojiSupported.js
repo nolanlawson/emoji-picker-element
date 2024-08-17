@@ -22,7 +22,11 @@ const getTextFeature = (text, color) => {
   const canvas = document.createElement('canvas')
   canvas.width = canvas.height = 1
 
-  const ctx = canvas.getContext('2d')
+  const ctx = canvas.getContext('2d', {
+    // Improves the performance of `getImageData()`
+    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/getContextAttributes#willreadfrequently
+    willReadFrequently: true
+  })
   ctx.textBaseline = 'top'
   ctx.font = `100px ${FONT_FAMILY}`
   ctx.fillStyle = color
