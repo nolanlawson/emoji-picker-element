@@ -263,11 +263,13 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
         instanceBindings.push(instanceBinding)
       }
     }
-    if (element.firstElementChild) {
+    const firstElementChild = element.firstElementChild
+    if (firstElementChild) {
       // walk down
-      element = element.firstElementChild
+      element = firstElementChild
     } else {
-      while (!element.nextElementSibling) {
+      let nextElementSibling
+      while (!(nextElementSibling = element.nextElementSibling)) {
         if (element === dom) {
           // done
           break
@@ -280,7 +282,7 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
         break
       }
       // walk right
-      element = element.nextElementSibling
+      element = nextElementSibling
     }
   }
 
