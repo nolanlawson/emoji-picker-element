@@ -214,12 +214,13 @@ function parse (tokens) {
 
 function traverseAndSetupBindings (dom, elementsToBindings) {
   const instanceBindings = []
-  // traverse dom
-  const treeWalker = document.createTreeWalker(dom, NodeFilter.SHOW_ELEMENT)
-
-  let element = dom
   let elementIndex = -1
-  do {
+
+  // traverse dom using a depth-first traversal without recursion or a stack
+  // https://stackoverflow.com/a/5285417
+  let element = dom
+  while (true) {
+    // visit
     const bindings = elementsToBindings.get(++elementIndex)
     if (bindings) {
       for (let i = 0; i < bindings.length; i++) {
@@ -262,7 +263,26 @@ function traverseAndSetupBindings (dom, elementsToBindings) {
         instanceBindings.push(instanceBinding)
       }
     }
-  } while ((element = treeWalker.nextNode()))
+    if (element.firstElementChild) {
+      // walk down
+      element = element.firstElementChild
+    } else {
+      while (!element.nextElementSibling) {
+        if (element === dom) {
+          // done
+          break
+        }
+        // walk up
+        element = element.parentElement
+      }
+      if (element === dom) {
+        // done
+        break
+      }
+      // walk right
+      element = element.nextElementSibling
+    }
+  }
 
   return instanceBindings
 }
