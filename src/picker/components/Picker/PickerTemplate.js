@@ -1,6 +1,6 @@
 import { createFramework } from './framework.js'
 
-export function render (container, state, helpers, events, actions, refs, abortSignal, firstRender) {
+export function render (container, state, helpers, events, actions, refs, abortSignal, actionContext, firstRender) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
   const { html, map } = createFramework(state)
 
@@ -16,7 +16,15 @@ export function render (container, state, helpers, events, actions, refs, abortS
         ${
         emoji.unicode
           ? unicodeWithSkin(emoji, state.currentSkinTone)
-          : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
+          // Note `data-src` is due to the `hideOffscreen` optimization.
+          // We still use `loading="lazy"` as an extra optimization measure, and for browsers that don't
+          // support `content-visibility`.
+          : html`<img 
+                      class="custom-emoji"
+                      alt="" 
+                      loading="lazy"
+                      data-src="${emoji.url}"
+                />`
       }
       </button>
     `
@@ -152,7 +160,8 @@ export function render (container, state, helpers, events, actions, refs, abortS
         <!--The tabindex=0 is so people can scroll up and down with the keyboard. The element has a role and a label, so I
         feel it's appropriate to have the tabindex.
         This on:click is a delegated click listener -->
-        <div data-ref="tabpanelElement" class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone' : ''}"
+        <div data-ref="tabpanelElement" 
+             class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone' : ''}"
              role="${state.searchMode ? 'region' : 'tabpanel'}"
              aria-label="${state.searchMode ? state.i18n.searchResultsLabel : state.i18n.categories[state.currentGroup.name]}"
              id="${state.searchMode ? '' : `tab-${state.currentGroup.id}`}"
@@ -162,6 +171,9 @@ export function render (container, state, helpers, events, actions, refs, abortS
           <div data-action="calculateEmojiGridStyle">
             ${
               map(state.currentEmojisWithCategories, (emojiWithCategory, i) => {
+                  // Improve performance in custom emoji by using `content-visibility: auto` on every category
+                  // The `--num-rows` is used in these calculations to contain the intrinsic height
+                const hideOffscreen = !state.searchMode && state.currentGroup.id === -1 // -1 means custom emoji
                 return html`
         <!-- wrapper div so there's one top level element for this loop -->
         <div>
@@ -187,12 +199,9 @@ export function render (container, state, helpers, events, actions, refs, abortS
                     )
                 }
           </div>
-            <!-- 
-              Improve performance in custom emoji by using \`content-visibility: auto\` on every category 
-              The \`--num-rows\` is also used in these calculations to contain the intrinsic height
-            -->
-          <div class="emoji-menu ${!state.searchMode && emojiWithCategory.category ? 'hide-offscreen' : ''}"
+          <div class="emoji-menu ${hideOffscreen ? 'hide-offscreen' : ''}"
                style=${`--num-rows: ${Math.ceil(emojiWithCategory.emojis.length / state.numColumns)}`}
+               data-action="${hideOffscreen ? 'updateOnIntersectionChange' : ''}"
                role="${state.searchMode ? 'listbox' : 'menu'}"
                aria-labelledby="menu-label-${i}"
                id=${state.searchMode ? 'search-results' : ''}
@@ -226,17 +235,17 @@ export function render (container, state, helpers, events, actions, refs, abortS
 
   const rootDom = section()
 
+  // helper for traversing the dom, finding elements by an attribute, and getting the attribute value
+  const forElementWithAttribute = (attributeName, callback) => {
+    for (const element of container.querySelectorAll(`[${attributeName}]`)) {
+      callback(element, element.getAttribute(attributeName))
+    }
+  }
+
   if (firstRender) { // not a re-render
     container.appendChild(rootDom)
 
-    // we only bind events/refs/actions once - there is no need to find them again given this component structure
-
-    // helper for traversing the dom, finding elements by an attribute, and getting the attribute value
-    const forElementWithAttribute = (attributeName, callback) => {
-      for (const element of container.querySelectorAll(`[${attributeName}]`)) {
-        callback(element, element.getAttribute(attributeName))
-      }
-    }
+    // we only bind events/refs once - there is no need to find them again given this component structure
 
     // bind events
     for (const eventName of ['click', 'focusout', 'input', 'keydown', 'keyup']) {
@@ -250,14 +259,26 @@ export function render (container, state, helpers, events, actions, refs, abortS
       refs[ref] = element
     })
 
-    // set up actions
-    forElementWithAttribute('data-action', (element, action) => {
-      actions[action](element)
-    })
-
     // destroy/abort logic
     abortSignal.addEventListener('abort', () => {
       container.removeChild(rootDom)
     })
   }
+
+  // set up actions
+  forElementWithAttribute('data-action', (element, action) => {
+    if (!action) {
+      return // `data-action` may be set to the empty string, meaning don't do anything
+    }
+    let boundActions = actionContext[action]
+    if (!boundActions) {
+      boundActions = actionContext[action] = new WeakSet()
+    }
+
+    // avoid applying the same action to the same element multiple times
+    if (!boundActions.has(element)) {
+      boundActions.add(element)
+      actions[action](element)
+    }
+  })
 }

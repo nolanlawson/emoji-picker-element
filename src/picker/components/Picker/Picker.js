@@ -23,6 +23,7 @@ import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.j
 import { render } from './PickerTemplate.js'
 import { createState } from './reactivity.js'
 import { arraysAreEqualByFunction } from '../../utils/arraysAreEqualByFunction.js'
+import { contentVisibilityAction } from '../../utils/contentVisibilityAction.js'
 
 // constants
 const EMPTY_ARRAY = []
@@ -34,6 +35,7 @@ export function createRoot (shadowRoot, props) {
   const abortController = new AbortController()
   const abortSignal = abortController.signal
   const { state, createEffect } = createState(abortSignal)
+  const actionContext = Object.create(null)
 
   // initial state
   assign(state, {
@@ -180,12 +182,13 @@ export function createRoot (shadowRoot, props) {
     onSearchInput
   }
   const actions = {
-    calculateEmojiGridStyle
+    calculateEmojiGridStyle,
+    updateOnIntersectionChange
   }
 
   let firstRender = true
   createEffect(() => {
-    render(shadowRoot, state, helpers, events, actions, refs, abortSignal, firstRender)
+    render(shadowRoot, state, helpers, events, actions, refs, abortSignal, actionContext, firstRender)
     firstRender = false
   })
 
@@ -373,6 +376,20 @@ export function createRoot (shadowRoot, props) {
         // write to state variables
         state.numColumns = newNumColumns
         state.isRtl = newIsRtl
+      }
+    })
+  }
+
+  // Re-run whenever the custom emoji in a category are shown/hidden. This is an optimization to prevent the browser
+  // from doing extra work for offscreen `<img>`s with `src`s, which seems to occur even with `loading="lazy"`.
+  function updateOnIntersectionChange (node) {
+    contentVisibilityAction(node, abortSignal, ({ skipped }) => {
+      node.classList.toggle('onscreen', !skipped)
+      /* istanbul ignore else */
+      if (!skipped) {
+        for (const img of node.querySelectorAll('img')) {
+          img.setAttribute('src', img.getAttribute('data-src'))
+        }
       }
     })
   }

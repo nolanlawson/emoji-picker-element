@@ -78,6 +78,17 @@ $skintoneZIndex3: 3;
       calc(var(--num-columns) * var(--total-emoji-size))
       // height
       calc(var(--num-rows) * var(--total-emoji-size));
+
+    // Optimization - when images for custom emoji are offscreen, set `visibility:visible` so that we don't see a flash
+    // of broken images while we change the `data-src` to a `src` when the `content-visibility` auto state changes.
+    // Note that a11y-wise, setting `hidden` here is fine because the `<img>`s are already `alt=''` meaning
+    // they are marked as purely decorative.
+    .custom-emoji {
+      visibility: hidden;
+    }
+    &.onscreen .custom-emoji {
+      visibility: visible;
+    }
   }
 }
 

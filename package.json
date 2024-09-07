@@ -141,6 +141,7 @@
       "btoa",
       "crypto",
       "customElements",
+      "CSS",
       "CustomEvent",
       "Event",
       "fetch",
