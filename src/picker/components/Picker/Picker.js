@@ -323,8 +323,12 @@ export function createRoot (shadowRoot, props) {
   function updateCustomEmoji () {
     // Certain effects have an implicit dependency on customEmoji since it affects the database
     // Getting it here on the state ensures this effect re-runs when customEmoji change.
-    // Setting it on the database is pointless but prevents this code from being removed by a minifier.
-    state.database.customEmoji = state.customEmoji || EMPTY_ARRAY
+    const databaseCustomEmoji = state.customEmoji || EMPTY_ARRAY
+    if (state.database.customEmoji !== databaseCustomEmoji) {
+      // Avoid setting this if the customEmoji have _not_ changed, because the setter
+      // triggers a re-computation of the `customEmojiIndex`
+      state.database.customEmoji = databaseCustomEmoji
+    }
   }
 
   createEffect(() => {
