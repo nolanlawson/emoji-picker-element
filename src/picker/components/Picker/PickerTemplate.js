@@ -4,7 +4,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
   const { html, map } = createFramework(state)
 
-  function emojiList (emojis, searchMode, prefix) {
+  function emojiList (emojis, searchMode, prefix, hideOffscreen) {
     return map(emojis, (emoji, i) => {
       return html`
       <button role="${searchMode ? 'option' : 'menuitem'}"
@@ -24,6 +24,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
                       alt="" 
                       loading="lazy"
                       data-src="${emoji.url}"
+                      src=${hideOffscreen ? '' : emoji.url}
                 />`
       }
       </button>
@@ -207,7 +208,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
                id=${state.searchMode ? 'search-results' : ''}
           >
             ${
-              emojiList(emojiWithCategory.emojis, state.searchMode, /* prefix */ 'emo')
+              emojiList(emojiWithCategory.emojis, state.searchMode, /* prefix */ 'emo', hideOffscreen)
             }
           </div>
         </div>
@@ -222,7 +223,8 @@ export function render (container, state, helpers, events, actions, refs, abortS
              aria-label="${state.i18n.favoritesLabel}"
              data-on-click="onEmojiClick">
           ${
-            emojiList(state.currentFavorites, /* searchMode */ false, /* prefix */ 'fav')
+            // favorites bar does not participate in the hideOffscreen optimization; it's always visible
+            emojiList(state.currentFavorites, /* searchMode */ false, /* prefix */ 'fav', /* hideOffscreen */ false)
           }
         </div>
         <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
