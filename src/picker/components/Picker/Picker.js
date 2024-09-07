@@ -183,7 +183,7 @@ export function createRoot (shadowRoot, props) {
   }
   const actions = {
     calculateEmojiGridStyle,
-    updateOnIntersectionChange
+    updateOnContentVisibilityChange
   }
 
   let firstRender = true
@@ -382,7 +382,7 @@ export function createRoot (shadowRoot, props) {
 
   // Re-run whenever the custom emoji in a category are shown/hidden. This is an optimization to prevent the browser
   // from doing extra work for offscreen `<img>`s with `src`s, which seems to occur even with `loading="lazy"`.
-  function updateOnIntersectionChange (node) {
+  function updateOnContentVisibilityChange (node) {
     contentVisibilityAction(node, abortSignal, ({ skipped }) => {
       node.classList.toggle('onscreen', !skipped)
       /* istanbul ignore else */

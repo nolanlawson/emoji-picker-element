@@ -201,7 +201,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
           </div>
           <div class="emoji-menu ${hideOffscreen ? 'hide-offscreen' : ''}"
                style=${`--num-rows: ${Math.ceil(emojiWithCategory.emojis.length / state.numColumns)}`}
-               data-action="${hideOffscreen ? 'updateOnIntersectionChange' : ''}"
+               data-action="${hideOffscreen ? 'updateOnContentVisibilityChange' : ''}"
                role="${state.searchMode ? 'listbox' : 'menu'}"
                aria-labelledby="menu-label-${i}"
                id=${state.searchMode ? 'search-results' : ''}
