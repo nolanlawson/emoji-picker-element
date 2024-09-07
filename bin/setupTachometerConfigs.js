@@ -3,21 +3,31 @@ import fs from 'node:fs'
 
 const benchmarks = fs.readdirSync('./test/benchmark').filter(_ => _.endsWith('.benchmark.js'))
 
+// Customize the tachometer config with these env vars
+const {
+  BENCHMARK_SAMPLE_SIZE = '50',
+  BENCHMARK_TIMEOUT = '5',
+  BENCHMARK_AUTO_SAMPLE_CONDITIONS = '10%',
+  BENCHMARK_BROWSER = 'chrome',
+  BENCHMARK_BROWSER_BINARY
+} = process.env
+
 for (const benchmark of benchmarks) {
   const benchmarkShortName = benchmark.replace('.benchmark.js', '')
 
   const content = {
     $schema: 'https://raw.githubusercontent.com/Polymer/tachometer/master/config.schema.json',
-    sampleSize: 50,
-    timeout: 5,
-    autoSampleConditions: ['10%'],
+    sampleSize: parseInt(BENCHMARK_SAMPLE_SIZE, 10),
+    timeout: parseInt(BENCHMARK_TIMEOUT, 10),
+    autoSampleConditions: [BENCHMARK_AUTO_SAMPLE_CONDITIONS],
     root: '../..',
     benchmarks: [
       {
         url: `./index.html?benchmark=${benchmarkShortName}`,
         browser: {
-          name: 'chrome',
-          headless: true
+          name: BENCHMARK_BROWSER,
+          headless: true,
+          ...(BENCHMARK_BROWSER_BINARY && { binary: BENCHMARK_BROWSER_BINARY })
         },
         measurement: [
           {
