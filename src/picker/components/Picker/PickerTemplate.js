@@ -189,7 +189,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
           </div>
             <!-- 
               Improve performance in custom emoji by using \`content-visibility: auto\` on every category 
-              The \`--expected-num-rows\` is also used in these calculations to contain the intrinsic height
+              The \`--num-rows\` is also used in these calculations to contain the intrinsic height
             -->
           <div class="emoji-menu ${!state.searchMode && emojiWithCategory.category ? 'hide-offscreen' : ''}"
                style=${`--num-rows: ${Math.ceil(emojiWithCategory.emojis.length / state.numColumns)}`}
