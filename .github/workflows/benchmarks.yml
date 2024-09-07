@@ -102,3 +102,18 @@ jobs:
           path: test/benchmark/search.results.json
           pr-bench-name: this-change
           base-bench-name: tip-of-tree
+
+      # many-custom-emoji
+      - name: Benchmark many-custom-emoji
+        run: |
+          ./node_modules/.bin/tach \
+            --config ./test/benchmark/many-custom-emoji.tachometer.json \
+            --json-file ./test/benchmark/many-custom-emoji.results.json
+
+      - name: Report many-custom-emoji
+        uses: andrewiggins/tachometer-reporter-action@v2
+        with:
+          report-id: emoji-picker-element-many-custom-emoji
+          path: test/benchmark/many-custom-emoji.results.json
+          pr-bench-name: this-change
+          base-bench-name: tip-of-tree
