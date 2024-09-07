@@ -77,7 +77,7 @@ $skintoneZIndex3: 3;
       // width
       calc(var(--num-columns) * var(--total-emoji-size))
       // height
-      calc(var(--expected-num-rows) * var(--total-emoji-size));
+      calc(var(--num-rows) * var(--total-emoji-size));
   }
 }
 

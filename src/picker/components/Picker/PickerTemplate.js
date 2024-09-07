@@ -192,7 +192,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
               The \`--expected-num-rows\` is also used in these calculations to contain the intrinsic height
             -->
           <div class="emoji-menu ${!state.searchMode && emojiWithCategory.category ? 'hide-offscreen' : ''}"
-               style=${`--expected-num-rows: ${Math.ceil(emojiWithCategory.emojis.length / state.numColumns)}`}
+               style=${`--num-rows: ${Math.ceil(emojiWithCategory.emojis.length / state.numColumns)}`}
                role="${state.searchMode ? 'listbox' : 'menu'}"
                aria-labelledby="menu-label-${i}"
                id=${state.searchMode ? 'search-results' : ''}
