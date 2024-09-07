@@ -12,11 +12,14 @@ const buildCustomEmoji = () => {
       const image = CUSTOM_EMOJI_IMAGES[(i + j) % CUSTOM_EMOJI_IMAGES.length]
       return {
         category: `category-${i}`,
-        shortcode: `category-${i}-emoji-${j}`,
-        name: `category-${i}-emoji-${j}`,
-        tags: [
-                    `category-${i}-emoji-${j}`
+        shortcodes: [
+          image,
+            `x${image}-y${image}-z${image}`,
+            `a${image}-b${image}-c${image}`,
+            `x${image}x-y${image}y-z${image}z`,
+            `a${image}a-b${image}b-c${image}c`
         ],
+        name: `category-${i}-emoji-${j}`,
         url: `/docs/custom/${image}.svg`
       }
     })
