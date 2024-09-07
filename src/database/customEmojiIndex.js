@@ -16,9 +16,17 @@ export function customEmojiIndex (customEmojis) {
   //
   // search()
   //
-  const emojiToTokens = emoji => (
-    [...new Set((emoji.shortcodes || []).map(shortcode => extractTokens(shortcode)).flat())]
-  )
+  const emojiToTokens = emoji => {
+    const set = new Set()
+    if (emoji.shortcodes) {
+      for (const shortcode of emoji.shortcodes) {
+        for (const token of extractTokens(shortcode)) {
+          set.add(token)
+        }
+      }
+    }
+    return set
+  }
   const searchTrie = trie(customEmojis, emojiToTokens)
   const searchByExactMatch = _ => searchTrie(_, true)
   const searchByPrefix = _ => searchTrie(_, false)
