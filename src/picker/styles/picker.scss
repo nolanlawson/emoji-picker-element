@@ -71,7 +71,7 @@ $skintoneZIndex3: 3;
   width: 100%;
 
   // Improve performance in custom emoji by using `content-visibility: auto` on every category
-  &.lazy {
+  &.hide-offscreen {
     content-visibility: auto;
     contain-intrinsic-size:
       // width
