@@ -187,10 +187,16 @@ export function render (container, state, helpers, events, actions, refs, abortS
                     )
                 }
           </div>
-          <div class="emoji-menu"
+            <!-- 
+              Improve performance in custom emoji by using \`content-visibility: auto\` on every category 
+              The \`--expected-num-rows\` is also used in these calculations to contain the intrinsic height
+            -->
+          <div class="emoji-menu ${!state.searchMode && emojiWithCategory.category ? 'lazy' : ''}"
+               style=${`--expected-num-rows: ${Math.ceil(emojiWithCategory.emojis.length / state.numColumns)}`}
                role="${state.searchMode ? 'listbox' : 'menu'}"
                aria-labelledby="menu-label-${i}"
-               id=${state.searchMode ? 'search-results' : ''}>
+               id=${state.searchMode ? 'search-results' : ''}
+          >
             ${
               emojiList(emojiWithCategory.emojis, state.searchMode, /* prefix */ 'emo')
             }

@@ -24,4 +24,6 @@ if (benchmark === 'first-load') {
   await import('./change-tab.benchmark.js')
 } else if (benchmark === 'search') {
   await import('./search.benchmark.js')
+} else if (benchmark === 'many-custom-emoji') {
+  await import('./many-custom-emoji.benchmark.js')
 }

@@ -69,6 +69,16 @@ $skintoneZIndex3: 3;
   justify-content: space-around;
   align-items: flex-start;
   width: 100%;
+
+  // Improve performance in custom emoji by using `content-visibility: auto` on every category
+  &.lazy {
+    content-visibility: auto;
+    contain-intrinsic-size:
+      // width
+      calc(var(--num-columns) * var(--total-emoji-size))
+      // height
+      calc(var(--expected-num-rows) * var(--total-emoji-size));
+  }
 }
 
 .category {
@@ -104,6 +114,7 @@ button.emoji,
   &.active {
     background: var(--button-active-background);
   }
+
 }
 
 .custom-emoji {
