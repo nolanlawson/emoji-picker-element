@@ -1,6 +1,6 @@
 const intersectionObserverCache = new WeakMap()
 
-export function contentVisibilityAction (node, abortSignal, listener) {
+export function intersectionObserverAction (node, abortSignal, listener) {
   /* istanbul ignore else */
   if (import.meta.env.MODE === 'test') {
     // jsdom doesn't support intersection observer; just fake it
@@ -22,6 +22,7 @@ export function contentVisibilityAction (node, abortSignal, listener) {
         threshold: 0
       })
 
+      // avoid creating a new IntersectionObserver for every category; just use one for the whole root
       intersectionObserverCache.set(root, observer)
 
       // assume that the abortSignal is always the same for this root node; just add one event listener

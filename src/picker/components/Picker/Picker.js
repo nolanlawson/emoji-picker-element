@@ -23,7 +23,7 @@ import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.j
 import { render } from './PickerTemplate.js'
 import { createState } from './reactivity.js'
 import { arraysAreEqualByFunction } from '../../utils/arraysAreEqualByFunction.js'
-import { contentVisibilityAction } from '../../utils/contentVisibilityAction.js'
+import { intersectionObserverAction } from '../../utils/intersectionObserverAction.js'
 
 // constants
 const EMPTY_ARRAY = []
@@ -183,7 +183,7 @@ export function createRoot (shadowRoot, props) {
   }
   const actions = {
     calculateEmojiGridStyle,
-    updateOnContentVisibilityChange
+    updateOnIntersection
   }
 
   let firstRender = true
@@ -382,8 +382,8 @@ export function createRoot (shadowRoot, props) {
 
   // Re-run whenever the custom emoji in a category are shown/hidden. This is an optimization that simulates
   // what we'd get from `<img loading=lazy>` but without rendering an `<img>`.
-  function updateOnContentVisibilityChange (node) {
-    contentVisibilityAction(node, abortSignal, (entries) => {
+  function updateOnIntersection (node) {
+    intersectionObserverAction(node, abortSignal, (entries) => {
       for (const { target, isIntersecting } of entries) {
         target.classList.toggle('onscreen', isIntersecting)
       }
