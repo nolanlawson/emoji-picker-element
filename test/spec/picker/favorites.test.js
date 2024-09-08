@@ -2,6 +2,7 @@ import {
   waitFor, getAllByRole,
   getByRole, fireEvent, queryAllByRole
 } from '@testing-library/dom'
+import userEvent from '@testing-library/user-event'
 import { basicAfterEach, basicBeforeEach, tick, truncatedEmoji } from '../shared'
 import Picker from '../../../src/picker/PickerElement'
 import allData from 'emoji-picker-element-data/en/emojibase/data.json'
@@ -9,6 +10,7 @@ import { MOST_COMMONLY_USED_EMOJI } from '../../../src/picker/constants'
 import { uniqBy } from '../../../src/shared/uniqBy'
 import { groups } from '../../../src/picker/groups'
 import { mockGetAndHead } from '../mockFetch.js'
+const { type } = userEvent
 
 const dataSource = 'with-favs.json'
 
@@ -130,5 +132,33 @@ describe('Favorites UI', () => {
     await waitFor(
       () => expect(queryAllByRole(getByRole(container, 'menu', { name: 'Favorites' }), 'menuitem', { name: /black/i })).toHaveLength(0)
     )
+  })
+
+  test('press down on search input - does not affect favorites', async () => {
+    type(getByRole(container, 'combobox'), 'monk')
+    await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(2))
+
+    const pressKeyAndExpectAriaDescendant = async (key, emoji) => {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))) // delay
+      fireEvent.keyDown(getByRole(container, 'combobox'), { key, code: key })
+      await waitFor(() => {
+        return expect(getByRole(container, 'combobox').getAttribute('aria-activedescendant'))
+          .toBe(getByRole(container, 'option', { name: new RegExp(emoji) }).getAttribute('id'))
+      })
+    }
+
+    await pressKeyAndExpectAriaDescendant('ArrowDown', '🐵')
+
+    // Only one emoji is selected in the main search results
+    const region = getByRole(container, 'region', { name: 'Search results' })
+    expect(queryAllByRole(region, 'option', {
+      selected: true
+    })).toHaveLength(1)
+
+    // Favorites bar emoji are not selected when a search option is selected
+    const favoritesBar = getByRole(container, 'menu', { name: 'Favorites' })
+    expect(queryAllByRole(favoritesBar, 'menuitem')
+      .filter(_ => _.getAttribute('aria-selected') === 'true')
+    ).toHaveLength(0)
   })
 })
