@@ -169,9 +169,6 @@ export function render (container, state, helpers, events, actions, refs, abortS
           <div data-action="calculateEmojiGridStyle">
             ${
               map(state.currentEmojisWithCategories, (emojiWithCategory, i) => {
-                  // Improve performance in custom emoji by using `content-visibility: auto` on every category
-                  // The `--num-rows` is used in these calculations to contain the intrinsic height
-                const hideOffscreen = !state.searchMode && state.currentGroup.id === -1 // -1 means custom emoji
                 return html`
         <!-- wrapper div so there's one top level element for this loop -->
         <div>
@@ -197,9 +194,13 @@ export function render (container, state, helpers, events, actions, refs, abortS
                     )
                 }
           </div>
-          <div class="emoji-menu ${hideOffscreen ? 'hide-offscreen' : ''}"
+            <!--
+              Improve performance in custom emoji by using \`content-visibility: auto\` on every category
+              The \`--num-rows\` is used in these calculations to contain the intrinsic height
+            -->
+          <div class="emoji-menu hide-offscreen"
                style=${`--num-rows: ${Math.ceil(emojiWithCategory.emojis.length / state.numColumns)}`}
-               data-action="${hideOffscreen ? 'updateOnContentVisibilityChange' : ''}"
+               data-action="updateOnContentVisibilityChange"
                role="${state.searchMode ? 'listbox' : 'menu'}"
                aria-labelledby="menu-label-${i}"
                id=${state.searchMode ? 'search-results' : ''}
@@ -265,9 +266,6 @@ export function render (container, state, helpers, events, actions, refs, abortS
 
   // set up actions
   forElementWithAttribute('data-action', (element, action) => {
-    if (!action) {
-      return // `data-action` may be set to the empty string, meaning don't do anything
-    }
     let boundActions = actionContext[action]
     if (!boundActions) {
       boundActions = actionContext[action] = new WeakSet()
