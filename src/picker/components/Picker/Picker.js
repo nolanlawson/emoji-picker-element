@@ -383,8 +383,10 @@ export function createRoot (shadowRoot, props) {
   // Re-run whenever the custom emoji in a category are shown/hidden. This is an optimization that simulates
   // what we'd get from `<img loading=lazy>` but without rendering an `<img>`.
   function updateOnContentVisibilityChange (node) {
-    contentVisibilityAction(node, ({ skipped }) => {
-      node.classList.toggle('onscreen', !skipped)
+    contentVisibilityAction(node, abortSignal, (entries) => {
+      for (const { target, isIntersecting } of entries) {
+        target.classList.toggle('onscreen', isIntersecting)
+      }
     })
   }
 

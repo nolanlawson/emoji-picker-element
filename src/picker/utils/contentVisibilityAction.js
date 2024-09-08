@@ -1,14 +1,36 @@
-/* istanbul ignore next */
-const SUPPORTS_CONTENT_VISIBILITY = import.meta.env.MODE !== 'test' && CSS.supports('content-visibility', 'auto')
+const intersectionObserverCache = new WeakMap()
 
-export function contentVisibilityAction (node, listener) {
-  /* istanbul ignore if */
-  if (SUPPORTS_CONTENT_VISIBILITY) {
-    // Note we don't need an abortSignal here because if the node is removed then the event listener is also GC'ed
-    node.addEventListener('contentvisibilityautostatechange', listener)
+export function contentVisibilityAction (node, abortSignal, listener) {
+  /* istanbul ignore else */
+  if (import.meta.env.MODE === 'test') {
+    // jsdom doesn't support intersection observer; just fake it
+    listener([{ target: node, isIntersecting: true }])
   } else {
-    // If content visibility is unsupported, then just treat every element as always visible.
-    // This browser will just not get the optimization
-    listener({ skipped: false })
+    // The scroll root is always `.tabpanel`
+    const root = node.closest('.tabpanel')
+
+    let observer = intersectionObserverCache.get(root)
+    if (!observer) {
+      // TODO: replace this with the contentvisibilityautostatechange event when all supported browsers support it.
+      // For now we use IntersectionObserver because it has better cross-browser support, and it would be bad for
+      // old Safari versions if they eagerly downloaded all custom emoji all at once.
+      observer = new IntersectionObserver(listener, {
+        root,
+        // trigger if we are one scroll container height away so that the images load a bit quicker while scrolling
+        rootMargin: '100% 0px 100% 0px',
+        // trigger if any part of the emoji grid is intersecting
+        threshold: 0
+      })
+
+      intersectionObserverCache.set(root, observer)
+
+      // assume that the abortSignal is always the same for this root node; just add one event listener
+      abortSignal.addEventListener('abort', () => {
+        console.log('IntersectionObserver destroyed')
+        observer.disconnect()
+      })
+    }
+
+    observer.observe(node)
   }
 }
