@@ -16,8 +16,8 @@ export function contentVisibilityAction (node, abortSignal, listener) {
       // old Safari versions if they eagerly downloaded all custom emoji all at once.
       observer = new IntersectionObserver(listener, {
         root,
-        // trigger if we are one scroll container height away so that the images load a bit quicker while scrolling
-        rootMargin: '100% 0px 100% 0px',
+        // trigger if we are 1/2 scroll container height away so that the images load a bit quicker while scrolling
+        rootMargin: '50% 0px 50% 0px',
         // trigger if any part of the emoji grid is intersecting
         threshold: 0
       })
