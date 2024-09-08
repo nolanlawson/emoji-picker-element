@@ -17,7 +17,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
                 (emoji.unicode ? '' : ' custom-emoji')
               }"
               id=${`${prefix}-${emoji.id}`}
-              style="${`--custom-emoji-background: url(${JSON.stringify(emoji.url)})`}"
+              style="${emoji.unicode ? '' : `--custom-emoji-background: url(${JSON.stringify(emoji.url)})`}"
       >
         ${
         emoji.unicode
