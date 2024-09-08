@@ -117,14 +117,25 @@ button.emoji,
 }
 
 .custom-emoji {
-  height: var(--total-emoji-size);
-  width: var(--total-emoji-size);
-  padding: var(--emoji-padding);
-  object-fit: contain;
-  pointer-events: none;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: var(--emoji-size) var(--emoji-size);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: var(--emoji-padding);
+    right: var(--emoji-padding);
+    top: var(--emoji-padding);
+    bottom: var(--emoji-padding);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    background-image: var(--custom-emoji-background);
+
+    // Don't eagerly download the images while the custom emoji is offscreen
+    .hide-offscreen:not(.onscreen) & {
+      background-image: none;
+    }
+  }
 }
 
 // nav
