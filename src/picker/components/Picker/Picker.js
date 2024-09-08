@@ -35,7 +35,7 @@ export function createRoot (shadowRoot, props) {
   const abortController = new AbortController()
   const abortSignal = abortController.signal
   const { state, createEffect } = createState(abortSignal)
-  const actionContext = Object.create(null)
+  const actionContext = new Map()
 
   // initial state
   assign(state, {

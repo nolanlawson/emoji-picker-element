@@ -264,11 +264,11 @@ export function render (container, state, helpers, events, actions, refs, abortS
     })
   }
 
-  // set up actions
+  // set up actions - these are re-bound on every render
   forElementWithAttribute('data-action', (element, action) => {
-    let boundActions = actionContext[action]
+    let boundActions = actionContext.get(action)
     if (!boundActions) {
-      boundActions = actionContext[action] = new WeakSet()
+      actionContext.set(action, (boundActions = new WeakSet()))
     }
 
     // avoid applying the same action to the same element multiple times
