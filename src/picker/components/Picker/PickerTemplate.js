@@ -1,6 +1,6 @@
 import { createFramework } from './framework.js'
 
-export function render (container, state, helpers, events, actions, refs, abortSignal, firstRender) {
+export function render (container, state, helpers, events, actions, refs, abortSignal, actionContext, firstRender) {
   const { labelWithSkin, titleForEmoji, unicodeWithSkin } = helpers
   const { html, map } = createFramework(state)
 
@@ -11,12 +11,18 @@ export function render (container, state, helpers, events, actions, refs, abortS
               aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
               aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
               title="${titleForEmoji(emoji)}"
-              class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
-              id=${`${prefix}-${emoji.id}`}>
+              class="${
+                'emoji' +
+                (searchMode && i === state.activeSearchItem ? ' active' : '') +
+                (emoji.unicode ? '' : ' custom-emoji')
+              }"
+              id=${`${prefix}-${emoji.id}`}
+              style="${emoji.unicode ? '' : `--custom-emoji-background: url(${JSON.stringify(emoji.url)})`}"
+      >
         ${
         emoji.unicode
           ? unicodeWithSkin(emoji, state.currentSkinTone)
-          : html`<img class="custom-emoji" src="${emoji.url}" alt="" loading="lazy"/>`
+          : ''
       }
       </button>
     `
@@ -152,7 +158,8 @@ export function render (container, state, helpers, events, actions, refs, abortS
         <!--The tabindex=0 is so people can scroll up and down with the keyboard. The element has a role and a label, so I
         feel it's appropriate to have the tabindex.
         This on:click is a delegated click listener -->
-        <div data-ref="tabpanelElement" class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone' : ''}"
+        <div data-ref="tabpanelElement" 
+             class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone' : ''}"
              role="${state.searchMode ? 'region' : 'tabpanel'}"
              aria-label="${state.searchMode ? state.i18n.searchResultsLabel : state.i18n.categories[state.currentGroup.name]}"
              id="${state.searchMode ? '' : `tab-${state.currentGroup.id}`}"
@@ -187,12 +194,13 @@ export function render (container, state, helpers, events, actions, refs, abortS
                     )
                 }
           </div>
-            <!-- 
-              Improve performance in custom emoji by using \`content-visibility: auto\` on every category 
-              The \`--num-rows\` is also used in these calculations to contain the intrinsic height
+            <!--
+              Improve performance in custom emoji by using \`content-visibility: auto\` on every category
+              The \`--num-rows\` is used in these calculations to contain the intrinsic height
             -->
-          <div class="emoji-menu ${!state.searchMode && emojiWithCategory.category ? 'hide-offscreen' : ''}"
+          <div class="emoji-menu hide-offscreen"
                style=${`--num-rows: ${Math.ceil(emojiWithCategory.emojis.length / state.numColumns)}`}
+               data-action="updateOnIntersection"
                role="${state.searchMode ? 'listbox' : 'menu'}"
                aria-labelledby="menu-label-${i}"
                id=${state.searchMode ? 'search-results' : ''}
@@ -226,17 +234,17 @@ export function render (container, state, helpers, events, actions, refs, abortS
 
   const rootDom = section()
 
+  // helper for traversing the dom, finding elements by an attribute, and getting the attribute value
+  const forElementWithAttribute = (attributeName, callback) => {
+    for (const element of container.querySelectorAll(`[${attributeName}]`)) {
+      callback(element, element.getAttribute(attributeName))
+    }
+  }
+
   if (firstRender) { // not a re-render
     container.appendChild(rootDom)
 
-    // we only bind events/refs/actions once - there is no need to find them again given this component structure
-
-    // helper for traversing the dom, finding elements by an attribute, and getting the attribute value
-    const forElementWithAttribute = (attributeName, callback) => {
-      for (const element of container.querySelectorAll(`[${attributeName}]`)) {
-        callback(element, element.getAttribute(attributeName))
-      }
-    }
+    // we only bind events/refs once - there is no need to find them again given this component structure
 
     // bind events
     for (const eventName of ['click', 'focusout', 'input', 'keydown', 'keyup']) {
@@ -250,14 +258,23 @@ export function render (container, state, helpers, events, actions, refs, abortS
       refs[ref] = element
     })
 
-    // set up actions
-    forElementWithAttribute('data-action', (element, action) => {
-      actions[action](element)
-    })
-
     // destroy/abort logic
     abortSignal.addEventListener('abort', () => {
       container.removeChild(rootDom)
     })
   }
+
+  // set up actions - these are re-bound on every render
+  forElementWithAttribute('data-action', (element, action) => {
+    let boundActions = actionContext.get(action)
+    if (!boundActions) {
+      actionContext.set(action, (boundActions = new WeakSet()))
+    }
+
+    // avoid applying the same action to the same element multiple times
+    if (!boundActions.has(element)) {
+      boundActions.add(element)
+      actions[action](element)
+    }
+  })
 }

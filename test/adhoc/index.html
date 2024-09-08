@@ -86,6 +86,24 @@
         worker.postMessage('init')
       })
     }
+
+    if (new URLSearchParams(location.search).has('custom')) {
+      // enable custom emoji
+      const categoriesToCustomEmoji = (await (await fetch('/docs/custom.json')).json())
+      const customEmoji = []
+      for (const [category, names] of Object.entries(categoriesToCustomEmoji)) {
+        for (const name of names) {
+          customEmoji.push({
+            category: category || undefined,
+            name,
+            shortcodes: [name],
+            url: `/docs/custom/${name}.svg`
+          })
+        }
+      }
+      opts.customEmoji = customEmoji
+    }
+
     const picker = new Picker(opts)
     picker.addEventListener('emoji-click', e => console.log(e))
     document.body.appendChild(picker)

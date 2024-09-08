@@ -23,6 +23,7 @@ import { resetScrollTopIfPossible } from '../../utils/resetScrollTopIfPossible.j
 import { render } from './PickerTemplate.js'
 import { createState } from './reactivity.js'
 import { arraysAreEqualByFunction } from '../../utils/arraysAreEqualByFunction.js'
+import { intersectionObserverAction } from '../../utils/intersectionObserverAction.js'
 
 // constants
 const EMPTY_ARRAY = []
@@ -34,6 +35,7 @@ export function createRoot (shadowRoot, props) {
   const abortController = new AbortController()
   const abortSignal = abortController.signal
   const { state, createEffect } = createState(abortSignal)
+  const actionContext = new Map()
 
   // initial state
   assign(state, {
@@ -180,12 +182,13 @@ export function createRoot (shadowRoot, props) {
     onSearchInput
   }
   const actions = {
-    calculateEmojiGridStyle
+    calculateEmojiGridStyle,
+    updateOnIntersection
   }
 
   let firstRender = true
   createEffect(() => {
-    render(shadowRoot, state, helpers, events, actions, refs, abortSignal, firstRender)
+    render(shadowRoot, state, helpers, events, actions, refs, abortSignal, actionContext, firstRender)
     firstRender = false
   })
 
@@ -373,6 +376,16 @@ export function createRoot (shadowRoot, props) {
         // write to state variables
         state.numColumns = newNumColumns
         state.isRtl = newIsRtl
+      }
+    })
+  }
+
+  // Re-run whenever the custom emoji in a category are shown/hidden. This is an optimization that simulates
+  // what we'd get from `<img loading=lazy>` but without rendering an `<img>`.
+  function updateOnIntersection (node) {
+    intersectionObserverAction(node, abortSignal, (entries) => {
+      for (const { target, isIntersecting } of entries) {
+        target.classList.toggle('onscreen', isIntersecting)
       }
     })
   }

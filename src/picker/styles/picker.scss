@@ -116,15 +116,25 @@ button.emoji,
   }
 }
 
-.custom-emoji {
-  height: var(--total-emoji-size);
-  width: var(--total-emoji-size);
-  padding: var(--emoji-padding);
-  object-fit: contain;
-  pointer-events: none;
+.custom-emoji::after {
+  content: '';
+  width: var(--emoji-size);
+  height: var(--emoji-size);
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: var(--emoji-size) var(--emoji-size);
+  background-size: contain;
+
+  // Don't eagerly download the images while the custom emoji is offscreen
+  .hide-offscreen & {
+    background-image: none;
+  }
+
+  // Note we have to handle the case of the favorites bar, which has no `.onscreen` or `.hide-offscreen` in its
+  // ancestor tree. The specificity/ordering here is deliberate.
+  // We could use `.hide-offscreen:not(.onscreen) &` above instead, but avoiding `:not()` here for selector perf.
+  &, .onscreen & {
+    background-image: var(--custom-emoji-background);
+  }
 }
 
 // nav
