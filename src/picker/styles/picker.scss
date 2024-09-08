@@ -129,11 +129,17 @@ button.emoji,
     background-repeat: no-repeat;
     background-position: center center;
     background-size: contain;
-    background-image: var(--custom-emoji-background);
 
     // Don't eagerly download the images while the custom emoji is offscreen
-    .hide-offscreen:not(.onscreen) & {
+    .hide-offscreen & {
       background-image: none;
+    }
+
+    // Note we have to handle the case of the favorites bar, which has no `.onscreen` or `.hide-offscreen` in its
+    // ancestor tree. The specificity/ordering here is deliberate.
+    // We could use `.hide-offscreen:not(.onscreen) &` above instead, but avoiding `:not()` here for selector perf.
+    &, .onscreen & {
+      background-image: var(--custom-emoji-background);
     }
   }
 }
