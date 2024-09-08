@@ -8,7 +8,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
     return map(emojis, (emoji, i) => {
       return html`
       <button role="${searchMode ? 'option' : 'menuitem'}"
-              aria-selected="${state.searchMode ? i === state.activeSearchItem : ''}"
+              aria-selected="${searchMode ? i === state.activeSearchItem : ''}"
               aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
               title="${titleForEmoji(emoji)}"
               class="emoji ${searchMode && i === state.activeSearchItem ? 'active' : ''}"
