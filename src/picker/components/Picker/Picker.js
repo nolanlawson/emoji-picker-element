@@ -425,7 +425,6 @@ export function createRoot (shadowRoot, props) {
   })
 
   const resetScrollTopInRaf = () => {
-    // Reset scroll top to 0 when emojis change
     requestAnimationFrame(() => resetScrollTopIfPossible(refs.tabpanelElement))
   }
 
@@ -444,6 +443,7 @@ export function createRoot (shadowRoot, props) {
     } else {
       const newEmojis = emojiVersion ? currentEmojis : currentEmojis.filter(isZwjSupported)
       updateCurrentEmojis(newEmojis)
+      // Reset scroll top to 0 when emojis change
       resetScrollTopInRaf()
     }
   })
