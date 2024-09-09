@@ -1,3 +1,13 @@
+## [1.22.6](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.5...v1.22.6) (2024-09-09)
+
+
+### Bug Fixes
+
+* fix firefox double emoji ([#454](https://github.com/nolanlawson/emoji-picker-element/issues/454)) ([d264cdf](https://github.com/nolanlawson/emoji-picker-element/commit/d264cdfd6a25e4f0b36e7d539a1345d3b01a1f1d))
+* fix resetting `scrollTop` ([#455](https://github.com/nolanlawson/emoji-picker-element/issues/455)) ([20f866c](https://github.com/nolanlawson/emoji-picker-element/commit/20f866cadca241e94927bd109e06010627506487))
+
+
+
 ## [1.22.5](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.4...v1.22.5) (2024-09-09)
 
 
