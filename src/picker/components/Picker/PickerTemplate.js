@@ -195,10 +195,18 @@ export function render (container, state, helpers, events, actions, refs, abortS
                 }
           </div>
             <!--
-              Improve performance in custom emoji by using \`content-visibility: auto\` on every category
-              The \`--num-rows\` is used in these calculations to contain the intrinsic height
+              Improve performance in custom emoji by using \`content-visibility: auto\` on emoji categories.
+              The \`--num-rows\` is used in these calculations to contain the intrinsic height.
+              Note that we only enable this for:
+                - categories beyond the first one
+                - non-search mode 
+                - custom emoji group (id -1)
+              We only need the optimization for large lists of custom emoji (issue #444). Enabling it for non-custom
+              emoji causes a bug in Firefox (issue #453). We also don't do it for the first category because this 
+              causes blank emoji rendering when switching tabs or searching and un-searching. (Plus it's kind of 
+              pointless to do \`content-visibility: auto\` for the first category, since it's immediately shown.)
             -->
-          <div class="emoji-menu hide-offscreen"
+          <div class="emoji-menu ${i !== 0 && !state.searchMode && state.currentGroup.id === -1 ? 'visibility-auto' : ''}"
                style=${`--num-rows: ${Math.ceil(emojiWithCategory.emojis.length / state.numColumns)}`}
                data-action="updateOnIntersection"
                role="${state.searchMode ? 'listbox' : 'menu'}"
@@ -216,7 +224,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
           </div>
         </div>
         <!-- This on:click is a delegated click listener -->
-        <div class="favorites emoji-menu ${state.message ? 'gone' : ''}"
+        <div class="favorites onscreen emoji-menu ${state.message ? 'gone' : ''}"
              role="menu"
              aria-label="${state.i18n.favoritesLabel}"
              data-on-click="onEmojiClick">

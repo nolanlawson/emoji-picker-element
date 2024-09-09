@@ -71,7 +71,7 @@ $skintoneZIndex3: 3;
   width: 100%;
 
   // Improve performance in custom emoji by using `content-visibility: auto` on every category
-  &.hide-offscreen {
+  &.visibility-auto {
     content-visibility: auto;
     contain-intrinsic-size:
       // width
@@ -123,16 +123,10 @@ button.emoji,
   background-repeat: no-repeat;
   background-position: center center;
   background-size: contain;
-
   // Don't eagerly download the images while the custom emoji is offscreen
-  .hide-offscreen & {
-    background-image: none;
-  }
+  background-image: none;
 
-  // Note we have to handle the case of the favorites bar, which has no `.onscreen` or `.hide-offscreen` in its
-  // ancestor tree. The specificity/ordering here is deliberate.
-  // We could use `.hide-offscreen:not(.onscreen) &` above instead, but avoiding `:not()` here for selector perf.
-  &, .onscreen & {
+  .onscreen & {
     background-image: var(--custom-emoji-background);
   }
 }
