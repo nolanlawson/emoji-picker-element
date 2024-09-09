@@ -7,5 +7,8 @@ export function resetScrollTopIfPossible (element) {
   /* istanbul ignore else */
   if (element) { // Makes me nervous not to have this `if` guard
     element.scrollTop = 0
+    console.log('reset scrollTop to 0')
+  } else {
+    console.log('could not reset scrollTop')
   }
 }

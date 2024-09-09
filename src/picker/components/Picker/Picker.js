@@ -424,6 +424,11 @@ export function createRoot (shadowRoot, props) {
     /* no await */ updateEmojis()
   })
 
+  const resetScrollTopInRaf = () => {
+    // Reset scroll top to 0 when emojis change
+    requestAnimationFrame(() => resetScrollTopIfPossible(refs.tabpanelElement))
+  }
+
   // Some emojis have their ligatures rendered as two or more consecutive emojis
   // We want to treat these the same as unsupported emojis, so we compare their
   // widths against the baseline widths and remove them as necessary
@@ -439,14 +444,16 @@ export function createRoot (shadowRoot, props) {
     } else {
       const newEmojis = emojiVersion ? currentEmojis : currentEmojis.filter(isZwjSupported)
       updateCurrentEmojis(newEmojis)
-      // Reset scroll top to 0 when emojis change
-      requestAnimationFrame(() => resetScrollTopIfPossible(refs.tabpanelElement))
+      resetScrollTopInRaf()
     }
   })
 
   function checkZwjSupportAndUpdate (zwjEmojisToCheck) {
     const allSupported = checkZwjSupport(zwjEmojisToCheck, refs.baselineEmoji, emojiToDomNode)
-    if (!allSupported) {
+    if (allSupported) {
+      // Even if all emoji are supported, we still need to reset the scroll top to 0 when emojis change
+      resetScrollTopInRaf()
+    } else {
       console.log('Not all ZWJ emoji are supported, forcing re-render')
       // Force update. We only do this if there are any unsupported ZWJ characters since otherwise,
       // for browsers that support all emoji, it would be an unnecessary extra re-render.
