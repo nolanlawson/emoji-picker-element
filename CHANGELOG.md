@@ -1,3 +1,20 @@
+## [1.22.5](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.4...v1.22.5) (2024-09-09)
+
+
+### Bug Fixes
+
+* fix favorites `aria-selected` rendering ([#451](https://github.com/nolanlawson/emoji-picker-element/issues/451)) ([497c7e0](https://github.com/nolanlawson/emoji-picker-element/commit/497c7e071c4584cf566665bb5a2b84cf1d53e166))
+
+
+### Performance Improvements
+
+* avoid recalculating custom emoji index ([#446](https://github.com/nolanlawson/emoji-picker-element/issues/446)) ([0c09f56](https://github.com/nolanlawson/emoji-picker-element/commit/0c09f56339be3b6f0cb563fee294721c2be79b62))
+* optimize trie construction ([#448](https://github.com/nolanlawson/emoji-picker-element/issues/448)) ([9954aef](https://github.com/nolanlawson/emoji-picker-element/commit/9954aef155d6983b770e2908f772dac7cf937fd4))
+* use `background-image` instead of `<img>` ([#450](https://github.com/nolanlawson/emoji-picker-element/issues/450)) ([a9351bc](https://github.com/nolanlawson/emoji-picker-element/commit/a9351bc8457fb6e4847b4a37108df3cedcb0cbdb))
+* use `content-visibility` for custom emoji ([#445](https://github.com/nolanlawson/emoji-picker-element/issues/445)) ([9268c67](https://github.com/nolanlawson/emoji-picker-element/commit/9268c6763b01274342375d29bc5eaf70e3c158bd))
+
+
+
 ## [1.22.4](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.3...v1.22.4) (2024-08-17)
 
 
