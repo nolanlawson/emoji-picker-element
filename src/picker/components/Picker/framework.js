@@ -87,7 +87,10 @@ function patch (expressions, instanceBindings) {
     instanceBinding.currentExpression = expression
 
     if (attributeName) { // attribute replacement
-      targetNode.setAttribute(attributeName, attributeValuePre + toString(expression) + attributeValuePost)
+      const newValue = attributeValuePre + toString(expression) + attributeValuePost
+      if (!(currentExpression === undefined && newValue === '')) {
+        targetNode.setAttribute(attributeName, newValue)
+      }
     } else { // text node / child element / children replacement
       let newNode
       if (Array.isArray(expression)) { // array of DOM elements produced by tag template literals
