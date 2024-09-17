@@ -1,3 +1,12 @@
+## [1.22.7](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.6...v1.22.7) (2024-09-17)
+
+
+### Performance Improvements
+
+* do not render offscreen pseudo at all ([#457](https://github.com/nolanlawson/emoji-picker-element/issues/457)) ([47d93f2](https://github.com/nolanlawson/emoji-picker-element/commit/47d93f27dcd18841d516266c5f4110c50164f590))
+
+
+
 ## [1.22.6](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.5...v1.22.6) (2024-09-09)
 
 
