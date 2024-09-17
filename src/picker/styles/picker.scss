@@ -116,19 +116,15 @@ button.emoji,
   }
 }
 
-.custom-emoji::after {
+// Don't eagerly download the images while the custom emoji is offscreen
+.onscreen .custom-emoji::after {
   content: '';
   width: var(--emoji-size);
   height: var(--emoji-size);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: contain;
-  // Don't eagerly download the images while the custom emoji is offscreen
-  background-image: none;
-
-  .onscreen & {
-    background-image: var(--custom-emoji-background);
-  }
+  background-image: var(--custom-emoji-background);
 }
 
 // nav
