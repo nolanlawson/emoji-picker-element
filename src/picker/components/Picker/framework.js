@@ -212,57 +212,69 @@ function parse (tokens) {
   }
 }
 
-function traverseAndSetupBindings (dom, elementsToBindings) {
-  const instanceBindings = []
-  // traverse dom
-  const treeWalker = document.createTreeWalker(dom, NodeFilter.SHOW_ELEMENT)
+function applyBindings (bindings, element, instanceBindings) {
+  for (let i = 0; i < bindings.length; i++) {
+    const binding = bindings[i]
 
-  let element = dom
-  let elementIndex = -1
-  do {
-    const bindings = elementsToBindings.get(++elementIndex)
-    if (bindings) {
-      for (let i = 0; i < bindings.length; i++) {
-        const binding = bindings[i]
+    const targetNode = binding.attributeName
+      ? element // attribute binding, just use the element itself
+      : element.firstChild // not an attribute binding, so has a placeholder text node
 
-        const targetNode = binding.attributeName
-          ? element // attribute binding, just use the element itself
-          : element.firstChild // not an attribute binding, so has a placeholder text node
+    /* istanbul ignore if */
+    if (import.meta.env.MODE !== 'production') {
+      // We only support exactly one placeholder text node inside an element, which simplifies
+      // the implementation a lot. Also, minify-html-literals should handle any whitespace
+      // around the expression, so we should only ever see e.g. `<div>${expr}</div>`
+      if (
+        !binding.attributeName &&
+          !(element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE)
+      ) {
+        throw new Error('framework only supports exactly one dynamic child text node')
+      }
 
-        /* istanbul ignore if */
-        if (import.meta.env.MODE !== 'production') {
-          // We only support exactly one placeholder text node inside an element, which simplifies
-          // the implementation a lot. Also, minify-html-literals should handle any whitespace
-          // around the expression, so we should only ever see e.g. `<div>${expr}</div>`
-          if (
-            !binding.attributeName &&
-            !(element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE)
-          ) {
-            throw new Error('framework only supports exactly one dynamic child text node')
-          }
-
-          if (!targetNode) {
-            throw new Error('targetNode should not be undefined')
-          }
-        }
-
-        const instanceBinding = {
-          binding,
-          targetNode,
-          targetParentNode: undefined,
-          currentExpression: undefined
-        }
-
-        /* istanbul ignore else */
-        if (import.meta.env.MODE !== 'production') {
-          // remind myself that this object is supposed to be monomorphic (for better JS engine perf)
-          Object.seal(instanceBinding)
-        }
-
-        instanceBindings.push(instanceBinding)
+      if (!targetNode) {
+        throw new Error('targetNode should not be undefined')
       }
     }
-  } while ((element = treeWalker.nextNode()))
+
+    const instanceBinding = {
+      binding,
+      targetNode,
+      targetParentNode: undefined,
+      currentExpression: undefined
+    }
+
+    /* istanbul ignore else */
+    if (import.meta.env.MODE !== 'production') {
+      // remind myself that this object is supposed to be monomorphic (for better JS engine perf)
+      Object.seal(instanceBinding)
+    }
+
+    instanceBindings.push(instanceBinding)
+  }
+}
+
+function traverseAndSetupBindings (rootElement, elementsToBindings) {
+  const instanceBindings = []
+
+  let topLevelBindings
+  if (elementsToBindings.size === 1 && (topLevelBindings = elementsToBindings.get(0))) {
+    // Optimization for the common case where there's only one element and one binding
+    // Skip creating a TreeWalker entirely and just handle the root DOM element
+    applyBindings(topLevelBindings, rootElement, instanceBindings)
+  } else {
+    // traverse dom
+    const treeWalker = document.createTreeWalker(rootElement, NodeFilter.SHOW_ELEMENT)
+
+    let element = rootElement
+    let elementIndex = -1
+    do {
+      const bindings = elementsToBindings.get(++elementIndex)
+      if (bindings) {
+        applyBindings(bindings, element, instanceBindings)
+      }
+    } while ((element = treeWalker.nextNode()))
+  }
 
   return instanceBindings
 }
