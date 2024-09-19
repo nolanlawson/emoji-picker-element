@@ -76,6 +76,70 @@ describe('framework', () => {
     expect(node.outerHTML).toBe('<div>baz</div>')
   })
 
+  test('set to undefined then something then back to undefined', () => {
+    const state = { value: undefined }
+    const { html } = createFramework(state)
+
+    let node
+    const render = () => {
+      node = html`<div aria-selected=${state.value}></div>`
+    }
+
+    render()
+    expect(node.getAttribute('aria-selected')).toBe(null)
+
+    state.value = true
+    render()
+    expect(node.getAttribute('aria-selected')).toBe('true')
+
+    state.value = undefined
+    render()
+    expect(node.getAttribute('aria-selected')).toBe(null)
+  })
+
+  test('set to undefined then something then back to undefined - with quotes', () => {
+    const state = { value: undefined }
+    const { html } = createFramework(state)
+
+    let node
+    const render = () => {
+      node = html`<div aria-selected="${state.value}"></div>`
+    }
+
+    render()
+    expect(node.getAttribute('aria-selected')).toBe(null)
+
+    state.value = true
+    render()
+    expect(node.getAttribute('aria-selected')).toBe('true')
+
+    state.value = undefined
+    render()
+    expect(node.getAttribute('aria-selected')).toBe(null)
+  })
+
+  test('set to undefined then something then back to undefined - with pre/post text', () => {
+    const state = { value: undefined }
+    const { html } = createFramework(state)
+
+    let node
+    const render = () => {
+      node = html`<div class="foo ${state.value} bar"></div>`
+    }
+
+    render()
+    // expect(node.getAttribute('class')).toBe('foo undefined bar')
+    expect(node.getAttribute('class')).toBe(null) // we don't handle the initial undefined case correctly
+
+    state.value = true
+    render()
+    expect(node.getAttribute('class')).toBe('foo true bar')
+
+    state.value = undefined
+    render()
+    expect(node.getAttribute('class')).toBe('foo undefined bar')
+  })
+
   // Framework no longer supports this since we switched from HTML comments to text nodes
   test.skip('render two dynamic expressions inside the same element', () => {
     const state = { name1: 'foo', name2: 'bar' }

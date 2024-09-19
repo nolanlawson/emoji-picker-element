@@ -8,7 +8,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
     return map(emojis, (emoji, i) => {
       return html`
       <button role="${searchMode ? 'option' : 'menuitem'}"
-              aria-selected="${searchMode ? i === state.activeSearchItem : ''}"
+              aria-selected="${searchMode ? i === state.activeSearchItem : undefined}"
               aria-label="${labelWithSkin(emoji, state.currentSkinTone)}"
               title="${titleForEmoji(emoji)}"
               class="${
@@ -17,7 +17,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
                 (emoji.unicode ? '' : ' custom-emoji')
               }"
               id=${`${prefix}-${emoji.id}`}
-              style="${emoji.unicode ? '' : `--custom-emoji-background: url(${JSON.stringify(emoji.url)})`}"
+              style=${emoji.unicode ? undefined : `--custom-emoji-background: url(${JSON.stringify(emoji.url)})`}
       >
         ${
         emoji.unicode
@@ -59,7 +59,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
             aria-controls="search-results"
             aria-describedby="search-description"
             aria-autocomplete="list"
-            aria-activedescendant="${state.activeSearchItemId ? `emo-${state.activeSearchItemId}` : ''}"
+            aria-activedescendant="${state.activeSearchItemId ? `emo-${state.activeSearchItemId}` : undefined}"
             data-ref="searchElement"
             data-on-input="onSearchInput"
             data-on-keydown="onSearchKeydown"
@@ -162,7 +162,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
              class="tabpanel ${(!state.databaseLoaded || state.message) ? 'gone' : ''}"
              role="${state.searchMode ? 'region' : 'tabpanel'}"
              aria-label="${state.searchMode ? state.i18n.searchResultsLabel : state.i18n.categories[state.currentGroup.name]}"
-             id="${state.searchMode ? '' : `tab-${state.currentGroup.id}`}"
+             id=${state.searchMode ? undefined : `tab-${state.currentGroup.id}`}
              tabIndex="0"
              data-on-click="onEmojiClick"
         >
@@ -211,7 +211,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
                data-action="updateOnIntersection"
                role="${state.searchMode ? 'listbox' : 'menu'}"
                aria-labelledby="menu-label-${i}"
-               id=${state.searchMode ? 'search-results' : ''}
+               id=${state.searchMode ? 'search-results' : undefined}
           >
             ${
               emojiList(emojiWithCategory.emojis, state.searchMode, /* prefix */ 'emo')
