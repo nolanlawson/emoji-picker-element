@@ -168,4 +168,13 @@ describe('framework', () => {
     items.push({ id: 4 })
     expectRender(['<div>3</div>', '<div>2</div>', '<div>1</div>', '<div>4</div>'])
   })
+
+  test('one binding not at top level', () => {
+    const state = {}
+    const { html } = createFramework(state)
+    const render = () => html`<div><div class="${state.name}"></div></div>`
+
+    state.name = 'foo'
+    expect(render().outerHTML).toBe('<div><div class="foo"></div></div>')
+  })
 })
