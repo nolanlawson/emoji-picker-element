@@ -91,7 +91,7 @@ function patch (expressions, instanceBindings) {
     instanceBinding.currentExpression = expression
 
     if (attributeName) { // attribute replacement
-      if (!attributeValuePre && !attributeValuePost && expression === undefined) {
+      if (expression === undefined) {
         // undefined is treated as a special case by the framework - we don't render an attribute at all in this case
         targetNode.removeAttribute(attributeName)
       } else {
