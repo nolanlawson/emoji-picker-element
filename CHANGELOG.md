@@ -1,3 +1,17 @@
+## [1.22.8](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.7...v1.22.8) (2024-09-20)
+
+
+### Bug Fixes
+
+* avoid undefined/null expression values ([#461](https://github.com/nolanlawson/emoji-picker-element/issues/461)) ([5eb642a](https://github.com/nolanlawson/emoji-picker-element/commit/5eb642a9572437447abd95c82d434ee8f04382ab))
+
+
+### Performance Improvements
+
+* optimize DOM traversal ([#458](https://github.com/nolanlawson/emoji-picker-element/issues/458)) ([63b2e10](https://github.com/nolanlawson/emoji-picker-element/commit/63b2e105b7fee36aef5222872422a0a04afd609b))
+
+
+
 ## [1.22.7](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.6...v1.22.7) (2024-09-17)
 
 
