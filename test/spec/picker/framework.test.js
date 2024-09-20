@@ -118,26 +118,18 @@ describe('framework', () => {
     expect(node.getAttribute('aria-selected')).toBe(null)
   })
 
-  test('set to undefined then something then back to undefined - with pre/post text', () => {
+  test('set to undefined - with pre/post text', () => {
     const state = { value: undefined }
     const { html } = createFramework(state)
 
-    let node
-    const render = () => {
-      node = html`<div class="foo ${state.value} bar"></div>`
+    const renders = [
+      () => html`<div class="foo ${state.value}"></div>`,
+      () => html`<div class="${state.value} bar"></div>`,
+      () => html`<div class="foo ${state.value} bar"></div>`
+    ]
+    for (const render of renders) {
+      expect(render).toThrow(/framework does not support undefined expressions with attribute pre\/post/)
     }
-
-    render()
-    // expect(node.getAttribute('class')).toBe('foo undefined bar')
-    expect(node.getAttribute('class')).toBe(null) // we don't handle the initial undefined case correctly
-
-    state.value = true
-    render()
-    expect(node.getAttribute('class')).toBe('foo true bar')
-
-    state.value = undefined
-    render()
-    expect(node.getAttribute('class')).toBe('foo undefined bar')
   })
 
   // Framework no longer supports this since we switched from HTML comments to text nodes

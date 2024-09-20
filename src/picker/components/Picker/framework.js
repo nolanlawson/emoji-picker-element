@@ -79,6 +79,10 @@ function patch (expressions, instanceBindings) {
 
     const expression = expressions[expressionIndex]
 
+    if (import.meta.env.MODE !== 'production' && expression === undefined && (attributeValuePre || attributeValuePost)) {
+      throw new Error('framework does not support undefined expressions with attribute pre/post')
+    }
+
     if (currentExpression === expression) {
       // no need to update, same as before
       continue
