@@ -76,6 +76,29 @@ describe('framework', () => {
     expect(node.outerHTML).toBe('<div>baz</div>')
   })
 
+  test('set expression to undefined/null', () => {
+    const state = {}
+    const { html } = createFramework(state)
+
+    const renders = [
+      () => html`<div class="${state.value}"></div>`,
+      () => html`<div class=${state.value}></div>`,
+      () => html`<div class="foo ${state.value}"></div>`,
+      () => html`<div class="${state.value} bar"></div>`,
+      () => html`<div class="foo ${state.value} bar"></div>`
+    ]
+
+    state.value = undefined
+    for (const render of renders) {
+      expect(render).toThrow(/framework does not support undefined or null expressions/)
+    }
+
+    state.value = null
+    for (const render of renders) {
+      expect(render).toThrow(/framework does not support undefined or null expressions/)
+    }
+  })
+
   // Framework no longer supports this since we switched from HTML comments to text nodes
   test.skip('render two dynamic expressions inside the same element', () => {
     const state = { name1: 'foo', name2: 'bar' }
