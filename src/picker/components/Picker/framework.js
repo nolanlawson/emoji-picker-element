@@ -79,6 +79,10 @@ function patch (expressions, instanceBindings) {
 
     const expression = expressions[expressionIndex]
 
+    if (import.meta.env.MODE !== 'production' && (expression === undefined || expression === null)) {
+      throw new Error('framework does not support undefined or null expressions - these would get stringified as-is')
+    }
+
     if (currentExpression === expression) {
       // no need to update, same as before
       continue

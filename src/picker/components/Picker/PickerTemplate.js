@@ -37,7 +37,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
         data-ref="rootElement"
         class="picker"
         aria-label="${state.i18n.regionLabel}"
-        style="${state.pickerStyle}">
+        style="${state.pickerStyle || ''}">
         <!-- using a spacer div because this allows us to cover up the skintone picker animation -->
         <div class="pad-top"></div>
          <div class="search-row">
@@ -81,7 +81,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
                 aria-expanded="${state.skinTonePickerExpanded}"
                 aria-controls="skintone-list"
                 data-on-click="onClickSkinToneButton">
-          ${state.skinToneButtonText}
+          ${state.skinToneButtonText || ''}
         </button>
       </div>
       <span id="skintone-description" class="sr-only">${state.i18n.skinToneDescription}</span>
@@ -152,7 +152,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
         <div class="message ${state.message ? '' : 'gone'}"
              role="alert"
              aria-live="polite">
-          ${state.message}
+          ${state.message || ''}
         </div>
 
         <!--The tabindex=0 is so people can scroll up and down with the keyboard. The element has a role and a label, so I
