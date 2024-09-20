@@ -85,7 +85,11 @@ describe('framework', () => {
       () => html`<div class=${state.value}></div>`,
       () => html`<div class="foo ${state.value}"></div>`,
       () => html`<div class="${state.value} bar"></div>`,
-      () => html`<div class="foo ${state.value} bar"></div>`
+      () => html`<div class="foo ${state.value} bar"></div>`,
+      () => html`<div>${state.value}</div>`,
+      () => html`<div>foo ${state.value}</div>`,
+      () => html`<div>${state.value} bar</div>`,
+      () => html`<div>foo ${state.value} bar</div>`
     ]
 
     state.value = undefined
