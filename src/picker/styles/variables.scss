@@ -54,14 +54,21 @@
   --outline-color: #{$outline}; /* Focus outline color */
   --category-font-color: #{$categoryFontColor}; /* Font color of custom emoji category headings */
 
+  // Some of these were originally `color.adjust()`ed, but are now hardcoded because in
+  // Sass 1.79.0 the `color.*` APIs changed to emit `rgb()` here and I prefer the shorter hex format.
+  // See https://github.com/sass/dart-sass/blob/main/CHANGELOG.md#1790
   @if $dark {
-    --button-active-background: #{color.adjust($bg, $lightness: 20%)};
-    --button-hover-background: #{color.adjust($bg, $lightness: 15%)};
+    // #{color.adjust($bg, $lightness: 20%)};
+    --button-active-background: #555555;
+    // #{color.adjust($bg, $lightness: 15%)};
+    --button-hover-background: #484848;
   }
 
   @else {
-    --button-active-background: #{color.adjust($bg, $lightness: -10%)}; /* Background of an active button */
-    --button-hover-background: #{color.adjust($bg, $lightness: -15%)}; /* Background of a hovered button */
+    // #{color.adjust($bg, $lightness: -10%)};
+    --button-active-background: #e6e6e6; /* Background of an active button */
+    // #{color.adjust($bg, $lightness: -15%)};
+    --button-hover-background: #d9d9d9; /* Background of a hovered button */
   }
 }
 

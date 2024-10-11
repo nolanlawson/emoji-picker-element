@@ -117,7 +117,7 @@
     "recursive-readdir": "^2.2.3",
     "rollup": "^4.24.0",
     "rollup-plugin-analyzer": "^4.0.0",
-    "sass": "1.77.8",
+    "sass": "^1.79.5",
     "standard": "^17.1.2",
     "stylelint": "^16.10.0",
     "stylelint-config-recommended-scss": "^14.1.0",
