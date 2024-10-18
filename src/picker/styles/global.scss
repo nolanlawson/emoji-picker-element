@@ -1,6 +1,6 @@
-@import './variables';
-@import './resets';
-@import './focus';
+@use './variables' as *;
+@use './resets' as *;
+@use './focus' as *;
 
 * {
   box-sizing: border-box;
