@@ -1,3 +1,12 @@
+# [1.23.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.8...v1.23.0) (2024-11-09)
+
+
+### Features
+
+* added Persian Language in i18n ([#471](https://github.com/nolanlawson/emoji-picker-element/issues/471)) ([b0bd34e](https://github.com/nolanlawson/emoji-picker-element/commit/b0bd34ec62400ae64e965476022b122c33fef1b1))
+
+
+
 ## [1.22.8](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.7...v1.22.8) (2024-09-20)
 
 
