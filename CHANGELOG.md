@@ -1,3 +1,12 @@
+# [1.24.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.23.0...v1.24.0) (2024-11-19)
+
+
+### Features
+
+* add Vietnamese language support in i18n ([#474](https://github.com/nolanlawson/emoji-picker-element/issues/474)) ([c2ffb53](https://github.com/nolanlawson/emoji-picker-element/commit/c2ffb53e7f47817762934bde10263827dd8b5823))
+
+
+
 # [1.23.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.22.8...v1.23.0) (2024-11-09)
 
 
