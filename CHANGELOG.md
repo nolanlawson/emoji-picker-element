@@ -1,3 +1,12 @@
+# [1.25.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.24.0...v1.25.0) (2024-11-25)
+
+
+### Features
+
+* add Japanese language support in i18n ([#476](https://github.com/nolanlawson/emoji-picker-element/issues/476)) ([7f14e9f](https://github.com/nolanlawson/emoji-picker-element/commit/7f14e9f1473169007c448ce3cd32effa27574cc1))
+
+
+
 # [1.24.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.23.0...v1.24.0) (2024-11-19)
 
 
