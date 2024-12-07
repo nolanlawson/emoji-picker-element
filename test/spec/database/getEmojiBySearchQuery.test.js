@@ -53,25 +53,29 @@ describe('getEmojiBySearchQuery', () => {
     expectToBeSorted(results)
     expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
       { annotation: 'monkey face' },
-      { annotation: 'monkey' }
+      { annotation: 'monkey' },
+      { annotation: 'orangutan' }
     ])
     results = await search('monkey')
     expectToBeSorted(results)
     expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
       { annotation: 'monkey face' },
-      { annotation: 'monkey' }
+      { annotation: 'monkey' },
+      { annotation: 'orangutan' }
     ])
     results = await search('monkey')
     expectToBeSorted(results)
     expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
       { annotation: 'monkey face' },
-      { annotation: 'monkey' }
+      { annotation: 'monkey' },
+      { annotation: 'orangutan' }
     ])
     results = await search('MoNkEy')
     expectToBeSorted(results)
     expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
       { annotation: 'monkey face' },
-      { annotation: 'monkey' }
+      { annotation: 'monkey' },
+      { annotation: 'orangutan' }
     ])
     results = await search('monkey fac')
     expect(results.map(_ => omit(_, ['order']))).toStrictEqual([
