@@ -136,7 +136,7 @@ describe('Favorites UI', () => {
 
   test('press down on search input - does not affect favorites', async () => {
     type(getByRole(container, 'combobox'), 'monk')
-    await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(2))
+    await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(3))
 
     const pressKeyAndExpectAriaDescendant = async (key, emoji) => {
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))) // delay

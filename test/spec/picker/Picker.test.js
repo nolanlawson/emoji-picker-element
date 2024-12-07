@@ -71,10 +71,11 @@ describe('Picker tests', () => {
     expect(queryAllByRole('tab', { selected: true })).toHaveLength(1) // one tab selected at first
     await type(getByRole('combobox'), 'monk')
 
-    await waitFor(() => expect(getAllByRole('option')).toHaveLength(2))
+    await waitFor(() => expect(getAllByRole('option')).toHaveLength(3))
 
     expect(getByRole('option', { name: /🐵/ })).toBeVisible()
     expect(getByRole('option', { name: /🐒/ })).toBeVisible()
+    expect(getByRole('option', { name: /🦧/ })).toBeVisible()
     expect(queryAllByRole('tab', { selected: true })).toHaveLength(0) // no tabs selected when searching
   })
 
@@ -242,7 +243,20 @@ describe('Picker tests', () => {
         annotation: 'grinning face',
         group: 0,
         shortcodes: ['grinning', 'grinning_face'],
-        tags: ['face', 'grin'],
+        tags: [
+          'cheerful',
+          'cheery',
+          'face',
+          'grin',
+          'grinning',
+          'happy',
+          'laugh',
+          'nice',
+          'smile',
+          'smiling',
+          'teeth'
+
+        ],
         unicode: '😀',
         version: 1
       },
@@ -265,7 +279,7 @@ describe('Picker tests', () => {
         annotation: 'thumbs up',
         group: 1,
         shortcodes: ['+1', 'thumbsup', 'yes'],
-        tags: ['+1', 'hand', 'thumb', 'up'],
+        tags: ['+1', 'good', 'hand', 'like', 'thumb', 'up', 'yes'],
         unicode: '👍️',
         version: 0.6,
         skins: [
@@ -289,7 +303,19 @@ describe('Picker tests', () => {
         annotation: 'grinning face',
         group: 0,
         shortcodes: ['grinning', 'grinning_face'],
-        tags: ['face', 'grin'],
+        tags: [
+          'cheerful',
+          'cheery',
+          'face',
+          'grin',
+          'grinning',
+          'happy',
+          'laugh',
+          'nice',
+          'smile',
+          'smiling',
+          'teeth'
+        ],
         unicode: '😀',
         version: 1
       },
@@ -300,7 +326,7 @@ describe('Picker tests', () => {
 
   test('press up/down on search input', async () => {
     type(getByRole('combobox'), 'monk')
-    await waitFor(() => expect(getAllByRole('option')).toHaveLength(2))
+    await waitFor(() => expect(getAllByRole('option')).toHaveLength(3))
 
     const pressKeyAndExpectAriaDescendant = async (key, emoji) => {
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))) // delay
@@ -313,8 +339,12 @@ describe('Picker tests', () => {
 
     await pressKeyAndExpectAriaDescendant('ArrowDown', '🐵')
     await pressKeyAndExpectAriaDescendant('ArrowDown', '🐒')
-    await pressKeyAndExpectAriaDescendant('ArrowUp', '🐵')
+    await pressKeyAndExpectAriaDescendant('ArrowDown', '🦧')
+    await pressKeyAndExpectAriaDescendant('ArrowDown', '🐵')
+    await pressKeyAndExpectAriaDescendant('ArrowUp', '🦧')
     await pressKeyAndExpectAriaDescendant('ArrowUp', '🐒')
+    await pressKeyAndExpectAriaDescendant('ArrowUp', '🐵')
+    await pressKeyAndExpectAriaDescendant('ArrowDown', '🐒')
 
     let emoji
     picker.addEventListener('emoji-click', event => {
@@ -327,7 +357,7 @@ describe('Picker tests', () => {
         annotation: 'monkey',
         group: 3,
         shortcodes: ['monkey'],
-        tags: ['monkey'],
+        tags: ['animal', 'banana'],
         unicode: '🐒',
         version: 0.6
       },

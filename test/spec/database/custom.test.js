@@ -108,7 +108,8 @@ describe('custom emoji', () => {
     expect((await db.getEmojiBySearchQuery('monkey')).map(summarize)).toStrictEqual([
       { name: 'monkey', shortcodes: ['monkey'], url: 'monkey.png' },
       summaryByUnicode('🐵'),
-      summaryByUnicode('🐒')
+      summaryByUnicode('🐒'),
+      summaryByUnicode('🦧')
     ])
 
     expect((await db.getEmojiBySearchQuery('undersc'))).toStrictEqual([

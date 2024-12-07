@@ -69,7 +69,7 @@ describe('scrolling', () => {
 
     await userEvent.type(getByRole(container, 'combobox'), 'monkey')
 
-    await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(2))
+    await waitFor(() => expect(getAllByRole(container, 'option')).toHaveLength(3))
     expect(getByRole(container, 'option', { name: /🐵/ })).toBeVisible()
 
     await tick(100)
