@@ -22,10 +22,10 @@
 <emoji-picker></emoji-picker>
 <script type="module">
   import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js'
-  import insertText from 'https://cdn.jsdelivr.net/npm/insert-text-at-cursor@0.3.0/index.js'
+  import textFieldEdit from 'https://cdn.jsdelivr.net/npm/text-field-edit@^4/index.js'
 
   document.querySelector('emoji-picker').addEventListener('emoji-click', e => {
-    insertText(document.querySelector('input'), e.detail.unicode)
+    textFieldEdit.insert(document.querySelector('input'), e.detail.unicode)
   })
 </script>
 </body>
