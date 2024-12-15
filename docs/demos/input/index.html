@@ -11,7 +11,7 @@
 <h1>emoji-picker element: inserting characters into text input</h1>
 <div>
   This demo shows how to use emoji-picker-element to insert emoji into the current cursor position in a text input.
-  It uses <a href="https://www.npmjs.com/package/insert-text-at-cursor" target="_blank">insert-text-at-cursor</a>
+  It uses <a href="https://www.npmjs.com/package/text-field-edit" target="_blank">text-field-edit</a>
   for convenience.
 </div>
 <label>
@@ -22,10 +22,10 @@
 <emoji-picker></emoji-picker>
 <script type="module">
   import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js'
-  import insertText from 'https://cdn.jsdelivr.net/npm/insert-text-at-cursor@0.3.0/index.js'
+  import textFieldEdit from 'https://cdn.jsdelivr.net/npm/text-field-edit@^4/index.js'
 
   document.querySelector('emoji-picker').addEventListener('emoji-click', e => {
-    insertText(document.querySelector('input'), e.detail.unicode)
+    textFieldEdit.insert(document.querySelector('input'), e.detail.unicode)
   })
 </script>
 </body>
