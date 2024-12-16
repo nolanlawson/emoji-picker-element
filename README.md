@@ -885,9 +885,7 @@ more details on shortcodes [in the Emojibase docs](https://emojibase.dev/docs/sh
 
 For optimal cache performance, it's recommended that your server expose an `ETag` header. If so, `emoji-picker-element` can avoid re-downloading the entire JSON file over and over again. Instead, it will do a `HEAD` request and just check the `ETag`.
 
-If the server hosting the JSON file is not the same as the one containing the emoji picker, then the cross-origin server will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Allow-Headers: ETag` (or `Access-Control-Allow-Headers: *` ). `jsdelivr` already does this, which is partly why it is the default.
-
-Note that [Safari does not currently support `Access-Control-Allow-Headers: *`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers#Browser_compatibility), but it does support `Access-Control-Allow-Headers: ETag`.
+If the server hosting the JSON file is not the same as the one containing the emoji picker, then the cross-origin server will also need to expose `Access-Control-Allow-Origin: *` and `Access-Control-Expose-Headers: ETag` (or `Access-Control-Expose-Headers: *` ). `jsdelivr` already does this, which is partly why it is the default.
 
 If `emoji-picker-element` cannot use the `ETag` for any reason, it will fall back to the less performant option, doing a full `GET` request on every page load.
 
