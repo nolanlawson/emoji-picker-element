@@ -1,4 +1,4 @@
-import { I18n, PickerConstructorOptions, EmojiPickerEventMap, CustomEmoji } from "./shared";
+import { I18n, PickerConstructorOptions, EmojiPickerEventMap, CustomEmoji } from "./shared.js";
 export default class Picker extends HTMLElement {
     dataSource: string;
     locale: string;

@@ -1,4 +1,4 @@
-import { Emoji } from "./shared";
+import { Emoji } from "./shared.js";
 /**
  * Given an array of emoji (e.g. emojibase-data/en/data.json), extract out only the data
  * needed for emoji-picker-element, resulting in a smaller object.

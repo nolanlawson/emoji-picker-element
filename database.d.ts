@@ -1,4 +1,4 @@
-import { Emoji, DatabaseConstructorOptions, SkinTone, CustomEmoji, NativeEmoji } from "./shared";
+import { Emoji, DatabaseConstructorOptions, SkinTone, CustomEmoji, NativeEmoji } from "./shared.js";
 export default class Database {
     /**
      * Create a new Database.
