@@ -1,5 +1,5 @@
-import Picker from './picker'
-import Database from './database'
+import Picker from './picker.js'
+import Database from './database.js'
 
 export {
   Picker,
