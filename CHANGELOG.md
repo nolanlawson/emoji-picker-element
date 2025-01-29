@@ -1,3 +1,12 @@
+## [1.26.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.26.0...v1.26.1) (2025-01-29)
+
+
+### Bug Fixes
+
+* add js extensions to imports in type definitions ([#487](https://github.com/nolanlawson/emoji-picker-element/issues/487)) ([f6200cb](https://github.com/nolanlawson/emoji-picker-element/commit/f6200cb4af539affbe560be530cde788ddf8fcaa))
+
+
+
 # [1.26.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.25.0...v1.26.0) (2024-12-07)
 
 
