@@ -2,6 +2,9 @@ import {
   waitFor, getAllByRole,
   getByRole, fireEvent, queryAllByRole
 } from '@testing-library/dom'
+import userEvent from '@testing-library/user-event'
+
+const { type } = userEvent
 
 export async function openSkintoneListbox (container) {
   await waitFor(() => expect(getByRole(container, 'button', { name: /Choose a skin tone/ }))
@@ -28,4 +31,11 @@ export function checkEmojiEquals (actual, expected) {
   expect(actual.emoji.order).toBeGreaterThan(0)
   delete actual.emoji.order // could change from version to version
   expect(actual).toStrictEqual(expected)
+}
+
+// Workaround for clear() not working in shadow roots: https://github.com/testing-library/user-event/issues/1143
+export const clear = async (element) => {
+  expect(element.value.length).not.toBe(0)
+  await type(element, '{backspace}'.repeat(element.value.length))
+  expect(element.value.length).toBe(0)
 }
