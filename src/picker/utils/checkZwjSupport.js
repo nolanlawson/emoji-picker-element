@@ -21,6 +21,14 @@ export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode
   let allSupported = true
   for (const emoji of zwjEmojisToCheck) {
     const domNode = emojiToDomNode(emoji)
+    // sanity check to make sure the node is defined properly
+    /* istanbul ignore if */
+    if (!domNode) {
+      // This is a race condition that can occur when the component is unmounted/remounted
+      // It doesn't really matter what we do here since the old context is not going to render anymore.
+      // Just bail out of emoji support detection and return `allSupported=true` since the rendering context is gone
+      continue
+    }
     const emojiWidth = calculateTextWidth(domNode)
     if (typeof baselineEmojiWidth === 'undefined') { // calculate the baseline emoji width only once
       baselineEmojiWidth = calculateTextWidth(baselineEmoji)
