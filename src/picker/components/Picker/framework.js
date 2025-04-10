@@ -79,8 +79,11 @@ function patch (expressions, instanceBindings) {
 
     const expression = expressions[expressionIndex]
 
-    if (import.meta.env.MODE !== 'production' && expression === undefined && (attributeValuePre || attributeValuePost)) {
-      throw new Error('framework does not support undefined expressions with attribute pre/post')
+    if (import.meta.env.MODE !== 'production' && expression === null && (attributeValuePre || attributeValuePost)) {
+      throw new Error('framework does not support null expressions with attribute pre/post')
+    }
+    if (import.meta.env.MODE !== 'production' && expression === undefined) {
+      throw new Error('framework does not support undefined expressions - use null to explicitly remove')
     }
 
     if (currentExpression === expression) {
@@ -91,11 +94,11 @@ function patch (expressions, instanceBindings) {
     instanceBinding.currentExpression = expression
 
     if (attributeName) { // attribute replacement
-      if (expression === undefined) {
-        // undefined is treated as a special case by the framework - we don't render an attribute at all in this case
+      if (expression === null) {
+        // null is treated as a special case by the framework - we don't render an attribute at all in this case
         targetNode.removeAttribute(attributeName)
       } else {
-        // attribute value is not undefined; set a new attribute
+        // attribute value is not null; set a new attribute
         const newValue = attributeValuePre + toString(expression) + attributeValuePost
         targetNode.setAttribute(attributeName, newValue)
       }

@@ -76,8 +76,8 @@ describe('framework', () => {
     expect(node.outerHTML).toBe('<div>baz</div>')
   })
 
-  test('set to undefined then something then back to undefined', () => {
-    const state = { value: undefined }
+  test('set to null then something then back to null', () => {
+    const state = { value: null }
     const { html } = createFramework(state)
 
     let node
@@ -92,13 +92,13 @@ describe('framework', () => {
     render()
     expect(node.getAttribute('aria-selected')).toBe('true')
 
-    state.value = undefined
+    state.value = null
     render()
     expect(node.getAttribute('aria-selected')).toBe(null)
   })
 
-  test('set to undefined then something then back to undefined - with quotes', () => {
-    const state = { value: undefined }
+  test('set to null then something then back to null - with quotes', () => {
+    const state = { value: null }
     const { html } = createFramework(state)
 
     let node
@@ -113,13 +113,13 @@ describe('framework', () => {
     render()
     expect(node.getAttribute('aria-selected')).toBe('true')
 
-    state.value = undefined
+    state.value = null
     render()
     expect(node.getAttribute('aria-selected')).toBe(null)
   })
 
-  test('set to undefined - with pre/post text', () => {
-    const state = { value: undefined }
+  test('set to null - with pre/post text', () => {
+    const state = { value: null }
     const { html } = createFramework(state)
 
     const renders = [
@@ -131,11 +131,11 @@ describe('framework', () => {
         <div class="foo ${state.value} bar"></div>`
     ]
     for (const render of renders) {
-      expect(render).toThrow(/framework does not support undefined expressions with attribute pre\/post/)
+      expect(render).toThrow(/framework does not support null expressions with attribute pre\/post/)
     }
   })
 
-  test('set expression to undefined/null', () => {
+  test('set expression to undefined', () => {
     const state = {}
     const { html } = createFramework(state)
 
@@ -153,12 +153,7 @@ describe('framework', () => {
 
     state.value = undefined
     for (const render of renders) {
-      expect(render).toThrow(/framework does not support undefined or null expressions/)
-    }
-
-    state.value = null
-    for (const render of renders) {
-      expect(render).toThrow(/framework does not support undefined or null expressions/)
+      expect(render).toThrow(/framework does not support undefined expressions/)
     }
   })
 
