@@ -76,6 +76,65 @@ describe('framework', () => {
     expect(node.outerHTML).toBe('<div>baz</div>')
   })
 
+  test('set to undefined then something then back to undefined', () => {
+    const state = { value: undefined }
+    const { html } = createFramework(state)
+
+    let node
+    const render = () => {
+      node = html`<div aria-selected=${state.value}></div>`
+    }
+
+    render()
+    expect(node.getAttribute('aria-selected')).toBe(null)
+
+    state.value = true
+    render()
+    expect(node.getAttribute('aria-selected')).toBe('true')
+
+    state.value = undefined
+    render()
+    expect(node.getAttribute('aria-selected')).toBe(null)
+  })
+
+  test('set to undefined then something then back to undefined - with quotes', () => {
+    const state = { value: undefined }
+    const { html } = createFramework(state)
+
+    let node
+    const render = () => {
+      node = html`<div aria-selected="${state.value}"></div>`
+    }
+
+    render()
+    expect(node.getAttribute('aria-selected')).toBe(null)
+
+    state.value = true
+    render()
+    expect(node.getAttribute('aria-selected')).toBe('true')
+
+    state.value = undefined
+    render()
+    expect(node.getAttribute('aria-selected')).toBe(null)
+  })
+
+  test('set to undefined - with pre/post text', () => {
+    const state = { value: undefined }
+    const { html } = createFramework(state)
+
+    const renders = [
+      () => html`
+        <div class="foo ${state.value}"></div>`,
+      () => html`
+        <div class="${state.value} bar"></div>`,
+      () => html`
+        <div class="foo ${state.value} bar"></div>`
+    ]
+    for (const render of renders) {
+      expect(render).toThrow(/framework does not support undefined expressions with attribute pre\/post/)
+    }
+  })
+
   test('set expression to undefined/null', () => {
     const state = {}
     const { html } = createFramework(state)

@@ -79,8 +79,8 @@ function patch (expressions, instanceBindings) {
 
     const expression = expressions[expressionIndex]
 
-    if (import.meta.env.MODE !== 'production' && (expression === undefined || expression === null)) {
-      throw new Error('framework does not support undefined or null expressions - these would get stringified as-is')
+    if (import.meta.env.MODE !== 'production' && expression === undefined && (attributeValuePre || attributeValuePost)) {
+      throw new Error('framework does not support undefined expressions with attribute pre/post')
     }
 
     if (currentExpression === expression) {
@@ -91,7 +91,14 @@ function patch (expressions, instanceBindings) {
     instanceBinding.currentExpression = expression
 
     if (attributeName) { // attribute replacement
-      targetNode.setAttribute(attributeName, attributeValuePre + toString(expression) + attributeValuePost)
+      if (expression === undefined) {
+        // undefined is treated as a special case by the framework - we don't render an attribute at all in this case
+        targetNode.removeAttribute(attributeName)
+      } else {
+        // attribute value is not undefined; set a new attribute
+        const newValue = attributeValuePre + toString(expression) + attributeValuePost
+        targetNode.setAttribute(attributeName, newValue)
+      }
     } else { // text node / child element / children replacement
       let newNode
       if (Array.isArray(expression)) { // array of DOM elements produced by tag template literals
@@ -127,9 +134,10 @@ function parse (tokens) {
   const elementsToBindings = new Map()
   const elementIndexes = []
 
+  let skipTokenChars = 0
   for (let i = 0, len = tokens.length; i < len; i++) {
     const token = tokens[i]
-    htmlString += token
+    htmlString += token.slice(skipTokenChars)
 
     if (i === len - 1) {
       break // no need to process characters - no more expressions to be found
@@ -181,10 +189,17 @@ function parse (tokens) {
     let attributeValuePost
     if (withinAttribute) {
       // I never use single-quotes for attribute values in HTML, so just support double-quotes or no-quotes
-      const match = /(\S+)="?([^"=]*)$/.exec(token)
-      attributeName = match[1]
-      attributeValuePre = match[2]
-      attributeValuePost = /^[^">]*/.exec(tokens[i + 1])[0]
+      const attributePreMatch = /(\S+)="?([^"=]*)$/.exec(token)
+      attributeName = attributePreMatch[1]
+      attributeValuePre = attributePreMatch[2]
+      const attributePostMatch = /^([^">]*)("?)/.exec(tokens[i + 1])
+      attributeValuePost = attributePostMatch[1]
+      // Optimization: remove the attribute itself, so we don't create a default attribute which is either empty or just
+      // the "pre" text, e.g. `<div foo>` or `<div foo="prefix">`. It will be replaced by the expression anyway.
+      htmlString = htmlString.slice(0, -1 * attributePreMatch[0].length)
+      skipTokenChars = attributePostMatch[0].length
+    } else {
+      skipTokenChars = 0
     }
 
     const binding = {
