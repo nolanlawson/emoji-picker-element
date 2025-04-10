@@ -76,7 +76,7 @@ describe('framework', () => {
     expect(node.outerHTML).toBe('<div>baz</div>')
   })
 
-  test('set to null then something then back to null', () => {
+  test('set to null then something then back to null then something again', () => {
     const state = { value: null }
     const { html } = createFramework(state)
 
@@ -95,6 +95,10 @@ describe('framework', () => {
     state.value = null
     render()
     expect(node.getAttribute('aria-selected')).toBe(null)
+
+    state.value = false
+    render()
+    expect(node.getAttribute('aria-selected')).toBe('false')
   })
 
   test('set to null then something then back to null - with quotes', () => {
