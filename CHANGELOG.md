@@ -1,3 +1,13 @@
+## [1.26.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.26.1...v1.26.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* handle null node race and break out tests ([#491](https://github.com/nolanlawson/emoji-picker-element/issues/491)) ([999c758](https://github.com/nolanlawson/emoji-picker-element/commit/999c758f56d1d8ca9e8044c899c8aba71cce90cb))
+* remove `aria-selected` when appropriate ([#490](https://github.com/nolanlawson/emoji-picker-element/issues/490)) ([b4423dc](https://github.com/nolanlawson/emoji-picker-element/commit/b4423dc793b5b72fc79f8898741a6175f0b04913))
+
+
+
 ## [1.26.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.26.0...v1.26.1) (2025-01-29)
 
 
