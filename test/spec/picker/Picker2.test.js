@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event'
 import { groups } from '../../../src/picker/groups'
 import Database from '../../../src/database/Database'
 import { getAccessibleName } from '../utils'
+import { clear } from './shared.js'
 
 const { waitFor, fireEvent } = testingLibrary
 const { type } = userEvent
@@ -278,5 +279,25 @@ describe('Picker tests part 2', () => {
   test('Styles are working in Jest', async () => {
     const style = picker.shadowRoot.querySelector('style')
     expect(style.textContent).not.toEqual('')
+  })
+
+  test('aria-selected is not rendered for role=menuitem', async () => {
+    // aria-selected should not be set for role=menuitem
+    for (const menuitem of getAllByRole('menuitem')) {
+      expect(menuitem.getAttribute('aria-selected')).toBeNull()
+    }
+
+    // type in the search to switch from menuitems to options
+    type(getByRole('combobox'), 'smile')
+    await waitFor(() => expect(getAllByRole('option')).not.toHaveLength(0))
+
+    // switch back
+    clear(getByRole('combobox'))
+    await waitFor(() => expect(queryAllByRole('option')).toHaveLength(0))
+
+    // aria-selected should not be set for role=menuitem
+    for (const menuitem of getAllByRole('menuitem')) {
+      expect(menuitem.getAttribute('aria-selected')).toBeNull()
+    }
   })
 })
