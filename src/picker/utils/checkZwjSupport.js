@@ -22,7 +22,6 @@ export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode
   for (const emoji of zwjEmojisToCheck) {
     const domNode = emojiToDomNode(emoji)
     // sanity check to make sure the node is defined properly
-    /* istanbul ignore if */
     if (!domNode) {
       // This is a race condition that can occur when the component is unmounted/remounted
       // It doesn't really matter what we do here since the old context is not going to render anymore.
