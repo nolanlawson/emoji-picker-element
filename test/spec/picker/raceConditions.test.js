@@ -51,7 +51,7 @@ describe('Race conditions', () => {
   })
 
   test('Immediately remove and re-add a new picker element - tick between each', async () => {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 5; i++) {
       picker.remove()
       await tick(i)
       picker = new Picker({ dataSource: ALL_EMOJI, locale: 'en' })
@@ -65,7 +65,10 @@ describe('Race conditions', () => {
       () => new Promise(requestAnimationFrame),
       () => tick(0),
       () => tick(1),
-      () => tick(2)
+      () => tick(2),
+      () => tick(3),
+      () => tick(4),
+      () => tick(5)
     ]
     for (const delay of delays) {
       /* no await */ click(getByRole('tab', { name: 'Animals and nature' }))
