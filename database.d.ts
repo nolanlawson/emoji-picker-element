@@ -79,6 +79,10 @@ export default class Database {
      */
     getTopFavoriteEmoji(limit: number): Promise<Emoji[]>;
     /**
+     * Returns all native emojis, unordered.
+     */
+    getAllNativeEmojis(): Promise<NativeEmoji[]>;
+    /**
      * Set the custom emoji for this database. Throws an error if custom emoji are not in the correct format.
      *
      *
