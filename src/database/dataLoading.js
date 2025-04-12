@@ -2,7 +2,7 @@ import { getETag, getETagAndData } from './utils/ajax'
 import { jsonChecksum } from './utils/jsonChecksum'
 import { hasData, loadData } from './idbInterface'
 
-export async function checkForUpdates (db, dataSource) {
+async function doCheckForUpdates (db, dataSource) {
   // just do a simple HEAD request first to see if the eTags match
   let emojiData
   let eTag = await getETag(dataSource)
@@ -35,4 +35,19 @@ export async function loadDataForFirstTime (db, dataSource) {
   }
 
   await loadData(db, emojiData, dataSource, eTag)
+}
+
+export async function checkForUpdates (db, dataSource) {
+  try {
+    await doCheckForUpdates(db, dataSource)
+  } catch (err) {
+    // Checking for updates is not a critical operation, and it can fail if e.g. the picker is quickly removed and
+    // re-added to the DOM. In those cases, we may get an IndexedDB InvalidStateError because we are attempting to close
+    // the database connection, possibly while another request is inflight. So there's effectively no way to prevent
+    // InvalidStateErrors unless we were to carefully sequence our IndexedDB operations. Much more simply, we can just
+    // ignore IndexedDB InvalidStateErrors here and give users one less useless error message in their console.
+    if (err.name !== 'InvalidStateError') {
+      throw err
+    }
+  }
 }
