@@ -66,7 +66,7 @@ describe('properties', () => {
     await tick(40)
 
     expect(fetch.calls().length).toBe(1)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastUrl().replaceAll('%5E', '^')).toBe(DEFAULT_DATA_SOURCE)
     expect(fetch.lastOptions()).toBe(undefined)
 
     expect(picker.locale).toEqual('fr')
