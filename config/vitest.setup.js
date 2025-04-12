@@ -33,8 +33,7 @@ beforeAll(() => {
 })
 
 beforeEach(() => {
-  globalThis.fetch = fetchMock.sandbox()
-  globalThis.Response = fetch.Response
+  fetchMock.mockGlobal()
 })
 
 afterEach(async () => {

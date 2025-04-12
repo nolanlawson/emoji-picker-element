@@ -99,7 +99,7 @@
     "express": "^5.1.0",
     "fake-indexeddb": "^6.0.0",
     "fast-glob": "^3.3.3",
-    "fetch-mock": "^12.5.2",
+    "fetch-mock": "^11.1.5",
     "flat-color-icons": "^1.1.0",
     "get-folder-size": "^5.0.0",
     "husky": "^9.1.7",
