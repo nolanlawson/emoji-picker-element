@@ -1,3 +1,12 @@
+## [1.26.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.26.2...v1.26.3) (2025-04-12)
+
+
+### Bug Fixes
+
+* better handling of race conditions ([#493](https://github.com/nolanlawson/emoji-picker-element/issues/493)) ([4afab21](https://github.com/nolanlawson/emoji-picker-element/commit/4afab217ff958d135e18ba4a5199e45f132d883b))
+
+
+
 ## [1.26.2](https://github.com/nolanlawson/emoji-picker-element/compare/v1.26.1...v1.26.2) (2025-04-10)
 
 
