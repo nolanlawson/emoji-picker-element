@@ -60,8 +60,8 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5
       emoji-picker-element-data:
-        specifier: ^1.7.1
-        version: 1.7.1
+        specifier: ^1.7.2
+        version: 1.7.2
       emojibase-data:
         specifier: ^5.1.1
         version: 5.1.1(emojibase@15.3.0)
@@ -1669,8 +1669,8 @@ packages:
   electron-to-chromium@1.5.36:
     resolution: {integrity: sha512-HYTX8tKge/VNp6FGO+f/uVDmUkq+cEfcxYhKf15Akc4M5yxt5YmorwlAitKWjWhWQnKcDRBAQKXkhqqXMqcrjw==}
 
-  emoji-picker-element-data@1.7.1:
-    resolution: {integrity: sha512-lDJm7VDYyvg5Qpu++GDU88Mkfmftch3PBD09q+SJhS+MW5QjHZshpsxDgJDdRzcHu/gPM3wKGphk2LnNwRC0tQ==}
+  emoji-picker-element-data@1.7.2:
+    resolution: {integrity: sha512-5Gl1C/uuI0ffxutXpkuGVCq5lTqg4Qs5Df6baq4t2eJwvwfivbmojpE6yoMnVdbSSpkJtbrMAfFS7T4AJr1/TA==}
 
   'emoji-picker-element@file:':
     resolution: {directory: '', type: directory}
@@ -5970,7 +5970,7 @@ snapshots:
 
   electron-to-chromium@1.5.36: {}
 
-  emoji-picker-element-data@1.7.1: {}
+  emoji-picker-element-data@1.7.2: {}
 
   'emoji-picker-element@file:': {}
 
