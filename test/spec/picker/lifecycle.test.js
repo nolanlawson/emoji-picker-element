@@ -21,7 +21,7 @@ describe('lifecycle', () => {
     await waitFor(() => expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible())
 
     expect(fetch.calls().length).toBe(1)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastUrl().replaceAll('%5E', '^')).toBe(DEFAULT_DATA_SOURCE)
     expect(fetch.lastOptions()).toBe(undefined)
 
     document.body.removeChild(picker)
@@ -32,7 +32,7 @@ describe('lifecycle', () => {
 
     // fetch is called once again after re-insertion
     expect(fetch.calls().length).toBe(2)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastUrl().replaceAll('%5E', '^')).toBe(DEFAULT_DATA_SOURCE)
     expect(fetch.lastOptions()).toEqual({ method: 'HEAD' })
 
     document.body.removeChild(picker)
@@ -67,7 +67,7 @@ describe('lifecycle', () => {
     await tick(60)
 
     expect(fetch.calls().length).toBe(1)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastUrl().replaceAll('%5E', '^')).toBe(DEFAULT_DATA_SOURCE)
     expect(fetch.lastOptions()).toBe(undefined)
     expect(Object.keys(openIndexedDBRequests).length).toBe(0) // no open IDB connections
   })
@@ -82,7 +82,7 @@ describe('lifecycle', () => {
     await tick(120)
 
     expect(fetch.calls().length).toBe(1)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastUrl().replaceAll('%5E', '^')).toBe(DEFAULT_DATA_SOURCE)
     expect(fetch.lastOptions()).toBe(undefined)
     expect(Object.keys(openIndexedDBRequests).length).toBe(0) // no open IDB connections
   })
@@ -110,7 +110,7 @@ describe('lifecycle', () => {
     await tick(40)
 
     expect(fetch.calls().length).toBe(1)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastUrl().replaceAll('%5E', '^')).toBe(DEFAULT_DATA_SOURCE)
     expect(fetch.lastOptions()).toBe(undefined)
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
@@ -138,7 +138,7 @@ describe('lifecycle', () => {
     await tick(40)
 
     expect(fetch.calls().length).toBe(1)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastUrl().replaceAll('%5E', '^')).toBe(DEFAULT_DATA_SOURCE)
     expect(fetch.lastOptions()).toBe(undefined)
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
@@ -151,7 +151,7 @@ describe('lifecycle', () => {
     await tick(40)
 
     expect(fetch.calls().length).toBe(2) // fetch is called again due to re-render
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastUrl().replaceAll('%5E', '^')).toBe(DEFAULT_DATA_SOURCE)
     expect(fetch.lastOptions()).toEqual({ method: 'HEAD' }) // cached, so does a HEAD
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()
@@ -174,7 +174,7 @@ describe('lifecycle', () => {
     await tick(40)
 
     expect(fetch.calls().length).toBe(1)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastUrl().replaceAll('%5E', '^')).toBe(DEFAULT_DATA_SOURCE)
     expect(fetch.lastOptions()).toBe(undefined)
     await expect(() => (
       expect(getByRole(picker.shadowRoot, 'option', { name: /😀/ })).toBeVisible()

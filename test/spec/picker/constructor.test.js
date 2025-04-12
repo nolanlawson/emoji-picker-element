@@ -17,7 +17,7 @@ describe('constructor', () => {
     expect(getByRole(container, 'menuitem', { name: /😀/ })).toBeVisible()
 
     expect(fetch.calls().length).toBe(1)
-    expect(fetch.lastUrl()).toBe(DEFAULT_DATA_SOURCE)
+    expect(fetch.lastUrl().replaceAll('%5E', '^')).toBe(DEFAULT_DATA_SOURCE)
     expect(fetch.lastOptions()).toBe(undefined)
 
     document.body.removeChild(picker)
