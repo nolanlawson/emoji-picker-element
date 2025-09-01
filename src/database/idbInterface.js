@@ -241,3 +241,9 @@ export function getTopFavoriteEmoji (db, customEmojiIndex, limit) {
     }
   })
 }
+
+export async function getAllNativeEmojis (db) {
+  return dbPromise(db, STORE_EMOJI, MODE_READONLY, (emojiStore, txn, cb) => {
+    getAllIDB(emojiStore.index(INDEX_GROUP_AND_ORDER), undefined, cb)
+  })
+}
