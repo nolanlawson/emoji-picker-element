@@ -1,0 +1,16 @@
+{
+  "short_name": "Emoji Picker Element",
+  "name": "Emoji Picker Element",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#FDE030",
+  "background_color": "white"
+}

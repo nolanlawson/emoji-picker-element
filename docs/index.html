@@ -3,8 +3,9 @@
 <head>
   <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/picker.js">
   <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/database.js">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.8em%22 font-size=%2280%22>😀</text></svg>">
+  <link rel="icon" href="./icon.svg">
   <meta charset="UTF-8">
+  <link rel="manifest" href="./manifest.json">
   <title>emoji-picker-element</title>
   <meta name="viewport" content="width=device-width">
   <style>
@@ -24,6 +25,8 @@
 
     p {
       padding: 20px;
+      text-align: center;
+      margin: 0 auto;
     }
 
     .github-banner {
@@ -62,6 +65,28 @@
       margin-left: 20px;
     }
 
+    pre {
+        margin: 0;
+    }
+
+    [role="alert"] {
+        display: none;
+    }
+    [role="alert"].shown {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+    details {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    footer {
+        display: none;
+    }
+
     @media (max-width: 767px) {
       html {
         padding-top: 50px;
@@ -74,6 +99,20 @@
       }
       h1 {
         padding: 0 50px;
+      }
+      p {
+          padding: 10px 5px;
+      }
+      html {
+          padding-top: 20px;
+      }
+      .github-banner-section {
+          display: none;
+      }
+      footer {
+          display: initial;
+          text-align: center;
+          padding: 20px;
       }
     }
 
@@ -121,7 +160,7 @@
   </style>
 </head>
 <body>
-<section aria-label="GitHub link">
+<section aria-label="GitHub link" class="github-banner-section">
   <a class="github-banner" href="https://github.com/nolanlawson/emoji-picker-element">
     <img width="149" height="149"
          src="https://github.blog/wp-content/uploads/2008/12/forkme_right_gray_6d6d6d.png?resize=149%2C149"
@@ -132,7 +171,7 @@
 <main>
 <h1>emoji-picker-element</h1>
 <p>
-  <code>emoji-picker-element</code> is a lightweight emoji picker for the modern web.
+  A lightweight emoji picker for the modern web.
 </p>
 <div class="flex">
   <div>
@@ -159,8 +198,11 @@
         <input type="checkbox" id="custom"> Custom emoji
       </label>
     </div>
-    <div style="padding: 20px;" role="alert" aria-live="polite">
-      <pre style="display:none;"></pre>
+    <div  role="alert" aria-live="polite">
+      <details open>
+        <summary>Copied to clipboard! Details:</summary>
+        <pre></pre>
+      </details>
     </div>
     <div class="private-browsing-warning"
          style="padding: 20px; display: none; border: 2px dashed crimson;"
@@ -174,6 +216,9 @@
   </div>
 </div>
 </main>
+<footer>
+    <p><a href="https://github.blog/wp-content/uploads/2008/12/forkme_right_gray_6d6d6d.png?resize=149%2C149">Source code</a></p>
+</footer>
 <script type="module">
   import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/picker.js'
   import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/database.js' // avoid extra round-trip
@@ -243,11 +288,22 @@
 
   document.addEventListener('DOMContentLoaded', async () => {
     const picker = $('emoji-picker')
+    const alert = $('[role="alert"]')
     const pre = $('pre')
-    const onEvent = e => {
+    const summary = $('summary')
+    const onEvent = async e => {
       console.log(e)
-      pre.style.display = 'block'
+      alert.classList.add('shown')
       pre.innerHTML = `Event: ${JSON.stringify(e.type)}\n\nData:\n\n${JSON.stringify(e.detail, null, 2)}`
+      try {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/plain': e.detail.unicode,
+        })]);
+        summary.textContent = `Copied to clipboard! Details:`
+      } catch (err) {
+        console.log(err)
+        summary.textContent = `Failed to write to the clipboard! Event details:`
+      }
     }
     picker.addEventListener('emoji-click', onEvent)
     picker.addEventListener('skin-tone-change', onEvent)
@@ -276,7 +332,7 @@
       await focusVisiblePolyfillPromise
       applyFocusVisiblePolyfill(picker.shadowRoot)
     }
-  })
+  }, 'DOMContentLoaded')
 </script>
 </body>
 </html>
