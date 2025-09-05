@@ -414,7 +414,7 @@ no skin tones, then no skin tone is applied to `unicode`.
 > due to [a Safari bug](https://github.com/nolanlawson/emoji-picker-element/issues/281#issuecomment-3256832247).
 
 The `emoji-click-sync` event is exactly the same as `emoji-click`, except that the event is fired
-synchronously relative to the original `'click'` event, and the `event.detail` is a `Promise` that must be `await`ed:
+synchronously relative to the original `click` event, and the `event.detail` is a `Promise` that must be `await`ed:
 
 ```js
 picker.addEventListener('emoji-click-sync', async event => {
