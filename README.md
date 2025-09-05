@@ -419,7 +419,7 @@ synchronously relative to the original `'click'` event, and the `event.detail` i
 ```js
 picker.addEventListener('emoji-click-sync', async event => {
   console.log(await event.detail); // same as above
-})
+});
 ```
 
 This is useful to work around [a Safari bug](https://github.com/nolanlawson/emoji-picker-element/issues/281#issuecomment-3256832247)
