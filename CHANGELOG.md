@@ -1,3 +1,12 @@
+# [1.27.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.26.3...v1.27.0) (2025-09-05)
+
+
+### Features
+
+* add `emoji-click-sync` event as Safari workaround ([#500](https://github.com/nolanlawson/emoji-picker-element/issues/500)) ([476dbc3](https://github.com/nolanlawson/emoji-picker-element/commit/476dbc3b877b14deb70666db6a2e79491cf7e317))
+
+
+
 ## [1.26.3](https://github.com/nolanlawson/emoji-picker-element/compare/v1.26.2...v1.26.3) (2025-04-12)
 
 
