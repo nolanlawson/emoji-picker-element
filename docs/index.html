@@ -298,6 +298,7 @@
     const copyToClipboard = async e => {
       // fun workaround for a safari bug: https://github.com/nolanlawson/emoji-picker-element/issues/281
       // use emoji-click-sync and then write the promise to the navigator.clipboard to avoid a NotAllowedError
+      // normal usage is to use the emoji-click event instead
       try {
         await navigator.clipboard.write([new ClipboardItem({
           'text/plain': e.detail.then(({ unicode }) => unicode),
@@ -315,12 +316,14 @@
       pre.innerHTML = JSON.stringify(detail, null, 2)
     }
 
-    const onEvent = async e => {
+    picker.addEventListener('emoji-click-sync', async e => {
       await copyToClipboard(e)
       await log(e)
-    }
-    picker.addEventListener('emoji-click-sync', onEvent)
-    picker.addEventListener('skin-tone-change', onEvent)
+    })
+    picker.addEventListener('skin-tone-change', async e => {
+      summary.textContent = 'Skin tone changed! Details:'
+      await log(e)
+    })
 
     $$('input[name=darkmode]').forEach(input => {
       input.addEventListener('change', e => {
