@@ -39,7 +39,7 @@ A lightweight emoji picker, distributed as a web component.
     + [Picker](#picker)
       - [Events](#events)
         * [`emoji-click`](#emoji-click)
-      - [`emoji-click-sync`](#emoji-click-sync)
+        * [`emoji-click-sync`](#emoji-click-sync)
         * [`skin-tone-change`](#skin-tone-change)
       - [Internationalization](#internationalization)
         * [Built-in translations](#built-in-translations)
@@ -407,7 +407,7 @@ Note that `unicode` will represent whatever the emoji should look like
 with the given `skinTone`. If the `skinTone` is 0, or if the emoji has
 no skin tones, then no skin tone is applied to `unicode`.
 
-#### `emoji-click-sync`
+##### `emoji-click-sync`
 
 > [!NOTE]  
 > You likely only need this event if you need to copy the emoji to the clipboard,
