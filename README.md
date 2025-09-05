@@ -425,7 +425,7 @@ picker.addEventListener('emoji-click-sync', async event => {
 This is useful to work around [a Safari bug](https://github.com/nolanlawson/emoji-picker-element/issues/281#issuecomment-3256832247)
 when using the [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard), which causes 
 the error `NotAllowedError: The request is not allowed by the user agent or the platform in the current context, possibly because the user denied permission.`
-This error occurs due to Safari not recognizing than the event is user-initiated due to the presence of
+This error occurs due to Safari not recognizing that the `emoji-click` event is user-initiated due to the presence of
 `await`s for IndexedDB data.
 
 Example of correct usage to copy an emoji to the clipboard:
