@@ -39,6 +39,7 @@ A lightweight emoji picker, distributed as a web component.
     + [Picker](#picker)
       - [Events](#events)
         * [`emoji-click`](#emoji-click)
+      - [`emoji-click-sync`](#emoji-click-sync)
         * [`skin-tone-change`](#skin-tone-change)
       - [Internationalization](#internationalization)
         * [Built-in translations](#built-in-translations)
