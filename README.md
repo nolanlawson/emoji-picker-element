@@ -39,6 +39,7 @@ A lightweight emoji picker, distributed as a web component.
     + [Picker](#picker)
       - [Events](#events)
         * [`emoji-click`](#emoji-click)
+        * [`emoji-click-sync`](#emoji-click-sync)
         * [`skin-tone-change`](#skin-tone-change)
       - [Internationalization](#internationalization)
         * [Built-in translations](#built-in-translations)
@@ -405,6 +406,44 @@ picker.addEventListener('emoji-click', event => {
 Note that `unicode` will represent whatever the emoji should look like
 with the given `skinTone`. If the `skinTone` is 0, or if the emoji has
 no skin tones, then no skin tone is applied to `unicode`.
+
+##### `emoji-click-sync`
+
+> [!NOTE]  
+> Most likely, you should only use this event if you need to copy an emoji to the clipboard,
+> due to [a Safari bug](https://github.com/nolanlawson/emoji-picker-element/issues/281#issuecomment-3256832247).
+
+The `emoji-click-sync` event is exactly the same as `emoji-click`, except that the event is fired
+synchronously relative to the original `click` event, and the `event.detail` is a `Promise` that must be `await`ed:
+
+```js
+picker.addEventListener('emoji-click-sync', async event => {
+  console.log(await event.detail); // same as above
+});
+```
+
+This is useful to work around [a Safari bug](https://github.com/nolanlawson/emoji-picker-element/issues/281#issuecomment-3256832247)
+when using the [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard), which causes 
+the error `NotAllowedError: The request is not allowed by the user agent or the platform in the current context, possibly because the user denied permission.`
+This error occurs due to Safari not recognizing that the `emoji-click` event is user-initiated due to the presence of
+`await`s for IndexedDB data.
+
+Example of correct usage to copy an emoji to the clipboard:
+
+```js
+picker.addEventListener('emoji-click-sync', async event => {
+  try {
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/plain': e.detail.then(({ unicode }) => unicode),
+    })]);
+    console.log('Copied to clipboard!');
+  } catch (err) {
+    console.log('Failed to copy to clipboard', err);
+  }
+});
+```
+
+If you don't need to work around the Safari bug, then you can just use the `emoji-click` event instead.
 
 ##### `skin-tone-change`
 

@@ -231,98 +231,100 @@ describe('Picker tests', () => {
       .toHaveLength(truncatedEmoji.filter(_ => _.group === 9).length))
   })
 
-  test('click emoji and get an event', async () => {
-    let emoji
-    picker.addEventListener('emoji-click', event => {
-      emoji = event.detail
+  for (const sync of [false, true]) {
+    test(`click emoji and get an event - ${sync ? 'sync' : 'async'}`, async () => {
+      let emoji
+      picker.addEventListener(sync ? 'emoji-click-sync' : 'emoji-click', async event => {
+        emoji = sync ? await event.detail : event.detail
+      })
+
+      getByRole('menuitem', { name: /😀/ }).click()
+      await waitFor(() => checkEmojiEquals(emoji, {
+        emoji: {
+          annotation: 'grinning face',
+          group: 0,
+          shortcodes: ['grinning', 'grinning_face'],
+          tags: [
+            'cheerful',
+            'cheery',
+            'face',
+            'grin',
+            'grinning',
+            'happy',
+            'laugh',
+            'nice',
+            'smile',
+            'smiling',
+            'teeth'
+
+          ],
+          unicode: '😀',
+          version: 1
+        },
+        skinTone: 0,
+        unicode: '😀'
+      }))
+
+      // choose a skin tone and then click an emoji where it would apply
+      getByRole('button', { name: /Choose a skin tone/ }).click()
+      await waitFor(() => expect(getByRole('option', { name: /Medium-Dark/ })).toBeVisible())
+      getByRole('option', { name: /Medium-Dark/ }).click()
+      await waitFor(
+        () => expect(getByRole('button', { name: 'Choose a skin tone (currently Medium-Dark)' })).toBeVisible()
+      )
+      getByRole('tab', { name: /People/ }).click()
+      await waitFor(() => expect(getByRole('menuitem', { name: /👍/ })).toBeVisible())
+      getByRole('menuitem', { name: /👍/ }).click()
+      await waitFor(() => checkEmojiEquals(emoji, {
+        emoji: {
+          annotation: 'thumbs up',
+          group: 1,
+          shortcodes: ['+1', 'thumbsup', 'yes'],
+          tags: ['+1', 'good', 'hand', 'like', 'thumb', 'up', 'yes'],
+          unicode: '👍️',
+          version: 0.6,
+          skins: [
+            { tone: 1, unicode: '👍🏻', version: 1 },
+            { tone: 2, unicode: '👍🏼', version: 1 },
+            { tone: 3, unicode: '👍🏽', version: 1 },
+            { tone: 4, unicode: '👍🏾', version: 1 },
+            { tone: 5, unicode: '👍🏿', version: 1 }
+          ]
+        },
+        skinTone: 4,
+        unicode: '👍🏾'
+      }))
+
+      // then click one that has no skins
+      getByRole('tab', { name: /Smileys/ }).click()
+      await waitFor(() => expect(getByRole('menuitem', { name: /😀/ })).toBeVisible())
+      getByRole('menuitem', { name: /😀/ }).click()
+      await waitFor(() => checkEmojiEquals(emoji, {
+        emoji: {
+          annotation: 'grinning face',
+          group: 0,
+          shortcodes: ['grinning', 'grinning_face'],
+          tags: [
+            'cheerful',
+            'cheery',
+            'face',
+            'grin',
+            'grinning',
+            'happy',
+            'laugh',
+            'nice',
+            'smile',
+            'smiling',
+            'teeth'
+          ],
+          unicode: '😀',
+          version: 1
+        },
+        skinTone: 4,
+        unicode: '😀'
+      }))
     })
-
-    getByRole('menuitem', { name: /😀/ }).click()
-    await waitFor(() => checkEmojiEquals(emoji, {
-      emoji: {
-        annotation: 'grinning face',
-        group: 0,
-        shortcodes: ['grinning', 'grinning_face'],
-        tags: [
-          'cheerful',
-          'cheery',
-          'face',
-          'grin',
-          'grinning',
-          'happy',
-          'laugh',
-          'nice',
-          'smile',
-          'smiling',
-          'teeth'
-
-        ],
-        unicode: '😀',
-        version: 1
-      },
-      skinTone: 0,
-      unicode: '😀'
-    }))
-
-    // choose a skin tone and then click an emoji where it would apply
-    getByRole('button', { name: /Choose a skin tone/ }).click()
-    await waitFor(() => expect(getByRole('option', { name: /Medium-Dark/ })).toBeVisible())
-    getByRole('option', { name: /Medium-Dark/ }).click()
-    await waitFor(
-      () => expect(getByRole('button', { name: 'Choose a skin tone (currently Medium-Dark)' })).toBeVisible()
-    )
-    getByRole('tab', { name: /People/ }).click()
-    await waitFor(() => expect(getByRole('menuitem', { name: /👍/ })).toBeVisible())
-    getByRole('menuitem', { name: /👍/ }).click()
-    await waitFor(() => checkEmojiEquals(emoji, {
-      emoji: {
-        annotation: 'thumbs up',
-        group: 1,
-        shortcodes: ['+1', 'thumbsup', 'yes'],
-        tags: ['+1', 'good', 'hand', 'like', 'thumb', 'up', 'yes'],
-        unicode: '👍️',
-        version: 0.6,
-        skins: [
-          { tone: 1, unicode: '👍🏻', version: 1 },
-          { tone: 2, unicode: '👍🏼', version: 1 },
-          { tone: 3, unicode: '👍🏽', version: 1 },
-          { tone: 4, unicode: '👍🏾', version: 1 },
-          { tone: 5, unicode: '👍🏿', version: 1 }
-        ]
-      },
-      skinTone: 4,
-      unicode: '👍🏾'
-    }))
-
-    // then click one that has no skins
-    getByRole('tab', { name: /Smileys/ }).click()
-    await waitFor(() => expect(getByRole('menuitem', { name: /😀/ })).toBeVisible())
-    getByRole('menuitem', { name: /😀/ }).click()
-    await waitFor(() => checkEmojiEquals(emoji, {
-      emoji: {
-        annotation: 'grinning face',
-        group: 0,
-        shortcodes: ['grinning', 'grinning_face'],
-        tags: [
-          'cheerful',
-          'cheery',
-          'face',
-          'grin',
-          'grinning',
-          'happy',
-          'laugh',
-          'nice',
-          'smile',
-          'smiling',
-          'teeth'
-        ],
-        unicode: '😀',
-        version: 1
-      },
-      skinTone: 4,
-      unicode: '😀'
-    }))
-  })
+  }
 
   test('press up/down on search input', async () => {
     type(getByRole('combobox'), 'monk')

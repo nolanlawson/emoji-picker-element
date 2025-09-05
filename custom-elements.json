@@ -89,6 +89,10 @@
             {
               "name": "emoji-click",
               "description": "The `emoji-click` event is fired when an emoji is selected by the user."
+            },
+            {
+              "name": "emoji-click-sync",
+              "description": "The `emoji-click-sync` event is fired synchronously when an emoji is selected by the user. Use this when copying data to the clipboard using the Clipboard API to work around a Safari bug."
             }
           ],
           "cssProperties": [
