@@ -414,7 +414,7 @@ no skin tones, then no skin tone is applied to `unicode`.
 > due to [a Safari bug](https://github.com/nolanlawson/emoji-picker-element/issues/281#issuecomment-3256832247).
 
 The `emoji-click-sync` event is exactly the same as `emoji-click`, except that the event is fired
-synchronously and the `event.detail` is a `Promise` that must be `await`ed:
+synchronously relative to the original `'click'` event, and the `event.detail` is a `Promise` that must be `await`ed:
 
 ```js
 picker.addEventListener('emoji-click-sync', async event => {
@@ -425,8 +425,10 @@ picker.addEventListener('emoji-click-sync', async event => {
 This is useful to work around [a Safari bug](https://github.com/nolanlawson/emoji-picker-element/issues/281#issuecomment-3256832247)
 when using the [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard), which causes 
 the error `NotAllowedError: The request is not allowed by the user agent or the platform in the current context, possibly because the user denied permission.`
+This error occurs due to Safari not recognizing than the event is user-initiated due to the presence of
+`await`s for IndexedDB data.
 
-Example usage to copy an emoji to the clipboard:
+Example of correct usage to copy an emoji to the clipboard:
 
 ```js
 picker.addEventListener('emoji-click-sync', async event => {
