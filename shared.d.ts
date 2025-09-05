@@ -78,11 +78,15 @@ declare type Modify<T, R> = Omit<T, keyof R> & R;
 export declare type EmojiClickEvent = Modify<UIEvent, {
     detail: EmojiClickEventDetail;
 }>;
+export declare type EmojiClickSyncEvent = Modify<UIEvent, {
+    detail: Promise<EmojiClickEventDetail>;
+}>;
 export declare type SkinToneChangeEvent = Modify<UIEvent, {
     detail: SkinToneChangeEventDetail;
 }>;
 export interface EmojiPickerEventMap {
     "emoji-click": EmojiClickEvent;
+    "emoji-click-sync": EmojiClickSyncEvent;
     "skin-tone-change": SkinToneChangeEvent;
 }
 export interface CustomEmoji {

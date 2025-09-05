@@ -619,25 +619,32 @@ export function createRoot (shadowRoot, props) {
     }
   }
 
-  //
-  // Handle user input on an emoji
-  //
-
-  async function clickEmoji (unicodeOrName) {
+  async function getDetailForClickEvent (unicodeOrName) {
     const emoji = await state.database.getEmojiByUnicodeOrName(unicodeOrName)
     const emojiSummary = [...state.currentEmojis, ...state.currentFavorites]
       .find(_ => (_.id === unicodeOrName))
     const skinTonedUnicode = emojiSummary.unicode && unicodeWithSkin(emojiSummary, state.currentSkinTone)
     await state.database.incrementFavoriteEmojiCount(unicodeOrName)
-    fireEvent('emoji-click', {
+    return {
       emoji,
       skinTone: state.currentSkinTone,
       ...(skinTonedUnicode && { unicode: skinTonedUnicode }),
       ...(emojiSummary.name && { name: emojiSummary.name })
-    })
+    }
   }
 
-  async function onEmojiClick (event) {
+  //
+  // Handle user input on an emoji
+  //
+  async function clickEmoji (unicodeOrName) {
+    const promiseForDetail = getDetailForClickEvent(unicodeOrName)
+    // sync event to work around a safari bug: https://bugs.webkit.org/show_bug.cgi?id=222262
+    fireEvent('emoji-click-sync', promiseForDetail)
+    // async event for most normal use cases that don't need to work around the safari bug
+    fireEvent('emoji-click', await promiseForDetail)
+  }
+
+  function onEmojiClick (event) {
     const { target } = event
     /* istanbul ignore if */
     if (!target.classList.contains('emoji')) {
