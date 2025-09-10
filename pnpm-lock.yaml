@@ -69,8 +69,8 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0
       fake-indexeddb:
-        specifier: ^6.0.1
-        version: 6.0.1
+        specifier: ^6.2.2
+        version: 6.2.2
       fast-glob:
         specifier: ^3.3.3
         version: 3.3.3
@@ -1960,8 +1960,8 @@ packages:
     engines: {node: '>= 10.17.0'}
     hasBin: true
 
-  fake-indexeddb@6.0.1:
-    resolution: {integrity: sha512-He2AjQGHe46svIFq5+L2Nx/eHDTI1oKgoevBP+TthnjymXiKkeJQ3+ITeWey99Y5+2OaPFbI1qEsx/5RsGtWnQ==}
+  fake-indexeddb@6.2.2:
+    resolution: {integrity: sha512-SGbf7fzjeHz3+12NO1dYigcYn4ivviaeULV5yY5rdGihBvvgwMds4r4UBbNIUMwkze57KTDm32rq3j1Az8mzEw==}
     engines: {node: '>=18'}
 
   fast-deep-equal@3.1.3:
@@ -6367,7 +6367,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  fake-indexeddb@6.0.1: {}
+  fake-indexeddb@6.2.2: {}
 
   fast-deep-equal@3.1.3: {}
 

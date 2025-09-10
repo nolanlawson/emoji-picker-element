@@ -34,8 +34,6 @@ async function createDatabase (dbName) {
   // Handle abnormal closes, e.g. "delete database" in chrome dev tools.
   // No need for removeEventListener, because once the DB can no longer
   // fire "close" events, it will auto-GC.
-  // Unfortunately cannot test in fakeIndexedDB: https://github.com/dumbmatter/fakeIndexedDB/issues/50
-  /* istanbul ignore next */
   db.onclose = () => closeDatabase(dbName)
   performance.measure('createDatabase', 'createDatabase')
   return db
