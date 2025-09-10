@@ -15,6 +15,7 @@ import {
 } from '../shared'
 import trimEmojiData from '../../../src/trimEmojiData'
 import { mockFetch, mockGetAndHead } from '../mockFetch.js'
+import { forceCloseDatabase } from 'fake-indexeddb'
 
 describe('database tests', () => {
   beforeEach(basicBeforeEach)
@@ -298,6 +299,19 @@ describe('database tests', () => {
     await db.ready()
 
     expect((await db.getEmojiBySearchQuery('monkey'))[0].unicode).toBe('🐵')
+
+    await db.delete()
+  })
+
+  test('abnormal indexeddb close event', async () => {
+    const dataSource = ALL_EMOJI
+    const db = new Database({ dataSource })
+    await db.ready()
+
+    // should be handled gracefully by 'close' event listener
+    forceCloseDatabase(db._db)
+
+    await tick(20)
 
     await db.delete()
   })
