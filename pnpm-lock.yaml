@@ -109,7 +109,7 @@ importers:
         version: 4.1.5
       playwright:
         specifier: ^1.54.1
-        version: 1.54.1
+        version: 1.55.1
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
@@ -3378,13 +3378,13 @@ packages:
     resolution: {integrity: sha512-N4zdA4sfOe6yCv+ulPCmpnIBQ5I60xfhDr1otdBBhKte9QtEf3bhfrfkW7dTb+IQ0iEx4ZDzas0kc1o5rdWpYg==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  playwright-core@1.54.1:
-    resolution: {integrity: sha512-Nbjs2zjj0htNhzgiy5wu+3w09YetDx5pkrpI/kZotDlDUaYk0HVA5xrBVPdow4SAUIlhgKcJeJg4GRKW6xHusA==}
+  playwright-core@1.55.1:
+    resolution: {integrity: sha512-Z6Mh9mkwX+zxSlHqdr5AOcJnfp+xUWLCt9uKV18fhzA8eyxUd8NUWzAjxUh55RZKSYwDGX0cfaySdhZJGMoJ+w==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.54.1:
-    resolution: {integrity: sha512-peWpSwIBmSLi6aW2auvrUtf2DqY16YYcCMO8rTVx486jKmDTJg7UAhyrraP98GB8BoPURZP8+nxO7TSd4cPr5g==}
+  playwright@1.55.1:
+    resolution: {integrity: sha512-cJW4Xd/G3v5ovXtJJ52MAOclqeac9S/aGGgRzLabuF8TnIb6xHvMzKIa6JmrRzUkeXJgfL1MhukP0NK6l39h3A==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -3468,6 +3468,7 @@ packages:
   puppeteer@24.12.1:
     resolution: {integrity: sha512-+vvwl+Xo4z5uXLLHG+XW8uXnUXQ62oY6KU6bEFZJvHWLutbmv5dw9A/jcMQ0fqpQdLydHmK0Uy7/9Ilj8ufwSQ==}
     engines: {node: '>=18'}
+    deprecated: < 24.15.0 is no longer supported
     hasBin: true
 
   qs@6.14.0:
@@ -7832,11 +7833,11 @@ snapshots:
     dependencies:
       find-up: 6.3.0
 
-  playwright-core@1.54.1: {}
+  playwright-core@1.55.1: {}
 
-  playwright@1.54.1:
+  playwright@1.55.1:
     dependencies:
-      playwright-core: 1.54.1
+      playwright-core: 1.55.1
     optionalDependencies:
       fsevents: 2.3.2
 
