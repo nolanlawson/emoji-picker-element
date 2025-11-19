@@ -94,7 +94,7 @@
     "conventional-changelog-cli": "^5.0.0",
     "cross-env": "^7.0.3",
     "csso": "^5.0.5",
-    "emoji-picker-element-data": "^1.7.2",
+    "emoji-picker-element-data": "^1.8.0",
     "emojibase-data": "^5.1.1",
     "express": "^5.1.0",
     "fake-indexeddb": "^6.2.2",
@@ -187,5 +187,5 @@
     "*.js": "standard --fix",
     "*.(css|scss)": "stylelint --fix '**/*.scss'"
   },
-  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad"
+  "packageManager": "pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c"
 }
