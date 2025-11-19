@@ -8,6 +8,7 @@
 // "face without mouth" plus "fog".) These emoji can only be filtered using the width test,
 // which happens in checkZwjSupport.js.
 export const versionsAndTestEmoji = {
+  '🫪': 17, // distorted face
   '🫩': 16, // face with bags under eyes
   '🫨': 15.1, // shaking head, technically from v15 but see note above
   '🫠': 14,
