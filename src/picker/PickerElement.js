@@ -4,6 +4,7 @@ import { DEFAULT_CATEGORY_SORTING, DEFAULT_SKIN_TONE_EMOJI, FONT_FAMILY } from '
 import enI18n from './i18n/en.js'
 import Database from './ImportedDatabase'
 import { queueMicrotask } from './utils/queueMicrotask.js'
+import FirefoxRescuerElementBase from './utils/FirefoxRescuerElementBase.js'
 import baseStyles from './styles/picker.scss'
 
 const PROPS = [
@@ -20,7 +21,7 @@ const PROPS = [
 // Styles injected ourselves, so we can declare the FONT_FAMILY variable in one place
 const EXTRA_STYLES = `:host{--emoji-font-family:${FONT_FAMILY}}`
 
-export default class PickerElement extends HTMLElement {
+export default class PickerElement extends FirefoxRescuerElementBase {
   constructor (props) {
     performance.mark('initialLoad')
     super()
@@ -58,6 +59,9 @@ export default class PickerElement extends HTMLElement {
   }
 
   disconnectedCallback () {
+    // Call super to fix Firefox iframe bug (must happen before accessing instance methods)
+    super.disconnectedCallback?.()
+
     // Check in a microtask if the element is still connected. If so, treat this as a "move" rather than a disconnect
     // Inspired by Vue: https://vuejs.org/guide/extras/web-components.html#building-custom-elements-with-vue
     queueMicrotask(() => {
