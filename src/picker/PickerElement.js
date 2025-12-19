@@ -143,6 +143,7 @@ Object.defineProperties(PickerElement.prototype, definitions)
 // See https://jakearchibald.com/2025/firefox-custom-elements-iframes-bug/
 // TODO: remove when the Firefox bug is fixed: https://bugzilla.mozilla.org/show_bug.cgi?id=1502814
 export function rescueElementPrototype (element) {
+  /* istanbul ignore if */
   if (!(element instanceof PickerElement)) {
     Object.setPrototypeOf(element, customElements.get(element.tagName.toLowerCase()).prototype)
   }
