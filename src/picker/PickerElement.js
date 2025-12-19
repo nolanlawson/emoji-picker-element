@@ -50,6 +50,7 @@ export default class PickerElement extends HTMLElement {
   }
 
   connectedCallback () {
+    rescueElementPrototype(this)
     // The _cmp may be defined if the component was immediately disconnected and then reconnected. In that case,
     // do nothing (preserve the state)
     if (!this._cmp) {
@@ -58,6 +59,7 @@ export default class PickerElement extends HTMLElement {
   }
 
   disconnectedCallback () {
+    rescueElementPrototype(this)
     // Check in a microtask if the element is still connected. If so, treat this as a "move" rather than a disconnect
     // Inspired by Vue: https://vuejs.org/guide/extras/web-components.html#building-custom-elements-with-vue
     queueMicrotask(() => {
@@ -137,6 +139,15 @@ for (const prop of PROPS) {
 }
 
 Object.defineProperties(PickerElement.prototype, definitions)
+
+// See https://jakearchibald.com/2025/firefox-custom-elements-iframes-bug/
+// TODO: remove when the Firefox bug is fixed: https://bugzilla.mozilla.org/show_bug.cgi?id=1502814
+export function rescueElementPrototype (element) {
+  /* istanbul ignore if */
+  if (!(element instanceof PickerElement)) {
+    Object.setPrototypeOf(element, customElements.get(element.tagName.toLowerCase()).prototype)
+  }
+}
 
 /* istanbul ignore else */
 if (!customElements.get('emoji-picker')) { // if already defined, do nothing (e.g. same script imported twice)

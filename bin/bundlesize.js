@@ -6,7 +6,7 @@ import prettyBytes from 'pretty-bytes'
 import fs from 'node:fs/promises'
 
 const MAX_SIZE_MIN = '38 kB'
-const MAX_SIZE_MINGZ = '13 kB'
+const MAX_SIZE_MINGZ = '13.5 kB'
 
 const FILENAME = './bundle.js'
 
