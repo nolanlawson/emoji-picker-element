@@ -1,3 +1,12 @@
+## [1.28.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.28.0...v1.28.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* fix firefox iframe bug ([#510](https://github.com/nolanlawson/emoji-picker-element/issues/510)) ([14ea758](https://github.com/nolanlawson/emoji-picker-element/commit/14ea7588f7150b45d796ddfa8cfd49d148ff0037))
+
+
+
 # [1.28.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.27.0...v1.28.0) (2025-11-19)
 
 
