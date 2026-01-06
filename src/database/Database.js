@@ -14,7 +14,7 @@ import {
   openDatabase
 } from './databaseLifecycle'
 import {
-  isEmpty, getEmojiByGroup,
+  isEmpty, getAllNativeEmojis, getEmojiByGroup,
   getEmojiBySearchQuery, getEmojiByShortcode, getEmojiByUnicode,
   get, set, getTopFavoriteEmoji, incrementFavoriteEmojiCount
 } from './idbInterface'
@@ -123,6 +123,11 @@ export default class Database {
     assertNumber(limit)
     await this.ready()
     return (await getTopFavoriteEmoji(this._db, this._custom, limit)).map(cleanEmoji)
+  }
+
+  async getAllNativeEmojis () {
+    await this.ready()
+    return (await getAllNativeEmojis(this._db)).map(cleanEmoji)
   }
 
   set customEmoji (customEmojis) {
