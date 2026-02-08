@@ -127,3 +127,5 @@ dist
 /test/benchmark/picker.js
 /test/benchmark/*.tachometer.json
 /i18n
+
+.pnpm-store
