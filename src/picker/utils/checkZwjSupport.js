@@ -19,6 +19,7 @@ export function setSimulateBrowserNotSupportingZWJEmoji (value) {
 export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode) {
   performance.mark('checkZwjSupport')
   let allSupported = true
+  let shouldWarn = false
   for (const emoji of zwjEmojisToCheck) {
     const domNode = emojiToDomNode(emoji)
     // sanity check to make sure the node is defined properly
@@ -30,6 +31,10 @@ export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode
       continue
     }
     const emojiWidth = calculateTextWidth(domNode)
+    /* istanbul ignore if */
+    if (emojiWidth === 0) {
+      shouldWarn = true
+    }
     if (typeof baselineEmojiWidth === 'undefined') { // calculate the baseline emoji width only once
       baselineEmojiWidth = calculateTextWidth(baselineEmoji)
     }
@@ -49,6 +54,15 @@ export function checkZwjSupport (zwjEmojisToCheck, baselineEmoji, emojiToDomNode
     if (supported && emojiWidth !== baselineEmojiWidth) {
       console.log('Allowed borderline ZWJ emoji', emoji.unicode, emojiWidth, baselineEmojiWidth)
     }
+  }
+  // Warn exactly once since we don't want to spam the console
+  /* istanbul ignore if */
+  if (shouldWarn) {
+    console.warn('Emoji support detection failed - emoji character is 0 width.\n' +
+      'This is likely due to using `display:none` which is unsupported.\n' +
+      'If this is a Jest/Vitest environment, you can ignore this warning.\n' +
+      'For details see: https://github.com/nolanlawson/emoji-picker-element/issues/514'
+    )
   }
   performance.measure('checkZwjSupport', 'checkZwjSupport')
   return allSupported
