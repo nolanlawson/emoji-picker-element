@@ -1,3 +1,17 @@
+# [1.29.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.28.1...v1.29.0) (2026-02-08)
+
+
+### Bug Fixes
+
+* add warning for `display:none` ([#521](https://github.com/nolanlawson/emoji-picker-element/issues/521)) ([359fd5f](https://github.com/nolanlawson/emoji-picker-element/commit/359fd5f98ed5c44fd693bd466220bc0bf58d91c0))
+
+
+### Features
+
+* add Hungarian translations ([#513](https://github.com/nolanlawson/emoji-picker-element/issues/513)) ([c23028f](https://github.com/nolanlawson/emoji-picker-element/commit/c23028f44412465b1a66f948f3a59d47112288a4))
+
+
+
 ## [1.28.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.28.0...v1.28.1) (2025-12-19)
 
 
