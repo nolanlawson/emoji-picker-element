@@ -14,7 +14,7 @@ export function setSimulateBrowserNotSupportingZWJEmoji (value) {
 function calculateTextWidthWithFallback (unicode, domNode, baselineEmojiNode) {
   const result = calculateTextWidth(domNode)
   /* istanbul ignore if */
-  if (result === 0) {
+  if (!result) {
     // If result is 0 then very likely the emoji-picker has `display:none` or equivalent. In that case, we fall back to
     // cloning the baseline emoji, putting that in the `document.body`, and measuring that instead. This is a perf hit,
     // but it's better than mistakenly filtering emoji: https://github.com/nolanlawson/emoji-picker-element/issues/514
