@@ -1,3 +1,12 @@
+## [1.29.1](https://github.com/nolanlawson/emoji-picker-element/compare/v1.29.0...v1.29.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* calculate emoji width correctly when hidden ([#526](https://github.com/nolanlawson/emoji-picker-element/issues/526)) ([62d423a](https://github.com/nolanlawson/emoji-picker-element/commit/62d423a00e83b473ecf0ef321d7dd357b9fbd8de))
+
+
+
 # [1.29.0](https://github.com/nolanlawson/emoji-picker-element/compare/v1.28.1...v1.29.0) (2026-02-08)
 
 
