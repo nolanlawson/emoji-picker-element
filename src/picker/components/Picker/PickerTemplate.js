@@ -233,6 +233,7 @@ export function render (container, state, helpers, events, actions, refs, abortS
           }
         </div>
         <!-- This serves as a baseline emoji for measuring against and determining emoji support -->
+        <!-- it must match BASELINE_EMOJI in baselineEmoji.js - inlined to avoid unnecessary templating perf tax -->
         <button data-ref="baselineEmoji" aria-hidden="true" tabindex="-1" class="abs-pos hidden emoji baseline-emoji">
           😀
         </button>
