@@ -145,7 +145,7 @@ importers:
         version: 6.12.1(stylelint@16.21.1(typescript@4.9.5))
       svgo:
         specifier: ^4.0.0
-        version: 4.0.0
+        version: 4.0.1
       tachometer:
         specifier: ^0.7.2
         version: 0.7.2
@@ -1504,8 +1504,8 @@ packages:
     resolution: {integrity: sha512-IQOkD3hbR5KrN93MtcYuad6YPuTSUhntLHDuLEbFWE+ff2/XSZNdZG+LcbbIW5AXKg/WFIfYItIzVoHngHXZzA==}
     engines: {node: '>=12 || >=16'}
 
-  css-select@5.1.0:
-    resolution: {integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==}
+  css-select@5.2.2:
+    resolution: {integrity: sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==}
 
   css-tree@2.2.1:
     resolution: {integrity: sha512-OA0mILzGc1kCOCSJerOeqDxDQ4HOh+G8NbOJFOTgOCzpw7fCBubk0fEyxp8AgOL/jvLgYA/uV0cMbe43ElF1JA==}
@@ -1515,8 +1515,8 @@ packages:
     resolution: {integrity: sha512-0eW44TGN5SQXU1mWSkKwFstI/22X2bG1nYzZTYMAWjylYURhse752YgbE4Cx46AC+bAvI+/dYTPRk1LqSUnu6w==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
 
-  css-what@6.1.0:
-    resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
+  css-what@6.2.2:
+    resolution: {integrity: sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==}
     engines: {node: '>= 6'}
 
   css.escape@1.5.1:
@@ -1692,8 +1692,8 @@ packages:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
 
-  domutils@3.1.0:
-    resolution: {integrity: sha512-H78uMmQtI2AhgDJjWeQmHwJJ2bLPD3GMmO7Zja/ZZh84wkm+4ut+IUnUdRa8uCGX88DiVx1j6FRe1XfxEgjEZA==}
+  domutils@3.2.2:
+    resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
 
   dot-prop@5.3.0:
     resolution: {integrity: sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==}
@@ -3381,9 +3381,6 @@ packages:
   pend@1.2.0:
     resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
 
-  picocolors@1.1.0:
-    resolution: {integrity: sha512-TQ92mBOW0l3LeMeyLV6mzy/kWr8lkd/hp3mTg7wYK7zJhuBStmGMBG0BdeDZS/dZx1IukaX6Bk11zcln25o1Aw==}
-
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
@@ -3715,8 +3712,9 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  sax@1.4.1:
-    resolution: {integrity: sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==}
+  sax@1.5.0:
+    resolution: {integrity: sha512-21IYA3Q5cQf089Z6tgaUTr7lDAyzoTPx5HRtbhsME8Udispad8dC/+sziTNugOEx54ilvatQ9YCzl4KQLPcRHA==}
+    engines: {node: '>=11.0.0'}
 
   saxes@6.0.0:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
@@ -4038,8 +4036,8 @@ packages:
   svg-tags@1.0.0:
     resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
 
-  svgo@4.0.0:
-    resolution: {integrity: sha512-VvrHQ+9uniE+Mvx3+C9IEe/lWasXCU0nXMY2kZeLrHNICuRiC8uMPyM14UEaMOFA5mhyQqEkB02VoQ16n3DLaw==}
+  svgo@4.0.1:
+    resolution: {integrity: sha512-XDpWUOPC6FEibaLzjfe0ucaV0YrOjYotGJO1WpF0Zd+n6ZGEQUsSugaoLq9QkEZtAfQIxT42UChcssDVPP3+/w==}
     engines: {node: '>=16'}
     hasBin: true
 
@@ -4529,7 +4527,7 @@ snapshots:
   '@babel/code-frame@7.25.7':
     dependencies:
       '@babel/highlight': 7.25.7
-      picocolors: 1.1.0
+      picocolors: 1.1.1
 
   '@babel/compat-data@7.25.8': {}
 
@@ -4608,7 +4606,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.25.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.1.0
+      picocolors: 1.1.1
 
   '@babel/parser@7.25.8':
     dependencies:
@@ -5806,12 +5804,12 @@ snapshots:
 
   css-functions-list@3.2.3: {}
 
-  css-select@5.1.0:
+  css-select@5.2.2:
     dependencies:
       boolbase: 1.0.0
-      css-what: 6.1.0
+      css-what: 6.2.2
       domhandler: 5.0.3
-      domutils: 3.1.0
+      domutils: 3.2.2
       nth-check: 2.1.1
 
   css-tree@2.2.1:
@@ -5824,7 +5822,7 @@ snapshots:
       mdn-data: 2.12.2
       source-map-js: 1.2.1
 
-  css-what@6.1.0: {}
+  css-what@6.2.2: {}
 
   css.escape@1.5.1: {}
 
@@ -5963,7 +5961,7 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  domutils@3.1.0:
+  domutils@3.2.2:
     dependencies:
       dom-serializer: 2.0.0
       domelementtype: 2.3.0
@@ -7859,8 +7857,6 @@ snapshots:
 
   pend@1.2.0: {}
 
-  picocolors@1.1.0: {}
-
   picocolors@1.1.1: {}
 
   picomatch@2.3.1: {}
@@ -8240,7 +8236,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.4.1
 
-  sax@1.4.1: {}
+  sax@1.5.0: {}
 
   saxes@6.0.0:
     dependencies:
@@ -8658,15 +8654,15 @@ snapshots:
 
   svg-tags@1.0.0: {}
 
-  svgo@4.0.0:
+  svgo@4.0.1:
     dependencies:
       commander: 11.1.0
-      css-select: 5.1.0
+      css-select: 5.2.2
       css-tree: 3.1.0
-      css-what: 6.1.0
+      css-what: 6.2.2
       csso: 5.0.5
       picocolors: 1.1.1
-      sax: 1.4.1
+      sax: 1.5.0
 
   symbol-tree@3.2.4: {}
 
