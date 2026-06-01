@@ -125,7 +125,7 @@
     "svgo": "^4.0.0",
     "tachometer": "^0.7.2",
     "terser": "^5.43.1",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.0"
   },
   "standard": {
     "ignore": [
