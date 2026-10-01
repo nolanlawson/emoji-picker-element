@@ -278,4 +278,19 @@ describe('database second load and update', () => {
 
     await db.delete()
   })
+
+  test('does not HEAD a blob data source on second load', async () => {
+    const db = new Database({ dataSource: ALL_EMOJI })
+    await db.ready()
+    await db.close()
+
+    fetch.reset()
+
+    const blobDb = new Database({ dataSource: 'blob:http://localhost/emoji-data' })
+    await blobDb.ready()
+    await blobDb._lazyUpdate
+    expect(fetch.calls().length).toBe(0)
+    expect((await blobDb.getEmojiByUnicodeOrName('🐵')).annotation).toBe('monkey face')
+    await blobDb.delete()
+  })
 })
