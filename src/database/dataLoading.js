@@ -38,6 +38,14 @@ export async function loadDataForFirstTime (db, dataSource) {
 }
 
 export async function checkForUpdates (db, dataSource) {
+  // blob: URLs cannot answer a HEAD request. The Fetch spec fails every non-GET
+  // method against them, and WebKit reports that as "TypeError: Load failed".
+  // This promise is not awaited, so the failure becomes an unhandled rejection
+  // the second time a picker opens against data already stored for the locale.
+  // A blob we just created has nothing newer to fetch.
+  if (dataSource.startsWith('blob:')) {
+    return
+  }
   try {
     await doCheckForUpdates(db, dataSource)
   } catch (err) {
