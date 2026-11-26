@@ -57,10 +57,6 @@ const summarize = ({ unicode, shortcodes, url, name }) => {
 
 const summaryByUnicode = unicode => {
   const emoji = truncatedEmoji.find(_ => _.emoji === unicode)
-  if (!emoji) {
-    throw new Error('dne ' + unicode)
-  }
-  console.log('emoji.emoji', unicode)
   return summarize({
     unicode: emoji.emoji,
     shortcodes: emoji.shortcodes
