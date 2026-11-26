@@ -6,11 +6,13 @@ export const DEFAULT_NUM_COLUMNS = 8
 // https://blog.emojipedia.org/facebook-reveals-most-and-least-used-emojis/ with
 // a bit of my own curation. (E.g. avoid the "OK" gesture because of connotations:
 // https://emojipedia.org/ok-hand/)
+// Note this list is 14 long to support up to `--max-columns: 14`. Beyond that,
+// the number of favorites don't line up with the number of grid columns
 export const MOST_COMMONLY_USED_EMOJI = [
   '😊',
   '😒',
   '❤️',
-  '👍️',
+  '👍',
   '😍',
   '😂',
   '😭',

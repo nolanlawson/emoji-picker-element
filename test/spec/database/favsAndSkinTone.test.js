@@ -44,7 +44,7 @@ describe('database tests', () => {
 
   test('emoji favorite counts', async () => {
     await db.incrementFavoriteEmojiCount('🐵')
-    const emojis = ['🐒', '😀', '🐵', '😅', '🤣', '🖐️', '🤏', '✌️', '🐶', '🎉', '✨️']
+    const emojis = ['🐒', '😀', '🐵', '😅', '🤣', '🖐️', '🤏', '✌️', '🐶', '🎉', '🍇']
 
     for (let i = 0; i < emojis.length; i++) {
       for (let j = 0; j < emojis.length - i + 1; j++) {
