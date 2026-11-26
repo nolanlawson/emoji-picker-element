@@ -1,3 +1,6 @@
-onlyBuiltDependencies:
-  - esbuild
-  - puppeteer
+allowBuilds:
+  esbuild: true
+  puppeteer: true
+  chromedriver: true
+minimumReleaseAgeExclude:
+  - emoji-picker-element-data@1.9.0

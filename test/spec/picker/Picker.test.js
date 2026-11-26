@@ -281,7 +281,7 @@ describe('Picker tests', () => {
           group: 1,
           shortcodes: ['+1', 'thumbsup', 'yes'],
           tags: ['+1', 'good', 'hand', 'like', 'thumb', 'up', 'yes'],
-          unicode: '👍️',
+          unicode: '👍',
           version: 0.6,
           skins: [
             { tone: 1, unicode: '👍🏻', version: 1 },
